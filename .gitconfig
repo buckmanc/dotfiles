@@ -1,0 +1,16 @@
+[user]
+	# These values are set in ~/.gitconfig_local
+
+[include]
+	path = ~/.gitconfig_local
+[alias]
+	wdiff=diff --color-words='\\w+|.'
+	ldiff=diff --color-words=.
+	undo-commit=reset HEAD~
+	list-alias=!git config -l | grep alias | cut -c 7-
+	wlog=log --patch --color-words='\\w+|.'
+	xgrep=!git --no-pager grep -in
+[core]
+	editor = vim
+[push]
+	autoSetupRemote = true

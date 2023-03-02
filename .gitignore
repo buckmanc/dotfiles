@@ -1,0 +1,4 @@
+# ignore all files, requiring -f to add any new files
+# some protection against adding sensitive files from your home directory
+
+*
