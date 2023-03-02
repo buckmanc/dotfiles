@@ -15,4 +15,5 @@ Example dotfiles for:
   - `vim`
   - `git`
   - `mintty` / `git bash`
+  - `bash aliases`
   - that's it!
