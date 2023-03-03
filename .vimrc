@@ -32,12 +32,17 @@ set spellcapcheck=					" turn off capitalization check. too bad this doesn't exi
 " custom date insert command
 command! Date put =strftime('%Y-%m-%d')
 
-" github.com/junegunn/vim-plug
-" run :PlugInstall / :PlugClean after changing plugin lists
-" below are github vim plugin projects
-call plug#begin('~/.vim/plugged')
+" wrapping in a try catch as plugins are completely broken on some systems
+try
+	" github.com/junegunn/vim-plug
+	" run :PlugInstall / :PlugClean after changing plugin lists
+	" below are github vim plugin projects
+	call plug#begin('~/.vim/plugged')
 
-Plug 'tpope/vim-speeddating'	"mods ctrl+x and ctrl+a to work with dates
-Plug 'tpope/vim-eunuch'		"simple file operations, namely :Delete, which is useful when reviewing a large number of files
+	Plug 'tpope/vim-speeddating'	"mods ctrl+x and ctrl+a to work with dates
+	Plug 'tpope/vim-eunuch'		"simple file operations, namely :Delete, which is useful when reviewing a large number of files
 
-call plug#end()
+	call plug#end()
+catch
+
+endtry
