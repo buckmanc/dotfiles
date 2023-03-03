@@ -1,6 +1,5 @@
 [user]
 	# These values are set in ~/.gitconfig_local
-
 [include]
 	path = ~/.gitconfig_local
 [alias]
@@ -14,3 +13,5 @@
 	editor = vim
 [push]
 	autoSetupRemote = true
+[gc]
+	auto = 256
