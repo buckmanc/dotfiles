@@ -9,8 +9,7 @@ mkdircd() {
 }
 
 open() {
-
-	if [ $OSTYPE != 'mysys' ]
+	if [ $OSTYPE != 'msys' ]
 	then
 		echo 'this function is only supported on windows'
 		return -1
@@ -29,13 +28,13 @@ open() {
 			continue
 		fi
 
-		echo $i
+		# echo $i
 
 		absolutepath=$(readlink -f "$i")
 		foldername=$(dirname -- "$absolutepath")
 		filename=$(basename -- "$i")
 
-		echo $filename
+		# echo $filename
 
 		(cd "$foldername" && explorer "$filename") # parenthesis so it doesn't change the user's directory
 	done
