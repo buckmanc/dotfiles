@@ -20,7 +20,7 @@ set incsearch		" search as you type
 set hlsearch		" highlight all search results
 set magic		" special characters available in pattern matching
 set ignorecase		" ignore case in searching
-"set smartcase		" only use case sensitive search when capitals are included in
+set smartcase		" only use case sensitive search when capitals are included in
 
 " spellcheck
 autocmd Filetype text setlocal spell spelllang=en_us	" turn on spell check for text files only
