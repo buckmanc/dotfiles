@@ -14,6 +14,7 @@ set autoread		" reloads file only if unmodified in vim
 set novisualbell	" stop yelling at me
 set noerrorbells	" i'm serious
 set backspace=indent,eol,start " 'normal' backspace behavior
+set wildignorecase	" ignore case when tab completing paths
 
 " searching
 set incsearch		" search as you type

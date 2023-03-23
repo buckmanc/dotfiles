@@ -1,0 +1,4 @@
+startup_message off
+altscreen on
+# screen will not create the .log folder for you
+logfile $HOME/.logs/screen_%Y-%m-%d_%c:%s.log

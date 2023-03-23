@@ -2,6 +2,7 @@ alias xtree='tree -fi | grep -i --color'
 alias xgrep='grep -i --color'
 alias xhistory='history | cut -c 8- | grep -ivE  ^x?history | grep -i --color'
 alias gwap='git diff -w --no-color | git apply --cached --ignore-whitespace && git checkout -- . && git reset && git add -p'
+alias screeny='screen -DRRqS screeny_weeny -L'
 
 mkdircd() {
 	mkdir "$1"
@@ -41,5 +42,16 @@ open() {
 
 	# return success
 	return 0
+}
+
+# no trailing whitespace
+# remove whitespace from the end of files
+notw(){
+	# add pipe args to the list of regular args
+	args="$@"
+	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
+
+	sed -bi 's/[ \t]*\(\r\?\)$/\1/' "$@"
+
 }
 
