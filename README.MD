@@ -16,4 +16,6 @@ Example dotfiles for:
   - `git`
   - `mintty` / `git bash`
   - `bash aliases`
+  - `gnu screen`
+  - `starship`
   - that's it!

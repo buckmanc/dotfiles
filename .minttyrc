@@ -1,6 +1,6 @@
 BoldAsFont=yes
 ThemeFile=base16-synth-midnight-dark-256.minttyrc
-Font=Consolas
+Font=FiraCode Nerd Font Mono
 BoldAsColour=yes
 CopyAsRTF=no
 ConfirmExit=no
