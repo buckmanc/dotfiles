@@ -1,7 +1,9 @@
 BoldAsFont=yes
 ThemeFile=base16-synth-midnight-dark-256.minttyrc
-Font=FiraCode Nerd Font Mono
+Font=FiraCode NFM
 BoldAsColour=yes
 CopyAsRTF=no
 ConfirmExit=no
 FontHeight=14
+FontSmoothing=full
+Ligatures=2
