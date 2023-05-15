@@ -55,3 +55,25 @@ notw(){
 
 }
 
+# set window title
+title() { echo -ne "\e]0;$1\a"; }
+
+figtest() {
+
+	echo
+	echo 'figlet fonts courtesy of figlist'
+	echo
+
+	# iterate over font names
+	figlist | while read f
+	do
+		#echo f:\ $f
+		figlet -l -f "$f" "$f" 2> /dev/null
+	done
+
+	echo
+	echo 'figlet -f fontname text'
+
+	# return success
+	return 0
+}

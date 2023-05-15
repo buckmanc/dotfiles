@@ -18,4 +18,5 @@ Example dotfiles for:
   - `bash aliases`
   - `gnu screen`
   - `starship`
+  - `notepad++`
   - that's it!
