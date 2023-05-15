@@ -17,3 +17,5 @@
 	auto = 256
 [init]
 	defaultBranch = main
+[filter "notepad++ignore"]
+	clean = ~/.config/Notepad++/git_clean_filter.sh
