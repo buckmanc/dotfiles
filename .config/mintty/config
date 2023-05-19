@@ -7,3 +7,6 @@ ConfirmExit=no
 FontHeight=14
 FontSmoothing=full
 Ligatures=2
+BellType=0
+Scrollbar=none
+Transparency=off

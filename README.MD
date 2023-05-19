@@ -20,3 +20,10 @@ Example dotfiles for:
   - `starship`
   - `notepad++`
   - that's it!
+
+
+Notepad++ Notes
+============
+This configuration uses Settings > Preferences > Cloud & Link to move the Notepad++ config files to .config\Notepad++.
+
+The theme is stored as an absolute path, thus for most configurations storing the username in the config file. I've mapped my user drive to X:\ to avoid this, so anyone using my config will have to either 1) map \\\\localhost\C$\Users\{username}\ to X:\ or 2) manually select the Twilight them and FireCode NFM for the global font. At least those are my choices.

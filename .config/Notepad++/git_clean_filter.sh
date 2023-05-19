@@ -7,6 +7,11 @@ declare -a myArray=(
 	'<GUIConfig name=\"FindWindowPosition\"'
 	'<GUIConfig name=\"noUpdate\"'
 	'<Replace name='
+	'<FileBrowser latestSelectedItem'
+	'<root foldername'
+	'<\/FileBrowser'
+	'<ProjectPanel'
+	'<\/ProjectPanel'
 )
 
 sedcmd="sed"
