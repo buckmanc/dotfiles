@@ -2,6 +2,8 @@
 	# These values are set in ~/.gitconfig_local
 [include]
 	path = ~/.gitconfig_local
+[mailmap]
+	file = ~/.mailmap
 [alias]
 	wdiff=diff --color-words='\\w+|.'
 	ldiff=diff --color-words=.
@@ -9,6 +11,8 @@
 	list-alias=!git config -l | grep alias | cut -c 7-
 	wlog=log --patch --color-words='\\w+|.'
 	xgrep=!git --no-pager grep -in
+	plog=log --abbrev-commit --date-order --format=format:'%C(bold blue)%>|(21)%h%C(reset) %C(bold green)(%as)%C(reset) %C(white)%<(60,trunc)%s%C(reset) %C(dim white)- %aN%C(reset)%C(auto)%d%C(reset)' --decorate --graph --all
+	olog=log --abbrev-commit --date-order --format=format:'%C(bold blue)%h%C(reset) %C(bold green)(%as)%C(reset) %C(white)%<(49,trunc)%s%C(reset) %C(dim white)- %aN%C(reset)%C(auto)%+d%C(reset)'
 [core]
 	editor = vim
 [push]
