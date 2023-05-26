@@ -1,14 +1,26 @@
 format = """
+$sudo\
 $username\
 $hostname \
 $directory\
+$dotnet\
+$custom\
 $git_branch\
 $git_state\
 $git_status\
 $git_metrics\
 $cmd_duration\
 $line_break\
-$character"""
+$character\
+"""
+
+continuation_prompt = '[❯ ](white)' # not working; what's wrong here?
+
+[sudo]
+format = '[$symbol]($style)'
+style = 'green'
+symbol = 'sudo'
+disabled = false
 
 [username]
 format = '[$user]($style)'
@@ -23,47 +35,72 @@ ssh_only = false
 
 [directory]
 style = "green"
-home_symbol = "~"
+read_only_style = "green"
+read_only = " 🔒"
+home_symbol = "ᐰ " # space solves a glyph clipping issue
 truncate_to_repo = false
 truncation_length = 3
-truncation_symbol = '.../'
+truncation_symbol = '../'
 
 [directory.substitutions]
-"/media/content/Dropbox" = ""
 "Dropbox" = ""
 "Documents" = ""
 "Downloads" = ""
 "Music"     = ""
 "Pictures"  = ""
+"Notes" = ""
+"to do" = "✓"
+"media" = ""
+"content" = ""
+"Playlists" = ""
+
+[dotnet]
+format = '[($tfm )]($style)'
+
+[custom.shellscripts]
+# don't report for the home dir
+# could not get the "when" option to work for the life of me
+command = '''if [ "$HOME" == "$PWD" ]; then echo ''; else echo '#!'; fi'''
+detect_extensions = ['sh']
+style = "bold blue"
+
+[custom.python]
+command = '''if [ "$HOME" == "$PWD" ]; then echo ''; else echo '🐍'; fi''' # don't report for the home dir
+detect_extensions = ["py"]
+style = "bold blue"
+
+[custom.sql]
+command = "echo "
+detect_extensions = ["sql"]
+style = "bold blue"
 
 [character]
-success_symbol = "[<3](white)"
-error_symbol   = "[</3](white)"
-vimcmd_symbol  = "[<3](white)"
+success_symbol = "[留❯](white)"
+error_symbol   = "[六❯](red)"
+vimcmd_symbol  = "[留❯](white)"
 
 [git_branch]
-format = "[\\($symbol$branch\\)]($style)"
+format = "[\\($symbol$branch(:$remote_branch)\\)]($style)"
 style = "white"
 
 [git_status]
-format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218)($ahead_behind$stashed)]($style)"
+format = "[($conflicted$ahead_behind$stashed$staged)[(*$untracked$modified$renamed$deleted)](218)]($style)"
 style = "white"
-conflicted = "​"
 untracked = "​"
 modified = "​"
-staged = "​"
 renamed = "​"
 deleted = "​"
 stashed = "≡"
 
 [git_state]
-format = '\([$state( $progress_current/$progress_total)]($style)\) '
 style = "white"
 
 [git_metrics]
+added_style = "white dimmed"
+deleted_style = "white dimmed"
+format = '( [+$added]($added_style))( [-$deleted]($deleted_style))'
 disabled = true
 
 [cmd_duration]
 format = "[ $duration]($style)"
-style = "white"
-
+style = "white dimmed"
