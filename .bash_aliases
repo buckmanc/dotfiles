@@ -57,7 +57,7 @@ notw(){
 
 # set window title
 title() { echo -ne "\e]0;$1\a"; }
-title $HOSTNAME
+#title $HOSTNAME
 
 figtest() {
 
@@ -93,3 +93,10 @@ done | while read -r n_hex; do
 done
 printf "\n"
 }
+
+# todo put this in bashrc instead
+function set_win_title(){
+    echo -ne "\033]0; $HOSTNAME - $PWD \007"
+}
+starship_precmd_user_func="set_win_title"
+

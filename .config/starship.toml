@@ -60,12 +60,12 @@ format = '[($tfm )]($style)'
 [custom.shellscripts]
 # don't report for the home dir
 # could not get the "when" option to work for the life of me
-command = '''if [ "$HOME" == "$PWD" ]; then echo ''; else echo '#!'; fi'''
+command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then echo ''; else echo '#!'; fi'''
 detect_extensions = ['sh']
 style = "bold blue"
 
 [custom.python]
-command = '''if [ "$HOME" == "$PWD" ]; then echo ''; else echo '🐍'; fi''' # don't report for the home dir
+command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then echo ''; else echo '🐍'; fi''' # don't report for the home dir
 detect_extensions = ["py"]
 style = "bold blue"
 
