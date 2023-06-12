@@ -6,6 +6,7 @@ $directory\
 $dotnet\
 $custom\
 $git_branch\
+$git_commit\
 $git_state\
 $git_status\
 $git_metrics\
@@ -32,45 +33,51 @@ disabled = true
 style = "green"
 format = "[@$hostname]($style)"
 ssh_only = false
+disabled = false
 
 [directory]
 style = "green"
 read_only_style = "green"
 read_only = " 🔒"
-home_symbol = "ᐰ " # space solves a glyph clipping issue
+home_symbol = "ᐰ " # space solves a glyph clipping issue ...sometimes
 truncate_to_repo = false
 truncation_length = 3
 truncation_symbol = '../'
 
 [directory.substitutions]
-"Dropbox" = ""
-"Documents" = ""
-"Downloads" = ""
-"Music"     = ""
-"Pictures"  = ""
-"Notes" = ""
-"to do" = "✓"
-"media" = ""
-"content" = ""
-"Playlists" = ""
+"Spotify"	 = ""
+"Dropbox"	= ""
+"Documents"	= ""
+"Downloads"	= ""
+"Music"		= ""
+"Pictures"	= ""
+"Notes"		= ""
+"to do"		= "✓"
+"media"		= ""
+"content"	= ""
+"Playlists"	= ""
+"sql"		= ""
+"Coding"	= ""
 
 [dotnet]
 format = '[($tfm )]($style)'
 
 [custom.shellscripts]
-# don't report for the home dir
-# could not get the "when" option to work for the life of me
-command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then echo ''; else echo '#!'; fi'''
+# if it's the home dir and bash, backspace over the symbol
+# this way you still get the symbol in other shells
+symbol = "#!"
+command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008\u0008'; fi'''
 detect_extensions = ['sh']
 style = "bold blue"
 
 [custom.python]
-command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then echo ''; else echo '🐍'; fi''' # don't report for the home dir
+symbol = "🐍"
+command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008\u0008'; fi'''
 detect_extensions = ["py"]
 style = "bold blue"
 
 [custom.sql]
-command = "echo "
+symbol = ""
 detect_extensions = ["sql"]
 style = "bold blue"
 
@@ -83,8 +90,13 @@ vimcmd_symbol  = "[留❯](white)"
 format = "[\\($symbol$branch(:$remote_branch)\\)]($style)"
 style = "white"
 
+# this is only the backup for git_branch in a detached head state
+[git_commit]
+format = "[\\( $hash$tag\\)]($style)"
+style = "white"
+
 [git_status]
-format = "[($conflicted$ahead_behind$stashed$staged)[(*$untracked$modified$renamed$deleted)](218)]($style)"
+format = "[($conflicted$ahead_behind$stashed$staged)[(*$untracked$modified$renamed$deleted)]()]($style)"
 style = "white"
 untracked = "​"
 modified = "​"

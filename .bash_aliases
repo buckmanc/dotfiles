@@ -44,15 +44,41 @@ open() {
 	return 0
 }
 
-# no trailing whitespace
+# fix trailing whitespace
 # remove whitespace from the end of files
-notw(){
+fixtw(){
 	# add pipe args to the list of regular args
 	args="$@"
 	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
 
 	sed -bi 's/[ \t]*\(\r\?\)$/\1/' "$@"
 
+}
+# add a space after //
+# this isn't perfect and will require manual review, so do it on a clean repo
+fixcomment(){
+	# add pipe args to the list of regular args
+	args="$@"
+	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
+
+	sed -i "s#(\s+?////+?)([^\s//])#\1 \2#g" "$@"
+
+}
+fixtab(){
+
+	# add pipe args to the list of regular args
+	args="$@"
+	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
+
+	# iterate over args
+	for i in "$@"
+	do
+		text=`expand -i -t 4 "$i"`
+		echo "$text" > "$i"
+
+	done
+
+	return 0
 }
 
 # set window title
@@ -96,7 +122,18 @@ printf "\n"
 
 # todo put this in bashrc instead
 function set_win_title(){
-    echo -ne "\033]0; $HOSTNAME - $PWD \007"
+	
+	text=$(basename "$PWD")
+
+	if [ "${HOME,,}" == "${PWD,,}" ]
+	then
+		text="ᐰ"
+	fi
+
+	echo -ne "\033]0; $HOSTNAME - $PWD \007"
 }
 starship_precmd_user_func="set_win_title"
 
+alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
+alias builderrors="dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file,error num, error message' | cut -c-$COLUMNS | uniq"
+alias sbuilderrors="dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file,error num, error message' --table-hide file | cut -c-$COLUMNS | uniq"

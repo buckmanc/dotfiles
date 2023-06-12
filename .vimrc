@@ -1,3 +1,5 @@
+set background=dark
+
 " presentation
 syntax on		" syntax highilghting
 set ruler		" show cursor position
@@ -32,6 +34,12 @@ set spellcapcheck=					" turn off capitalization check. too bad this doesn't exi
 
 " custom date insert command
 command! Date put =strftime('%Y-%m-%d')
+
+"hi StatusLine ctermbg=black ctermfg=black " doesn't work right on mobile
+
+augroup FileTypeSpecificAutocommands
+	autocmd FileType cs setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
+augroup end
 
 " wrapping in a try catch as plugins are completely broken on some systems
 try
