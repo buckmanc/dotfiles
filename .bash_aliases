@@ -10,6 +10,7 @@ mkdircd() {
 }
 
 open() {
+	# TODO vim -p these on other platforms
 	if [ $OSTYPE != 'msys' ]
 	then
 		echo 'this function is only supported on windows'
@@ -83,9 +84,14 @@ fixtab(){
 
 # set window title
 title() { echo -ne "\e]0;$1\a"; }
-#title $HOSTNAME
 
 figtest() {
+
+	if (! type figlet >/dev/null 2>&1)
+	then
+		echo 'figlet not installed'
+		return -1
+	fi
 
 	echo
 	echo 'figlet fonts courtesy of figlist'
@@ -119,20 +125,6 @@ done | while read -r n_hex; do
 done
 printf "\n"
 }
-
-# todo put this in bashrc instead
-function set_win_title(){
-	
-	text=$(basename "$PWD")
-
-	if [ "${HOME,,}" == "${PWD,,}" ]
-	then
-		text="ᐰ"
-	fi
-
-	echo -ne "\033]0; $HOSTNAME - $PWD \007"
-}
-starship_precmd_user_func="set_win_title"
 
 alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
 alias builderrors="dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file,error num, error message' | cut -c-$COLUMNS | uniq"
