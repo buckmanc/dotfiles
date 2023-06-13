@@ -19,6 +19,8 @@ Example dotfiles for:
   - `gnu screen`
   - `starship`
   - `notepad++`
+  - `windows terminal`
+  - `powershell`
   - that's it!
 
 
