@@ -2,14 +2,16 @@
 goodnight
 sleep tight
 pleasant dreams to you
-'til we meet again
+til we meet again
 adios
 au revoir
 auf wiedersehn
 #misc
 goodbye
 farewell
+gourdspood
 speedgod
+don't take any wooden nickels
 #rosalina be praised
 rosalina's light shine upon thee
 may rosalina's lumas guide thee
@@ -20,6 +22,72 @@ May the ground you walk quake as you pass
 Azura's wisdom to you
 Divines smile on you
 Stendarr's mercy upon ye
+Be seeing you
+May your blade always strike true... and first!
+Walk without fear
+I do hope our paths cross again.
+Farewell!
+Come back for a drink!
+Goodbye. And watch yourself.
+Songs of forks follow you.
+Pleasant dreams.
+Gotta run.
+Stay safe.
+Blessings of Julianos upon ye.
+Blessings of Akatosh upon ye.
+Blessings of the Shadow upon ye.
+Blessings of Anu upon ye.
+Blessings of Mystara upon ye.
+Blessings of Arkay upon ye.
+Blessings of Stendarr upon ye.
+Blessings of the Lady upon you
+Blessings, citizen
+Blessings of the Nine
+many blessings upon you, my friend
+Go with Talos's blessings
+Keep your heart true and your eyes open.
+May Uriel's spirit guide us in these troubled times.
+May your sword always strike true.
+Until next time.
+I will now take my leave.
+May Talos guide you, my friend.
+Have a good day now.
+Very good, then.
+May your spells never falter.
+Until later, then.
+I'll take my leave of you then
+Do run along.
+Pleasant, as always.
+I'll be seeing you, then.
+Fear not, our paths may cross again.
+May Mara guide you in your travels
+May the sunlight always safeguard your path
+I really must get back to my paintings.
+May your walls stand secure!
+Farewell. Stay safe.
+Be careful out there
+Come back anytime.
+Go with Akatosh
+May the roads carry you safely in your journeys
+safe journey
+Farewell, and may Arkay guide you
+See you soon. Or not. Whichever it might be.
+I'd better get back to practicing.
+I guess I'll be going about my business.
+May luck be always on your side.
+Good journey to you.
+may you find your way home safely each night to a warm fire.
+Good fortune to you
+Take care now!
+may the goddess watch you
+may riches fill your pockets
+may your path be free of danger
+may your arrows strike true
+may you walk on warm sands
+may the wind be on your back
+may Azura bless our days
+may luck be with you
+may your wisdom guide you well
 #ChatGPT
 May the stars guide your path
 Fair winds and following seas be with you
@@ -54,4 +122,25 @@ Til next time, gancho
 #skyward
 Saints and stars guide you
 #hunger grames
-may the odds be ever in your favor
+May the odds be ever in your favor
+#tolkien
+a star shines on the hour of our meeting
+live well
+go in peace
+It was a merry meeting.
+We shall meet again some day.
+May the stars shine upon your face
+Go now with good hearts!
+May you find what you seek
+May we meet again
+Farewell and return!
+Farewell and sleep in peace
+I drink to the fortunes of your house
+Beyond the shadows we may meet again
+Ride unto great renown!
+Ride to good fortune!
+What fun to be off again
+Good-bye, until our next meeting!
+Good-bye now! Take care of yourself!
+farewell wherever you fare
+May the wind under your wings bear you where the sun sails and the moon walks

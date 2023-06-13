@@ -17,6 +17,8 @@ goodbymessage()
 
 	# pick a random line from the farewells file
 	message="$(shuf -n 1 ~/.config/messages/farewells.txt)"
+	# strip blank lines
+	message=$(echo "$message" | sed "/^[[:space:]]*\?$/d")
 	# strip comments
 	message=$(echo "$message" | sed "/^#/d")
 	# punctuate
