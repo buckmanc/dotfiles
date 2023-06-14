@@ -15,26 +15,31 @@ goodbymessage()
 	#index=$(($RANDOM % $size))
 	#message="${messages[$index]}"
 
-	# pick a random line from the farewells file
-	message="$(shuf -n 1 ~/.config/messages/farewells.txt)"
+	# read farewells file
+	messages="$(cat ~/.config/messages/farewells.txt)"
 	# strip blank lines
-	message=$(echo "$message" | sed "/^[[:space:]]*\?$/d")
+	messages=$(echo "${messages}" | sed "/^[[:space:]]*\?$/d")
 	# strip comments
-	message=$(echo "$message" | sed "/^#/d")
+	messages=$(echo "${messages}" | sed "/^#/d")
+	# pick a random line from the farewells file
+	message=$(echo "${messages}" | shuf -n 1)
 	# punctuate
-	message=$(echo "$message" | sed "s/[^[:punct:]]$/&./")
+	message=$(echo "${message}" | sed "s/[^[:punct:]]$/&./")
 	# capitalize
 	message="${message^}"
+	# wrap based on screen width
+	message=$(echo "${message}" | fmt -w $(($COLUMNS - 4)))
 
 	if type cowsay >/dev/null 2>&1; then
-		message=$(cowsay "$message")
+		message=$(echo "${message}" | cowsay -n)
 	fi
 	if type lolcat >/dev/null 2>&1; then
-		message=$(echo "$message" | lolcat --force)
+		message=$(echo "${message}" | lolcat --force)
 	fi
 
 	echo
-	echo "$message"
+	echo "${message}"
+	echo
 }
 
 clear
