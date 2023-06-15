@@ -1,3 +1,5 @@
+# TODO add cdx, to parse a dir from the last history command and cd to it
+
 alias xtree='tree -fi | grep -i --color'
 alias xgrep='grep -i --color'
 alias xhistory='history | cut -c 8- | grep -ivE  ^x?history | grep -i --color'
@@ -129,3 +131,110 @@ printf "\n"
 alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
 alias builderrors="dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file,error num, error message' | cut -c-$COLUMNS | uniq"
 alias sbuilderrors="dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file,error num, error message' --table-hide file | cut -c-$COLUMNS | uniq"
+
+goodbyemessage()
+{
+	# very possible to hardcode messages here
+	#messages[0]="goodnight"
+
+	#size=${#messages[@]}
+	#index=$(($RANDOM % $size))
+	#message="${messages[$index]}"
+
+	# read farewells file
+	messages="$(cat ~/.config/messages/farewells.txt)"
+	# strip blank lines
+	messages=$(echo "${messages}" | sed "/^[[:space:]]*\?$/d")
+	# strip comments
+	messages=$(echo "${messages}" | sed "/^#/d")
+	# pick a random line from the farewells file
+	message=$(echo "${messages}" | shuf -n 1)
+	# punctuate
+	message=$(echo "${message}" | sed "s/[^[:punct:]]$/&./")
+	# capitalize
+	message="${message^}"
+	# wrap based on screen width
+	message=$(echo "${message}" | fmt -w $(($COLUMNS - 4)))
+
+	if type cowsay >/dev/null 2>&1; then
+		message=$(echo "${message}" | cowsay -n)
+	fi
+	if type lolcat >/dev/null 2>&1; then
+		message=$(echo "${message}" | lolcat --force)
+	fi
+
+	echo
+	echo "${message}"
+	echo
+}
+
+shutdown() {
+	echo 'custom shutdown time'
+
+	# TODO expand OS checking into a user enviro variable or function
+	# include cygwin as windows
+
+	cowtime=2
+	waitforshutdowntime=10
+
+	if [ $1 == 'now' ] && [ -z "$3" ]
+	then
+		if [ $OSTYPE == 'msys' ] && [ $2 == '-r' ]
+		then
+			`which shutdown` -r -f -t $cowtime
+
+			clear
+			goodbyemessage
+			sleep $waitforshutdowntime
+
+		elif [ $OSTYPE == 'msys' ] && [ -z "$2" ]
+		then
+			`which shutdown` -s -hybrid -f -t 0
+
+			clear
+			goodbyemessage
+			sleep $waitforshutdowntime
+
+		elif [ -n "$SSH_CLIENT" ] && [ -z "$2" ]
+		then
+
+			#confirm if the user REALLY WANTS to shutdown this machine
+			#is not called if a user does "sudo shutdown..."
+			read -p "Are you sure you want to shutdown this remote machine?" -n 1 -r
+			if [[ $REPLY =~ ^[Yy]$ ]]
+			then
+				sudo echo
+				if [ $? -eq 0 ]
+				then
+
+					clear
+					goodbyemessage
+					sleep $cowtime
+
+					sudo `which shutdown` $@
+				fi
+			fi
+		elif [ -n "$SSH_CLIENT" ] && [ "$2" == "-r" ]
+		then
+			sudo echo
+			if [ $? -eq 0 ]
+			then
+
+				clear
+				goodbyemessage
+				sleep $cowtime
+
+				sudo `which shutdown` $@
+			fi
+		else
+			`which shutdown` $@
+		fi
+
+		return "$?"
+
+	# if not doing "shutdown now", just pass the args along, no special behaviour
+	else
+		`which shutdown` $@
+	fi
+}
+export shutdown

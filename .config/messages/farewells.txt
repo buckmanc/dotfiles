@@ -16,9 +16,7 @@ don't take any wooden nickels
 rosalina's light shine upon thee
 may rosalina's lumas guide thee
 rosalina speed thy return
-#elder scrolls
-Divines bless you
-May the ground you walk quake as you pass
+#oblivion
 Azura's wisdom to you
 Divines smile on you
 Stendarr's mercy upon ye
@@ -144,3 +142,209 @@ Good-bye, until our next meeting!
 Good-bye now! Take care of yourself!
 farewell wherever you fare
 May the wind under your wings bear you where the sun sails and the moon walks
+#skyrim
+All right, then.
+A most pleasant chat. Until the next!
+A pleasant journey.
+Arkay keep you and protect you.
+Arkay's blessing to you.
+Arkay watch over you.
+A word of advice -- don't buy discounted armor.
+Aye, 'til next time.
+Azura bless you.
+Azura is watching over you
+Azura's insight sustains you
+Azura's Prophecy always guide you to fortune.
+Azura's wisdom to you, friend.
+Be careful out there.
+Be safe, traveler.
+Be seeing you.
+Best not to walk the roads of Skyrim alone.
+Blessings be with you.
+Blessings of Arkay be upon you.
+Blessings of Arkay to you
+Blessings of Mara upon you
+Blessings of she whose veil is the storm.
+Blessings of Stendarr on you!
+Blessings of Talos upon you.
+Blessings of the Eight Divines upon you.
+Blessings of the moons upon you, traveler.
+Blessings of the Nine Divines upon you
+Blessings of the Warrior-Wife.
+Blessings to you. The Divines are listening.
+Blessings upon you, traveler.
+Bye.
+Carry the blessings of Mara with you
+Come back and see us again!
+Come back when you're ready to spend more gold... goodness knows I could use it.
+Come visit again sometime.
+Despair not, Mara's warmth will protect you always!
+Dibella guide you
+Dibella's blessing to you.
+Divines bless you
+Do come again!
+Don't let me keep you.
+Embrace order and hard truth, mortal. Good bye.
+Fair winds and calm seas. That's an old sailor's parting.
+Eyes open... walk with the shadows.
+Farewell, then.
+Fortune to you and your children.
+Goddess of Dusk and Dawn bless you
+Gods' blessings on you.
+Gods bless you.
+Goodbye.
+Goodbye, then.
+Good day.
+Good day to you.
+Good journey, marsh-friend.
+Good journey to you.
+Good luck. I'll be here if you need me.
+Good luck. Mara bless you.
+Good luck on your travels.
+Good luck out there.
+Good, now maybe I can get back to work.
+Good speaking with you.
+Go with the gods.
+Grace of Kynareth be with you.
+Have yourself a great day!
+Hmm hmm.
+<humming>
+I bid you safe travels.
+I'd better get going.
+If there's nothing else, I really must ask you to leave.
+If you have need of tonics or potions, come see me at my shop.
+If you'll excuse me, I have other things to attend to.
+If you'll excuse me, I must return to my duties.
+If you need another drink, I'll be right here.
+If you need any more smithing work, come see me again.
+If you need my services again, just come and look for me in the usual place.
+If you pass through again, stop by for a drink.
+If you're the best the Guild's got, they're in worse shape than I imagined.
+I hope to see you again soon.
+I hope we bump into each other again.
+I'll be right here if you need anything else.
+I'll see you again soon, I hope.
+I'll take my leave, then.
+I'm just not up for it, sorry. I'd rather stay here, have a glass of wine, and perform my rites to Arkay in peace.
+I'm sure we'll speak again.
+I need another drink.
+It's been a pleasure.
+It's been good talking to you.
+It was a pleasure.
+It was a pleasure to talk to someone so interesting.
+I will commune with Azura.
+I will entreat Mara on your behalf.
+I would not complain if you returned with some Skooma. 
+Keep in song in your heart to ward off the gloom.
+Keep on your guard. This city can be a little rough for those such us.
+Keep your belly full and your shoulders strong.
+Keep your eyes to the road.
+Keep yourself safe, traveler.
+Know that Azura will be guarding over the threads of your fate in the Twilight.
+Kynareth bless you
+Kynareth preserve us.
+Kynareth's winds will guide your path.
+Lady Mara is displeased with your constant inebriation.
+Lady Mara provide you strength and guidance through these difficult times.
+Listen to the Voice that Kynareth has placed within you, and your path will be clear.
+Mara bless you
+Mara have mercy on you
+Mara keep you.
+Mara's love, compassion, and understanding be upon you
+Mara's mercy be yours
+Mara smiles upon us this day.
+Mara will protect you.
+Mark my words, I'll be Jarl again someday!
+May Arkay bless you.
+May Arkay bless you with a long life.
+May Arkay bless you with a long life, a proud death, and a restful grave.
+May Azura's magic protect you.
+Maybe I'll see you around the Guild.
+Dibella guide you to life's simple pleasures.
+Kynareth guard you
+may Kynareth's soft rains fall before you.
+May Kynareth's wind carry only the sweetest scents.
+May Kynareth's winds blow you to fortune.
+May prosperity bless us both!
+May Talos bless your days.
+May Talos shield you from all harm.
+May the blessings of the Eight be with you.
+May the blessings of the Nine be with you.
+May the earth beneath your feet be always soft.
+may the Goddess of the Storm bring you fair winds
+May the ground you walk quake as you pass
+May the road favor the foolish.
+May the shadows guide your journey.
+May the sun keep you warm even in this land of bitter cold.
+May wisdom forever light your path.
+May you carry the warmth of Mara to all corners of the frozen wastes.
+May you cross the bridge to the blessed hall.
+may you hear the winds of Kynareth
+May you lose yourself in the pages of a good book!
+May your road lead you to warm sands.
+May your time here be pleasant.
+May you walk on warm sands.
+Mother of Roses guide you
+My gratitude and blessings go with you
+Now if you'll excuse me...
+Now I've got to clean up this mess.
+Now was it two parts giant lichen or three? Hm...
+Off for some wine, eh? Drink one for me.
+Oh, goodbye then.
+Oh, yes. Goodbye, goodbye.
+Okay, now where did I put those spiders?
+Perhaps one day, I'll write a song about you!
+Please be careful, I don't wish to be the reason for your death.
+Return anytime. You're quite welcome here.
+Right. See you around.
+Safe travels.
+See you.
+See you around.
+Should our paths cross again, I will remember your kindness.
+Some other time, perhaps.
+Stendarr be with you.
+Stendarr protect you
+Stendarr's Light purify you of your ills.
+Stendarr's Mercy be upon you
+Stendarr's Mercy to you.
+Sweet breath of Arkay go with you
+Take care, and go with the blessings of the Eight.
+Take care, and go with the blessings of the Nine.
+Take care, friend.
+Take care, now.
+Take care, stranger. Be careful out there.
+Talos be with you
+Talos bless you
+Talos guard you.
+Talos guide you.
+Talos keep you.
+Talos preserve you.
+Talos protect you.
+Talos watch over you.
+Thank Kynareth for you, stranger
+Thanks again for the ice wraith teeth.
+Thanks for your business.
+The blessing of Arkay be upon you.
+The goddess's divine blessings to you
+the light of Mara's love shines on you
+The roads of Skyrim can be treacherous. If you must walk them, be wary.
+To love is to know the true nature of the gods.
+Travel great Skyrim, and Kynareth travels with you.
+Travel safe.
+Travel safely. It's dangerous out there.
+Trust in Mara. she'll protect us in this dark place.
+Until later, then.
+Until next time.
+Until next we meet.
+Until our next meeting, if such is fated.
+Very well.
+Very well then.
+Visit me anytime. I'm not going anywhere soon.
+Watch yourself out there.
+We commend your soul to Aetherius
+We'll all meet Arkay sooner or later. Best to enjoy the time we've got.
+What? Oh, goodbye.
+...with three beers down, the Orc did frown, and bid the Elf goodbye... ...for none could know, 'twas not for show, and someone had to die... 
+Yes, yes... goodbye.
+You've got the heart of Mara herself
+Ysmir's blessing on you.
