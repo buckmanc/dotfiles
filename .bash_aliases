@@ -169,31 +169,28 @@ goodbyemessage()
 }
 
 shutdown() {
-	echo 'custom shutdown time'
-
 	# TODO expand OS checking into a user enviro variable or function
 	# include cygwin as windows
 
 	cowtime=2
-	waitforshutdowntime=10
 
 	if [ $1 == 'now' ] && [ -z "$3" ]
 	then
-		if [ $OSTYPE == 'msys' ] && [ $2 == '-r' ]
+		if [ $OSTYPE == 'msys' ] && [ "$2" = "-r" ]
 		then
-			`which shutdown` -r -f -t $cowtime
-
 			clear
 			goodbyemessage
-			sleep $waitforshutdowntime
+			sleep $cowtime 
+
+			`which shutdown` -r -f -t 0
 
 		elif [ $OSTYPE == 'msys' ] && [ -z "$2" ]
 		then
-			`which shutdown` -s -hybrid -f -t 0
-
 			clear
 			goodbyemessage
-			sleep $waitforshutdowntime
+			sleep $cowtime
+
+			`which shutdown` -s -hybrid -f -t 0
 
 		elif [ -n "$SSH_CLIENT" ] && [ -z "$2" ]
 		then
