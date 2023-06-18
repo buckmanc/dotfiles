@@ -132,6 +132,45 @@ alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
 alias builderrors="dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file,error num, error message' | cut -c-$COLUMNS | uniq"
 alias sbuilderrors="dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file,error num, error message' --table-hide file | cut -c-$COLUMNS | uniq"
 
+xindent(){
+
+	spaces=$(seq -s " " 0 "$1" | sed -E 's/[0-9]+?//g')
+	while read -r; do
+		echo "${REPLY}" | sed -E "s/^/${spaces}/g"
+	done
+}
+center(){
+	text=""
+	i="0"
+	while read -r; do
+		if [ "$i" -ne 0 ]
+		then
+			text+="
+"
+		fi
+		text+="${REPLY}"
+		i=$((i+1))
+	done
+
+	longestLineLen=$(echo "${text}" | wc -L)
+
+	if [ -z "$COLUMNS" ] || [ "$COLUMNS" -le 0 ]
+	then
+		echo "${text}"
+		return 0
+	elif [ "$longestLineLen" -ge "$COLUMNS" ]
+	then
+		echo "${text}"
+		return 0
+	fi
+
+	spaces=$((($COLUMNS - $longestLineLen) / 2))
+
+
+	echo "${text}" | xindent "${spaces}"
+
+}
+
 goodbyemessage()
 {
 	# very possible to hardcode messages here
@@ -159,6 +198,9 @@ goodbyemessage()
 	if type cowsay >/dev/null 2>&1; then
 		message=$(echo "${message}" | cowsay -n)
 	fi
+
+		message=$(echo "${message}" | center)
+
 	if type lolcat >/dev/null 2>&1; then
 		message=$(echo "${message}" | lolcat --force)
 	fi
