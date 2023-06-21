@@ -1,5 +1,7 @@
 # TODO add cdx, to parse a dir from the last history command and cd to it
 
+# aliases / functions starting with an x indicate a custom variant of a command, or a way of avoiding overwriting another command
+
 alias xtree='tree -fi | grep -i --color'
 alias xgrep='grep -i --color'
 alias xhistory='history | cut -c 8- | grep -ivE  ^x?history | grep -i --color'
@@ -128,8 +130,10 @@ done
 printf "\n"
 }
 
+# long exa
 alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
 alias builderrors="dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file,error num, error message' | cut -c-$COLUMNS | uniq"
+# short build errors
 alias sbuilderrors="dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file,error num, error message' --table-hide file | cut -c-$COLUMNS | uniq"
 
 xindent(){
@@ -277,3 +281,14 @@ shutdown() {
 	fi
 }
 export shutdown
+
+winterm() {
+
+	if (! type wt >/dev/null 2>&1)
+	then
+		echo 'windows terminal not installed'
+		return -1
+	fi
+
+	wt nt --startingDirectory "$1"
+}

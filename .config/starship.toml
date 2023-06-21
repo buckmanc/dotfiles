@@ -38,26 +38,37 @@ disabled = false
 [directory]
 style = "green"
 read_only_style = "green"
-read_only = " 🔒"
+read_only = " "
 home_symbol = "ᐰ " # space solves a glyph clipping issue ...sometimes
 truncate_to_repo = false
 truncation_length = 3
 truncation_symbol = '../'
 
 [directory.substitutions]
-"Spotify"	 = ""
+"Spotify"	= ""
+"config"	= ""
 "Dropbox"	= ""
 "Documents"	= ""
 "Downloads"	= ""
+"Uploads"	= ""
 "Music"		= ""
 "Pictures"	= ""
+"Videos"	= ""
+"Sounds"	= ""
+"Backups"	= ""
+"Backup"	= ""
+"Minecraft"	= ""
 "Notes"		= ""
 "to do"		= "✓"
 "media"		= ""
 "content"	= ""
 "Playlists"	= ""
 "sql"		= ""
-"Coding"	= ""
+"SQL"		= ""
+"Coding"	= ""
+"Scripts"	= "#!"
+"Books"		= ""
+"Windows"	= ""
 
 [dotnet]
 format = '[($tfm )]($style)'
@@ -69,17 +80,20 @@ symbol = "#!"
 command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008\u0008'; fi'''
 detect_extensions = ['sh']
 style = "bold blue"
+description = "A symbol indicating if shell scripts are present."
 
 [custom.python]
 symbol = "🐍"
 command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008\u0008'; fi'''
 detect_extensions = ["py"]
 style = "bold blue"
+description = "A symbol indicating if python scripts are present."
 
 [custom.sql]
 symbol = ""
 detect_extensions = ["sql"]
 style = "bold blue"
+description = "A symbol indicating if SQL files are present."
 
 [character]
 success_symbol = "[留❯](white)"
@@ -98,11 +112,14 @@ style = "white"
 [git_status]
 format = "[($conflicted$ahead_behind$stashed$staged)[(*$untracked$modified$renamed$deleted)]()]($style)"
 style = "white"
-untracked = "​"
-modified = "​"
-renamed = "​"
-deleted = "​"
-stashed = "≡"
+untracked	= "​"
+modified	= "​"
+renamed		= "​"
+deleted		= "​"
+stashed		= "≡"
+#conflicted	= "ﲅ"
+#conflicted	= "󰞇"
+conflicted	= "理"
 
 [git_state]
 style = "white"

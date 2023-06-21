@@ -10,3 +10,4 @@ Ligatures=2
 BellType=0
 Scrollbar=none
 Transparency=off
+RightClickAction=paste
