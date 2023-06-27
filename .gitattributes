@@ -1,2 +1,3 @@
 .config/Notepad++/config.xml filter=notepad++ignore
 .config/starship.toml filter=gitignore
+*.cs filter=gitignore

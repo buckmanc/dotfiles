@@ -58,16 +58,32 @@ if [ -d "$HOME/.nvm" ]; then
 	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 fi
 
+# provide a standard user environment variable between platforms
+if [ -z "$USER" ]; then
+	export USER="$USERNAME"
+fi
+
 function set_win_title(){
 	
 	text=$(basename "$PWD")
 
+	# special character for home dir
 	if [ "${HOME,,}" == "${PWD,,}" ]
 	then
-		text="ᐰ"
+		# very hacky bug fix for juicessh
+		if [ -z "$SSH_CLIENT" ] || [[ ("$COLUMNS" != "75" && "$COLUMNS" != 37) ]]
+		then
+			text="ᐰ"
+		fi
 	fi
 
-	echo -ne "\033]0; $HOSTNAME - $PWD \007"
+	# only display hostname on certain platforms
+	if [[ "$USER" != *"."* ]]
+	then
+		text="${HOMENAME} - ${text}"
+	fi
+
+	echo -ne "\033]0;${text}\007"
 }
 starship_precmd_user_func="set_win_title"
 

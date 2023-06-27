@@ -1,6 +1,6 @@
-set background=dark
 
 " presentation
+set background=dark	" better colors for dark themes
 syntax on		" syntax highilghting
 set ruler		" show cursor position
 set number		" show line numbers
@@ -15,8 +15,10 @@ set smartindent 	" smart indenting for coding
 set autoread		" reloads file only if unmodified in vim
 set novisualbell	" stop yelling at me
 set noerrorbells	" i'm serious
-set backspace=indent,eol,start " 'normal' backspace behavior
 set wildignorecase	" ignore case when tab completing paths
+set backspace=indent,eol,start	" 'normal' backspace behavior
+set undodir=~/.vim/undodir	" where to save undo history
+set undofile			" enable persistent undo
 
 " searching
 set incsearch		" search as you type
@@ -55,3 +57,30 @@ try
 catch
 
 endtry
+
+" default position restoration from /etc/vim/vimrc
+" au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" the below is the position restoration stolen from /etc/vim
+" via git for Windows (git-extra/vimrc)
+"
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+    " Set UTF-8 as the default encoding for commit messages
+    autocmd BufReadPre COMMIT_EDITMSG,MERGE_MSG,git-rebase-todo setlocal fileencoding=utf-8
+
+    " Remember the positions in files with some git-specific exceptions"
+    autocmd BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$")
+      \           && &filetype !~# 'commit\|gitrebase'
+      \           && expand("%") !~ "ADD_EDIT.patch"
+      \           && expand("%") !~ "addp-hunk-edit.diff" |
+      \   exe "normal! g`\"" |
+      \ endif
+
+      autocmd BufNewFile,BufRead *.patch set filetype=diff
+
+      autocmd Filetype diff
+      \ highlight WhiteSpaceEOL ctermbg=red |
+      \ match WhiteSpaceEOL /\(^+.*\)\@<=\s\+$/
+endif " has("autocmd")

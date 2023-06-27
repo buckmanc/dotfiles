@@ -1,0 +1,7 @@
+# ignore everything in this directory
+*
+# except this file
+!.gitignore
+
+# this file exists to ensure this directory is preserved as part of the repo
+# vim undodir will not create this folder on its own

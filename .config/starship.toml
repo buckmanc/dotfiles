@@ -1,7 +1,18 @@
+# glyphs in this file chosen for compatibility with JuiceSSH, Mintty, and Windows Terminal
+# if something awful makes its way into this file and breaks your prompt, login while holding CTRL+C to disable loading .bashrc
+
 format = """
+${custom.files}\
+${custom.directories}\
+${custom.df}\
+${custom.random}\
+$line_break\
 $sudo\
+${custom.screen}\
+$jobs\
 $username\
-$hostname \
+$hostname\
+${custom.shlvl} \
 $directory\
 $dotnet\
 $custom\
@@ -15,7 +26,62 @@ $line_break\
 $character\
 """
 
+command_timeout = 1500
 continuation_prompt = '[❯ ](white)' # not working; what's wrong here?
+
+palette = "primary"
+
+# TODO finish implementing this
+[palettes.primary]
+main		= "green"
+git		= "white"
+dev		= "bold blue"
+priority-1	= "white dimmed"
+priority-2	= "#232323"
+
+# used for spoofing a right aligned section
+[fill]
+symbol = " "
+
+[custom.files]
+description = "Show file count."
+command = "find ./ -maxdepth 1 -type f | wc -l"
+symbol = "f"
+format = "[$output$symbol-]($style)"
+#style = "white dimmed"
+style = "priority-2"
+when = true
+
+[custom.directories]
+description = "Show file count."
+command = "find ./ -maxdepth 1 -type d | tail -n +2 | wc -l"
+symbol = "d"
+format = "[$output$symbol-]($style)"
+style = "priority-2"
+when = true
+
+[custom.df]
+description = "Show free space on disk."
+command = 'df -h --output=avail "$PWD" | tail -n 1 | tr "[:upper:]" "[:lower:]"'
+when = true
+shell = ["bash", "--noprofile", "--norc"]
+symbol = ''
+format = "[$output$symbol-]($style)"
+#style = "white dimmed"
+style = "priority-2"
+
+[custom.random]
+description = "Show a random two digit number."
+command = "printf '%02d' `shuf --random-source='/dev/urandom' -n 1 -i 1-10`"
+when = true
+shell = ["bash", "--noprofile", "--norc"]
+symbol = 'r'
+format = "[$output$symbol]($style)"
+#style = "white dimmed"
+style = "priority-2"
+
+# TODO add [custom.bashlinebreak] here
+# so that optional top line can be completely disabled in non-bash shells
 
 [sudo]
 format = '[$symbol]($style)'
@@ -23,23 +89,46 @@ style = 'green'
 symbol = 'sudo'
 disabled = false
 
+[custom.screen]
+description = "Display a symbol if we're in a screen session."
+when = """ test "$STY" """
+shell = ["bash", "--noprofile", "--norc"]
+style = "green"
+symbol = " "
+format = "[$symbol]($style)"
+
+[jobs]
+format = "[\\[$number\\]]($style)"
+style = "green"
+number_threshold = 1
+
+# only using the username module to show root or not by color
 [username]
-format = '[$user]($style)'
+format = '[@]($style)'
 style_user = "green"
 style_root = "bright-red"
-disabled = true
+show_always = true
 
 [hostname]
 style = "green"
-format = "[@$hostname]($style)"
+format = "[$hostname]($style)"
 ssh_only = false
 disabled = false
+
+# display the shell level as an exponent
+[custom.shlvl]
+command = "echo $SHLVL | sed 'y|1234567890|¹²³⁴⁵⁶⁷⁸⁹⁰|'"
+description = "Show the current shell level if greater than one."
+style = "green"
+when = """ test "$SHLVL" != "1" """
+shell = ["bash", "--noprofile", "--norc"]
+format = "[$output]($style)"
 
 [directory]
 style = "green"
 read_only_style = "green"
 read_only = " "
-home_symbol = "ᐰ " # space solves a glyph clipping issue ...sometimes
+home_symbol = "ᐰ"
 truncate_to_repo = false
 truncation_length = 3
 truncation_symbol = '../'
@@ -57,6 +146,7 @@ truncation_symbol = '../'
 "Sounds"	= ""
 "Backups"	= ""
 "Backup"	= ""
+"backup"	= ""
 "Minecraft"	= ""
 "Notes"		= ""
 "to do"		= "✓"
@@ -67,6 +157,7 @@ truncation_symbol = '../'
 "SQL"		= ""
 "Coding"	= ""
 "Scripts"	= "#!"
+".git"		= ""
 "Books"		= ""
 "Windows"	= ""
 
@@ -74,20 +165,42 @@ truncation_symbol = '../'
 format = '[($tfm )]($style)'
 
 [custom.shellscripts]
-# if it's the home dir and bash, backspace over the symbol
+# if it's the home dir and bash, backspace over the symbol and the space
 # this way you still get the symbol in other shells
 symbol = "#!"
 command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008\u0008'; fi'''
+#when = """ test "${HOME,,}" != "${PWD,,}" """
 detect_extensions = ['sh']
 style = "bold blue"
 description = "A symbol indicating if shell scripts are present."
+format = "[$symbol $output]($style)"
+
+[custom.powershell]
+symbol = ">_"
+command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008\u0008'; fi'''
+#when = """ test "${HOME,,}" != "${PWD,,}" """
+detect_extensions = ["ps1","psm1"]
+style = "bold blue"
+description = "A symbol indicating if powershell scripts are present."
+format = "[$symbol $output]($style)"
+
+[custom.batch]
+symbol = ""
+command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008'; fi'''
+#when = """ test "${HOME,,}" != "${PWD,,}" """
+detect_extensions = ["bat"]
+style = "bold blue"
+description = "A symbol indicating if batch files are present."
+format = "[$symbol $output]($style)"
 
 [custom.python]
-symbol = "🐍"
-command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008\u0008'; fi'''
+symbol = ""
+command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008'; fi'''
+#when = """ test "${HOME,,}" != "${PWD,,}" """
 detect_extensions = ["py"]
 style = "bold blue"
 description = "A symbol indicating if python scripts are present."
+format = "[$symbol $output]($style)"
 
 [custom.sql]
 symbol = ""
@@ -109,7 +222,12 @@ style = "white"
 format = "[\\( $hash$tag\\)]($style)"
 style = "white"
 
+[git_state]
+style = "white"
+
 [git_status]
+# the zero width space prints correctly in juicessh
+# but prints as a regular space in windows terminal
 format = "[($conflicted$ahead_behind$stashed$staged)[(*$untracked$modified$renamed$deleted)]()]($style)"
 style = "white"
 untracked	= "​"
@@ -120,9 +238,6 @@ stashed		= "≡"
 #conflicted	= "ﲅ"
 #conflicted	= "󰞇"
 conflicted	= "理"
-
-[git_state]
-style = "white"
 
 [git_metrics]
 added_style = "white dimmed"

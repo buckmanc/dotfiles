@@ -132,9 +132,9 @@ printf "\n"
 
 # long exa
 alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
-alias builderrors="dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file,error num, error message' | cut -c-$COLUMNS | uniq"
+alias builderrors="dotnet clean > /dev/null && dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide '-' | cut -c-\$COLUMNS | uniq"
 # short build errors
-alias sbuilderrors="dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file,error num, error message' --table-hide file | cut -c-$COLUMNS | uniq"
+alias sbuilderrors="dotnet clean > /dev/null && dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide file,'-' | cut -c-\$COLUMNS | uniq"
 
 xindent(){
 
@@ -191,19 +191,23 @@ goodbyemessage()
 	# strip comments
 	messages=$(echo "${messages}" | sed "/^#/d")
 	# pick a random line from the farewells file
-	message=$(echo "${messages}" | shuf -n 1)
+	message=$(echo "${messages}" | shuf --random-source='/dev/urandom' -n 1)
 	# punctuate
 	message=$(echo "${message}" | sed "s/[^[:punct:]]$/&./")
 	# capitalize
 	message="${message^}"
 	# wrap based on screen width
-	message=$(echo "${message}" | fmt -w $(($COLUMNS - 4)))
+	targetWidth=$(($COLUMNS - 4))
+	if [ "$targetWidth" -gt "0" ]
+	then
+		message=$(echo "${message}" | fmt -w "$targetWidth")
+	fi
 
 	if type cowsay >/dev/null 2>&1; then
 		message=$(echo "${message}" | cowsay -n)
 	fi
 
-		message=$(echo "${message}" | center)
+	message=$(echo "${message}" | center)
 
 	if type lolcat >/dev/null 2>&1; then
 		message=$(echo "${message}" | lolcat --force)

@@ -29,6 +29,7 @@
 		}; f;"
 [core]
 	editor = vim
+	#attributesfile = ~/.gitattributes # working, but gitignore filter causes one hell of a slowdown in certain environments
 [push]
 	autoSetupRemote = true
 [gc]
@@ -38,4 +39,6 @@
 [filter "notepad++ignore"]
 	clean = ~/.config/Notepad++/git_clean_filter.sh
 [filter "gitignore"]
-	clean = "sed '/#gitignore$/d'"
+	clean = "sed -b '/#gitignore$/d'"
+[help]
+	autocorrect = 20
