@@ -27,6 +27,8 @@
 		done;\
 		git checkout $currentbranch;\
 		}; f;"
+	# allows for neat tricks like cd `git root`
+	root=rev-parse --show-toplevel
 [core]
 	editor = vim
 	#attributesfile = ~/.gitattributes # working, but gitignore filter causes one hell of a slowdown in certain environments

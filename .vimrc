@@ -43,8 +43,12 @@ augroup FileTypeSpecificAutocommands
 	autocmd FileType cs setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
 augroup end
 
-" wrapping in a try catch as plugins are completely broken on some systems
+" wrapping in a try catch as plugins are completely broken on certain platforms
 try
+	" explicitly source plug
+	" as auto plugin loading is broken on certain platforms
+	source ~/.vim/plug.vim
+
 	" github.com/junegunn/vim-plug
 	" run :PlugInstall / :PlugClean after changing plugin lists
 	" below are github vim plugin projects
@@ -52,6 +56,7 @@ try
 
 	Plug 'tpope/vim-speeddating'	"mods ctrl+x and ctrl+a to work with dates
 	Plug 'tpope/vim-eunuch'		"simple file operations, namely :Delete, which is useful when reviewing a large number of files
+	Plug 'tomtom/tcomment_vim'	" comment shortcuts, namely gcc
 
 	call plug#end()
 catch
