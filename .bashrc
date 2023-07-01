@@ -77,10 +77,24 @@ function set_win_title(){
 		fi
 	fi
 
+	# neat idea for pulling directly from starship to support substitutions
+	# changing system fonts to a nerd font to get glyph support in the title bar is too painful though
+	#
+	# text="$(starship module directory)"
+	# text=$(basename "${text}")
+
+	# # strip off color codes as they interfere with window titling
+	# if type ansi2txt >/dev/null 2>&1
+	# then
+	# text="$(echo ${text} | ansi2txt)"
+	# else
+	# 	text="$(echo ${text} | sed -e "s/\x1b\[.\{1,5\}m//g")"
+	# fi
+
 	# only display hostname on certain platforms
 	if [[ "$USER" != *"."* ]]
 	then
-		text="${HOMENAME} - ${text}"
+		text="${HOSTNAME} - ${text}"
 	fi
 
 	echo -ne "\033]0;${text}\007"

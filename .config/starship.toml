@@ -53,7 +53,7 @@ style = "priority-2"
 when = true
 
 [custom.directories]
-description = "Show file count."
+description = "Show directory count."
 command = "find ./ -maxdepth 1 -type d | tail -n +2 | wc -l"
 symbol = "d"
 format = "[$output$symbol-]($style)"
@@ -137,6 +137,7 @@ truncation_symbol = '../'
 "Spotify"	= ""
 "config"	= ""
 "Dropbox"	= ""
+"My Documents"	= ""
 "Documents"	= ""
 "Downloads"	= ""
 "Uploads"	= ""
@@ -209,9 +210,12 @@ style = "bold blue"
 description = "A symbol indicating if SQL files are present."
 
 [character]
-success_symbol = "[留❯](white)"
-error_symbol   = "[六❯](red)"
-vimcmd_symbol  = "[留❯](white)"
+success_symbol = "[ ❯](white)"
+error_symbol   = "[ ❯](red)"
+vimcmd_symbol  = "[ ❯](white)"
+#success_symbol = "[留❯](white)"
+#error_symbol   = "[六❯](red)"
+#vimcmd_symbol  = "[留❯](white)"
 
 [git_branch]
 format = "[\\($symbol$branch(:$remote_branch)\\)]($style)"

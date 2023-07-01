@@ -37,8 +37,14 @@ open() {
 		# echo $i
 
 		absolutepath=$(readlink -f "$i")
-		foldername=$(dirname -- "$absolutepath")
-		filename=$(basename -- "$i")
+		if [[ -f "$absolutepath" ]]
+		then
+			foldername=$(dirname -- "$absolutepath")
+			filename=$(basename -- "$i")
+		else
+			foldername="$absolutepath"
+			filename="."
+		fi
 
 		# echo $filename
 
@@ -294,7 +300,9 @@ winterm() {
 		return -1
 	fi
 
-	wt nt --startingDirectory "$1"
+	path=$(readlink -f "$1")
+
+	wt nt --startingDirectory "$path"
 }
 # start wttr.in/:bash.function
 # If you source this file, it will set WTTR_PARAMS as well as show weather.
@@ -327,3 +335,131 @@ wttr() {
 }
 
 # end wttr.in/:bash.function
+
+# position of moonphase glyphs correspond to the day of the moon
+export MOONPHASE_NERDFONT_GLYPHS=""
+
+nerdmoon(){
+	# moon phases in nerdfont glyphs
+
+	moonday=$(curl -s "wttr.in/?format=%M")
+
+	# zero base our moonday
+	moonday=$(($moonday-1))
+
+	echo ${MOONPHASE_NERDFONT_GLYPHS:$moonday:1}
+
+}
+
+# schedule me in cron
+# or you can call immediately after definition to update when loading bash
+nerdmoon_to_starship(){
+
+	glyph="$(nerdmoon)"
+
+	# replace any glyph from our chosen set of moon phase glyphs with the current moon phase glyph
+	sed -i "s/[${MOONPHASE_NERDFONT_GLYPHS}]/${glyph}/g" ~/.config/starship.toml
+}
+# nerdmoon_to_starship
+
+gutenbook(){
+
+# TODO add options
+# https://stackoverflow.com/questions/16483119/an-example-of-how-to-use-getopts-in-bash
+#
+# -v open file in vim (allows for saving progress if you open the file directly)
+# -l list matches from the catalog
+# -w unwrap hardwrap (dump any \n that isn't followed by another one)
+# -p print path to cached file
+
+	if [ -z "$1" ]
+	then
+		echo "please provide a book string to search for. regex works fine"
+		return 1
+	fi
+
+	# caching a lot as gutenberg blocks aggressively
+
+	cacheDir="$HOME/.cache/gutenbook"
+	csvPath="${cacheDir}/gutenberg_catalog.csv"
+	catalogURI="https://www.gutenberg.org/cache/epub/feeds/pg_catalog.csv"
+
+	# download the csv catalog if it's newer or not yet saved
+	if [ ! -f "$csvPath" ]
+	then
+		curl --create-dirs --location --compressed --max-time 30 --silent -o "${csvPath}" "${catalogURI}"
+	else
+		curl --create-dirs --location --compressed --max-time 30 --silent -o "${csvPath}" -z "${csvPath}" "${catalogURI}"
+	fi
+
+	# read the file, ignoring anything that isn't formatted correctly and labelled "text"
+	# as of now this is only 1) the "Sound" category and 2) CSV error lines
+	# the perl regex replaces new lines that are in a field with spaces
+	csvText=$(cat "$csvPath" | perl -00pe 's/\r?\n(\D)/ \1/g' | grep -iP '^\d+,Text,')
+
+	# only nab the first match
+	bookID=$(echo "${csvText}" | grep -iP "$1" | grep -iPo "^\d+" | head -n 1)
+	bookPath="${cacheDir}/${bookID}.txt"
+	bookURI="https://www.gutenberg.org/ebooks/${bookID}.txt.utf-8"
+
+	if [ -z "${bookID}" ]
+	then
+		echo "could not find $1"
+		return 1
+	fi
+
+	# ( set -o posix ; set ) | xgrep book
+
+	# download the book if it's not yet saved
+	if [ ! -f "${bookPath}" ]
+	then
+		# check for http errors first
+		httpStatus=$(curl -ILs "${bookURI}" -w "%{http_code}" | tail -n 1)
+		if [[ "${httpStatus}" == "404" ]]
+		then
+			echo "bad book url"
+			return 1
+		elif [[ "${httpStatus}" != "200" ]]
+		then
+			echo "there was an http problem while fetching the book"
+			return 1
+		fi
+
+		# grab the book
+		bookText=$(curl --create-dirs --location --compressed --silent --max-time 30 "${bookURI}")
+
+		startLine=$(echo "${bookText}" | grep -Pin -m1 '\s*?\*\*\*\s*?start( \w+)?( \w+)? project gutenberg' | cut -f1 -d:)
+		if [ -n "${startLine}" ]
+		then
+			# echo "startLine: ${startLine}"
+    			startLine=$((startLine + 1))
+			bookText=$(echo "${bookText}" | tail -n +$startLine)
+		fi
+
+		endLine=$(echo "${bookText}" | grep -Pin -m1 '\s*?\*\*\*\s*?end( \w+)?( \w+)? project gutenberg' | cut -f1 -d:)
+		if [ -n "${endLine}" ]
+		then
+			# echo "endLine: ${startLine}"
+			endLine=$((endLine - 1))
+			bookText=$(echo "${bookText}" | head -n +$endLine)
+		fi
+		
+		# don't write that book on failure
+		if [ -z "${bookText}" ]
+		then
+			echo "something went wrong"
+			return 1
+		elif [[ "${bookText}" =~ ^\<\!DOCTYPE ]]
+		then
+			echo "got a web page instead of a book"
+			return 1
+		fi
+
+		echo "${bookText}" > "${bookPath}"
+	fi
+
+	# serve up the book!
+	cat "${bookPath}"
+
+}
+alias bookenberg='gutenbook'
