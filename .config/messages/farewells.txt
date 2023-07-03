@@ -12,6 +12,7 @@ farewell
 gourdspood
 speedgod
 don't take any wooden nickels
+You don't have to go home but you can't stay here.
 #rosalina be praised
 rosalina's light shine upon thee
 may rosalina's lumas guide thee
@@ -351,3 +352,6 @@ What? Oh, goodbye.
 Yes, yes... goodbye.
 You've got the heart of Mara herself
 Ysmir's blessing on you.
+#shakespeare
+Parting is such sweet sorrow.
+Good night, good night! Parting is such sweet sorrow, That I shall say good night till it be morrow.

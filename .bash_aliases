@@ -342,12 +342,20 @@ export MOONPHASE_NERDFONT_GLYPHS="�
 nerdmoon(){
 	# moon phases in nerdfont glyphs
 
-	moonday=$(curl -s "wttr.in/?format=%M")
+	url="wttr.in/?format=%M"
+	moonday=$(curl -s "${url}")
+
+	logPath="${HOME}/.logs/nerdmoon_to_$(date -Iseconds).txt"
+	echo "url:      ${url}" >> "${logPath}"
+	echo "response: ${moonday}" >> "${logPath}"
 
 	# zero base our moonday
 	moonday=$(($moonday-1))
 
-	echo ${MOONPHASE_NERDFONT_GLYPHS:$moonday:1}
+	output=${MOONPHASE_NERDFONT_GLYPHS:$moonday:1}
+
+	echo "${output}"
+	echo "output:   ${output}" >> "${logPath}"
 
 }
 
@@ -364,15 +372,54 @@ nerdmoon_to_starship(){
 
 gutenbook(){
 
-# TODO add options
-# https://stackoverflow.com/questions/16483119/an-example-of-how-to-use-getopts-in-bash
-#
-# -v open file in vim (allows for saving progress if you open the file directly)
-# -l list matches from the catalog
-# -w unwrap hardwrap (dump any \n that isn't followed by another one)
-# -p print path to cached file
+	# options
+	# an oldie but a voldie
+	# -v open file in vim (allows for saving progress if you open the file directly)
+	# -o print the og, unaltered book
+	# -l list matches from the catalog
+	# -d list debug vars; urls, ids, paths
 
-	if [ -z "$1" ]
+	# TODO -p to print path
+	# TODO -h
+	# TODO -e to dl epub?
+
+	optVim=0
+	optOG=0
+	optList=0
+	optDebug=0
+	query=''
+
+	for i in "$@"; do
+		if [[ "$i" =~ ^-.*v ]]
+		then
+			optVim=1
+		fi
+
+		if [[ "$i" =~ ^-.*o ]]
+		then
+			optOG=1
+
+		fi
+
+		if [[ "$i" =~ ^-.*l ]]
+		then
+			optList=1
+		fi
+
+		if [[ "$i" =~ ^-.*d ]]
+		then
+			optDebug=1
+		fi
+
+		if [[ "$i" =~ ^[^-] ]]
+		then
+			query="$i"
+		fi
+	done
+
+	# printallvars | grep ^opt
+
+	if [ -z "${query}" ]
 	then
 		echo "please provide a book string to search for. regex works fine"
 		return 1
@@ -383,6 +430,11 @@ gutenbook(){
 	cacheDir="$HOME/.cache/gutenbook"
 	csvPath="${cacheDir}/gutenberg_catalog.csv"
 	catalogURI="https://www.gutenberg.org/cache/epub/feeds/pg_catalog.csv"
+
+	# if [ "${optDebug}" ]
+	# then
+	# 	echo
+	# fi
 
 	# download the csv catalog if it's newer or not yet saved
 	if [ ! -f "$csvPath" ]
@@ -397,14 +449,23 @@ gutenbook(){
 	# the perl regex replaces new lines that are in a field with spaces
 	csvText=$(cat "$csvPath" | perl -00pe 's/\r?\n(\D)/ \1/g' | grep -iP '^\d+,Text,')
 
+	# list matches, highlighting ID and matches
+	# TODO got some duplicate code here
+	if [ "${optList}" == 1 ]
+	then
+		echo "${csvText}" | grep -iP "${query}" | grep -iP --color "^\d+|${query}"
+		return 0
+	fi
+
 	# only nab the first match
-	bookID=$(echo "${csvText}" | grep -iP "$1" | grep -iPo "^\d+" | head -n 1)
+	bookID=$(echo "${csvText}" | grep -iP "${query}" | grep -iPo "^\d+" | head -n 1)
 	bookPath="${cacheDir}/${bookID}.txt"
+	bookOgPath="${cacheDir}/${bookID}_og.txt"
 	bookURI="https://www.gutenberg.org/ebooks/${bookID}.txt.utf-8"
 
 	if [ -z "${bookID}" ]
 	then
-		echo "could not find $1"
+		echo "could not find ${query}"
 		return 1
 	fi
 
@@ -421,12 +482,25 @@ gutenbook(){
 			return 1
 		elif [[ "${httpStatus}" != "200" ]]
 		then
-			echo "there was an http problem while fetching the book"
+			echo "there was an http problem while fetching the book. http status: ${httpStatus}"
 			return 1
 		fi
 
 		# grab the book
 		bookText=$(curl --create-dirs --location --compressed --silent --max-time 30 "${bookURI}")
+
+		# don't write that book on failure
+		if [ -z "${bookText}" ]
+		then
+			echo "something went wrong"
+			return 1
+		elif [[ "${bookText}" =~ ^\<\!DOCTYPE ]]
+		then
+			echo "got a web page instead of a book"
+			return 1
+		fi
+
+		echo "${bookText}" > "${bookOgPath}"
 
 		startLine=$(echo "${bookText}" | grep -Pin -m1 '\s*?\*\*\*\s*?start( \w+)?( \w+)? project gutenberg' | cut -f1 -d:)
 		if [ -n "${startLine}" ]
@@ -443,23 +517,51 @@ gutenbook(){
 			endLine=$((endLine - 1))
 			bookText=$(echo "${bookText}" | head -n +$endLine)
 		fi
-		
-		# don't write that book on failure
-		if [ -z "${bookText}" ]
-		then
-			echo "something went wrong"
-			return 1
-		elif [[ "${bookText}" =~ ^\<\!DOCTYPE ]]
-		then
-			echo "got a web page instead of a book"
-			return 1
-		fi
 
+		# unwrap the hardwrapping
+		# replace solitary newlines that aren't followed by a space
+		bookText=$(echo "${bookText}" | dos2unix | perl -00pe 's/(?<!\n)\n(?![\n\s])/ /g')
+		
 		echo "${bookText}" > "${bookPath}"
 	fi
 
-	# serve up the book!
-	cat "${bookPath}"
+	if [ "${optOG}" == 1 ]
+	then
+		outPath="${bookOgPath}"
+	else
+		outPath="${bookPath}"
+	fi
 
+	if [ "${optDebug}" == 1 ]
+	then
+		echo -n "book stats: "
+		cat "${outPath}" | wc
+	fi
+
+	# serve up the book!
+	if [ "${optVim}" == 1 ]
+	then
+		vim "${outPath}" 
+	elif [ "${optDebug}" == 0 ]
+	then
+		cat "${outPath}" 
+	elif [ "${optPrintPath}" == 0 ]
+	then
+		echo "${outPath}" 
+	fi
+	
 }
 alias bookenberg='gutenbook'
+
+printallvars(){
+	set -o posix; set | sort
+}
+
+squish(){
+	# add pipe args to the list of regular args
+	args="$@"
+	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
+
+	echo "$@" | perl -00pe 's/[\r\n\s]+/ /g' | perl -00pe 's/^ //g' | perl -00pe 's/ $//g'
+	echo # end with a new line
+}
