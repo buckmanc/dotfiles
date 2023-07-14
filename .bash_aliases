@@ -14,10 +14,18 @@ mkdircd() {
 }
 
 open() {
-	# TODO vim -p these on other platforms
-	if [ $OSTYPE != 'msys' ]
+	if [ -n "$SSH_CLIENT" ] && ( type vim >/dev/null 2>&1)
 	then
-		echo 'this function is only supported on windows'
+		# TODO make vim open in tabs with -p instead of making multiple calls
+		openy=vim
+	elif ( type explorer >/dev/null 2>&1)
+	then
+		openy=explorer
+	elif ( type xdg-open >/dev/null 2>&1)
+	then
+		openy=xdg-open
+	else
+		echo 'cannot find a program to open with'
 		return -1
 	fi
 
@@ -48,7 +56,7 @@ open() {
 
 		# echo $filename
 
-		(cd "$foldername" && explorer "$filename") # parenthesis so it doesn't change the user's directory
+		(cd "$foldername" && $openy "$filename") # parenthesis so it doesn't change the user's directory
 	done
 
 	# return success
@@ -138,9 +146,9 @@ printf "\n"
 
 # long exa
 alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
-alias builderrors="dotnet clean > /dev/null && dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide '-' | cut -c-\$COLUMNS | uniq"
+alias builderrors="dotnet clean > /dev/null ;  dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide '-' | cut -c-\$COLUMNS | uniq"
 # short build errors
-alias sbuilderrors="dotnet clean > /dev/null && dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide file,'-' | cut -c-\$COLUMNS | uniq"
+alias sbuilderrors="dotnet clean > /dev/null ;  dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide file,'-' | cut -c-\$COLUMNS | uniq"
 
 xindent(){
 
@@ -232,6 +240,17 @@ shutdown() {
 
 	if [ $1 == 'now' ] && [ -z "$3" ]
 	then
+		
+		#confirm if the user REALLY WANTS to shutdown this machine
+		if [ -n "$SSH_CLIENT" ] && [ -z "$2" ]
+		then
+			read -p "Are you sure you want to shutdown this remote machine?" -n 1 -r
+			if [[ $REPLY =~ ^[^Yy]$ ]]
+			then
+				return 0
+			fi
+		fi
+
 		if [ $OSTYPE == 'msys' ] && [ "$2" = "-r" ]
 		then
 			clear
@@ -248,26 +267,20 @@ shutdown() {
 
 			`which shutdown` -s -hybrid -f -t 0
 
-		elif [ -n "$SSH_CLIENT" ] && [ -z "$2" ]
+		elif [ $OSTYPE == 'linux-gnu' ] && [ -z "$2" ]
 		then
 
-			#confirm if the user REALLY WANTS to shutdown this machine
-			#is not called if a user does "sudo shutdown..."
-			read -p "Are you sure you want to shutdown this remote machine?" -n 1 -r
-			if [[ $REPLY =~ ^[Yy]$ ]]
+			sudo echo
+			if [ $? -eq 0 ]
 			then
-				sudo echo
-				if [ $? -eq 0 ]
-				then
 
-					clear
-					goodbyemessage
-					sleep $cowtime
+				clear
+				goodbyemessage
+				sleep $cowtime
 
-					sudo `which shutdown` $@
-				fi
+				sudo `which shutdown` $@
 			fi
-		elif [ -n "$SSH_CLIENT" ] && [ "$2" == "-r" ]
+		elif [ $OSTYPE == 'linux-gnu' ] && [ "$2" == "-r" ]
 		then
 			sudo echo
 			if [ $? -eq 0 ]
@@ -348,6 +361,19 @@ nerdmoon(){
 	logPath="${HOME}/.logs/nerdmoon_to_$(date -Iseconds).txt"
 	echo "url:      ${url}" >> "${logPath}"
 	echo "response: ${moonday}" >> "${logPath}"
+
+	# this should really be a loop but alas, here we are
+	if [ -z "${moonday}" ]
+	then
+		sleep 10s
+		moonday=$(curl -s "${url}")
+		echo "response: ${moonday}" >> "${logPath}"
+	fi
+
+	if [ -z "${moonday}" ]
+	then
+		return 1
+	fi
 
 	# zero base our moonday
 	moonday=$(($moonday-1))
@@ -541,7 +567,7 @@ gutenbook(){
 	# serve up the book!
 	if [ "${optVim}" == 1 ]
 	then
-		vim "${outPath}" 
+		vim "${outPath}" +"set nospell"
 	elif [ "${optDebug}" == 0 ]
 	then
 		cat "${outPath}" 
