@@ -27,17 +27,28 @@ $character\
 """
 
 command_timeout = 1500
-continuation_prompt = '[❯ ](white)' # not working; what's wrong here?
+continuation_prompt = '[❯ ](git)' # not working; what's wrong here?
 
 palette = "primary"
 
-# TODO finish implementing this
+# uses colors from your theme
+# designed for synth-midnight-dark base16
 [palettes.primary]
 main		= "green"
 git		= "white"
 dev		= "bold blue"
+error		= "red"
 priority-1	= "white dimmed"
-priority-2	= "#232323"
+priority-2	= "#232323"	# custom greyish
+
+# hardcoded synth-midnight-dark base16 colors if desired
+[palettes.synth-midnight-dark]
+main		= "#06EA61"	# green
+git		= "#DFDBDF"	# white
+dev		= "#03AEFF"	# bold blue
+error		= "#B53B50"	# red
+priority-1	= "#6F6D6F"	# white dimmed
+priority-2	= "#232323"	# custom greyish
 
 # used for spoofing a right aligned section
 [fill]
@@ -48,7 +59,6 @@ description = "Show file count."
 command = "find ./ -maxdepth 1 -type f | wc -l"
 symbol = "f"
 format = "[$output$symbol-]($style)"
-#style = "white dimmed"
 style = "priority-2"
 when = true
 
@@ -67,7 +77,6 @@ when = true
 shell = ["bash", "--noprofile", "--norc"]
 symbol = ''
 format = "[$output$symbol-]($style)"
-#style = "white dimmed"
 style = "priority-2"
 
 [custom.random]
@@ -77,7 +86,6 @@ when = true
 shell = ["bash", "--noprofile", "--norc"]
 symbol = 'r'
 format = "[$output$symbol]($style)"
-#style = "white dimmed"
 style = "priority-2"
 
 # TODO add [custom.bashlinebreak] here
@@ -85,7 +93,7 @@ style = "priority-2"
 
 [sudo]
 format = '[$symbol]($style)'
-style = 'green'
+style = "main"
 symbol = 'sudo'
 disabled = false
 
@@ -93,24 +101,24 @@ disabled = false
 description = "Display a symbol if we're in a screen session."
 when = """ test "$STY" """
 shell = ["bash", "--noprofile", "--norc"]
-style = "green"
+style = "main"
 symbol = " "
 format = "[$symbol]($style)"
 
 [jobs]
 format = "[\\[$number\\]]($style)"
-style = "green"
+style = "main"
 number_threshold = 1
 
 # only using the username module to show root or not by color
 [username]
 format = '[@]($style)'
-style_user = "green"
-style_root = "bright-red"
+style_user = "main"
+style_root = "error"
 show_always = true
 
 [hostname]
-style = "green"
+style = "main"
 format = "[$hostname]($style)"
 ssh_only = false
 disabled = false
@@ -119,14 +127,14 @@ disabled = false
 [custom.shlvl]
 command = "echo $SHLVL | sed 'y|1234567890|¹²³⁴⁵⁶⁷⁸⁹⁰|'"
 description = "Show the current shell level if greater than one."
-style = "green"
+style = "main"
 when = """ test "$SHLVL" != "1" """
 shell = ["bash", "--noprofile", "--norc"]
 format = "[$output]($style)"
 
 [directory]
-style = "green"
-read_only_style = "green"
+style = "main"
+read_only_style = "main"
 read_only = " "
 home_symbol = "ᐰ"
 truncate_to_repo = false
@@ -172,7 +180,7 @@ symbol = "#!"
 command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008\u0008'; fi'''
 #when = """ test "${HOME,,}" != "${PWD,,}" """
 detect_extensions = ['sh']
-style = "bold blue"
+style = "dev"
 description = "A symbol indicating if shell scripts are present."
 format = "[$symbol $output]($style)"
 
@@ -181,7 +189,7 @@ symbol = ">_"
 command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008\u0008'; fi'''
 #when = """ test "${HOME,,}" != "${PWD,,}" """
 detect_extensions = ["ps1","psm1"]
-style = "bold blue"
+style = "dev"
 description = "A symbol indicating if powershell scripts are present."
 format = "[$symbol $output]($style)"
 
@@ -190,7 +198,7 @@ symbol = ""
 command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008'; fi'''
 #when = """ test "${HOME,,}" != "${PWD,,}" """
 detect_extensions = ["bat"]
-style = "bold blue"
+style = "dev"
 description = "A symbol indicating if batch files are present."
 format = "[$symbol $output]($style)"
 
@@ -199,41 +207,41 @@ symbol = ""
 command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008'; fi'''
 #when = """ test "${HOME,,}" != "${PWD,,}" """
 detect_extensions = ["py"]
-style = "bold blue"
+style = "dev"
 description = "A symbol indicating if python scripts are present."
 format = "[$symbol $output]($style)"
 
 [custom.sql]
 symbol = ""
 detect_extensions = ["sql"]
-style = "bold blue"
+style = "dev"
 description = "A symbol indicating if SQL files are present."
 
 [character]
-success_symbol = "[ ❯](white)"
-error_symbol   = "[ ❯](red)"
-vimcmd_symbol  = "[ ❯](white)"
-#success_symbol = "[留❯](white)"
-#error_symbol   = "[六❯](red)"
-#vimcmd_symbol  = "[留❯](white)"
+success_symbol = "[ ❯](git)"
+error_symbol   = "[ ❯](error)"
+vimcmd_symbol  = "[ ❯](git)"
+#success_symbol = "[留❯](git)"
+#error_symbol   = "[六❯](error)"
+#vimcmd_symbol  = "[留❯](git)"
 
 [git_branch]
 format = "[\\($symbol$branch(:$remote_branch)\\)]($style)"
-style = "white"
+style = "git"
 
 # this is only the backup for git_branch in a detached head state
 [git_commit]
 format = "[\\( $hash$tag\\)]($style)"
-style = "white"
+style = "git"
 
 [git_state]
-style = "white"
+style = "git"
 
 [git_status]
 # the zero width space prints correctly in juicessh
 # but prints as a regular space in windows terminal
 format = "[($conflicted$ahead_behind$stashed$staged)[(*$untracked$modified$renamed$deleted)]()]($style)"
-style = "white"
+style = "git"
 untracked	= "​"
 modified	= "​"
 renamed		= "​"
@@ -244,11 +252,11 @@ stashed		= "≡"
 conflicted	= "理"
 
 [git_metrics]
-added_style = "white dimmed"
-deleted_style = "white dimmed"
+added_style = "priority-1"
+deleted_style = "priority-1"
 format = '( [+$added]($added_style))( [-$deleted]($deleted_style))'
 disabled = true
 
 [cmd_duration]
 format = "[ $duration]($style)"
-style = "white dimmed"
+style = "priority-1"
