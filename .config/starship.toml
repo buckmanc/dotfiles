@@ -6,7 +6,7 @@ ${custom.files}\
 ${custom.directories}\
 ${custom.df}\
 ${custom.random}\
-$line_break\
+${custom.bash_line_break}\
 $sudo\
 ${custom.screen}\
 $jobs\
@@ -58,7 +58,7 @@ symbol = " "
 description = "Show file count."
 command = "find ./ -maxdepth 1 -type f | wc -l"
 symbol = "f"
-format = "[$output$symbol-]($style)"
+format = "[($output$symbol-)]($style)"
 style = "priority-2"
 when = true
 
@@ -66,7 +66,7 @@ when = true
 description = "Show directory count."
 command = "find ./ -maxdepth 1 -type d | tail -n +2 | wc -l"
 symbol = "d"
-format = "[$output$symbol-]($style)"
+format = "[($output$symbol-)]($style)"
 style = "priority-2"
 when = true
 
@@ -76,7 +76,7 @@ command = 'df -h --output=avail "$PWD" | tail -n 1 | tr "[:upper:]" "[:lower:]"'
 when = true
 shell = ["bash", "--noprofile", "--norc"]
 symbol = ''
-format = "[$output$symbol-]($style)"
+format = "[($output$symbol-)]($style)"
 style = "priority-2"
 
 [custom.random]
@@ -85,11 +85,16 @@ command = "printf '%02d' `shuf --random-source='/dev/urandom' -n 1 -i 1-10`"
 when = true
 shell = ["bash", "--noprofile", "--norc"]
 symbol = 'r'
-format = "[$output$symbol]($style)"
+format = "[($output$symbol)]($style)"
 style = "priority-2"
 
-# TODO add [custom.bashlinebreak] here
-# so that optional top line can be completely disabled in non-bash shells
+# bash-specific line break
+# so that weird top line will be ignored in non-bash shells
+[custom.bash_line_break]
+symbol = '''
+
+'''
+when = """ test true """
 
 [sudo]
 format = '[$symbol]($style)'

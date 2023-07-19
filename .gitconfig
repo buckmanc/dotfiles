@@ -42,5 +42,8 @@
 	clean = ~/.config/Notepad++/git_clean_filter.sh
 [filter "gitignore"]
 	clean = "sed -b '/#gitignore$/d'"
+[filter "starship"]
+	# standardize nerdfont moon glyphs and support #gitignore
+	clean = "sed -b -e 's/[]//g' -e '/#gitignore$/d'"
 [help]
 	autocorrect = 20

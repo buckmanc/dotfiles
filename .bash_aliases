@@ -149,6 +149,8 @@ alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
 alias builderrors="dotnet clean > /dev/null ;  dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide '-' | cut -c-\$COLUMNS | uniq"
 # short build errors
 alias sbuilderrors="dotnet clean > /dev/null ;  dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide file,'-' | cut -c-\$COLUMNS | uniq"
+# long build errors
+alias lbuilderrors="dotnet clean > /dev/null ;  dotnet build | sort | uniq | grep -iP 'error|warning'"
 
 xindent(){
 
@@ -265,7 +267,8 @@ shutdown() {
 			goodbyemessage
 			sleep $cowtime
 
-			`which shutdown` -s -hybrid -f -t 0
+			# -hybrid not supported on some platforms
+			`which shutdown` -s -hybrid -f -t 0 || `which shutdown` -s -f -t 0
 
 		elif [ $OSTYPE == 'linux-gnu' ] && [ -z "$2" ]
 		then
@@ -348,6 +351,20 @@ wttr() {
 }
 
 # end wttr.in/:bash.function
+
+xwttr(){
+
+	if [ $# -eq 0 ]
+	then
+		wttr '' 'format="+%c+%t"'
+	elif [ "$1" = "moon" ]
+	then
+		wttr "$1"
+	else
+		wttr '' $@
+	fi
+}
+
 
 # position of moonphase glyphs correspond to the day of the moon
 export MOONPHASE_NERDFONT_GLYPHS=""
@@ -435,6 +452,11 @@ gutenbook(){
 		if [[ "$i" =~ ^-.*d ]]
 		then
 			optDebug=1
+		fi
+
+		if [[ "$i" =~ ^-.*p ]]
+		then
+			optPrintPath=1
 		fi
 
 		if [[ "$i" =~ ^[^-] ]]
@@ -568,12 +590,12 @@ gutenbook(){
 	if [ "${optVim}" == 1 ]
 	then
 		vim "${outPath}" +"set nospell"
+	elif [ "${optPrintPath}" == 1 ]
+	then
+		echo "${outPath}" 
 	elif [ "${optDebug}" == 0 ]
 	then
 		cat "${outPath}" 
-	elif [ "${optPrintPath}" == 0 ]
-	then
-		echo "${outPath}" 
 	fi
 	
 }

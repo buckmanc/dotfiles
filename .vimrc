@@ -1,4 +1,3 @@
-
 " presentation
 set background=dark	" better colors for dark themes
 syntax on		" syntax highilghting
@@ -6,8 +5,9 @@ set ruler		" show cursor position
 set number		" show line numbers
 set showmatch		" bracket matching
 set wildmenu		" command line tab completion
-set breakindent		" visual indenting 
+set breakindent		" visual indenting
 set linebreak		" do not visually break lines in the middle of words
+set t_Co=256		" no really we have colors here (for airline on certain platforms)
 
 " behaviour
 set autoindent		" copy indenting from current line
@@ -54,9 +54,18 @@ try
 	" below are github vim plugin projects
 	call plug#begin('~/.vim/plugged')
 
-	Plug 'tpope/vim-speeddating'	"mods ctrl+x and ctrl+a to work with dates
-	Plug 'tpope/vim-eunuch'		"simple file operations, namely :Delete, which is useful when reviewing a large number of files
+	Plug 'tpope/vim-speeddating'	" mods ctrl+x and ctrl+a to work with dates
+	Plug 'tpope/vim-eunuch'		" simple file operations, namely :Delete, which is useful when reviewing a large number of files
 	Plug 'tomtom/tcomment_vim'	" comment shortcuts, namely gcc
+
+	" fancy status line
+	Plug 'vim-airline/vim-airline'
+	let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+
+	" git line status in the gutter
+	Plug 'airblade/vim-gitgutter'
+	highlight! link SignColumn LineNr " match the background of the number column
+	let g:gitgutter_diff_args = '-w'  " ignore whitespace changes
 
 	call plug#end()
 catch

@@ -104,6 +104,7 @@ function set_win_title(){
 	echo -ne "\033]0;${text}\007"
 }
 starship_precmd_user_func="set_win_title"
+STARSHIP_LOG=error # suppress warnings
 
 if type starship >/dev/null 2>&1; then
 	eval "$(starship init bash)"
