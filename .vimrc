@@ -60,12 +60,20 @@ try
 
 	" fancy status line
 	Plug 'vim-airline/vim-airline'
-	let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+	Plug 'vim-airline/vim-airline-themes'
+	let g:airline_theme='simple' " works well enough with differing terminal themes
+	let g:airline_powerline_fonts = 1
+	" let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+	let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 	" git line status in the gutter
 	Plug 'airblade/vim-gitgutter'
 	highlight! link SignColumn LineNr " match the background of the number column
 	let g:gitgutter_diff_args = '-w'  " ignore whitespace changes
+
+	" using for improved markdown syntax highlighting
+	Plug 'preservim/vim-markdown'
+	let g:vim_markdown_folding_disabled = 1
 
 	call plug#end()
 catch

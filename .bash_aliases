@@ -6,7 +6,35 @@ alias xtree='tree -fi | grep -i --color'
 alias xgrep='grep -i --color'
 alias xhistory='history | cut -c 8- | grep -ivE  ^x?history | grep -i --color'
 alias gwap='git diff -w --no-color | git apply --cached --ignore-whitespace && git checkout -- . && git reset && git add -p'
-alias screeny='screen -DRRqS screeny_weeny -L'
+# alias screeny='screen -DRRqS screeny_weeny -L'
+screeny() {
+	name=$1
+	if [ -z "$name" ]
+	then
+		name="screeny_weeny"
+	fi
+
+	if [ -z "$2" ]
+	then
+		screen -DRRqS "$name" -L
+	fi
+}
+ 
+if [ -n /usr/share/bash-completion/completions/screen ]
+then
+	source /usr/share/bash-completion/completions/screen
+fi
+# https://superuser.com/a/947240
+function _complete_screeny() {
+	local does_screen_exist=$(type -t _screen_sessions)
+	local cur=$2 # Needed by _screen_sessions
+	if [[ "function" = "${does_screen_exist}" ]]; then
+		# _screen_sessions "Detached"
+		_screen_sessions
+	fi
+}
+export -f _complete_screeny
+complete -F _complete_screeny -o default screeny
 
 mkdircd() {
 	mkdir "$1"
@@ -17,6 +45,8 @@ open() {
 	if [ -n "$SSH_CLIENT" ] && ( type vim >/dev/null 2>&1)
 	then
 		# TODO make vim open in tabs with -p instead of making multiple calls
+		# try adding all found paths to a var
+		# then running that var through xargs -o to openy program
 		openy=vim
 	elif ( type explorer >/dev/null 2>&1)
 	then
@@ -33,6 +63,8 @@ open() {
 	args="$@"
 	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
 
+	log=()
+
 	# iterate over args
 	for i in "$@"
 	do
@@ -45,18 +77,39 @@ open() {
 		# echo $i
 
 		absolutepath=$(readlink -f "$i")
+
+		# if the file doesn't exist try again removing everything after :
+		# makes this function play nice with grep results
+		if [[ ! -f "${absolutepath}" ]]
+		then
+			absolutepath=$(echo "${absolutepath}" | grep -iPo '^.[2][^:]+')
+		fi
+
+		# skip dupes
+		# makes this function play nice with grep results
+		if [[ " ${log[*]} " =~ " ${absolutepath} " ]]
+		then
+			continue
+		fi
+
 		if [[ -f "$absolutepath" ]]
 		then
 			foldername=$(dirname -- "$absolutepath")
-			filename=$(basename -- "$i")
-		else
+			filename=$(basename -- "$absolutepath")
+		elif [[ -d "$absolutepath" ]]
+		then
 			foldername="$absolutepath"
 			filename="."
+		else
+			echo "could not find ${absolutepath}"
+			continue
 		fi
 
 		# echo $filename
 
 		(cd "$foldername" && $openy "$filename") # parenthesis so it doesn't change the user's directory
+
+		log+=("${absolutepath}")
 	done
 
 	# return success
@@ -352,16 +405,18 @@ wttr() {
 
 # end wttr.in/:bash.function
 
+export -f wttr
+
 xwttr(){
 
 	if [ $# -eq 0 ]
 	then
-		wttr '' 'format="+%c+%t"'
+		timeout 5s bash -c "wttr '' 'format=""+%c+%t""'"
 	elif [ "$1" = "moon" ]
 	then
-		wttr "$1"
+		timeout 5s bash -c "wttr $@"
 	else
-		wttr '' $@
+		timeout 5s bash -c "wttr '' $@"
 	fi
 }
 
@@ -408,6 +463,11 @@ nerdmoon_to_starship(){
 
 	glyph="$(nerdmoon)"
 
+	if [ -z "${glyph}" ]
+	then
+		return 1
+	fi
+
 	# replace any glyph from our chosen set of moon phase glyphs with the current moon phase glyph
 	sed -i "s/[${MOONPHASE_NERDFONT_GLYPHS}]/${glyph}/g" ~/.config/starship.toml
 }
@@ -415,21 +475,25 @@ nerdmoon_to_starship(){
 
 gutenbook(){
 
-	# options
-	# an oldie but a voldie
-	# -v open file in vim (allows for saving progress if you open the file directly)
-	# -o print the og, unaltered book
-	# -l list matches from the catalog
-	# -d list debug vars; urls, ids, paths
+# help="Usage: $(basename "$0") [OPTION] PATTERN
+help="Usage: $FUNCNAME [OPTION] PATTERN
 
-	# TODO -p to print path
-	# TODO -h
-	# TODO -e to dl epub?
+Search for books from Project Gutenberg! And cache aggressively to avoid being blocked.
 
+Options:
+	-v open file in vim (allows for saving progress if you open the file directly)
+	-o print the og, unaltered book
+	-l list matches from the catalog
+	-d list debug vars; urls, ids, paths
+
+	-h  show this help text
+"
+	# TODO -e epub
 	optVim=0
 	optOG=0
 	optList=0
 	optDebug=0
+	optEpub=0
 	query=''
 
 	for i in "$@"; do
@@ -454,9 +518,14 @@ gutenbook(){
 			optDebug=1
 		fi
 
-		if [[ "$i" =~ ^-.*p ]]
+		if [[ "$i" =~ ^-.*h ]]
 		then
-			optPrintPath=1
+			optHelp=1
+		fi
+
+		if [[ "$i" =~ ^-.*e ]]
+		then
+			optEpub=1
 		fi
 
 		if [[ "$i" =~ ^[^-] ]]
@@ -467,22 +536,22 @@ gutenbook(){
 
 	# printallvars | grep ^opt
 
-	if [ -z "${query}" ]
+	if [ -z "${query}" ] || [ "$optHelp" == 1 ]
 	then
-		echo "please provide a book string to search for. regex works fine"
-		return 1
+		echo "$help"
+		return 0
 	fi
-
-	# caching a lot as gutenberg blocks aggressively
 
 	cacheDir="$HOME/.cache/gutenbook"
 	csvPath="${cacheDir}/gutenberg_catalog.csv"
 	catalogURI="https://www.gutenberg.org/cache/epub/feeds/pg_catalog.csv"
 
-	# if [ "${optDebug}" ]
-	# then
-	# 	echo
-	# fi
+	if [ "${optDebug}" == 1 ]
+	then
+		echo "cacheDir:   ${cacheDir}"
+		echo "csvPath:    ${csvPath}"
+		echo "catalogURI: ${catalogURI}"
+	fi
 
 	# download the csv catalog if it's newer or not yet saved
 	if [ ! -f "$csvPath" ]
@@ -509,7 +578,17 @@ gutenbook(){
 	bookID=$(echo "${csvText}" | grep -iP "${query}" | grep -iPo "^\d+" | head -n 1)
 	bookPath="${cacheDir}/${bookID}.txt"
 	bookOgPath="${cacheDir}/${bookID}_og.txt"
+	bookPageURI="https://www.gutenberg.org/ebooks/${bookID}"
 	bookURI="https://www.gutenberg.org/ebooks/${bookID}.txt.utf-8"
+	
+	if [ "${optDebug}" == 1 ]
+	then
+		echo "bookID:     ${bookID}"
+		echo "bookPath:   ${bookPath}"
+		echo "bookOgPath: ${bookOgPath}"
+		echo "bookURI:    ${bookURI}"
+		echo "bookPageURI:${bookPageURI}"
+	fi
 
 	if [ -z "${bookID}" ]
 	then
@@ -584,17 +663,11 @@ gutenbook(){
 	then
 		echo -n "book stats: "
 		cat "${outPath}" | wc
-	fi
-
 	# serve up the book!
-	if [ "${optVim}" == 1 ]
+	elif [ "${optVim}" == 1 ]
 	then
 		vim "${outPath}" +"set nospell"
-	elif [ "${optPrintPath}" == 1 ]
-	then
-		echo "${outPath}" 
-	elif [ "${optDebug}" == 0 ]
-	then
+	else
 		cat "${outPath}" 
 	fi
 	

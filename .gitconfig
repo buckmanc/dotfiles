@@ -6,9 +6,9 @@
 	file = ~/.mailmap
 [alias]
 	# word diff
-	wdiff=diff --color-words='\\w+|.'
+	wdiff=diff --color-words='\\w+|.' --ignore-cr-at-eol
 	# letter diff
-	ldiff=diff --color-words=.
+	ldiff=diff --color-words=.' --ignore-cr-at-eol
 	undo-commit=reset HEAD~
 	list-alias=!git config -l | grep alias | cut -c 7-
 	# word diff log
@@ -31,6 +31,8 @@
 	root=rev-parse --show-toplevel
 [core]
 	editor = vim
+	autocrlf = input # only check in lf, check out whatever's in the index
+	pager = tr -d '\\r' | less -REX # visually strip CR's
 	#attributesfile = ~/.gitattributes # working, but gitignore filter causes one hell of a slowdown in certain environments
 [push]
 	autoSetupRemote = true

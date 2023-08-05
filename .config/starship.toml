@@ -1,12 +1,13 @@
 # glyphs in this file chosen for compatibility with JuiceSSH, Mintty, and Windows Terminal
 # if something awful makes its way into this file and breaks your prompt, login while holding CTRL+C to disable loading .bashrc
 
+# format = """
+# ${custom.files}\
+# ${custom.directories}\
+# ${custom.df}\
+# ${custom.random}\
+# ${custom.bash_line_break}\
 format = """
-${custom.files}\
-${custom.directories}\
-${custom.df}\
-${custom.random}\
-${custom.bash_line_break}\
 $sudo\
 ${custom.screen}\
 $jobs\
@@ -15,7 +16,11 @@ $hostname\
 ${custom.shlvl} \
 $directory\
 $dotnet\
-$custom\
+${custom.shellscripts}\
+${custom.powershell}\
+${custom.batch}\
+${custom.python}\
+${custom.sql}\
 $git_branch\
 $git_commit\
 $git_state\
@@ -36,7 +41,7 @@ palette = "primary"
 [palettes.primary]
 main		= "green"
 git		= "white"
-dev		= "bold blue"
+dev		= "blue"
 error		= "red"
 priority-1	= "white dimmed"
 priority-2	= "#232323"	# custom greyish
@@ -176,6 +181,7 @@ truncation_symbol = '../'
 "Windows"	= ""
 
 [dotnet]
+style = 'dev'
 format = '[($tfm )]($style)'
 
 [custom.shellscripts]
