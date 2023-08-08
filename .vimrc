@@ -37,6 +37,11 @@ set spellcapcheck=					" turn off capitalization check. too bad this doesn't exi
 " custom date insert command
 command! Date put =strftime('%Y-%m-%d')
 
+" create the undo dir if it doesn't exist
+if !isdirectory(&undodir)
+	call mkdir(&undodir, "p")
+endif
+
 "hi StatusLine ctermbg=black ctermfg=black " doesn't work right on mobile
 
 augroup FileTypeSpecificAutocommands

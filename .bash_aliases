@@ -20,7 +20,7 @@ screeny() {
 	fi
 }
  
-if [ -n /usr/share/bash-completion/completions/screen ]
+if [ -f /usr/share/bash-completion/completions/screen ]
 then
 	source /usr/share/bash-completion/completions/screen
 fi
@@ -199,11 +199,150 @@ printf "\n"
 
 # long exa
 alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
-alias builderrors="dotnet clean > /dev/null ;  dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide '-' | cut -c-\$COLUMNS | uniq"
-# short build errors
-alias sbuilderrors="dotnet clean > /dev/null ;  dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP 'error|warning' | grep -ivP '^\s+?[\d,]+? (error|warning)\(s\)$' | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide file,'-' | cut -c-\$COLUMNS | uniq"
-# long build errors
-alias lbuilderrors="dotnet clean > /dev/null ;  dotnet build | sort | uniq | grep -iP 'error|warning'"
+
+builderrors(){
+	
+help="Usage: $FUNCNAME [OPTION] [PATH]
+
+Run dotnet clean and build with concise, parsed, one-line warning and error messages.
+
+Options:
+	-s short output
+	-l long output
+	-e errors only
+	-w warnings only
+
+	-h  show this help text
+"
+	optShort=0
+	optLong=0
+	optWarnings=0
+	optErrors=0
+	smallScreen=0
+	path=''
+
+	if [ $COLUMNS -gt 0 ] && [ $COLUMNS -lt 40 ]
+	then
+		smallScreen=1
+	fi
+	
+	for i in "$@"; do
+		if [[ "$i" =~ ^-.*s ]]
+		then
+			optShort=1
+		fi
+
+		if [[ "$i" =~ ^-.*l ]]
+		then
+			optLong=1
+
+		fi
+
+		if [[ "$i" =~ ^-.*w ]]
+		then
+			optWarnings=1
+		fi
+
+		if [[ "$i" =~ ^-.*e ]]
+		then
+			optErrors=1
+		fi
+
+		if [[ "$i" =~ ^-.*h ]]
+		then
+			optHelp=1
+		fi
+
+		if [[ "$i" =~ ^[^-] ]]
+		then
+			path="$i"
+		fi
+	done
+
+	if [ "$optHelp" == 1 ]
+	then
+		echo "$help"
+		return 0
+	fi
+
+	# both is just default
+	if [ "$optWarnings" == 1 ] && [ "$optErrors" == 1 ]
+	then
+		optWarnings=0
+		optErrors=0
+	fi
+	
+	# set what text to search for
+	if [ "$optWarnings" == 1 ]
+	then
+		errowarn="warning"
+	elif [ "$optErrors" == 1 ]
+	then
+		errowarn="errors"
+	else
+		errowarn="warning|error"
+	fi
+
+	# only show error numbers in long mode
+	# hide columns as appropro
+	numTrim="cat"
+	# hide all dangling columns
+	tableHideColumns="-"
+	if [ "$optShort" == 1 ]
+	then
+		tableHideColumns="${tableHideColumns},file"
+	fi
+	if [ "$optLong" -ne 1 ] || [ "$optShort" ]
+	then
+		if [ "$optWarnings" == 1 ] || [ "$optErrors" == 1 ]
+		then
+			tableHideColumns="${tableHideColumns}, error num"
+		else
+			numTrim="perl -pe s/\s(err|warn)(or|ing)\s\w+?\d+/\1/g"
+		fi
+	fi
+
+	# truncate file names when the screen is small
+	fileTrim="cat"
+	# if [ "$smallScreen" == 1 ] && [ "$optShort" == 0 ] && [ "$optLong" == 0 ]
+	if [ "$smallScreen" == 1 ] && [ "$optShort" == 0 ]
+	then
+		fileTrim="perl -pe s/^([\.\w]{7})[\.\w]{3,}/\1\.\.\./g"
+	fi
+
+	# clean, ignore output
+	dotnet clean > /dev/null
+	# build and parse only relevant error and warning data points into a table
+	text=$(dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP "${errowarn}" | grep -ivP "^\s+?[\d,]+? (${errowarn})\(s\)$" | $fileTrim | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide "$tableHideColumns" | $numTrim)
+
+	# unless in long mode, don't wrap 
+	if [ "$optLong" -ne 1 ]
+	then
+		text=$(echo "${text}" | cut -c-"$COLUMNS")
+	fi
+
+	if [ "$optLong" == 1 ] && [ "$smallScreen" == 1 ]
+	then
+		doSome="stuff"
+		# regex some nicer formatting
+		text=$(echo "${text}" | perl -pe 's/(\(\d+,\d+\))\s+((?:err(?:or?)|warn(?:ing)) \w+?\d+)\s+/\1 \2\n/g')
+	else
+		text=$(echo "${text}" | (sed -u 1q; sort))
+	fi
+
+	# highlight start and error/warning
+	# important to have ^ in isolation or lines get stripped if nothing matches
+	# having grep be the final command makes auto coloring work
+	# echo "${text}" | uniq | grep --color -P "^\w+\.{0,3}\w*(?=\(\d+,\d)|err(or)?|warn(ing)?|^"
+	echo "${text}" | uniq | grep --color -P "^\w+\.{0,3}\w*(?=\(\d+,\d)|([\s^]err(or)?)|([\s^]warn(ing)?)|^"
+
+}
+
+# stub for complete anything
+# curl --help all | grep -Pio '(?<=[\s^])\-\-[\w\-]+?(?=[\s<$])' | tr '\n' ' '
+# use output to write a script with a bunch of complete -W statements
+# do that as a background job
+# in a separate function, eval anything in the .cache/completions folder
 
 xindent(){
 
