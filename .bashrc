@@ -12,6 +12,8 @@ case $- in
       *) return;;
 esac
 
+mkdir -p $HOME/.logs/screen
+
 # run the below command if you need/want to theme bash directly
 # useful where terminal theming is hard
 # echo ". ~/.bash_themes" >> ~/.bash_aliases_local && exec bash
@@ -66,6 +68,10 @@ fi
 if [ -z "$USER" ]; then
 	export USER="$USERNAME"
 fi
+
+# prefer vim over nano
+# crontab reads this variable
+export EDITOR=vim
 
 function set_win_title(){
 	

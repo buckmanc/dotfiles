@@ -8,7 +8,7 @@
 	# word diff
 	wdiff=diff --color-words='\\w+|.' --ignore-cr-at-eol
 	# letter diff
-	ldiff=diff --color-words=.' --ignore-cr-at-eol
+	ldiff=diff --color-words='.' --ignore-cr-at-eol
 	# short stat
 	stat=status -s
 	undo-commit=reset HEAD~
@@ -32,6 +32,9 @@
 		}; f;"
 	# allows for neat tricks like cd `git root`
 	root=rev-parse --show-toplevel
+	fixcarriagereturn=!git ls-files --eol | grep -Pi 'w/(mixed|crlf)' | grep -Pio '(?<=\\s{4}\\S.+' | xargs perl -i -pe 's/\\r//g'
+	fixtw=!git ls-files | xargs -d '\n' sed -i 's/[ \t]*\\(\\r\\?\\)$/\\1/'
+	# TODO dedangle= git fsck | xgrep dangle, git prune, git gc
 [core]
 	editor = vim
 	autocrlf = input # only check in lf, check out whatever's in the index
@@ -56,3 +59,5 @@
 	clean = "sed -b -e 's/[]//g' -e '/#gitignore$/d'"
 [help]
 	autocorrect = 20
+[diff]
+	wsErrorHighlight = all

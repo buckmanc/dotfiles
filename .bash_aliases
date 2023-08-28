@@ -6,7 +6,7 @@ alias xtree='tree -fi | grep -i --color'
 alias xgrep='grep -i --color'
 alias xhistory='history | cut -c 8- | grep -ivE  ^x?history | grep -i --color'
 alias gwap='git diff -w --no-color | git apply --cached --ignore-whitespace && git checkout -- . && git reset && git add -p'
-# alias screeny='screen -DRRqS screeny_weeny -L'
+alias gut='git'
 screeny() {
 	name=$1
 	if [ -z "$name" ]
@@ -82,7 +82,7 @@ open() {
 		# makes this function play nice with grep results
 		if [[ ! -f "${absolutepath}" ]]
 		then
-			absolutepath=$(echo "${absolutepath}" | grep -iPo '^.[2][^:]+')
+			absolutepath=$(echo "${absolutepath}" | grep -iPo '^.{2}[^:]+')
 		fi
 
 		# skip dupes
@@ -123,8 +123,17 @@ fixtw(){
 	args="$@"
 	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
 
-	sed -bi 's/[ \t]*\(\r\?\)$/\1/' "$@"
+	# iterate over args
+	for i in "$@"
+	do
+		# ignore empty args, which show up when using pipes for some reason
+		if [[ -z $i ]]
+		then
+			continue
+		fi
 
+		sed -bi 's/[ \t]*\(\r\?\)$/\1/' "$i"
+	done
 }
 # add a space after //
 # this isn't perfect and will require manual review, so do it on a clean repo
@@ -148,6 +157,28 @@ fixtab(){
 		text=`expand -i -t 4 "$i"`
 		echo "$text" > "$i"
 
+	done
+
+	return 0
+}
+
+fixcarriagereturn(){
+
+
+	# add pipe args to the list of regular args
+	args="$@"
+	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
+
+	# iterate over args
+	for i in "$@"
+	do
+		# ignore empty args, which show up when using pipes for some reason
+		if [[ -z $i ]]
+		then
+			continue
+		fi
+
+		perl -i -pe 's/\r//g' "$i"
 	done
 
 	return 0
@@ -219,7 +250,7 @@ Options:
 	optWarnings=0
 	optErrors=0
 	smallScreen=0
-	path=''
+	path='.'
 
 	if [ $COLUMNS -gt 0 ] && [ $COLUMNS -lt 40 ]
 	then
@@ -278,7 +309,7 @@ Options:
 		errowarn="warning"
 	elif [ "$optErrors" == 1 ]
 	then
-		errowarn="errors"
+		errowarn="error"
 	else
 		errowarn="warning|error"
 	fi
@@ -292,13 +323,13 @@ Options:
 	then
 		tableHideColumns="${tableHideColumns},file"
 	fi
-	if [ "$optLong" -ne 1 ] || [ "$optShort" ]
+	if [ "$optLong" -ne 1 ] || [ "$optShort" == 1 ]
 	then
 		if [ "$optWarnings" == 1 ] || [ "$optErrors" == 1 ]
 		then
 			tableHideColumns="${tableHideColumns}, error num"
 		else
-			numTrim="perl -pe s/\s(err|warn)(or|ing)\s\w+?\d+/\1/g"
+			numTrim="perl -pe s/\s(erro|warn)(r|ing)\s\w+?\d+/\1/g"
 		fi
 	fi
 
@@ -313,7 +344,7 @@ Options:
 	# clean, ignore output
 	dotnet clean > /dev/null
 	# build and parse only relevant error and warning data points into a table
-	text=$(dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP "${errowarn}" | grep -ivP "^\s+?[\d,]+? (${errowarn})\(s\)$" | $fileTrim | column -t --separator ':[' --table-columns 'file, error num, error message' --table-hide "$tableHideColumns" | $numTrim)
+	text=$(dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP "${errowarn}" | grep -ivP "^\s+?[\d,]+? (${errowarn})\(s\)$" | $fileTrim | perl -pe 's/(Argument \d{1,2}):/\1/g' | column -t --separator ':[' --table-columns 'file, error num, error message' -o ' ' --table-hide "$tableHideColumns" | $numTrim)
 
 	# unless in long mode, don't wrap 
 	if [ "$optLong" -ne 1 ]
@@ -321,20 +352,22 @@ Options:
 		text=$(echo "${text}" | cut -c-"$COLUMNS")
 	fi
 
-	if [ "$optLong" == 1 ] && [ "$smallScreen" == 1 ]
+	if [ "$optLong" == 1 ] && [ "$smallScreen" == 1 ] && [ "$optShort" == 0 ]
 	then
-		doSome="stuff"
 		# regex some nicer formatting
-		text=$(echo "${text}" | perl -pe 's/(\(\d+,\d+\))\s+((?:err(?:or?)|warn(?:ing)) \w+?\d+)\s+/\1 \2\n/g')
+		text=$(echo "${text}" | perl -pe 's/(\(\d+,\d+\)\s+(?:erro(?:r?)|warn(?:ing)?) \w+?\d+)\s+/\1 \2\n/g')
 	else
+		# sort but ignore the header
 		text=$(echo "${text}" | (sed -u 1q; sort))
 	fi
+
+	# trim
+	text=$(echo "${text}" | perl -pe 's/^[^\S\r\n]//g')
 
 	# highlight start and error/warning
 	# important to have ^ in isolation or lines get stripped if nothing matches
 	# having grep be the final command makes auto coloring work
-	# echo "${text}" | uniq | grep --color -P "^\w+\.{0,3}\w*(?=\(\d+,\d)|err(or)?|warn(ing)?|^"
-	echo "${text}" | uniq | grep --color -P "^\w+\.{0,3}\w*(?=\(\d+,\d)|([\s^]err(or)?)|([\s^]warn(ing)?)|^"
+	echo -n "${text}" | uniq | grep --color -P "^\w+\.{0,3}\w*(?=\(\d+,\d)|\serro(r)?\s|^erro(r)?\s|\swarn(ing)?\s|^warn(ing)?\s|^"
 
 }
 
@@ -342,7 +375,53 @@ Options:
 # curl --help all | grep -Pio '(?<=[\s^])\-\-[\w\-]+?(?=[\s<$])' | tr '\n' ' '
 # use output to write a script with a bunch of complete -W statements
 # do that as a background job
-# in a separate function, eval anything in the .cache/completions folder
+#	 in a separate function, eval anything in the .cache/completions folder
+
+completeme(){
+
+	# optShort is probably useless, but leaving for now
+	cmd=''
+	shortCmd=''
+	optShort=0
+	for i in "$@"; do
+		if [[ "$i" =~ ^-.*s ]]
+		then
+			optShort=1
+		fi
+
+		if [[ "$i" =~ ^[^-] ]]
+		then
+			if [[ -z "${cmd}" ]]
+		then
+			cmd="${i/\~/$HOME}"
+		elif [[ -z "${shortCmd}" ]]
+		then
+			shortCmd="${i/\~/$HOME}"
+
+			fi
+		fi
+	done
+
+	if [[ "${cmd}" != *"--"* ]]
+	then
+		if [ -z "${shortCmd}" ]
+		then
+			shortCmd="${cmd}"
+		fi
+
+		cmd="${cmd} --help"
+	elif [ -z "${shortCmd}" ]
+	then
+		shortCmd=$(echo "${cmd}" | perl -pe 's/^(.+) --.+/\1/g')
+	fi
+
+	# echo "cmd:      ${cmd}"
+	# echo "shortCmd: ${shortCmd}"
+
+	output=$($cmd | grep -Pio '(?<=[\s^])\-\-[\w\-]+?(?=[\s<$,])' | sort | uniq | tr '\n' ' ' | perl -pe 's/[ \t]$//g')
+	echo "complete -W \"${output}\" $shortCmd"
+
+}
 
 xindent(){
 
@@ -569,7 +648,8 @@ nerdmoon(){
 	url="wttr.in/?format=%M"
 	moonday=$(curl -s "${url}")
 
-	logPath="${HOME}/.logs/nerdmoon_to_$(date -Iseconds).txt"
+	logPath="${HOME}/.logs/nerdmoon/$(date -Iseconds).txt"
+	mkdir -p "${HOME}/.logs/nerdmoon/"
 	echo "url:      ${url}" >> "${logPath}"
 	echo "response: ${moonday}" >> "${logPath}"
 
@@ -824,4 +904,8 @@ squish(){
 
 	echo "$@" | perl -00pe 's/[\r\n\s]+/ /g' | perl -00pe 's/^ //g' | perl -00pe 's/ $//g'
 	echo # end with a new line
+}
+
+gowebgo(){
+	sudo python -m http.server -d ~/www/html/ 80
 }
