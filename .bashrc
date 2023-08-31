@@ -12,7 +12,7 @@ case $- in
       *) return;;
 esac
 
-mkdir -p $HOME/.logs/screen
+mkdir -p "$HOME/.logs/screen"
 
 # run the below command if you need/want to theme bash directly
 # useful where terminal theming is hard

@@ -126,6 +126,7 @@ format = '[@]($style)'
 style_user = "main"
 style_root = "error"
 show_always = true
+disabled = false
 
 [hostname]
 style = "main"

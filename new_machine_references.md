@@ -13,6 +13,7 @@ New Machine References
 - [Regex Tester](https://regex101.com/)
 - [ShellCheck](https://shellcheck.net)
 - [Crontab.Guru](https://crontab.guru)
+- [Gist Viewer](https://yi-jiayu.github.io/essence/)
 - [No Hello](https://nohello.net)
 - [Passwordless SSH](https://linuxize.com/post/how-to-setup-passwordless-ssh-login/)
 - [Pokemon Go Raid Finder](https://9db.jp/pokego/data/62)
@@ -53,3 +54,9 @@ New Machine References
 
 - Push to Kindle - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/kindle-it/) [Chrome](https://chrome.google.com/webstore/detail/push-to-kindle/pnaiinchjaonopoejhknmgjingcnaloc)
 - [Privacy Badger](https://privacybadger.org/) - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/privacy-badger17/) [Chrome](https://chrome.google.com/webstore/detail/privacy-badger/pkehgijcmpdhfbdbbnkijodmdjhbjlgp)
+
+## Emergency Music
+- [Dungeon Synth Archives](https://youtube.com/@TheDungeonSynthArchives/videos)
+- [LoFi Study Girl](https://youtube.com/watch?v=jfKfPfyJRdk)
+- [LoFi Air Traffic Control](https://www.lofiatc.com/)
+- ~~[Voices of the Ainur](https://www.podchaser.com/podcasts/voices-of-the-ainur-1487083/episodes/recent)~~

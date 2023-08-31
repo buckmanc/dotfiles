@@ -11,6 +11,8 @@
 	ldiff=diff --color-words='.' --ignore-cr-at-eol
 	# short stat
 	stat=status -s
+	statu=status -s
+	comm=!git diff --check && git commit
 	undo-commit=reset HEAD~
 	list-alias=!git config -l | grep alias | cut -c 7-
 	# word diff log
@@ -49,7 +51,6 @@
 [status]
 	renames = copies
 	short = true
-	relativePaths = false
 [filter "notepad++ignore"]
 	clean = ~/.config/Notepad++/git_clean_filter.sh
 [filter "gitignore"]

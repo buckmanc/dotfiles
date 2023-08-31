@@ -16,6 +16,7 @@ set autoread		" reloads file only if unmodified in vim
 set novisualbell	" stop yelling at me
 set noerrorbells	" i'm serious
 set wildignorecase	" ignore case when tab completing paths
+set whichwrap+=<,>,h,l	" allow moving to next line from the ends
 set backspace=indent,eol,start	" 'normal' backspace behavior
 set undodir=~/.vim/undodir	" where to save undo history
 set undofile			" enable persistent undo
@@ -42,7 +43,10 @@ if !isdirectory(&undodir)
 	call mkdir(&undodir, "p")
 endif
 
-"hi StatusLine ctermbg=black ctermfg=black " doesn't work right on mobile
+" custom filetypes
+" makes sure these filetypes have appropriate syntax highlighting and comment chars
+autocmd BufNewFile,BufRead *.gitconfig_local set filetype=gitconfig
+autocmd BufNewFile,BufRead *.bash_* set filetype=bash
 
 augroup FileTypeSpecificAutocommands
 	autocmd FileType cs setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
@@ -79,6 +83,10 @@ try
 	" using for improved markdown syntax highlighting
 	Plug 'preservim/vim-markdown'
 	let g:vim_markdown_folding_disabled = 1
+
+	" plugin experiments
+	Plug 'ycm-core/YouCompleteMe'
+	" Plug 'ervandew/supertab'
 
 	call plug#end()
 catch
