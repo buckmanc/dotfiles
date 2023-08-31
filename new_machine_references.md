@@ -33,7 +33,7 @@ New Machine References
 - [uBlock Origin](https://ublockorigin.com/) - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/) [Chrome](https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm)
 - AutoplayStopper - [Chrome](https://chrome.google.com/webstore/detail/autoplaystopper/ejddcgojdblidajhngkogefpkknnebdh)
 - Bypass Paywalls Clean - [Firefox](https://gitlab.com/magnolia1234/bypass-paywalls-firefox-clean/-/releases) [Chrome](https://gitlab.com/magnolia1234/bypass-paywalls-chrome-clean)
-- Tracking Token Stripper - [Firefox](https://chrome.google.com/webstore/detail/kcpnkledgcbobhkgimpbmejgockkplob) [Chrome]()
+- Tracking Token Stripper - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/utm-tracking-token-stripper/) [Chrome](https://chrome.google.com/webstore/detail/kcpnkledgcbobhkgimpbmejgockkplob)
 
 #### Dev & Downloads
 
