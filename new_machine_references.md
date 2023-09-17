@@ -5,11 +5,13 @@ New Machine References
 
 - [ASCII Converter](https://www.branah.com/ascii-converter)
 - [Old Regex Basics](https://web.archive.org/web/20130814132447/http://www.regular-expressions.info/reference.html)
+- [Regex Lookarounds](https://miro.medium.com/v2/1*PRRHGdN32Mep-3KhLwvKzw.png)
 - [Vim Cheat Sheet](https://vim.rtorr.com/)
 - [SQL Server Data Types](https://web.archive.org/web/20161128134813/http://www.dummies.com/programming/sql/data-types-found-in-sql-server-2008)
 - [SQL Data Types](https://www.w3schools.com/sql/sql_datatypes.asp)
 - [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#headers)
 - [Nerd Font Cheatsheet](https://www.nerdfonts.com/cheat-sheet)
+- [ANSI Escape Sequences](https://stackoverflow.com/a/33206814)
 - [Regex Tester](https://regex101.com/)
 - [ShellCheck](https://shellcheck.net)
 - [Crontab.Guru](https://crontab.guru)
@@ -21,8 +23,10 @@ New Machine References
 
 ## Bookmarklets
 
-- `javascript:void(window.open("mailto:example@example.com?subject=%22+encodeURIComponent(document.title)+%22&body=%22+document.location.href));`
-- `javascript:location.href='http://web.archive.org/web/*/'+document.location.href;`
+- email - `javascript:void(window.open("mailto:example@example.com?subject=%22+encodeURIComponent(document.title)+%22&body=%22+document.location.href));`
+- wayback - `javascript:location.href='http://web.archive.org/web/*/'+document.location.href; `
+- gistfix - `javascript:(function(){var a=/^(?:.*\/)?([a-f0-9]+)$/.exec(window.location.href),b=a?a[1]:null;b&&(window.location.href=%27https://yi-jiayu.github.io/essence/#'+b);})()`
+- puzzle from img - `javascript:post('https://www.jigsawexplorer.com/jigsaw-puzzle-result/',{'image-url':document.location.href,color:'charcoal','puzzle-nop':136});function post(a,b){const c=(e,f)=>Object.assign(document.createElement(e),f),d=c('form',{action:a,method:'post',hidden:true});for(const[e,f]of Object.entries(b))d.appendChild(c('input',{name:e,value:f}));document.body.appendChild(d),d.submit()}`
 
 
 ## Browser Extensions

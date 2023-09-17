@@ -58,6 +58,12 @@
 [filter "starship"]
 	# standardize nerdfont moon glyphs and support #gitignore
 	clean = "sed -b -e 's/[]//g' -e '/#gitignore$/d'"
+[filter "xml"]
+	# deterministic xml sorting
+	# specifically for visual studios and ssms that shuffle their arrays
+	# winget install jqlang.jq && pip install yq
+	# note that strings are case sensitive
+	clean = "xq -x -S 'walk(if type == \"array\" then sort_by(.\"@name\", .\"@Name\", .\"@GUID\") else . end)'"
 [filter "sort"]
 	clean = "sort -u"
 [help]
