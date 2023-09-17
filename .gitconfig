@@ -58,6 +58,8 @@
 [filter "starship"]
 	# standardize nerdfont moon glyphs and support #gitignore
 	clean = "sed -b -e 's/[]//g' -e '/#gitignore$/d'"
+[filter "sort"]
+	clean = "sort -u"
 [help]
 	autocorrect = 20
 [diff]

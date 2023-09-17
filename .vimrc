@@ -35,6 +35,33 @@ autocmd Filetype text setlocal spell spelllang=en_us	" turn on spell check for t
 hi SpellLocal ctermbg=Black 				" invisible or innocuous with dark themes
 set spellcapcheck=					" turn off capitalization check. too bad this doesn't exist for SpellLocal
 
+" iterate over custom spellfiles
+let spellPaths = ''
+for d in glob('~/.vim/spell/*.add', 1, 1)
+	if (filereadable(d))
+
+		" compile the file if needed
+		if (!filereadable(d . '.spl') || getftime(d) > getftime(d . '.spl'))
+			echo 'compiling spell file updates: ' . d
+			silent exec 'mkspell! ' . fnameescape(d)
+		endif
+
+		" append the file path to the list
+
+		if (len(spellPaths) == 0)
+			let spellPaths=d
+		else
+			let spellPaths=spellPaths . "," . d
+		endif
+
+		" echo d
+		" echo spellPaths
+	endif
+
+	" update the spell file setting
+	exec 'set spellfile=' . spellPaths
+endfor
+
 " custom date insert command
 command! Date put =strftime('%Y-%m-%d')
 
@@ -47,6 +74,7 @@ endif
 " makes sure these filetypes have appropriate syntax highlighting and comment chars
 autocmd BufNewFile,BufRead *.gitconfig_local set filetype=gitconfig
 autocmd BufNewFile,BufRead *.bash_* set filetype=bash
+autocmd BufNewFile,BufRead *.add set filetype=text
 
 augroup FileTypeSpecificAutocommands
 	autocmd FileType cs setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
