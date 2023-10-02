@@ -12,6 +12,7 @@ New Machine References
 - [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#headers)
 - [Nerd Font Cheatsheet](https://www.nerdfonts.com/cheat-sheet)
 - [ANSI Escape Sequences](https://stackoverflow.com/a/33206814)
+- [Windows Environment Variables](https://ss64.com/nt/syntax-variables.html)
 - [Regex Tester](https://regex101.com/)
 - [ShellCheck](https://shellcheck.net)
 - [Crontab.Guru](https://crontab.guru)
