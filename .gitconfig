@@ -71,7 +71,6 @@
 	defaultBranch = main
 [status]
 	renames = copies
-	short = true
 [filter "notepad++ignore"]
 	clean = ~/.config/Notepad++/git_clean_filter.sh
 [filter "gitignore"]
