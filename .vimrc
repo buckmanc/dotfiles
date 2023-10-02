@@ -27,7 +27,9 @@ set hlsearch		" highlight all search results
 set magic		" special characters available in pattern matching
 set ignorecase		" ignore case in searching
 set smartcase		" only use case sensitive search when capitals are included in
-
+set viminfo+=! " make sure it can save viminfo
+set noshowmode " airline shows mode
+set report=0 " always show 'x lines changed' messages
 " spellcheck
 autocmd Filetype text setlocal spell spelllang=en_us	" turn on spell check for text files only
 " hi SpellLocal ctermbg=DarkMagenta
@@ -115,6 +117,8 @@ try
 	" plugin experiments
 	Plug 'ycm-core/YouCompleteMe'
 	" Plug 'ervandew/supertab'
+	Plug 'tmadsen/vim-compiler-plugin-for-dotnet'
+	Plug 'mhinz/vim-startify'
 
 	call plug#end()
 catch
