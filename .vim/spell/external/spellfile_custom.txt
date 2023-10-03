@@ -356,6 +356,12 @@ borks
 borker
 frutti
 hotdog
+raspi4
+raspi1
+raspi2
+raspi3
+raspi5
+raspi
 
 Adolin
 Adolin's

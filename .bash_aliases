@@ -907,5 +907,78 @@ squish(){
 }
 
 gowebgo(){
-	sudo python -m http.server -d ~/www/html/ 80
+	local port=8080
+	local dir="."
+	local nextIsPort=0
+	local nextIsDir=0
+
+	for i in "$@"; do
+		if [[ "$i" =~ ^-.*p ]]
+		then
+			nextIsPort=1
+
+		elif [[ "$i" =~ ^-.*d ]]
+		then
+			nextIsDir=1
+		fi
+	done
+
+# TODO arg support for port and dir
+	sudo python -m http.server -d "${dir}" "${port}"
+}
+
+xrsync() {
+    rsync -Przzu "$1"/* "$2"
+    rsync -Przzu "$2"/* "$1"
+}
+
+superreplace(){
+	local gitRoot=$(git rev-parse --show-toplevel)
+	git ls-files | while read oldShortPath
+	do
+		local newShortPath=$(echo "${oldShortPath}" | sed -e "s/${1}/${2}/g" -e "s/${1,}/${2,}/g" -e "s/${1,,}/${2,,}/g")
+		local oldFullPath="${gitRoot}/${oldShortPath}"
+		local newFullPath="${gitRoot}/${newShortPath}"
+
+		sed -i -e "s/${1}/${2}/g" -e "s/${1,}/${2,}/g" -e "s/${1,,}/${2,,}/g" "${oldFullPath}"
+		if [[ ! "${oldFullPath}" -ef "${newFullPath}" ]]
+		then
+			# git mv "${oldFullPath}" "${newFullPath}"
+			mv "${oldFullPath}" "${newFullPath}"
+		fi
+
+	done
+
+
+}
+
+dotnewt(){
+
+	if [ $# -eq 0 ]
+	then
+		>&2 echo "You've gotta at least provide a template name"
+		return 1
+	fi
+
+	read -p "Create a new dotnet $1 project in the current directory?" -n 1 -r
+	if [[ $REPLY =~ ^[^Yy]$ ]]
+	then
+		return 0
+	fi
+
+	if ! dotnet new "$@" -o .
+	then
+		return 1
+	fi
+
+	dotnet new sln
+	dotnet new gitignore
+	git init
+	git add .
+
+	read -p "Initial commit?" -n 1 -r
+	if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+		git commit -m "Initial commit based on $1 dotnet template"
+	fi
 }

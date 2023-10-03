@@ -180,6 +180,7 @@ truncation_symbol = '../'
 ".git"		= ""
 "Books"		= ""
 "Windows"	= ""
+"spotify_playlist_generator"	= ""
 
 [dotnet]
 style = 'dev'

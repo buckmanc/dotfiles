@@ -35,7 +35,7 @@ linkylink(){
 		return
 	fi
 
-	if fileordir "${source}" && [[ -d "${parentdestdir}" ]] && ( fileordir "${dest}" || [[ "${optCreateIfDoesntExist}" == 1 ]] )
+	if fileordir "${source}" && [[ -n "$dest}" ]] && [[ -d "${parentdestdir}" ]] && ( fileordir "${dest}" || [[ "${optCreateIfDoesntExist}" == 1 ]] )
 	then
 		# TODO warn if there's more than 10 files in this folder
 		if fileordir "${dest}"
@@ -59,6 +59,7 @@ linkylink(){
 		then
 			echo "would have linked ${source} to ${dest}" > $(tty)
 		else
+			echo "attempting to link ${source} to ${dest}" > $(tty)
 			cmd <<< "mklink ${junctionArg} \"${dest}\" \"${source}\""
 		fi
 	elif [[ "$optTestOnly" == 1 ]]
@@ -70,22 +71,26 @@ linkylink(){
 optTestOnly=0
 optTestOnly=1
 
+# have to use windows environment variables intead of $HOME
+# so that windows can read the resulting symlinks
+winHome="${HOMEDRIVE}$HOMEPATH}"
+
 wtDest=$(find "${LOCALAPPDATA}/Packages/" -maxdepth 2 -wholename "*WindowsTerminal*" -name LocalState -print -quit)
 firefoxDictPath=$(find "${APPDATA}/Mozilla/Firefox/Profiles" -name persdict.dat -print -quit)
 
 # should be the same on *most* systems
-linkylink "${HOME}/.config" "${USERPROFILE}/.config"
+linkylink "${winHome}/.config" "${USERPROFILE}/.config"
 
-linkylink "${HOME}/.config/WindowsTerminal "$wtDest"
+linkylink "${winHome}/.config/WindowsTerminal" "$wtDest"
 # yes, I've had one machine with all four PowerShell paths
-linkylink "${HOME}/.config/PowerShell" "${HOME}/Documents/PowerShell"
-linkylink "${HOME}/.config/PowerShell" "${HOME}/My Documents/PowerShell"
-linkylink "${HOME}/.config/PowerShell" "${HOME}/Documents/WindowsPowerShell"
-linkylink "${HOME}/.config/PowerShell" "${HOME}/My Documents/WindowsPowerShell"
+linkylink "${winHome}/.config/PowerShell" "${winHome}/Documents/PowerShell"
+linkylink "${winHome}/.config/PowerShell" "${winHome}/My Documents/PowerShell"
+linkylink "${winHome}/.config/PowerShell" "${winHome}/Documents/WindowsPowerShell"
+linkylink "${winHome}/.config/PowerShell" "${winHome}/My Documents/WindowsPowerShell"
 
 # custom spelling dictionary
-linkylink "${HOME}/.vim/spell/external/spellfile_custom.txt" "${APPDATA}/Microsoft/UProof/CUSTOM.DIC" 1
-linkylink "${HOME}/.vim/spell/external/spellfile_custom.txt" "${APPDATA}/Microsoft/Teams/Custom Dictionary.txt" 1
-linkylink "${HOME}/.vim/spell/external/spellfile_custom.txt" "${APPDATALOCAL}/Google/Chrome/User Data/Default/Custom Dictionary.txt" 1
-linkylink "${HOME}/.vim/spell/external/spellfile_custom.txt" "${firefoxDictPath}" 1
+linkylink "${winHome}/.vim/spell/external/spellfile_custom.txt" "${APPDATA}/Microsoft/UProof/CUSTOM.DIC" 1
+linkylink "${winHome}/.vim/spell/external/spellfile_custom.txt" "${APPDATA}/Microsoft/Teams/Custom Dictionary.txt" 1
+linkylink "${winHome}/.vim/spell/external/spellfile_custom.txt" "${APPDATA}/../Local/Google/Chrome/User Data/Default/Custom Dictionary.txt" 1
+linkylink "${winHome}/.vim/spell/external/spellfile_custom.txt" "${firefoxDictPath}" 1
 

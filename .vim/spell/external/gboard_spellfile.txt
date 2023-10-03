@@ -1,5 +1,4 @@
-# Gboard Dictionary version:1
-	3D	en-US
+# Gboard Dictionary version:1\n	3D	en-US
 	achey	en-US
 	aerosoled	en-US
 	aether	en-US
@@ -357,6 +356,12 @@
 	borker	en-US
 	frutti	en-US
 	hotdog	en-US
+	raspi4	en-US
+	raspi1	en-US
+	raspi2	en-US
+	raspi3	en-US
+	raspi5	en-US
+	raspi	en-US
 		en-US
 	Adolin	en-US
 	Adolin's	en-US
