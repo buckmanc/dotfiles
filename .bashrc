@@ -54,12 +54,43 @@ if ! shopt -oq posix; then
   fi
 fi
 
-if [ -d ~/go/bin ]; then
-	export PATH=$PATH:~/go/bin
+addtopath(){
+	if [ -d "$1" ]
+	then
+		export PATH="${PATH}:${1}"
+	fi
+}
+addtopathstart(){
+	if [ -d "$1" ]
+	then
+		export PATH="${1}:${PATH}"
+	fi
+}
+
+pyPath="$LOCALAPPDATA/Programs/Python/Python312"
+streamlinkPath="$LOCALAPPDATA/Programs/Streamlink/bin"
+jqPath="$LOCALAPPDATA\Microsoft\WinGet\Packages\jqlang.jq_Microsoft.Winget.Source_8wekyb3d8bbwe"
+
+NVM_DIR="${HOME}/.nvm"
+ANDROID_HOME="/media/content/Coding/androidsdk"
+
+addtopathstart "${HOME}/bin"
+addtopath "${HOME}/go/bin"
+addtopath "${pyPath}"
+addtopath "${pyPath}/scripts"
+addtopath "${streamlinkPath}"
+addtopath "${jqPath}"
+addtopath "${ANDROID_HOME}/cmdline-tools/latest/bin"
+addtopath "${ANDROID_HOME}/platform-tools"
+
+if [ -d "${ANDROID_HOME}" ]
+then
+	export ANDROID_HOME
 fi
 
-if [ -d "$HOME/.nvm" ]; then
-	export NVM_DIR="$HOME/.nvm"
+if [ -d "${NVM_DIR}" ]
+then
+	export NVM_DIR
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 fi

@@ -24,6 +24,7 @@ New Machine References
 
 ## Bookmarklets
 
+- copy sanitized url - `javascript:void(navigator.clipboard.writeText(location.href.substring(0,location.href.search("(ref=|\\?)"))));`
 - email - `javascript:void(window.open("mailto:example@example.com?subject=%22+encodeURIComponent(document.title)+%22&body=%22+document.location.href));`
 - wayback - `javascript:location.href='http://web.archive.org/web/*/'+document.location.href; `
 - gistfix - `javascript:(function(){var a=/^(?:.*\/)?([a-f0-9]+)$/.exec(window.location.href),b=a?a[1]:null;b&&(window.location.href=%27https://yi-jiayu.github.io/essence/#'+b);})()`

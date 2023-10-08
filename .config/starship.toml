@@ -151,6 +151,7 @@ home_symbol = "ᐰ"
 truncate_to_repo = false
 truncation_length = 3
 truncation_symbol = '../'
+use_os_path_sep = false
 
 [directory.substitutions]
 "Spotify"	= ""
@@ -180,7 +181,15 @@ truncation_symbol = '../'
 ".git"		= ""
 "Books"		= ""
 "Windows"	= ""
+"Terminal"	= ""
 "spotify_playlist_generator"	= ""
+"TopMons"	= "󰐝"
+"Pokemon"	= "󰐝"
+"www"		= "󰖟"
+"html"		= ""
+"HTML"		= ""
+"libation"	= "󰡶"
+"Libation"	= "󰡶"
 
 [dotnet]
 style = 'dev'

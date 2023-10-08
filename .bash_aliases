@@ -4,7 +4,8 @@
 
 alias xtree='tree -fi | grep -i --color'
 alias xgrep='grep -i --color'
-alias xhistory='history | cut -c 8- | grep -ivE  ^x?history | grep -i --color'
+alias xhistory='history | cut -c 8- | grep -ivE  "^x?hist(ory | )" | grep -i --color'
+alias xhist='xhistory'
 alias gwap='git diff -w --no-color | git apply --cached --ignore-whitespace && git checkout -- . && git reset && git add -p'
 alias gut='git'
 screeny() {
@@ -541,30 +542,30 @@ shutdown() {
 			# -hybrid not supported on some platforms
 			`which shutdown` -s -hybrid -f -t 0 || `which shutdown` -s -f -t 0
 
-		elif [ $OSTYPE == 'linux-gnu' ] && [ -z "$2" ]
+		elif [ $OSTYPE == 'linux-gnu' ] && ( [ -z "$2" ] || [ "$2" == "-r" ] )
 		then
 
-			sudo echo
-			if [ $? -eq 0 ]
+			# if we have shutdown perms, don't ask for sudo
+			if test -w $(which shutdown)
 			then
-
 				clear
 				goodbyemessage
 				sleep $cowtime
 
-				sudo `which shutdown` $@
-			fi
-		elif [ $OSTYPE == 'linux-gnu' ] && [ "$2" == "-r" ]
-		then
-			sudo echo
-			if [ $? -eq 0 ]
-			then
+				`which shutdown` $@
 
-				clear
-				goodbyemessage
-				sleep $cowtime
+			# if we don't have shutdown perms, check for sudo first
+			else
+				sudo echo
+				if [ $? -eq 0 ]
+				then
 
-				sudo `which shutdown` $@
+					clear
+					goodbyemessage
+					sleep $cowtime
+
+					sudo `which shutdown` $@
+				fi
 			fi
 		else
 			`which shutdown` $@
@@ -972,6 +973,7 @@ dotnewt(){
 	fi
 
 	dotnet new sln
+	dotnet sln add *.csproj
 	dotnet new gitignore
 	git init
 	git add .

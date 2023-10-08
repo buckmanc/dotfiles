@@ -1,6 +1,7 @@
 .config/Notepad++/config.xml filter=notepad++ignore
 .config/starship.toml filter=starship
 *.cs filter=gitignore
+.config/WindowsTerminal/*.json filter=json
 .config/messages/*.txt merge=union
 .vim/spell/*.add merge=union
 .vim/spell/*.add filter=sort

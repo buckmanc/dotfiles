@@ -84,6 +84,8 @@
 	# winget install jqlang.jq && pip install yq
 	# note that strings are case sensitive
 	clean = "xq -x -S 'walk(if type == \"array\" then sort_by(.\"@name\", .\"@Name\", .\"@GUID\") else . end)'"
+[filter "json"]
+	clean = "jq -S 'walk(if type == \"array\" then sort_by(.) else . end)'"
 [filter "sort"]
 	# clean = "sort -u"
 	clean = "~/bin/PADS"

@@ -1,4 +1,4 @@
-if [[ $EUID > 0 ]]
+if [ $EUID > 0 ]
 then
 	echo 'please sudo this script'
 	return 1

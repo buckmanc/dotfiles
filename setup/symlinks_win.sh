@@ -20,6 +20,10 @@ linkylink(){
 	local dest=$2
 	local optCreateIfDoesntExist=$3
 	local parentdestdir="$(dirname -- "$(readlink -f -- "$dest")")"
+	if [ "${parentdestdir}" == "." ]
+	then
+		parentdestdir=""
+	fi
 
 	if [[ -z "$optCreateIfDoesntExist" ]]
 	then
@@ -35,15 +39,15 @@ linkylink(){
 		return
 	fi
 
-	if fileordir "${source}" && [[ -n "$dest}" ]] && [[ -d "${parentdestdir}" ]] && ( fileordir "${dest}" || [[ "${optCreateIfDoesntExist}" == 1 ]] )
+	# echo "parent dest dir: ${parentdestdir}"
+
+	if fileordir "${source}" && [[ -n "${dest}" ]] && [[ -d "${parentdestdir}" ]] && ( fileordir "${dest}" || [[ "${optCreateIfDoesntExist}" == 1 ]] )
 	then
 		# TODO warn if there's more than 10 files in this folder
 		if fileordir "${dest}"
 		then
-			if [[ "$optTestOnly" == 1 ]]
+			if [[ "$optTestOnly" != 1 ]]
 			then
-				echo "would have deleted ${dest} prior to symlink" > $(tty)
-			else
 				rm -rf "${dest}"
 			fi
 		fi
@@ -62,18 +66,15 @@ linkylink(){
 			echo "attempting to link ${source} to ${dest}" > $(tty)
 			cmd <<< "mklink ${junctionArg} \"${dest}\" \"${source}\""
 		fi
-	elif [[ "$optTestOnly" == 1 ]]
-	then
-		echo "nopers" > $(tty)
 	fi
 }
 
 optTestOnly=0
-optTestOnly=1
+# optTestOnly=1
 
-# have to use windows environment variables intead of $HOME
+# have to use windows environment variables instead of $HOME
 # so that windows can read the resulting symlinks
-winHome="${HOMEDRIVE}$HOMEPATH}"
+winHome="${HOMEDRIVE}${HOMEPATH}"
 
 wtDest=$(find "${LOCALAPPDATA}/Packages/" -maxdepth 2 -wholename "*WindowsTerminal*" -name LocalState -print -quit)
 firefoxDictPath=$(find "${APPDATA}/Mozilla/Firefox/Profiles" -name persdict.dat -print -quit)
