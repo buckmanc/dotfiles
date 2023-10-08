@@ -92,5 +92,6 @@ linkylink "${winHome}/.config/PowerShell" "${winHome}/My Documents/WindowsPowerS
 linkylink "${winHome}/.vim/spell/external/spellfile_custom.txt" "${APPDATA}/Microsoft/UProof/CUSTOM.DIC" 1
 linkylink "${winHome}/.vim/spell/external/spellfile_custom.txt" "${APPDATA}/Microsoft/Teams/Custom Dictionary.txt" 1
 linkylink "${winHome}/.vim/spell/external/spellfile_custom.txt" "${APPDATA}/../Local/Google/Chrome/User Data/Default/Custom Dictionary.txt" 1
+linkylink "${winHome}/.vim/spell/external/spellfile_custom.txt" "${APPDATA}/Notepad++/plugins/config/Hunspell/en_US.usr"
 linkylink "${winHome}/.vim/spell/external/spellfile_custom.txt" "${firefoxDictPath}" 1
 

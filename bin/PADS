@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Platform Agnostic Deterministic Sort
+# entirely because Termux sorts like a fucking maniac
+
+# sane sort
+if [ $(echo -e "x\nX" | sort | head -n 1) = 'x' ]
+then
+	sort -u
+# stupid sort
+else
+	tr 'a-zA-Z' 'A-Za-z' | sort --ignore-case | tr 'a-zA-Z' 'A-Za-z'
+fi

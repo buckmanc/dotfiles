@@ -1,4 +1,4 @@
 for f in ~/.vim/spell/*.add
 do
-	sort -o "$f" "$f"
+	sort -u -o "$f" "$f"
 done

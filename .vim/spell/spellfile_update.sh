@@ -30,7 +30,7 @@ then
 fi
 
 # mash all vim spell files into one text file for outside use
-ls "${spellDir}"/*.add | grep -iv private | xargs cat | grep -Piv '/!$' > "${customPath}" 
+ls "${spellDir}"/*.add | grep -iv private | xargs cat | grep -Piv '/!$' | sed '/^[ \t]*$/d' > "${customPath}" 
 
 # write gboard file from spellfile_custom
 newGboardText="# Gboard Dictionary version:1\n$(sed -e 's/$/\ten-US/g' -e 's/^/\t/g' ${customPath})"

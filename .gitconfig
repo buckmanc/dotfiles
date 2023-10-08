@@ -85,7 +85,8 @@
 	# note that strings are case sensitive
 	clean = "xq -x -S 'walk(if type == \"array\" then sort_by(.\"@name\", .\"@Name\", .\"@GUID\") else . end)'"
 [filter "sort"]
-	clean = "sort -u"
+	# clean = "sort -u"
+	clean = "~/bin/PADS"
 [help]
 	autocorrect = 20
 [diff]

@@ -24,6 +24,8 @@
 	audiobook	en-US
 	audiobooks	en-US
 	autocatching	en-US
+	B2B	en-US
+	backend	en-US
 	bb	en-US
 	bbq	en-US
 	BCP	en-US
@@ -31,6 +33,7 @@
 	bevy	en-US
 	biome	en-US
 	biomes	en-US
+	Blazor	en-US
 	Blegh	en-US
 	BLM	en-US
 	blotchiness	en-US
@@ -39,13 +42,19 @@
 	Booktuber	en-US
 	booped	en-US
 	bootlickers	en-US
+	bork	en-US
+	borked	en-US
+	borker	en-US
+	borks	en-US
 	bs	en-US
+	Bulbapedia	en-US
 	bupkis	en-US
 	burgo	en-US
 	caffeination	en-US
 	calc	en-US
 	calcs	en-US
 	cancelled	en-US
+	canopic	en-US
 	CEOs	en-US
 	cheerleading	en-US
 	childers	en-US
@@ -55,6 +64,7 @@
 	cishet	en-US
 	CJ	en-US
 	clergical	en-US
+	cli	en-US
 	config	en-US
 	convo	en-US
 	cosleep	en-US
@@ -62,6 +72,7 @@
 	covid	en-US
 	COVID	en-US
 	coz	en-US
+	crashdown	en-US
 	cringey	en-US
 	Dafoe's	en-US
 	Darkspace	en-US
@@ -74,11 +85,13 @@
 	Deus	en-US
 	dev	en-US
 	devs	en-US
+	dialer	en-US
 	direness	en-US
 	discog	en-US
 	dl	en-US
 	DLC	en-US
 	DLCs	en-US
+	DNS	en-US
 	docu	en-US
 	docuseries	en-US
 	dodgeball	en-US
@@ -112,6 +125,7 @@
 	FMLA	en-US
 	followable	en-US
 	frans	en-US
+	frutti	en-US
 	fundie	en-US
 	GAM	en-US
 	gameplay	en-US
@@ -123,6 +137,7 @@
 	github	en-US
 	globbing	en-US
 	Goodreads	en-US
+	greataxe	en-US
 	hacky	en-US
 	hander	en-US
 	hatewatch	en-US
@@ -132,6 +147,7 @@
 	hearted	en-US
 	HIPAA	en-US
 	hm	en-US
+	hodge	en-US
 	HomeChef	en-US
 	homeschool	en-US
 	homeschooled	en-US
@@ -139,9 +155,13 @@
 	homeschooler's	en-US
 	homeschoolers	en-US
 	homeschooling	en-US
+	homeworld	en-US
+	hotdog	en-US
 	HTTSKWLALSKWT	en-US
 	hubbers	en-US
 	hurty	en-US
+	hydroxychloroquine	en-US
+	hyperdrive	en-US
 	ideation	en-US
 	Idris	en-US
 	IEnumerable	en-US
@@ -166,17 +186,21 @@
 	Khaw	en-US
 	Kool	en-US
 	Koolaid	en-US
+	kraken	en-US
 	Kwik	en-US
 	LaBeouf	en-US
 	Lactaid	en-US
 	Larkwood's	en-US
 	Lenscrafters	en-US
 	LGBTQ	en-US
+	lifesign	en-US
+	lifesigns	en-US
 	lofi	en-US
 	Logitech	en-US
 	lunner	en-US
 	Machina	en-US
 	mahjong	en-US
+	Malwart	en-US
 	marvelling	en-US
 	mech	en-US
 	meds	en-US
@@ -188,6 +212,8 @@
 	MLKJ	en-US
 	monologuing	en-US
 	moreso	en-US
+	mothership	en-US
+	nanite	en-US
 	nerddom	en-US
 	neurodivergent	en-US
 	neurotypical	en-US
@@ -198,16 +224,19 @@
 	offput	en-US
 	oof	en-US
 	other's	en-US
+	outro	en-US
 	overprotection	en-US
 	overstimulation	en-US
 	overworld	en-US
 	parter	en-US
+	pathing	en-US
 	Pattinson	en-US
 	personhood	en-US
 	pinky	en-US
 	Plandemic	en-US
 	playthrough	en-US
 	plushie	en-US
+	podge	en-US
 	positivity	en-US
 	PowerShell	en-US
 	pre	en-US
@@ -223,8 +252,15 @@
 	Q3	en-US
 	Q4	en-US
 	Quiplash	en-US
+	ramen	en-US
 	ramped	en-US
 	rando	en-US
+	raspi	en-US
+	raspi1	en-US
+	raspi2	en-US
+	raspi3	en-US
+	raspi4	en-US
+	raspi5	en-US
 	readme	en-US
 	realtor	en-US
 	recraft	en-US
@@ -243,6 +279,7 @@
 	rotavirus	en-US
 	scritches	en-US
 	se	en-US
+	secondaries	en-US
 	secrеting	en-US
 	selah	en-US
 	SGDQ	en-US
@@ -258,6 +295,7 @@
 	Shia	en-US
 	shoppy	en-US
 	skelly	en-US
+	sleevies	en-US
 	societally	en-US
 	sp	en-US
 	spoop	en-US
@@ -265,6 +303,7 @@
 	Spotify	en-US
 	SSH'ing	en-US
 	stabby	en-US
+	stardrive	en-US
 	staycation	en-US
 	strategizing	en-US
 	stressors	en-US
@@ -285,6 +324,7 @@
 	toons	en-US
 	transphobic	en-US
 	treaters	en-US
+	Tzu	en-US
 	Uber	en-US
 	umami	en-US
 	unanswering	en-US
@@ -296,6 +336,7 @@
 	uninstallability	en-US
 	unintuitive	en-US
 	unkillable	en-US
+	unmaintainable	en-US
 	unshielded	en-US
 	Unsplash	en-US
 	unvaccinated	en-US
@@ -306,6 +347,7 @@
 	vaxxed	en-US
 	VBS	en-US
 	vids	en-US
+	VPN	en-US
 	waifu	en-US
 	Walgreens	en-US
 	watchings	en-US
@@ -323,46 +365,12 @@
 	xyz	en-US
 	Yay	en-US
 	yeet	en-US
+	yeetability	en-US
 	yeeter	en-US
+	yeets	en-US
 	Yoshi	en-US
 	youtube	en-US
 	Zenni	en-US
-	backend	en-US
-	Blazor	en-US
-	DNS	en-US
-	hyperdrive	en-US
-	stardrive	en-US
-	dialer	en-US
-	nanite	en-US
-	lifesign	en-US
-	lifesigns	en-US
-	homeworld	en-US
-	crashdown	en-US
-	Tzu	en-US
-	mothership	en-US
-	canopic	en-US
-	yeetability	en-US
-	yeets	en-US
-	ramen	en-US
-	sleevies	en-US
-	Bulbapedia	en-US
-	B2B	en-US
-	VPN	en-US
-	unmaintainable	en-US
-	pathing	en-US
-	borked	en-US
-	bork	en-US
-	borks	en-US
-	borker	en-US
-	frutti	en-US
-	hotdog	en-US
-	raspi4	en-US
-	raspi1	en-US
-	raspi2	en-US
-	raspi3	en-US
-	raspi5	en-US
-	raspi	en-US
-		en-US
 	Adolin	en-US
 	Adolin's	en-US
 	Albus	en-US
@@ -374,6 +382,7 @@
 	Armello	en-US
 	Beckman	en-US
 	Bioshock	en-US
+	Blart	en-US
 	Bonemass	en-US
 	Borat	en-US
 	BotW	en-US
@@ -517,30 +526,65 @@
 	Wonka's	en-US
 	Wyndle	en-US
 	wyrm	en-US
+	afaik	en-US
+	afk	en-US
+	asl	en-US
+	bff	en-US
 	brb	en-US
+	diy	en-US
 	dl	en-US
+	dm	en-US
+	eod	en-US
+	fomo	en-US
 	ftw	en-US
+	fwiw	en-US
+	fyi	en-US
+	gratz	en-US
 	gtfo	en-US
 	idk	en-US
 	iirc	en-US
+	im	en-US
 	imho	en-US
 	imo	en-US
 	irl	en-US
+	jk	en-US
+	kms	en-US
+	kthxbai	en-US
 	lmao	en-US
 	lmk	en-US
 	lol	en-US
 	lol'd	en-US
+	nbd	en-US
+	np	en-US
 	nsfw	en-US
+	nvm	en-US
+	omfg	en-US
 	omg	en-US
 	omw	en-US
+	otp	en-US
+	pov	en-US
 	rofl	en-US
 	rtfm	en-US
+	sfw	en-US
+	smh	en-US
+	stfu	en-US
+	tba	en-US
+	tbd	en-US
 	tbh	en-US
 	tbr	en-US
+	tbt	en-US
+	tfw	en-US
+	tgif	en-US
+	thx	en-US
 	tl;dr	en-US
+	tldr	en-US
+	ttfn	en-US
 	ttyl	en-US
 	wtf	en-US
-	kms	en-US
+	ymmv	en-US
+	yolo	en-US
+	yw	en-US
+	zzz	en-US
 	Abomasnow	en-US
 	Abra	en-US
 	Absol	en-US
@@ -828,6 +872,7 @@
 	Finizen	en-US
 	Finneon	en-US
 	Flaaffy	en-US
+	Flabebe	en-US
 	Flabébé	en-US
 	Flamigo	en-US
 	Flapple	en-US
@@ -1140,6 +1185,8 @@
 	Nidoran	en-US
 	Nidoran♀	en-US
 	Nidoran♂	en-US
+	Nidoran-F	en-US
+	Nidoran-M	en-US
 	Nidorina	en-US
 	Nidorino	en-US
 	Nihilego	en-US
@@ -1335,6 +1382,7 @@
 	Simipour	en-US
 	Simisage	en-US
 	Simisear	en-US
+	Sinistcha	en-US
 	Sinistea	en-US
 	Sirfetch'd	en-US
 	Sizzlipede	en-US
@@ -1562,17 +1610,13 @@
 	Zubat	en-US
 	Zweilous	en-US
 	Zygarde	en-US
-	Nidoran-F	en-US
-	Nidoran-M	en-US
-	Flabebe	en-US
-	Sinistcha	en-US
-	Kanto	en-US
-	Johto	en-US
-	Hoenn	en-US
-	Sinnoh	en-US
-	Unova	en-US
-	Kalos	en-US
 	Alola	en-US
 	Galar	en-US
 	Hisui	en-US
+	Hoenn	en-US
+	Johto	en-US
+	Kalos	en-US
+	Kanto	en-US
 	Paldea	en-US
+	Sinnoh	en-US
+	Unova	en-US
