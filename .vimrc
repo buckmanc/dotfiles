@@ -100,10 +100,19 @@ try
 	" fancy status line
 	Plug 'vim-airline/vim-airline'
 	Plug 'vim-airline/vim-airline-themes'
-	let g:airline_theme='simple' " works well enough with differing terminal themes
+	" let g:airline_theme='simple' " works well enough with differing terminal themes
+	" let g:airline_theme='distinguished'
+	" let g:airline_theme='minimalist' " real good but a little hard to read
+	" let g:airline_theme='monochrome' " as simple as it gets
+	let g:airline_theme='raven'
 	let g:airline_powerline_fonts = 1
 	" let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 	let g:airline#extensions#tabline#formatter = 'unique_tail'
+	let g:airline_section_c_only_filename = 1
+
+	let g:airline_detect_spell=0
+	let g:airline_section_x = ''
+	let g:airline_section_b = ''
 
 	" git line status in the gutter
 	Plug 'airblade/vim-gitgutter'
