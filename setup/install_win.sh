@@ -1,6 +1,7 @@
-winget install git.git # how are you here if you don't have win git?
+# winget install git.git # how are you here if you don't have win git?
 winget install starship.starship
 winget install gnuwin32.tree
+winget install vim.vim # vim for cmd, powerShell
 winget install notepad++.notepad++
 winget install 7zip.7zip
 winget install windirstat

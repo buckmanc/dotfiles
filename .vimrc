@@ -61,11 +61,13 @@ for d in glob('~/.vim/spell/*.add', 1, 1)
 	endif
 
 	" update the spell file setting
-	exec 'set spellfile=' . spellPaths
+	exec 'set spellfile=' . escape(spellPaths, ' ')
 endfor
 
 " custom date insert command
 command! Date put =strftime('%Y-%m-%d')
+" save as sudo!
+cmap w!! w !sudo tee % >/dev/null
 
 " create the undo dir if it doesn't exist
 if !isdirectory(&undodir)
@@ -111,8 +113,30 @@ try
 	let g:airline_section_c_only_filename = 1
 
 	let g:airline_detect_spell=0
-	let g:airline_section_x = ''
-	let g:airline_section_b = ''
+	let g:airline_skip_empty_sections = 1
+	let g:airline_section_z = '%p%%%'
+	let g:airline_whitespace_checks= [ 'indent', 'trailing', 'mixed-indent-file', 'conflicts' ]
+	" fix airline delay on mode change
+	" affects gcc command
+	set timeoutlen=500
+
+	" < 80 mobile landscape
+	" < 40 mobile portrait
+	let g:airline#extensions#default#section_truncate_width = {
+	\ 'a': 0,
+	\ 'b': 80,
+	\ 'c': 0,
+	\ 'x': 40,
+	\ 'z': 80,
+	\ 'warning': 40,
+	\ 'error': 40,
+	\ 'wordcount': 0,
+	\ }
+
+	let g:airline#extensions#default#layout = [
+	\ [ 'a', 'b', 'c' ],
+	\ [ 'x', 'y', 'z', 'error', 'warning' ]
+	\ ]
 
 	" git line status in the gutter
 	Plug 'airblade/vim-gitgutter'
@@ -123,10 +147,32 @@ try
 	Plug 'preservim/vim-markdown'
 	let g:vim_markdown_folding_disabled = 1
 
-	" plugin experiments
-	Plug 'ycm-core/YouCompleteMe'
-	" Plug 'ervandew/supertab'
-	Plug 'tmadsen/vim-compiler-plugin-for-dotnet'
+	" if has('python')
+		Plug 'ycm-core/YouCompleteMe'
+	" endif
+	" let g:ycm_auto_hover="
+	" aggressively trigger semantic completion
+	" let g:ycm_semantic_triggers =  {
+	" 			\   'c,cs,cpp,objc': [ 're!\w{3}', '_' ],
+	" 			\ }
+
+	" Plug 'sirver/ultisnips'
+	" ycm suggested remappings
+	" UltiSnips triggering :
+	"  - ctrl-j to expand
+	"  - ctrl-j to go to next tabstop
+	"  - ctrl-k to go to previous tabstop
+	" let g:UltiSnipsExpandTrigger = '<C-j>'
+	" let g:UltiSnipsJumpForwardTrigger = '<C-j>'
+	" let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
+
+	Plug 'editorconfig/editorconfig-vim'
+	Plug 'jlcrochet/vim-razor'
+	" Plug 'tmadsen/vim-compiler-plugin-for-dotnet'
+	Plug 'buckmanc/vim-compiler-plugin-for-dotnet', { 'branch': 'buildflags' }
+	Plug 'tpope/vim-dispatch'
+	let g:dotnet_compiler_errors_only = 1
+
 	Plug 'mhinz/vim-startify'
 
 	call plug#end()

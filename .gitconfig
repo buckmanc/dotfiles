@@ -14,26 +14,7 @@
 	statu=status -s
 	# comm=!git diff --check && git commit
 	# diff check and dotnet test before committing
-	comm="!f() { \
-		if ! git diff --check\
-		then\
-			return\
-		elif (! type dotnet >/dev/null 2>&1)\
-		then\
-			return\
-		elif [[ \"$(dotnet list reference)\" != *\"Could not find any project in\"* ]]\
-		then\
-			return\
-		fi\
-		\
-		if ! dotnet test\
-		then\
-			return\
-		fi\
-		\
-		git commit \"$@\"\
-		\
-		}; f;"
+	comm=!"~/bin/commitcheck && git commit"
 	undo-commit=reset HEAD~
 	list-alias=!git config -l | grep alias | cut -c 7-
 	# word diff log

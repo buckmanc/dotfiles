@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+grep -Pio '(?<= |\t|^)\d+' | paste -sd+ | bc

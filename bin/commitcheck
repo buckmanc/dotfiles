@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+if ! git diff HEAD --check
+then
+	exit 1
+else
+	echo 'git check passed'
+fi
+
+if ( type dotnet > /dev/null 2>&1 ) && [[ "$(dotnet list package 2>&1)" != *"A project or solution file could not be found"* ]]
+then
+	dotnet clean --nologo --verbosity quiet
+	if ! dotnet build --nologo --verbosity:quiet --consoleLoggerParameters:NoSummary --consoleLoggerParameters:ErrorsOnly
+	then
+		exit 1
+	else
+		echo 'build succeeded'
+	fi
+
+	if [[ -z $(dotnet test --nologo --verbosity:quiet --list-tests --consoleLoggerParameters:ErrorsOnly) ]]
+	then
+		echo 'no dotnet unit tests found'
+		exit 0
+	fi
+
+	if ! dotnet test --nologo --verbosity:minimal --consoleLoggerParameters:ErrorsOnly
+	then
+		exit 1
+	fi
+fi
+
+exit 0

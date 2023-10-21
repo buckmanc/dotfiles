@@ -8,6 +8,11 @@ alias xhistory='history | cut -c 8- | grep -ivE  "^x?hist(ory | )" | grep -i --c
 alias xhist='xhistory'
 alias gwap='git diff -w --no-color | git apply --cached --ignore-whitespace && git checkout -- . && git reset && git add -p'
 alias gut='git'
+if [ -d ~/.jpsxdec ]
+then
+	alias jpsxdec='java -jar ~/.jpsxdec/jpsxdec.jar'
+fi
+
 screeny() {
 	name=$1
 	if [ -z "$name" ]
@@ -297,6 +302,8 @@ Options:
 		return 0
 	fi
 
+	buildFlags="--nologo --verbosity quiet -consoleLoggerParameters:NoSummary"
+
 	# both is just default
 	if [ "$optWarnings" == 1 ] && [ "$optErrors" == 1 ]
 	then
@@ -307,9 +314,11 @@ Options:
 	# set what text to search for
 	if [ "$optWarnings" == 1 ]
 	then
+		buildFlags="${buildFlags} -consoleLoggerParameters:WarningsOnly"
 		errowarn="warning"
 	elif [ "$optErrors" == 1 ]
 	then
+		buildFlags="${buildFlags} -consoleLoggerParameters:ErrorsOnly"
 		errowarn="error"
 	else
 		errowarn="warning|error"
@@ -345,7 +354,13 @@ Options:
 	# clean, ignore output
 	dotnet clean > /dev/null
 	# build and parse only relevant error and warning data points into a table
-	text=$(dotnet build | sort | uniq | sed 's#/#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' | grep -iP "${errowarn}" | grep -ivP "^\s+?[\d,]+? (${errowarn})\(s\)$" | $fileTrim | perl -pe 's/(Argument \d{1,2}):/\1/g' | column -t --separator ':[' --table-columns 'file, error num, error message' -o ' ' --table-hide "$tableHideColumns" | $numTrim)
+	text=$(dotnet build $buildFlags | sort | uniq | \
+		perl -pe 's/^\w:(?=[\/\\])//g' |  sed 's#[/\\]#\\\\#g' | sed -E 's/^.+?\\\\(.+?: )/\1/g' |  \
+		tac -r -s 'x\|[^x]' | perl -pe 's/(?=([^:]*:){3}):/zzzzzzzzz/g' | tac -r -s 'x\|[^x]' | \
+		$fileTrim | perl -pe 's/(Argument \d{1,2}):/\1/g' | \
+		column -t --separator ':[' --table-columns 'file, error num, error message' -o ' ' --table-hide "$tableHideColumns" | \
+		perl -pe 's/zzzzzzzzz/:/g' | \
+		$numTrim)
 
 	# unless in long mode, don't wrap 
 	if [ "$optLong" -ne 1 ]
@@ -364,6 +379,12 @@ Options:
 
 	# trim
 	text=$(echo "${text}" | perl -pe 's/^[^\S\r\n]//g')
+
+	# don't return an error if nothing was found
+	if [ -z "$text" ]
+	then
+		return 0
+	fi
 
 	# highlight start and error/warning
 	# important to have ^ in isolation or lines get stripped if nothing matches
@@ -927,6 +948,33 @@ gowebgo(){
 # TODO arg support for port and dir
 	sudo python -m http.server -d "${dir}" "${port}"
 }
+
+xsleep(){
+	# use regex replace to support sleep syntax
+	# 1s, 1h, 1m, 1d etc
+	local input=$(echo "$*" \
+		| perl -pe 's/(\d)+s( |$)/\1second/g' \
+		| perl -pe 's/(\d)+m( |$)/\1minute/g' \
+		| perl -pe 's/(\d)+h( |$)/\1hour/g' \
+		| perl -pe 's/(\d)+d( |$)/\1day/g' \
+		| perl -pe 's/(\d)+d( |$)/\1week/g' \
+	)
+
+	local startEpochSec=$(date +"%s")
+	local targetEpochSec=$(date --date="$input" +"%s")
+	local secToWait="$(($targetEpochSec-$startEpochSec))"
+	echo "sleeping til $(date --date=@$targetEpochSec --rfc-3339=second | cut -c -19)"
+
+	sleep "$secToWait"
+
+	# TODO make this a countdown instead
+	# while [ "$targetEpochSec" > $(date +"%s") ]
+	# do
+	# 	echo ""
+	# 	sleep 1s
+	# done
+}
+alias xleep='xsleep'
 
 xrsync() {
     rsync -Przzu "$1"/* "$2"
