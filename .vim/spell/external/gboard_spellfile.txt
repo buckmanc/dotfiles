@@ -26,6 +26,7 @@
 	autocatching	en-US
 	B2B	en-US
 	backend	en-US
+	Bathory	en-US
 	bb	en-US
 	bbq	en-US
 	BCP	en-US
@@ -33,6 +34,7 @@
 	bevy	en-US
 	biome	en-US
 	biomes	en-US
+	Blackcraft	en-US
 	Blazor	en-US
 	Blegh	en-US
 	BLM	en-US
@@ -56,15 +58,20 @@
 	cancelled	en-US
 	canopic	en-US
 	CEOs	en-US
+	cheebo	en-US
 	cheerleading	en-US
+	chicky	en-US
 	childers	en-US
 	children's	en-US
+	chiropathy	en-US
+	chiropraxy	en-US
 	chislic	en-US
 	choco	en-US
 	cishet	en-US
 	CJ	en-US
 	clergical	en-US
 	cli	en-US
+	Cocomelon	en-US
 	config	en-US
 	convo	en-US
 	cosleep	en-US
@@ -96,6 +103,7 @@
 	docuseries	en-US
 	dodgeball	en-US
 	doneness	en-US
+	donut	en-US
 	doofus	en-US
 	dotfile	en-US
 	dotfiles	en-US
@@ -138,6 +146,8 @@
 	globbing	en-US
 	Goodreads	en-US
 	greataxe	en-US
+	grifter	en-US
+	groc	en-US
 	hacky	en-US
 	hander	en-US
 	hatewatch	en-US
@@ -277,6 +287,7 @@
 	Romani	en-US
 	roomba	en-US
 	rotavirus	en-US
+	Runza	en-US
 	scritches	en-US
 	se	en-US
 	secondaries	en-US
@@ -296,6 +307,7 @@
 	shoppy	en-US
 	skelly	en-US
 	sleevies	en-US
+	sms	en-US
 	societally	en-US
 	sp	en-US
 	spoop	en-US
@@ -324,6 +336,7 @@
 	toons	en-US
 	transphobic	en-US
 	treaters	en-US
+	tupper	en-US
 	Tzu	en-US
 	Uber	en-US
 	umami	en-US
@@ -347,9 +360,11 @@
 	vaxxed	en-US
 	VBS	en-US
 	vids	en-US
+	vimrc	en-US
 	VPN	en-US
 	waifu	en-US
 	Walgreens	en-US
+	Warnke	en-US
 	watchings	en-US
 	watchthrough	en-US
 	weaponized	en-US
@@ -362,12 +377,14 @@
 	woohoo	en-US
 	worldbuilding	en-US
 	WWIII	en-US
+	xmas	en-US
 	xyz	en-US
 	Yay	en-US
 	yeet	en-US
 	yeetability	en-US
 	yeeter	en-US
 	yeets	en-US
+	Yoder	en-US
 	Yoshi	en-US
 	youtube	en-US
 	Zenni	en-US

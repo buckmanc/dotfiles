@@ -26,6 +26,7 @@ audiobooks
 autocatching
 B2B
 backend
+Bathory
 bb
 bbq
 BCP
@@ -33,6 +34,7 @@ beflued
 bevy
 biome
 biomes
+Blackcraft
 Blazor
 Blegh
 BLM
@@ -56,15 +58,20 @@ calcs
 cancelled
 canopic
 CEOs
+cheebo
 cheerleading
+chicky
 childers
 children's
+chiropathy
+chiropraxy
 chislic
 choco
 cishet
 CJ
 clergical
 cli
+Cocomelon
 config
 convo
 cosleep
@@ -96,6 +103,7 @@ docu
 docuseries
 dodgeball
 doneness
+donut
 doofus
 dotfile
 dotfiles
@@ -138,6 +146,8 @@ github
 globbing
 Goodreads
 greataxe
+grifter
+groc
 hacky
 hander
 hatewatch
@@ -277,6 +287,7 @@ Rogan
 Romani
 roomba
 rotavirus
+Runza
 scritches
 se
 secondaries
@@ -296,6 +307,7 @@ Shia
 shoppy
 skelly
 sleevies
+sms
 societally
 sp
 spoop
@@ -324,6 +336,7 @@ toon
 toons
 transphobic
 treaters
+tupper
 Tzu
 Uber
 umami
@@ -347,9 +360,11 @@ vax
 vaxxed
 VBS
 vids
+vimrc
 VPN
 waifu
 Walgreens
+Warnke
 watchings
 watchthrough
 weaponized
@@ -362,12 +377,14 @@ Willem
 woohoo
 worldbuilding
 WWIII
+xmas
 xyz
 Yay
 yeet
 yeetability
 yeeter
 yeets
+Yoder
 Yoshi
 youtube
 Zenni

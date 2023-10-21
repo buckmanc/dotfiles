@@ -17,7 +17,7 @@ fi
 sanitizedExternalWordsPath=$(mktemp -t sanitizedExternalWords.txt.XXX)
 currentWordsPath=$(mktemp -t currentWords.txt.XXX)
 
-cat "${externalDir}"/*.txt | grep -Piv '(^checksum_v1|^# Gboard Dictionary version)' | perl -pe 's/(\ten-US$|\t)//g' > "${sanitizedExternalWordsPath}"
+cat "${externalDir}"/*.txt | grep -Piv '(^checksum_v1|^# Gboard Dictionary version|^# From OS)' | perl -pe 's/(\ten-US$|\t)//g' > "${sanitizedExternalWordsPath}"
 cat "${spellDir}"/*.add > "${currentWordsPath}"
 
 newExternalWords=$(grep -hivx -f "${currentWordsPath}" "${sanitizedExternalWordsPath}")
