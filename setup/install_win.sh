@@ -15,10 +15,12 @@ winget install streamlink.streamlink
 
 cp "${PROGRAMFILES} (x86)/GnuWin32/bin/tree.exe" "${PROGRAMFILES}/Git/usr/bin/"
 
+~/bin/vimplugupdate
+
 # winget install python # check version at run time
 
 # winget install mozilla.firefox
 # winget install microsoft.visualstudio.2022.Professional
 # winget install microsoft.visualstudio.2022.Community
 
-
+# TODO schtasks nerdmoon install; schtasks -create -sc hourly -tn nerdmoon -tr ~/bin/nerdmoon

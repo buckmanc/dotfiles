@@ -4,5 +4,8 @@ apt install -y cowsay cron curl dos2unix dotnet-sdk-6.0 exa ffmpeg figlet fonts-
 # apt install vlc streamlink
 pip install yt-dlp yq
 
+~/bin/vimplugupdate
+
 # TODO openvpn super script
 # TODO dropbox script
+# TODO nerdmoon cronjob install

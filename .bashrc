@@ -75,6 +75,7 @@ NVM_DIR="${HOME}/.nvm"
 ANDROID_HOME="/media/content/Coding/androidsdk"
 
 addtopathstart "${HOME}/bin"
+addtopathstart "${LOCALAPPDATA}/Microsoft/WinGet/Links"
 addtopath "${HOME}/go/bin"
 addtopath "${pyPath}"
 addtopath "${pyPath}/scripts"
@@ -82,6 +83,7 @@ addtopath "${streamlinkPath}"
 addtopath "${jqPath}"
 addtopath "${ANDROID_HOME}/cmdline-tools/latest/bin"
 addtopath "${ANDROID_HOME}/platform-tools"
+addtopath "${LOCALAPPDATA}/Pandoc"
 
 if [ -d "${ANDROID_HOME}" ]
 then
