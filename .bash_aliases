@@ -12,6 +12,10 @@ if [ -d ~/.jpsxdec ]
 then
 	alias jpsxdec='java -jar ~/.jpsxdec/jpsxdec.jar'
 fi
+if [ -f ~/dropbox.py ]
+then
+	alias dropbox='python3 ~/dropbox.py'
+fi
 
 screeny() {
 	name=$1

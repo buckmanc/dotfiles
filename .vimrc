@@ -1,3 +1,9 @@
+" nocompatible resets a few things when set
+" so only set if needed
+if &compatible
+	set nocompatible
+endif
+
 " presentation
 set background=dark	" better colors for dark themes
 syntax on		" syntax highilghting
@@ -111,6 +117,8 @@ if filereadable(expand("~/.vim/plug.vim"))
 	" plugins
 	call plug#begin('~/.vim/plugged')
 
+	Plug 'tpope/vim-sensible'	" tpope's sensible defaults
+	Plug 'tpope/vim-sleuth'		" hueristic file options
 	Plug 'tpope/vim-speeddating'	" mods ctrl+x and ctrl+a to work with dates
 	Plug 'tpope/vim-eunuch'		" simple file operations, namely :Delete, which is useful when reviewing a large number of files
 	Plug 'tomtom/tcomment_vim'	" gcc/gc to comment
