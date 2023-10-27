@@ -38,8 +38,13 @@ set hlsearch		" highlight all search results
 set magic		" special characters available in pattern matching
 set ignorecase		" ignore case in searching
 set smartcase		" only use case sensitive search when capitals are included in
+set infercase		" infer completion case
 set viminfo+=!		" make sure it can save viminfo
 set report=0		" always show 'x lines changed' messages
+
+" performance improvment experiment
+set lazyredraw
+autocmd VimEnter * redraw!
 
 " spellcheck
 " hi SpellLocal ctermbg=DarkMagenta
@@ -101,8 +106,11 @@ augroup FileTypeSpecificAutocommands
 
 	" custom filetypes: makes sure these filetypes have appropriate syntax highlighting and comment chars
 	autocmd BufNewFile,BufRead *.gitconfig_local set filetype=gitconfig
+	autocmd BufNewFile,BufRead *.vimrc_local set filetype=vim
 	autocmd BufNewFile,BufRead *.bash_* set filetype=bash
 	autocmd BufNewFile,BufRead *.add set filetype=text
+
+	autocmd FileType markdown,text setlocal keywordprg=dict
 
 augroup end
 endif " has('autocmd')
@@ -229,3 +237,7 @@ if has("autocmd")
       \ highlight WhiteSpaceEOL ctermbg=red |
       \ match WhiteSpaceEOL /\(^+.*\)\@<=\s\+$/
 endif " has("autocmd")
+
+if filereadable(expand('~/.vimrc_local'))
+	source ~/.vimrc_local
+endif

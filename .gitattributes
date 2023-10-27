@@ -5,3 +5,11 @@
 .config/messages/*.txt merge=union
 .vim/spell/*.add merge=union
 .vim/spell/*.add filter=sort
+*.bmp diff=image
+*.gif diff=image
+*.jpeg diff=image
+*.jpg diff=image
+*.png diff=image
+*.tif diff=image
+*.tiff diff=image
+*.webp diff=image

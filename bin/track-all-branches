@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+git for-each-ref --format='%(refname)' | grep -iPo '(?<=refs/remotes/).+' | grep -iv /HEAD | while read remote; do git branch --track "${remote#origin/}" "$remote"; done

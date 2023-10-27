@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+runifexists(){
+	local command="$1"
+	local args="$2"
+	local progName=$(echo "$command" | cut -d' ' -f 1)
+	echo "command: $command"
+	echo "args: $2"
+	if ( type $progName >/dev/null 2>&1 )
+	then
+		$command $2
+	else
+		return 1
+	fi
+}
+
+runifexists "ascii-image-converter --color" "$@" || runifexists "magick identify" "$@" || runifexists "identify" "$@"
+
+

@@ -9,6 +9,7 @@
 	wdiff=diff --color-words='\\w+|.' --ignore-cr-at-eol
 	# letter diff
 	ldiff=diff --color-words='.' --ignore-cr-at-eol
+	dbdiff=wdiff --ignore-matching-lines='^USE \\[\\w+\\]$'
 	# short stat
 	stat=status -s
 	statu=status -s
@@ -26,6 +27,8 @@
 	# one line log
 	olog=log --abbrev-commit --date-order --format=format:'%C(bold blue)%h%C(reset) %C(bold green)(%as)%C(reset) %C(white)%<(49,trunc)%s%C(reset) %C(dim white)- %aN%C(reset)%C(auto)%+d%C(reset)'
 	dumpchanges=!git clean -fd && git checkout .
+	track-all-branches=!~/bin/track-all-branches
+	diff-all-branches=!~/bin/diff-all-branches
 	pullall="!f() { \
 		test -z \"$(git status --porcelain)\" || { echo 'Uncommitted changes!' && exit 1; };\
 		currentbranch=$(git branch | grep \\* | cut -c 3-);\
@@ -44,6 +47,8 @@
 	autocrlf = input # only check in lf, check out whatever's in the index
 	pager = tr -d '\\r' | less -REX # visually strip CR's
 	#attributesfile = ~/.gitattributes # working, but gitignore filter causes one hell of a slowdown in certain environments
+[interactive]
+	singleKey = true
 [push]
 	autoSetupRemote = true
 [gc]
@@ -71,6 +76,8 @@
 	# clean = "sort -u"
 	clean = "~/bin/PADS"
 [help]
-	autocorrect = 20
+	autocorrect = 50
 [diff]
 	wsErrorHighlight = all
+[diff "image"]
+	textconv = ~/bin/image-diff
