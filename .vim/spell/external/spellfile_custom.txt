@@ -142,7 +142,9 @@ gaslit
 GBA
 GDQ
 Gemma
+gitconfig
 github
+gitignore
 globbing
 Goodreads
 greataxe
@@ -388,6 +390,7 @@ Yoder
 Yoshi
 youtube
 Zenni
+thorts
 Adolin
 Adolin's
 Albus

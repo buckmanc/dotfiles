@@ -1,0 +1,4 @@
+# those darned mac files
+.DS_Store
+# vim swap files
+[._]*.sw[a-p]

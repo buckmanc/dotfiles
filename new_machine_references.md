@@ -21,6 +21,8 @@ New Machine References
 - [Passwordless SSH](https://linuxize.com/post/how-to-setup-passwordless-ssh-login/)
 - [Pokemon Go Raid Finder](https://9db.jp/pokego/data/62)
 - [Pokemon Go Countdowns](https://p337.info/pokemongo/)
+- [Market Holidays](https://www.nyse.com/markets/hours-calendars)
+- [jq Cheat Sheet](https://gist.github.com/olih/f7437fb6962fb3ee9fe95bda8d2c8fa4)
 
 ## Bookmarklets
 

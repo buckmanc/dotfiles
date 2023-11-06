@@ -142,7 +142,9 @@
 	GBA	en-US
 	GDQ	en-US
 	Gemma	en-US
+	gitconfig	en-US
 	github	en-US
+	gitignore	en-US
 	globbing	en-US
 	Goodreads	en-US
 	greataxe	en-US
@@ -388,6 +390,7 @@
 	Yoshi	en-US
 	youtube	en-US
 	Zenni	en-US
+	thorts	en-US
 	Adolin	en-US
 	Adolin's	en-US
 	Albus	en-US

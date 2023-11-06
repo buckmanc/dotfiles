@@ -46,7 +46,8 @@
 	editor = vim
 	autocrlf = input # only check in lf, check out whatever's in the index
 	pager = tr -d '\\r' | less -REX # visually strip CR's
-	#attributesfile = ~/.gitattributes # working, but gitignore filter causes one hell of a slowdown in certain environments
+	attributesfile = ~/.gitattributes # todo: fix the slowdown this causes in some environments
+	excludesfile = ~/.gitignore_global
 [interactive]
 	singleKey = true
 [push]
