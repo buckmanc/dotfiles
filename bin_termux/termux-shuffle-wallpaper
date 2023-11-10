@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# (cd ~/storage/shared/Wallpapers/ && ./update.sh)
+# shenanigans to get around permission issues
+cd ~/storage/shared/Wallpapers/
+eval "$(cat ./update.sh)"
+
+paperPath=$(find ~/storage/shared/Wallpapers/mobile/stormlight/ -type f -not -iname '*.md' | shuf --random-source='/dev/urandom' -n 1)
+termux-wallpaper -l -f "$paperPath"
+
+git ls-files | xargs touch --no-create -t "190001010101"
+
+termux-notification --image-path "$paperPath" --icon "Wallpaper" --title "wallpaper updated" --content '' --id autopaper

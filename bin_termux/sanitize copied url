@@ -1,0 +1,12 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+stringy=$(termux-clipboard-get)
+sanStringy=$(echo "$stringy" | sed 's/\(ref=\|\?\).*//g')
+
+if [ "$stringy" != "$sanStringy" ]
+then
+	echo "${sanStringy}" | termux-clipboard-set
+	termux-toast "sanitized"
+else
+	termux-toast "no match"
+fi
