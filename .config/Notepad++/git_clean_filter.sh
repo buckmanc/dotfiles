@@ -12,6 +12,10 @@ declare -a myArray=(
 	'<\/FileBrowser'
 	'<ProjectPanel'
 	'<\/ProjectPanel'
+	'<FindHistory'
+	'<Filter name'
+	'<\/FindHistory'
+	'<text content'
 )
 
 sedcmd="sed"

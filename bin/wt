@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# wrap the windows terminal command (wt) and open a new tab in the provided dir if the argument is a path
+
+if (! type wt >/dev/null 2>&1)
+then
+	echo 'windows terminal not installed'
+	return -1
+fi
+
+path=$(readlink -f "$1")
+
+if [ -d "$path" ]
+then
+	wt new-tab --startingDirectory "$path"
+else
+	wt "$@"
+fi

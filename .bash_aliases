@@ -605,18 +605,6 @@ shutdown() {
 }
 export shutdown
 
-winterm() {
-
-	if (! type wt >/dev/null 2>&1)
-	then
-		echo 'windows terminal not installed'
-		return -1
-	fi
-
-	path=$(readlink -f "$1")
-
-	wt nt --startingDirectory "$path"
-}
 # start wttr.in/:bash.function
 # If you source this file, it will set WTTR_PARAMS as well as show weather.
 

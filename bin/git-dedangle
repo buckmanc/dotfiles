@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -e
+if ! git fsck 2>&1 | grep -i dangling 
+then
+	echo 'nothing dangling'
+	exit 0
+fi
+
+git prune
+git gc

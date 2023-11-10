@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 if [ $EUID > 0 ]
 then
 	echo 'please sudo this script'

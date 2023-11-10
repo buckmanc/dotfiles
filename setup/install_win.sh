@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # winget install git.git # how are you here if you don't have win git?
 winget install starship.starship
 winget install gnuwin32.tree

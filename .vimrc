@@ -51,6 +51,7 @@ autocmd VimEnter * redraw!
 " hi SpellRare ctermbg=DarkMagenta
 hi SpellLocal ctermbg=Black 				" invisible or innocuous with dark themes
 set spellcapcheck=					" turn off capitalization check. too bad this doesn't exist for SpellLocal
+set spellsuggest+=10
 
 " iterate over custom spellfiles
 let spellPaths = ''
@@ -87,6 +88,7 @@ function! DateStamp(...)
 	return strftime('%Y-%m-%d', ( localtime() + daySeconds ))
 endfunction
 command! -bar -nargs=? Date put =DateStamp(<args>)
+command! Run !"%:p"
 
 " save as sudo!
 cmap w!! w !sudo tee % >/dev/null

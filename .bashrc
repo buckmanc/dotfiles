@@ -75,6 +75,7 @@ NVM_DIR="${HOME}/.nvm"
 ANDROID_HOME="/media/content/Coding/androidsdk"
 
 addtopathstart "${HOME}/bin"
+addtopathstart "${HOME}/bin_local"
 addtopathstart "${LOCALAPPDATA}/Microsoft/WinGet/Links"
 addtopath "${HOME}/go/bin"
 addtopath "${pyPath}"
@@ -147,4 +148,9 @@ STARSHIP_LOG=error # suppress warnings
 
 if type starship >/dev/null 2>&1; then
 	eval "$(starship init bash)"
+fi
+
+if [ -d /home/linuxbrew ]
+then
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
