@@ -76,8 +76,8 @@
 	convo	en-US
 	cosleep	en-US
 	cosleeping	en-US
-	covid	en-US
 	COVID	en-US
+	covid	en-US
 	coz	en-US
 	crashdown	en-US
 	cringey	en-US
@@ -179,11 +179,12 @@
 	IEnumerable	en-US
 	IGN	en-US
 	IGN's	en-US
+	IM's	en-US
 	IMing	en-US
 	immunocompromised	en-US
-	IM's	en-US
 	incel	en-US
 	ing	en-US
+	intellisense	en-US
 	interoception	en-US
 	intersex	en-US
 	interwebs	en-US
@@ -214,9 +215,9 @@
 	mahjong	en-US
 	Malwart	en-US
 	marvelling	en-US
+	me's	en-US
 	mech	en-US
 	meds	en-US
-	me's	en-US
 	midwest	en-US
 	mins	en-US
 	mislisting	en-US
@@ -275,6 +276,7 @@
 	raspi5	en-US
 	readme	en-US
 	realtor	en-US
+	recency	en-US
 	recraft	en-US
 	Reddit	en-US
 	rehome	en-US
@@ -324,13 +326,15 @@
 	talkbox	en-US
 	taze	en-US
 	Teradata	en-US
+	Termux	en-US
 	Tetris	en-US
 	that	en-US
 	that'll	en-US
 	themself	en-US
+	thorts	en-US
 	throwies	en-US
-	tiktok	en-US
 	TikTok	en-US
+	tiktok	en-US
 	tiktoks	en-US
 	timelines	en-US
 	timestamps	en-US
@@ -390,7 +394,6 @@
 	Yoshi	en-US
 	youtube	en-US
 	Zenni	en-US
-	thorts	en-US
 	Adolin	en-US
 	Adolin's	en-US
 	Albus	en-US
@@ -737,13 +740,13 @@
 	Chesnaught	en-US
 	Chespin	en-US
 	Chewtle	en-US
+	Chi-Yu	en-US
 	Chien-Pao	en-US
 	Chikorita	en-US
 	Chimchar	en-US
 	Chimecho	en-US
 	Chinchou	en-US
 	Chingling	en-US
-	Chi-Yu	en-US
 	Cinccino	en-US
 	Cinderace	en-US
 	Clamperl	en-US
@@ -1004,9 +1007,9 @@
 	Hitmonchan	en-US
 	Hitmonlee	en-US
 	Hitmontop	en-US
+	Ho-Oh	en-US
 	Honchkrow	en-US
 	Honedge	en-US
-	Ho-Oh	en-US
 	Hoopa	en-US
 	Hoothoot	en-US
 	Hoppip	en-US
@@ -1203,10 +1206,10 @@
 	Nidoking	en-US
 	Nidoqueen	en-US
 	Nidoran	en-US
-	Nidoran♀	en-US
-	Nidoran♂	en-US
 	Nidoran-F	en-US
 	Nidoran-M	en-US
+	Nidoran♀	en-US
+	Nidoran♂	en-US
 	Nidorina	en-US
 	Nidorino	en-US
 	Nihilego	en-US
@@ -1286,8 +1289,8 @@
 	Poochyena	en-US
 	Popplio	en-US
 	Porygon	en-US
-	Porygon2	en-US
 	Porygon-Z	en-US
+	Porygon2	en-US
 	Primarina	en-US
 	Primeape	en-US
 	Prinplup	en-US
@@ -1355,8 +1358,8 @@
 	Sandile	en-US
 	Sandshrew	en-US
 	Sandslash	en-US
-	Sandygast	en-US
 	Sandy Shocks	en-US
+	Sandygast	en-US
 	Sawk	en-US
 	Sawsbuck	en-US
 	Scatterbug	en-US
@@ -1597,8 +1600,8 @@
 	Wimpod	en-US
 	Wingull	en-US
 	Wishiwashi	en-US
-	Wobbuffet	en-US
 	Wo-Chien	en-US
+	Wobbuffet	en-US
 	Woobat	en-US
 	Wooloo	en-US
 	Wooper	en-US

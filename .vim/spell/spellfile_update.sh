@@ -17,7 +17,7 @@ fi
 sanitizedExternalWordsPath=$(mktemp -t sanitizedExternalWords.txt.XXX)
 currentWordsPath=$(mktemp -t currentWords.txt.XXX)
 
-cat "${externalDir}"/*.txt | grep -Piv '(^checksum_v1|^# Gboard Dictionary version|^# From OS)' | perl -pe 's/(\ten-US$|\t)//g' > "${sanitizedExternalWordsPath}"
+cat "${externalDir}"/*.txt | grep -Piv '(^checksum_v1|^# Gboard Dictionary version|^# From OS)' | perl -pe 's/(\ten-US$|\t)//g' | pysort > "${sanitizedExternalWordsPath}"
 cat "${spellDir}"/*.add > "${currentWordsPath}"
 
 newExternalWords=$(grep -hivx -f "${currentWordsPath}" "${sanitizedExternalWordsPath}")
@@ -28,6 +28,9 @@ if [[ "${newExternalWords}" != "${oldExternalWords}" ]]
 then
 	echo "${newExternalWords}" > "${externalPath}"
 fi
+
+# sort first
+"${spellDir}"/sort.sh
 
 # mash all vim spell files into one text file for outside use
 ls "${spellDir}"/*.add | grep -iv private | xargs cat | grep -Piv '/!$' | sed '/^[ \t]*$/d' > "${customPath}" 

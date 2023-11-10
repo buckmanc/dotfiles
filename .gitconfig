@@ -1,9 +1,5 @@
 [user]
 	# These values are set in ~/.gitconfig_local
-[include]
-	path = ~/.gitconfig_local
-[mailmap]
-	file = ~/.mailmap
 [alias]
 	# word diff
 	wdiff=diff --color-words='\\w+|.' --ignore-cr-at-eol
@@ -71,11 +67,16 @@
 [filter "json"]
 	clean = "jq -S 'walk(if type == \"array\" then sort_by(.) else . end)'"
 [filter "sort"]
-	# clean = "sort -u"
-	clean = "~/bin/PADS"
+	clean = "~/bin/pysort"
 [help]
 	autocorrect = 50
 [diff]
 	wsErrorHighlight = all
 [diff "image"]
 	textconv = ~/bin/git-image-diff
+
+# placed at the bottom to allow overriding if necessary
+[include]
+	path = ~/.gitconfig_local
+[mailmap]
+	file = ~/.mailmap

@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+
+import sys
+lines = sys.stdin.read().strip().split("\n")
+# sortedLines = sorted(set(lines), key=str.casefold)
+sortedLines = sorted(lines, key=str.casefold)
+print("\n".join(sortedLines), file=sys.stdout, flush=True)
+sys.stdout.flush()
+sys.stdout.close()

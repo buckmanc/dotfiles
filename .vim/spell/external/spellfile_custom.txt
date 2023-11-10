@@ -76,8 +76,8 @@ config
 convo
 cosleep
 cosleeping
-covid
 COVID
+covid
 coz
 crashdown
 cringey
@@ -179,11 +179,12 @@ Idris
 IEnumerable
 IGN
 IGN's
+IM's
 IMing
 immunocompromised
-IM's
 incel
 ing
+intellisense
 interoception
 intersex
 interwebs
@@ -214,9 +215,9 @@ Machina
 mahjong
 Malwart
 marvelling
+me's
 mech
 meds
-me's
 midwest
 mins
 mislisting
@@ -275,6 +276,7 @@ raspi4
 raspi5
 readme
 realtor
+recency
 recraft
 Reddit
 rehome
@@ -324,13 +326,15 @@ stressors
 talkbox
 taze
 Teradata
+Termux
 Tetris
 that
 that'll
 themself
+thorts
 throwies
-tiktok
 TikTok
+tiktok
 tiktoks
 timelines
 timestamps
@@ -390,7 +394,6 @@ Yoder
 Yoshi
 youtube
 Zenni
-thorts
 Adolin
 Adolin's
 Albus
@@ -737,13 +740,13 @@ Cherubi
 Chesnaught
 Chespin
 Chewtle
+Chi-Yu
 Chien-Pao
 Chikorita
 Chimchar
 Chimecho
 Chinchou
 Chingling
-Chi-Yu
 Cinccino
 Cinderace
 Clamperl
@@ -1004,9 +1007,9 @@ Hippowdon
 Hitmonchan
 Hitmonlee
 Hitmontop
+Ho-Oh
 Honchkrow
 Honedge
-Ho-Oh
 Hoopa
 Hoothoot
 Hoppip
@@ -1203,10 +1206,10 @@ Nickit
 Nidoking
 Nidoqueen
 Nidoran
-Nidoran♀
-Nidoran♂
 Nidoran-F
 Nidoran-M
+Nidoran♀
+Nidoran♂
 Nidorina
 Nidorino
 Nihilego
@@ -1286,8 +1289,8 @@ Ponyta
 Poochyena
 Popplio
 Porygon
-Porygon2
 Porygon-Z
+Porygon2
 Primarina
 Primeape
 Prinplup
@@ -1355,8 +1358,8 @@ Sandaconda
 Sandile
 Sandshrew
 Sandslash
-Sandygast
 Sandy Shocks
+Sandygast
 Sawk
 Sawsbuck
 Scatterbug
@@ -1597,8 +1600,8 @@ Wiglett
 Wimpod
 Wingull
 Wishiwashi
-Wobbuffet
 Wo-Chien
+Wobbuffet
 Woobat
 Wooloo
 Wooper

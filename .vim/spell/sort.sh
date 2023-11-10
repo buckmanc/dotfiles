@@ -1,4 +1,4 @@
 for f in ~/.vim/spell/*.add
 do
-	sort -u -o "$f" "$f"
+	cat "$f" | pysort | sponge "$f"
 done
