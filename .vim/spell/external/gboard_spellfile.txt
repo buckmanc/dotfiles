@@ -1633,6 +1633,10 @@
 	Zubat	en-US
 	Zweilous	en-US
 	Zygarde	en-US
+	buddy5	en-US
+	friendlevel4	en-US
+	giftable	en-US
+	interactable	en-US
 	Alola	en-US
 	Galar	en-US
 	Hisui	en-US

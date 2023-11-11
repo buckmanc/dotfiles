@@ -1633,6 +1633,10 @@ Zorua
 Zubat
 Zweilous
 Zygarde
+buddy5
+friendlevel4
+giftable
+interactable
 Alola
 Galar
 Hisui

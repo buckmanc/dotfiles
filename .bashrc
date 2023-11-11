@@ -6,6 +6,14 @@ if [ -f ~/.bash_aliases_local ]; then
     . ~/.bash_aliases_local
 fi
 
+if [ "$HOME" == *"termux"* ]; then
+	XENVIRO=mobile
+elif [ "$HOME" == *OneDrive* ]; then
+	XENVIRO=work
+fi
+
+export XENVIRO
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -76,6 +84,10 @@ ANDROID_HOME="/media/content/Coding/androidsdk"
 
 addtopathstart "${HOME}/bin"
 addtopathstart "${HOME}/bin_local"
+if [ "$XENVIRO" == "mobile" ]
+then
+	addtopath "${HOME}/bin_termux"
+fi
 addtopathstart "${LOCALAPPDATA}/Microsoft/WinGet/Links"
 addtopath "${HOME}/go/bin"
 addtopath "${pyPath}"
