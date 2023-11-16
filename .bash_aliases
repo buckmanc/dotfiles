@@ -8,6 +8,10 @@ alias xhistory='history | cut -c 8- | grep -ivE  "^x?hist(ory | )" | grep -i --c
 alias xhist='xhistory'
 alias gwap='git diff -w --no-color | git apply --cached --ignore-whitespace && git checkout -- . && git reset && git add -p'
 alias gut='git'
+alias got='git'
+alias vum='vim'
+alias vom='vim'
+alias vin='echo "praise the Ascendant Warrior"'
 if [ -d ~/.jpsxdec ]
 then
 	alias jpsxdec='java -jar ~/.jpsxdec/jpsxdec.jar'
@@ -652,60 +656,6 @@ xwttr(){
 	fi
 }
 
-
-# position of moonphase glyphs correspond to the day of the moon
-export MOONPHASE_NERDFONT_GLYPHS=""
-
-nerdmoon(){
-	# moon phases in nerdfont glyphs
-
-	url="wttr.in/?format=%M"
-	moonday=$(curl -s "${url}")
-
-	logPath="${HOME}/.logs/nerdmoon/$(date -Iseconds).txt"
-	mkdir -p "${HOME}/.logs/nerdmoon/"
-	echo "url:      ${url}" >> "${logPath}"
-	echo "response: ${moonday}" >> "${logPath}"
-
-	# this should really be a loop but alas, here we are
-	if [ -z "${moonday}" ]
-	then
-		sleep 10s
-		moonday=$(curl -s "${url}")
-		echo "response: ${moonday}" >> "${logPath}"
-	fi
-
-	if [ -z "${moonday}" ]
-	then
-		return 1
-	fi
-
-	# zero base our moonday
-	moonday=$(($moonday-1))
-
-	output=${MOONPHASE_NERDFONT_GLYPHS:$moonday:1}
-
-	echo "${output}"
-	echo "output:   ${output}" >> "${logPath}"
-
-}
-
-# schedule me in cron
-# or you can call immediately after definition to update when loading bash
-nerdmoon_to_starship(){
-
-	glyph="$(nerdmoon)"
-
-	if [ -z "${glyph}" ]
-	then
-		return 1
-	fi
-
-	# replace any glyph from our chosen set of moon phase glyphs with the current moon phase glyph
-	sed -i "s/[${MOONPHASE_NERDFONT_GLYPHS}]/${glyph}/g" ~/.config/starship.toml
-}
-# nerdmoon_to_starship
-
 gutenbook(){
 
 # help="Usage: $(basename "$0") [OPTION] PATTERN
@@ -937,19 +887,49 @@ gowebgo(){
 		fi
 	done
 
+
 # TODO arg support for port and dir
 	sudo python -m http.server -d "${dir}" "${port}"
+}
+
+quoter_update(){
+	# store file paths, names in a dictionary format
+	# try a json file, parse with jq
+	# 'quoter todo "bake us a cake"' appends to the file
+	# 'quoter todo' opens the file
+
+	fileSearch="${1}"
+	textToAdd="${2}"
+
+	if [ -z "${fileSearch}" ]
+	then
+		blarp=blorp
+		# list optional names
+	fi
+
+	# find file path
+	# something like '^${fileSearch.*'
+	# warn an exit if more than one matching path found
+
+	if [ -z "${textToAdd}" ]
+	then
+		blarp=blorp
+		# vim file
+	else
+		blarp=blorp
+		# append to file
+	fi
 }
 
 xsleep(){
 	# use regex replace to support sleep syntax
 	# 1s, 1h, 1m, 1d etc
 	local input=$(echo "$*" \
-		| perl -pe 's/(\d)+s( |$)/\1second/g' \
-		| perl -pe 's/(\d)+m( |$)/\1minute/g' \
-		| perl -pe 's/(\d)+h( |$)/\1hour/g' \
-		| perl -pe 's/(\d)+d( |$)/\1day/g' \
-		| perl -pe 's/(\d)+d( |$)/\1week/g' \
+		| perl -pe 's/(\d+)s( |$)/\1second\2/g' \
+		| perl -pe 's/(\d+)m( |$)/\1minute\2/g' \
+		| perl -pe 's/(\d+)h( |$)/\1hour\2/g' \
+		| perl -pe 's/(\d+)d( |$)/\1day\2/g' \
+		| perl -pe 's/(\d+)d( |$)/\1week\2/g' \
 	)
 
 	local startEpochSec=$(date +"%s")

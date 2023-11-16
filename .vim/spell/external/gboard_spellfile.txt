@@ -1,4 +1,5 @@
-# Gboard Dictionary version:1\n	3D	en-US
+# Gboard Dictionary version:1
+	3D	en-US
 	achey	en-US
 	aerosoled	en-US
 	aether	en-US
@@ -13,6 +14,7 @@
 	AGDQ2023	en-US
 	AGDQ2024	en-US
 	AirBNB	en-US
+	Airbnb	en-US
 	airpod	en-US
 	airpods	en-US
 	amened	en-US
@@ -20,6 +22,7 @@
 	appt	en-US
 	Arby's	en-US
 	ASMR	en-US
+	assholery	en-US
 	async	en-US
 	audiobook	en-US
 	audiobooks	en-US
@@ -56,6 +59,7 @@
 	calc	en-US
 	calcs	en-US
 	cancelled	en-US
+	cancelling	en-US
 	canopic	en-US
 	CEOs	en-US
 	cheebo	en-US
@@ -237,6 +241,7 @@
 	offput	en-US
 	oof	en-US
 	other's	en-US
+	ouija	en-US
 	outro	en-US
 	overprotection	en-US
 	overstimulation	en-US
@@ -246,6 +251,7 @@
 	Pattinson	en-US
 	personhood	en-US
 	pinky	en-US
+	PJs	en-US
 	Plandemic	en-US
 	playthrough	en-US
 	plushie	en-US
@@ -337,9 +343,11 @@
 	tiktok	en-US
 	tiktoks	en-US
 	timelines	en-US
+	timestamped	en-US
 	timestamps	en-US
 	toon	en-US
 	toons	en-US
+	transgressive	en-US
 	transphobic	en-US
 	treaters	en-US
 	tupper	en-US
@@ -385,6 +393,7 @@
 	WWIII	en-US
 	xmas	en-US
 	xyz	en-US
+	yacking	en-US
 	Yay	en-US
 	yeet	en-US
 	yeetability	en-US

@@ -26,6 +26,7 @@ set whichwrap+=<,>,h,l	" allow moving to next line from the ends
 set backspace=indent,eol,start	" 'normal' backspace behavior
 set undodir=~/.vim/undodir	" where to save undo history
 set undofile			" enable persistent undo
+set mouse=	" disable mouse/touch controls
 
 " filenames can have space, comma, ampersand... sigh
 set isfname+=32
@@ -101,11 +102,6 @@ endif
 if has('autocmd')
 augroup FileTypeSpecificAutocommands
 
-	autocmd Filetype text setlocal spell spelllang=en_us	" turn on spell check for text files only
-
-	autocmd FileType cs setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
-	autocmd FileType text setlocal commentstring=#%s
-
 	" custom filetypes: makes sure these filetypes have appropriate syntax highlighting and comment chars
 	autocmd BufNewFile,BufRead *.gitconfig_local set filetype=gitconfig
 	autocmd BufNewFile,BufRead *.vimrc_local set filetype=vim
@@ -113,7 +109,10 @@ augroup FileTypeSpecificAutocommands
 	autocmd BufNewFile,BufRead *.add set filetype=text
 	autocmd BufNewFile,BufRead *.MD set filetype=markdown " uppercase markdown is still markdown
 
+	autocmd FileType cs setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
 	autocmd FileType markdown,text setlocal keywordprg=dict
+	autocmd Filetype text setlocal spell spelllang=en_us	" turn on spell check for text files only
+	autocmd FileType text setlocal commentstring=#%s
 
 augroup end
 endif " has('autocmd')
@@ -145,6 +144,7 @@ if filereadable(expand("~/.vim/plug.vim"))
 	Plug 'buckmanc/vim-compiler-plugin-for-dotnet', { 'branch': 'buildflags' }
 	Plug 'tpope/vim-dispatch'	" async :Make
 	Plug 'mhinz/vim-startify'	" startup screen
+	Plug 'sbdchd/vim-shebang'	" :ShebangInsert 
 
 	call plug#end()
 
@@ -212,6 +212,10 @@ if filereadable(expand("~/.vim/plug.vim"))
 	" let g:UltiSnipsExpandTrigger = '<C-j>'
 	" let g:UltiSnipsJumpForwardTrigger = '<C-j>'
 	" let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
+	
+	let g:shebang#shebangs = {
+				\ 'sh': '#!/usr/bin/env bash'
+				\ }
 endif " vim-plug exists
 
 " default position restoration from /etc/vim/vimrc

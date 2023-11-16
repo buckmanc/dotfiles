@@ -14,6 +14,9 @@ fi
 
 export XENVIRO
 
+# position of moonphase glyphs correspond to the day of the moon
+export MOONPHASE_NERDFONT_GLYPHS=""
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;

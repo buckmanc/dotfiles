@@ -1,0 +1,36 @@
+# moon phases in nerdfont glyphs
+if [ -z ${MOONPHASE_NERDFONT_GLYPHS} ]
+then
+	echo "$MOONPHASE_NERDFONT_GLYPHS is missing"
+	exit 1
+fi
+
+url="wttr.in/?format=%M"
+moonday=$(curl -s "${url}")
+
+logPath="${HOME}/.logs/nerdmoon/$(date -Iseconds).txt"
+mkdir -p "${HOME}/.logs/nerdmoon/"
+echo "url:      ${url}" >> "${logPath}"
+echo "response: ${moonday}" >> "${logPath}"
+
+# this should really be a loop but alas, here we are
+if [ -z "${moonday}" ]
+then
+	sleep 10s
+	moonday=$(curl -s "${url}")
+	echo "response: ${moonday}" >> "${logPath}"
+fi
+
+if [ -z "${moonday}" ]
+then
+	exit 1
+fi
+
+# zero base our moonday
+moonday=$(($moonday-1))
+
+output=${MOONPHASE_NERDFONT_GLYPHS:$moonday:1}
+
+echo "${output}"
+echo "output:   ${output}" >> "${logPath}"
+

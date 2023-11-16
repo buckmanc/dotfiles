@@ -1,0 +1,11 @@
+# schedule me in cron
+
+glyph="$(nerdmoon)"
+
+if [ -z "${glyph}" ]
+then
+exit 1
+fi
+
+# replace any glyph from our chosen set of moon phase glyphs with the current moon phase glyph
+sed -i "s/[${MOONPHASE_NERDFONT_GLYPHS}]/${glyph}/g" ~/.config/starship.toml

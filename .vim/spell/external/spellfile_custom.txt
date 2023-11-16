@@ -13,6 +13,7 @@ AGDQ2022
 AGDQ2023
 AGDQ2024
 AirBNB
+Airbnb
 airpod
 airpods
 amened
@@ -20,6 +21,7 @@ apnea
 appt
 Arby's
 ASMR
+assholery
 async
 audiobook
 audiobooks
@@ -56,6 +58,7 @@ caffeination
 calc
 calcs
 cancelled
+cancelling
 canopic
 CEOs
 cheebo
@@ -237,6 +240,7 @@ numbingly
 offput
 oof
 other's
+ouija
 outro
 overprotection
 overstimulation
@@ -246,6 +250,7 @@ pathing
 Pattinson
 personhood
 pinky
+PJs
 Plandemic
 playthrough
 plushie
@@ -337,9 +342,11 @@ TikTok
 tiktok
 tiktoks
 timelines
+timestamped
 timestamps
 toon
 toons
+transgressive
 transphobic
 treaters
 tupper
@@ -385,6 +392,7 @@ worldbuilding
 WWIII
 xmas
 xyz
+yacking
 Yay
 yeet
 yeetability

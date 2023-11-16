@@ -74,6 +74,9 @@
 	wsErrorHighlight = all
 [diff "image"]
 	textconv = ~/bin/git-image-diff
+[color "diff"]
+	meta = blue
+	frag = dim blue
 
 # placed at the bottom to allow overriding if necessary
 [include]
