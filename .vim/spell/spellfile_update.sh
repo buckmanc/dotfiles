@@ -36,6 +36,7 @@ fi
 ls "${spellDir}"/*.add | grep -iv private | xargs cat | grep -Piv '/!$' | sed '/^[ \t]*$/d' > "${customPath}" 
 
 # write gboard file from spellfile_custom
-newGboardText="# Gboard Dictionary version:1\n$(sed -e 's/$/\ten-US/g' -e 's/^/\t/g' ${customPath})"
+newGboardText="# Gboard Dictionary version:1
+$(sed -e 's/$/\ten-US/g' -e 's/^/\t/g' ${customPath})"
 echo "${newGboardText}" > "${gboardPath}"
 

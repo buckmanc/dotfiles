@@ -184,6 +184,7 @@
 	IGN	en-US
 	IGN's	en-US
 	IM's	en-US
+	ImageMagick	en-US
 	IMing	en-US
 	immunocompromised	en-US
 	incel	en-US

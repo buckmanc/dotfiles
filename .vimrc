@@ -10,17 +10,17 @@ syntax on		" syntax highilghting
 set ruler		" show cursor position
 set number		" show line numbers
 set showmatch		" bracket matching
-set wildmenu		" command line tab completion
-set breakindent		" visual indenting
-set linebreak		" do not visually break lines in the middle of words
 set t_Co=256		" no really we have colors here (for airline on certain platforms)
 
 " behaviour
+set breakindent		" visual indenting
+set linebreak		" do not visually break lines in the middle of words
 set autoindent		" copy indenting from current line
 set smartindent 	" smart indenting for coding
 set autoread		" reloads file only if unmodified in vim
 set novisualbell	" stop yelling at me
 set noerrorbells	" i'm serious
+set wildmenu		" command line tab completion
 set wildignorecase	" ignore case when tab completing paths
 set whichwrap+=<,>,h,l	" allow moving to next line from the ends
 set backspace=indent,eol,start	" 'normal' backspace behavior
@@ -52,7 +52,7 @@ autocmd VimEnter * redraw!
 " hi SpellRare ctermbg=DarkMagenta
 hi SpellLocal ctermbg=Black 				" invisible or innocuous with dark themes
 set spellcapcheck=					" turn off capitalization check. too bad this doesn't exist for SpellLocal
-set spellsuggest+=10
+set spellsuggest+=10	" limit spell suggest for small screens
 
 " iterate over custom spellfiles
 let spellPaths = ''
@@ -83,16 +83,13 @@ endfor
 
 " custom date insert command
 " accepts an integer date offset
-function! DateStamp(...)
+function DateStamp(...)
 	let days = get(a:, 1, 0)
 	let daySeconds = days * 24 * 60 * 60
 	return strftime('%Y-%m-%d', ( localtime() + daySeconds ))
 endfunction
-command! -bar -nargs=? Date put =DateStamp(<args>)
-command! Run !"%:p"
-
-" save as sudo!
-cmap w!! w !sudo tee % >/dev/null
+command -bar -nargs=? Date put =DateStamp(<args>)
+command Run !"%:p"
 
 " create the undo dir if it doesn't exist
 if !isdirectory(&undodir)
@@ -130,7 +127,7 @@ if filereadable(expand("~/.vim/plug.vim"))
 	Plug 'tpope/vim-sensible'	" tpope's sensible defaults
 	Plug 'tpope/vim-sleuth'		" hueristic file options
 	Plug 'tpope/vim-speeddating'	" mods ctrl+x and ctrl+a to work with dates
-	Plug 'tpope/vim-eunuch'		" simple file operations, namely :Delete, which is useful when reviewing a large number of files
+	Plug 'tpope/vim-eunuch'		" simple file operations, namely :Delete and :SudoWrite
 	Plug 'tomtom/tcomment_vim'	" gcc/gc to comment
 	Plug 'vim-airline/vim-airline'	" fancy status line
 	Plug 'vim-airline/vim-airline-themes'
@@ -189,6 +186,7 @@ if filereadable(expand("~/.vim/plug.vim"))
 
 	" gitgutter config
 	highlight! link SignColumn LineNr " match the gutter background to the number column
+	" highlight! link Search IncSearch
 	let g:gitgutter_diff_args = '-w'  " ignore whitespace changes
 
 	" ycm config

@@ -8,19 +8,21 @@
 my dotfiles
 =========
 
-A simple repo to backup, sync, and show off some simple configurations. Inspired by [Drew DeVault's method](https://drewdevault.com/2019/12/30/dotfiles.html) of dotfile management.
+A ~~simple~~ repo to backup, sync, and show off some configurations. Inspired by [Drew DeVault's method](https://drewdevault.com/2019/12/30/dotfiles.html) of dotfile management.
 
 Example dotfiles for:
 
   - `vim`
   - `git`
+  - `bash`
   - `mintty` / `git bash`
-  - `bash aliases`
   - `gnu screen`
+  - `termux`
+  - `curl`
   - `starship`
   - `notepad++`
   - `windows terminal`
-  - `powershell`
+  - `powershell` (barely)
   - that's it!
 
 
