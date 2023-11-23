@@ -18,6 +18,7 @@
 	airpod	en-US
 	airpods	en-US
 	amened	en-US
+	api	en-US
 	apnea	en-US
 	appt	en-US
 	Arby's	en-US
@@ -124,6 +125,8 @@
 	else's	en-US
 	esque	en-US
 	ETL	en-US
+	etl	en-US
+	etls	en-US
 	ETLs	en-US
 	exvangelical	en-US
 	fakeout	en-US
@@ -181,6 +184,7 @@
 	ideation	en-US
 	Idris	en-US
 	IEnumerable	en-US
+	Iglesias	en-US
 	IGN	en-US
 	IGN's	en-US
 	IM's	en-US
@@ -228,9 +232,14 @@
 	mislisting	en-US
 	mitzvah	en-US
 	MLKJ	en-US
+	mon	en-US
 	monologuing	en-US
+	mons	en-US
 	moreso	en-US
 	mothership	en-US
+	mssql	en-US
+	MSSQL	en-US
+	mvp	en-US
 	nanite	en-US
 	nerddom	en-US
 	neurodivergent	en-US
@@ -259,6 +268,7 @@
 	podge	en-US
 	positivity	en-US
 	PowerShell	en-US
+	powershell	en-US
 	pre	en-US
 	prep'd	en-US
 	prep'ing	en-US
@@ -286,9 +296,13 @@
 	recency	en-US
 	recraft	en-US
 	Reddit	en-US
+	regen	en-US
 	rehome	en-US
 	remoting	en-US
 	repo	en-US
+	repoint	en-US
+	repointed	en-US
+	repointing	en-US
 	resemblant	en-US
 	rewatch	en-US
 	rng	en-US
@@ -299,6 +313,7 @@
 	roomba	en-US
 	rotavirus	en-US
 	Runza	en-US
+	scripter	en-US
 	scritches	en-US
 	se	en-US
 	secondaries	en-US
@@ -324,6 +339,8 @@
 	spoop	en-US
 	spotify	en-US
 	Spotify	en-US
+	sqlbulkcopy	en-US
+	SqlBulkCopy	en-US
 	SSH'ing	en-US
 	stabby	en-US
 	stardrive	en-US
@@ -369,6 +386,7 @@
 	Unsplash	en-US
 	unvaccinated	en-US
 	unvaxxed	en-US
+	upsert	en-US
 	Urfaust	en-US
 	UX	en-US
 	vax	en-US

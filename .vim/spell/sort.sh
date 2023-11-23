@@ -1,4 +1,12 @@
+#!/usr/bin/env bash
+
 for f in ~/.vim/spell/*.add
 do
-	cat "$f" | ~/bin/pysort | sponge "$f"
+	oldText="$(cat "$f")"
+	newText="$(echo "$oldText" | ~/bin/pysort)"
+
+	if [ "$oldText" != "$newText" ]
+	then
+		echo "$newText" > "$f"
+	fi
 done

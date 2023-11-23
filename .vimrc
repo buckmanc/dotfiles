@@ -47,10 +47,19 @@ set report=0		" always show 'x lines changed' messages
 set lazyredraw
 autocmd VimEnter * redraw!
 
-" spellcheck
-" hi SpellLocal ctermbg=DarkMagenta
+" color tweaks
+" fewer screaming colors
+" designed to match with base16 Midnight Synth terminal theme
+hi! TODO ctermbg=green
 " hi SpellRare ctermbg=DarkMagenta
-hi SpellLocal ctermbg=Black 				" invisible or innocuous with dark themes
+hi SpellLocal ctermbg=235
+hi SpellBad ctermbg=240
+hi! link IncSearch Search
+hi Search cterm=reverse term=reverse gui=reverse ctermbg=none ctermfg=none 
+hi! Error ctermbg=darkred
+hi! link ErrorMsg Error
+
+" spellcheck
 set spellcapcheck=					" turn off capitalization check. too bad this doesn't exist for SpellLocal
 set spellsuggest+=10	" limit spell suggest for small screens
 
@@ -110,6 +119,7 @@ augroup FileTypeSpecificAutocommands
 	autocmd FileType markdown,text setlocal keywordprg=dict
 	autocmd Filetype text setlocal spell spelllang=en_us	" turn on spell check for text files only
 	autocmd FileType text setlocal commentstring=#%s
+	autocmd FileType text hi Search ctermfg=magenta " text theme is white, so reverse search colors make white cursor painful
 
 augroup end
 endif " has('autocmd')
@@ -186,7 +196,6 @@ if filereadable(expand("~/.vim/plug.vim"))
 
 	" gitgutter config
 	highlight! link SignColumn LineNr " match the gutter background to the number column
-	" highlight! link Search IncSearch
 	let g:gitgutter_diff_args = '-w'  " ignore whitespace changes
 
 	" ycm config
@@ -212,7 +221,8 @@ if filereadable(expand("~/.vim/plug.vim"))
 	" let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
 	
 	let g:shebang#shebangs = {
-				\ 'sh': '#!/usr/bin/env bash'
+				\ 'sh': '#!/usr/bin/env bash',
+				\ 'termux': '#!/data/data/com.termux/files/usr/bin/bash'
 				\ }
 endif " vim-plug exists
 

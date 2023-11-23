@@ -1,0 +1,22 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+if [[ -z "$1" || -z "$2" ]]
+then
+	echo "need url and dest dir"
+	exit 1
+fi
+
+if [ ! -d "$2" ]
+then
+	echo "output dir does not exist"
+	exit 1
+fi
+
+echo "input: $1"
+curl --silent "$1" | tac | tac | grep -iPo 'http.+?\-1000x1000\.(jpe?g|png|webp|gif)' | head -n 1 | sed 's/\-1000x1000//g' | xargs --no-run-if-empty curl --silent -O --output-dir "$2"
+
+if [ ! $? -eq 0 ]
+then
+	echo "failure: $1" >> "$2/teeturtle.log"
+	exit $?
+fi

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+if [[ -z "$1" ]]
+then
+	echo "need path"
+	exit 1
+fi
+
+if [ ! -f "$1" ]
+then
+	echo "file does not exist"
+	exit 1
+fi
+
+
+outname=$(echo "$1" | \
+	sed -E 's/(^[-_]{0,5}TT[-_]|[-_]SEPS|[-_]800x800|[-_]4200x4200|[-_]site[-_]comp|[-_]teeturtle|[-_]license|[-_]close[-_]ups?|[-_]products?|[-_]t[-_]shirts?|[-_]socks?|[-_]stickers?)//Ig' | \
+	sed -E 's/(^[-_]*)//Ig' | \
+	sed -E 's/(seps|[-_]1|[-_]final)\././Ig' | \
+	sed -E 's/[-_]{0,10}\././Ig')
+
+# echo "input: $1"
+# echo "output: $outname"
+echo "$outname"
+
+if [ "$1" != "$outname" ]
+then
+	mv --backup=numbered -- "$1" "$outname"
+fi
