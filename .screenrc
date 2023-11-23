@@ -1,5 +1,6 @@
 startup_message off
 altscreen on
+defscrollback 10000
 # screen will not create the .log folder for you
 logfile $HOME/.logs/screen/%Y-%m-%d_%c:%s.log
 # shell -bash

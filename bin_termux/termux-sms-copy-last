@@ -1,0 +1,1 @@
+termux-sms-list | jq '.[-1].body' | termux-clipboard-set 

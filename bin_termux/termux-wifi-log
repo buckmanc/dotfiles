@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/data/data/com.termux/files/usr/bin/bash
 
 logLine=$(termux-wifi-scaninfo | jq -r '.[] | "\"\(.ssid)\",\(.bssid),\(.frequency_mhz)"')
 logPath="${HOME}/.logs/wifi/phone_$(date +'%Y%m').log"

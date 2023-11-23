@@ -1,13 +1,47 @@
-#!/usr/bin/env bash
+#!/data/data/com.termux/files/usr/bin/bash
 
-# (cd ~/storage/shared/Wallpapers/ && ./update.sh)
-# shenanigans to get around permission issues
-cd ~/storage/shared/Wallpapers/
-eval "$(cat ./update.sh)"
+# lazy arg parsing
+if [[ -e "$1" ]]
+then
+	path="$1"
+elif [[ -e "$2" ]]
+then
+	path="$2"
+else
+	echo "bad path"
+	exit 1
+fi
 
-paperPath=$(find ~/storage/shared/Wallpapers/mobile/stormlight/ -type f -not -iname '*.md' | shuf --random-source='/dev/urandom' -n 1)
-termux-wallpaper -l -f "$paperPath"
+if [[ "$1" == "-l" || "$2" == "-l" ]]
+then
+	lockArg="-l"
+	titleText="Lockscreen Wallpaper Updated"
+else
+	titleText="Homescreen Wallpaper Updated"
+fi
 
-git ls-files | xargs touch --no-create -t "190001010101"
+paperPath="$(find "$path" -type f -not -iname '*.md' | shuf --random-source='/dev/urandom' -n 1)"
+paperFileName="$(basename "$paperPath")"
+glitchDir="/data/data/com.termux/files/home/storage/shared/Wallpapers_Glitched/"
+mkdir -p "$glitchDir"
+paperPathGlitched="${glitchDir}/glitched_$paperFileName"
 
-termux-notification --image-path "$paperPath" --icon "Wallpaper" --title "wallpaper updated" --content '' --id autopaper
+echo "Setting wallpaper to:"
+echo "$paperFileName"
+termux-wallpaper $lockArg -f "$paperPath"
+termux-media-scan "$paperPath"
+
+# elaborate notification with actions to take
+# gotta escape the dashes im the args
+# oddly quotes are not enough
+reshuffleAction="\"$HOME/bin_termux/termux-shuffle-wallpaper\" $(echo "$@" | sed 's/\-/\\-/g')"
+termux-notification --image-path "$paperPath" --title "$titleText" --content "$(basename "$paperPath")" --group autopaper --id "$titleText" \
+	--button1 "reshuffle" \
+	--button1-action "$reshuffleAction" \
+	--button2 "share" \
+	--button2-action "termux-open --send \"$paperPath\"" \
+	--button3 "glitch" \
+	--button3-action "glitch_this -c -o \"$paperPathGlitched\" \"$paperPath\" 3.5 && ~/bin_termux/termux-shuffle-wallpaper $lockArg \"$paperPathGlitched\""
+
+	# can enable view on click, but there's not much functionality
+	# --action "termux-open --view \"$paperPath\"" \
