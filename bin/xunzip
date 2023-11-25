@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if [[ -z "$@" ]]
+then
+	echo "need an archive path"
+	exit 1
+fi
+
+for archivePath in "$@"
+do
+	if [[ ! -f "$archivePath" ]]
+	then
+		echo "file does not exist: $archivePath"
+		continue
+	fi
+
+	dirIn="$(dirname "$archivePath")"
+	filename="$(basename "$archivePath")"
+	dirOut="$dirIn/${filename%%.*}"
+
+	7z x -spe "-o$dirOut" -aos -- "$archivePath" | grep -i "extracting"
+
+done
