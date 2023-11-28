@@ -42,10 +42,11 @@ set smartcase		" only use case sensitive search when capitals are included in
 set infercase		" infer completion case
 set viminfo+=!		" make sure it can save viminfo
 set report=0		" always show 'x lines changed' messages
+set commentstring=#%s	" default comment string, is changed downstream as needed
 
 " performance improvment experiment
-set lazyredraw
-autocmd VimEnter * redraw!
+" set lazyredraw
+" autocmd VimEnter * redraw!
 
 " color tweaks
 " fewer screaming colors
@@ -108,18 +109,23 @@ endif
 if has('autocmd')
 augroup FileTypeSpecificAutocommands
 
-	" custom filetypes: makes sure these filetypes have appropriate syntax highlighting and comment chars
+	" autocommand filetypes
+	" makes sure these filetypes have appropriate syntax highlighting and comment chars
 	autocmd BufNewFile,BufRead *.gitconfig_local set filetype=gitconfig
 	autocmd BufNewFile,BufRead *.vimrc_local set filetype=vim
 	autocmd BufNewFile,BufRead *.bash_* set filetype=bash
 	autocmd BufNewFile,BufRead *.add set filetype=text
 	autocmd BufNewFile,BufRead *.MD set filetype=markdown " uppercase markdown is still markdown
 
+	" autocommand actions
 	autocmd FileType cs setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
 	autocmd FileType markdown,text setlocal keywordprg=dict
 	autocmd Filetype text setlocal spell spelllang=en_us	" turn on spell check for text files only
-	autocmd FileType text setlocal commentstring=#%s
 	autocmd FileType text hi Search ctermfg=magenta " text theme is white, so reverse search colors make white cursor painful
+	autocmd BufRead,BufNewFile */bin/* silent! ShebangInsert bash
+	" if this gets annoying, use a function with an "if filereadable(expand('%'))" test to check for newness
+	" file type and BufNewFile autocommands cannot be combined
+	autocmd FileType sh,bash,python silent! ShebangInsert
 
 augroup end
 endif " has('autocmd')
@@ -152,6 +158,7 @@ if filereadable(expand("~/.vim/plug.vim"))
 	Plug 'tpope/vim-dispatch'	" async :Make
 	Plug 'mhinz/vim-startify'	" startup screen
 	Plug 'sbdchd/vim-shebang'	" :ShebangInsert 
+	Plug 'glensc/vim-syntax-lighttpd'
 
 	call plug#end()
 

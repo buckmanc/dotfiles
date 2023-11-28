@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+input="$1"
+if [ -z "$input" ]
+then
+  input="."
+fi
+
+total="$2"
+if [ -z "$total" ]
+then
+	total="1"
+fi
+
+if [[ -z "$input" || ! -e "$input" ]]
+then
+	echo "invalid path, doofus"
+	exit 1
+fi
+
+glitchLevel="$(bc -l <<< "$(shuf -i 300-800 -n 1)/100")"
+
+if [[ -f "$input" ]]
+then
+	paths="$input"
+elif [[ -d "$input" ]]
+then
+	paths=$("$HOME/bin/find-images" "$input" | grep -iv "glitched")
+fi
+
+if [ -z "$paths" ]
+then
+	echo "no images, doofus"
+	exit 1
+fi
+
+echo "$paths" | while read src
+do
+	for i in $(seq -w 1 $total)
+	do
+		outpath="$(dirname "$src")/glitched_${i}_$(basename "$src")"
+		echo "outpath: $outpath"
+		glitch_this -c -o "$outpath" "$src" "$glitchLevel"
+	done
+done
+
+if [[ "$?" -eq "0" ]]
+then
+	echo "$(echo "$paths" | wc -l) files glitched"
+else
+	echo "yikes what happened"
+	exit 1
+fi

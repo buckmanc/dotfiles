@@ -230,6 +230,12 @@ use_os_path_sep = false
 "forest"	= "󱢗"
 "Forest"	= "󱢗"
 " and "		= " & "
+"castlevania"	= "󰭟󱡂"
+"Castlevania"	= "󰭟󱡂"
+"the legend of zelda" = "󰯙"
+"The Legend of Zelda" = "󰯙"
+"legend of zelda" = "󰯙"
+"Legend of Zelda" = "󰯙"
 
 
 [dotnet]

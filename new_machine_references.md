@@ -23,6 +23,7 @@ New Machine References
 - [Pokemon Go Countdowns](https://p337.info/pokemongo/)
 - [Market Holidays](https://www.nyse.com/markets/hours-calendars)
 - [jq Cheat Sheet](https://gist.github.com/olih/f7437fb6962fb3ee9fe95bda8d2c8fa4)
+- [bash filename parsing](https://stackoverflow.com/a/965069/1995812)
 
 ## Bookmarklets
 

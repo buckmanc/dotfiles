@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # schedule me in cron
 
 glyph="$(nerdmoon)"

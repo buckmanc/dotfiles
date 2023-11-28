@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # moon phases in nerdfont glyphs
 if [ -z ${MOONPHASE_NERDFONT_GLYPHS} ]
 then
