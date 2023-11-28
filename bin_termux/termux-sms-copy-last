@@ -1,1 +1,3 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
 termux-sms-list | jq '.[-1].body' | termux-clipboard-set 

@@ -6,10 +6,12 @@ if [ -f ~/.bash_aliases_local ]; then
     . ~/.bash_aliases_local
 fi
 
-if [ "$HOME" == *"termux"* ]; then
+if [[ "$HOME" == *"termux"* ]]; then
 	XENVIRO=mobile
-elif [ "$HOME" == *OneDrive* ]; then
+elif [[ "$HOME" == *"OneDrive"* ]]; then
 	XENVIRO=work
+else
+	XENVIRO=other
 fi
 
 export XENVIRO
@@ -90,6 +92,8 @@ addtopathstart "${HOME}/bin_local"
 if [ "$XENVIRO" == "mobile" ]
 then
 	addtopath "${HOME}/bin_termux"
+	addtopath "${HOME}/.shortcuts"
+	addtopath "${HOME}/.shortcuts/tasks"
 fi
 addtopathstart "${LOCALAPPDATA}/Microsoft/WinGet/Links"
 addtopath "${HOME}/go/bin"
