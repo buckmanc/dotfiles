@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+if [[ -z "$1" ]] || [ ! -d "$1" ]
+then
+	echo "need output dir, doofus"
+	exit 1
+fi
+
+urls="$(curl stevenrhodes.threadless.com | grep -iPo 'http[^ ,"]+' | grep -i threadless | grep -iv images | grep -i '/collections/')
+https://stevenrhodes.threadless.com"
+
+productUrlPath="$1/urls.log"
+if [ -f "$productUrlPath" ]
+then
+	rm "$productUrlPath"
+fi
+
+for url in $urls
+do
+	echo "base page: $url"
+	curl --silent "${url}?page=1000" | tac | tac | grep -iPo 'http[^" ,?]+' | grep designs | sort -u | sed 's|/[a-z]*/t-shirt/regular/\?$||g' >> "$productUrlPath"	
+done
+
+sort -u -o "$productUrlPath" "$productUrlPath"
+
+cat "$productUrlPath" | xargs --no-run-if-empty -I {} "$HOME/bin/download-threadless" {} "$1"
+
+# clean up
+if [ -f "$productUrlPath" ]
+then
+	rm "$productUrlPath"
+fi

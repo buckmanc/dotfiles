@@ -13,10 +13,19 @@ then
 	# download big teeturtle images
 	if echo "$1" | grep -iq "teeturtle.com"
 	then
-		teeDir="$HOME/storage/downloads/TeeTurtle/"
-		mkdir -p "$teeDir"
-		$HOME/bin/download-teeturtle "$1" "$teeDir"
-		termux-media-scan "$teeDir"
+		outDir="$HOME/storage/downloads/TeeTurtle/"
+		mkdir -p "$outDir"
+		$HOME/bin/download-teeturtle "$1" "$outDir"
+		termux-media-scan "$outDir"
+
+	# download big teeturtle images
+	elif echo "$1" | grep -iq "threadless.com"
+	then
+		outDir="$HOME/storage/downloads/$domain"
+		mkdir -p "$outDir"
+		$HOME/bin/download-threadless "$1" "$outDir"
+		termux-media-scan "$outDir"
+
 	# download images off this unknown page
 	else
 		outDir="$HOME/storage/downloads/$domain"

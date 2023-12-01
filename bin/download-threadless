@@ -1,0 +1,46 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+if [[ -z "$1" || -z "$2" ]]
+then
+	echo "need url and dest dir"
+	exit 1
+fi
+
+if [ ! -d "$2" ]
+then
+	echo "output dir does not exist"
+	exit 1
+fi
+
+# echo "input: $1"
+input=$(echo "$1" | sed -e 's|/$||g' -e 's|/[a-z]*/t-shirt/regular/\?$||g')
+designName="${input##*/}"
+echo "designName: $designName"
+
+imageUrls=$(curl --silent "$1" | tac | tac | grep -iPo 'http[^, "]+?\.(jpe?g|png|gif|webp)(\?v=\d+)?' | sed 's/v=3/v=1/g' | grep -iv pinterest)
+
+if echo "$imageUrls" | grep -iq "/shirt"
+then
+	imageUrls=$(echo "$imageUrls" | grep -i "/shirt")
+else
+	imageUrls=$(echo "$imageUrls" | grep -i "/original")
+fi
+
+outNames=$(echo "$imageUrls" | sort -u | xargs -L 1 --no-run-if-empty curl --silent -O --output-dir "$2" -w '%{filename_effective}\n')
+
+if [ ! $? -eq 0 ]
+then
+	echo "failure: $1" >> "$2/download-page-images.log"
+	exit $?
+fi
+
+# echo "outNames: $outNames"
+echo "$outNames" | while read outName
+do
+	# echo "outName: $outName"
+	if [ -f "$outName" ]
+	then
+		mv --backup=numbered "$outName" "$(dirname "$outName")/${designName}.${outName##*.}"
+	fi
+done
+
