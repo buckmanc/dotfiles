@@ -35,13 +35,15 @@ termux-media-scan "$paperPath"
 # gotta escape the dashes im the args
 # oddly quotes are not enough
 reshuffleAction="\"$HOME/bin_termux/termux-shuffle-wallpaper\" $(echo "$@" | sed 's/\-/\\-/g')"
+glitchLevel="$(bc -l <<< "$(shuf -i 300-800 -n 1)/100")"
+echo "glitchLevel: $glitchLevel"
 termux-notification --image-path "$paperPath" --title "$titleText" --content "$(basename "$paperPath")" --group autopaper --id "$titleText" \
 	--button1 "reshuffle" \
 	--button1-action "$reshuffleAction" \
 	--button2 "share" \
 	--button2-action "termux-open --send \"$paperPath\"" \
 	--button3 "glitch" \
-	--button3-action "glitch_this -c -o \"$paperPathGlitched\" \"$paperPath\" 3.5 && ~/bin_termux/termux-shuffle-wallpaper $lockArg \"$paperPathGlitched\""
+	--button3-action "glitch_this -c -o \"$paperPathGlitched\" \"$paperPath\" $glitchLevel && ~/bin_termux/termux-shuffle-wallpaper $lockArg \"$paperPathGlitched\""
 
 	# can enable view on click, but there's not much functionality
 	# --action "termux-open --view \"$paperPath\"" \

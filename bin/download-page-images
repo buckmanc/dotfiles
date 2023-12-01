@@ -1,0 +1,25 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+# a very simple image downloader
+# will not work on complicated pages
+
+if [[ -z "$1" || -z "$2" ]]
+then
+	echo "need url and dest dir"
+	exit 1
+fi
+
+if [ ! -d "$2" ]
+then
+	echo "output dir does not exist"
+	exit 1
+fi
+
+echo "input: $1"
+curl --silent "$1" | tac | tac | grep -iPo '"http[^,"]+?\.(jpe?g|png|gif|webp)"' | sed 's/"//g' | xargs -t -L 1 --no-run-if-empty curl --silent -O --output-dir "$2"
+
+if [ ! $? -eq 0 ]
+then
+	echo "failure: $1" >> "$2/download-page-images.log"
+	exit $?
+fi
