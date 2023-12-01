@@ -40,7 +40,7 @@ do
 	do
 		outpath="$(dirname "$src")/glitched_${i}_$(basename "$src")"
 		echo "outpath: $outpath"
-		glitch_this -c -o "$outpath" "$src" "$glitchLevel"
+		/home/hammer/.local/bin/glitch_this -c -o "$outpath" "$src" "$glitchLevel"
 	done
 done
 

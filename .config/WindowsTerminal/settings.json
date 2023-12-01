@@ -41,6 +41,7 @@
   "copyFormatting": "none",
   "copyOnSelect": false,
   "defaultProfile": "{e9961a24-1111-2222-3333-835a2d22397d}",
+  "multiLinePasteWarning": false,
   "newTabMenu": [
     {
       "type": "remainingProfiles"
@@ -49,6 +50,7 @@
   "profiles": {
     "defaults": {
       "backgroundImage": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\totk_ouroboros_grey.png",
+      "bellStyle": "window",
       "colorScheme": "Synth Midnight Dark",
       "experimental.retroTerminalEffect": true,
       "font": {

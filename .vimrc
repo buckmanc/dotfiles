@@ -26,7 +26,8 @@ set whichwrap+=<,>,h,l	" allow moving to next line from the ends
 set backspace=indent,eol,start	" 'normal' backspace behavior
 set undodir=~/.vim/undodir	" where to save undo history
 set undofile			" enable persistent undo
-set mouse=	" disable mouse/touch controls
+set mouse=		" disable mouse/touch controls
+set clipboard=		" unjoin from system clipboard on windows for consistent cross-platform behaviour
 
 " filenames can have space, comma, ampersand... sigh
 set isfname+=32
@@ -147,14 +148,14 @@ if filereadable(expand("~/.vim/plug.vim"))
 	Plug 'tomtom/tcomment_vim'	" gcc/gc to comment
 	Plug 'vim-airline/vim-airline'	" fancy status line
 	Plug 'vim-airline/vim-airline-themes'
-	Plug 'airblade/vim-gitgutter'	" git in the gutter
+	" Plug 'airblade/vim-gitgutter'	" git in the gutter, freezing on excessively large repos
+	Plug 'mhinz/vim-signify'	" git in the gutter
 	Plug 'preservim/vim-markdown'	" improved markdown syntax
 	Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }	" intellisense
 	" Plug 'sirver/ultisnips'
 	Plug 'editorconfig/editorconfig-vim'
 	Plug 'jlcrochet/vim-razor'	" razor syntax
-	" Plug 'tmadsen/vim-compiler-plugin-for-dotnet'
-	Plug 'buckmanc/vim-compiler-plugin-for-dotnet', { 'branch': 'buildflags' }
+	Plug 'tmadsen/vim-compiler-plugin-for-dotnet'
 	Plug 'tpope/vim-dispatch'	" async :Make
 	Plug 'mhinz/vim-startify'	" startup screen
 	Plug 'sbdchd/vim-shebang'	" :ShebangInsert 
@@ -201,9 +202,21 @@ if filereadable(expand("~/.vim/plug.vim"))
 	\ [ 'x', 'y', 'z', 'error', 'warning' ]
 	\ ]
 
-	" gitgutter config
-	highlight! link SignColumn LineNr " match the gutter background to the number column
-	let g:gitgutter_diff_args = '-w'  " ignore whitespace changes
+	" gitgutter/signify config
+	" wipe the conspicuous colors from the gutter
+	highlight LineNr ctermfg=darkblue
+	highlight SignColumn ctermbg=NONE cterm=NONE guibg=NONE gui=NONE
+	" highlight! DiffChange ctermfg=5 ctermbg=none
+	" highlight! DiffAdd ctermfg=5 ctermbg=none
+	" highlight! DiffDelete ctermfg=5 ctermbg=none
+	highlight! DiffChange ctermfg=darkmagenta ctermbg=none
+	highlight! link DiffAdd DiffChange
+	highlight! link DiffDelete DiffChange
+
+	" let g:gitgutter_diff_args = '-w'  " ignore whitespace changes
+	let g:signify_sign_change = '~'
+	let g:signify_vcs_cmds = {
+				\ 'git': 'git diff -w --no-color --no-ext-diff -U0 -- %f' }
 
 	" ycm config
 	" let g:ycm_auto_hover="

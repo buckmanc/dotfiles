@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+
+from PIL import Image
+import imagehash
+import sys
+
+# possibly unwise, but large nasa images hit this warning easily
+Image.MAX_IMAGE_PIXELS = None
+# path = sys.stdin.read().strip()
+path = sys.argv[1].strip()
+
+# hash = imagehash.average_hash(Image.open(path))
+hash = imagehash.phash(Image.open(path))
+# hash = imagehash.dhash(Image.open(path))
+# hash = imagehash.colorhash(Image.open(path)) # breaks, idk why
+# hash = imagehash.whash(Image.open(path))
+
+print(hash, file=sys.stdout, flush=True)
+sys.stdout.flush()
+sys.stdout.close()

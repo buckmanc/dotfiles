@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# pipe a bunch of paths
+# $1 can be a grep pattern to only sort those files
+
+while read -r path
+do
+	listy+="$(dirname "$path")/$(pyphash "$path"): $path"
+	listy+=$'\n'
+done
+
+if [ -n "$1"]
+then
+	echo "$listy" | while read -r path
+	do
+		if ! echo "$path" | grep -Piq "$1"
+		then
+			filename="$(basename "$path")"
+			path="$(echo "$path" | sed "s/[a-f0-9]/$filename/g")"
+		fi
+
+		listy2+="$path"
+		listy2+=$'\n'
+	done
+else
+	listy2="$listy"
+fi
+
+echo "$listy2" |
+	sort -t'/' -k1,1 -k2,2 -k3,3 -k4,4 -k5,5 -k6,6 -k7,7 |
+	grep -iPo '(?<=[a-f0-9]{16}: ).+?$'
+

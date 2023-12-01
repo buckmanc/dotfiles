@@ -122,6 +122,9 @@ fi
 # crontab reads this variable
 export EDITOR=vim
 
+# no welcome message for dotnet
+export DOTNET_NOLOGO=true
+
 function set_win_title(){
 	
 	text=$(basename "$PWD")
@@ -168,4 +171,22 @@ fi
 if [ -d /home/linuxbrew ]
 then
 	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+# bash parameter completion for the dotnet CLI
+# learn.microsoft.com/en-us/dotnet/core/tools/enable-tab-autocomplete
+if ( type dotnet > /dev/null 2>&1 )
+then
+
+	function _dotnet_bash_complete()
+	{
+	  local cur="${COMP_WORDS[COMP_CWORD]}" IFS=$'\n' # On Windows you may need to use use IFS=$'\r\n'
+	  local candidates
+
+	  read -d '' -ra candidates < <(dotnet complete --position "${COMP_POINT}" "${COMP_LINE}" 2>/dev/null)
+
+	  read -d '' -ra COMPREPLY < <(compgen -W "${candidates[*]:-}" -- "$cur")
+	}
+
+	complete -f -F _dotnet_bash_complete dotnet
 fi
