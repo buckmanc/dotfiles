@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+spaces=$(seq -s " " 0 "$1" | sed -E 's/[0-9]+?//g')
+while read -r; do
+	echo "${REPLY}" | sed -E "s/^/${spaces}/g"
+done

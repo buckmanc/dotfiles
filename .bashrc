@@ -125,9 +125,11 @@ fi
 # prefer vim over nano
 # crontab reads this variable
 export EDITOR=vim
+export COLUMNS
 
 # no welcome message for dotnet
 export DOTNET_NOLOGO=true
+export DOTNET_ROOT=/usr/share/dotnet
 
 function set_win_title(){
 	

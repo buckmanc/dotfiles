@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+if [[ ! -e "$1" ]]
+then
+	echo "need messages file path"
+	exit 1
+fi
+
+optNoCow=0
+if [ "$2" = "--no-cow" ]
+then
+	optNoCow=1
+fi
+
+# very possible to hardcode messages here
+#messages[0]="goodnight"
+
+#size=${#messages[@]}
+#index=$(($RANDOM % $size))
+#message="${messages[$index]}"
+
+# read farewells file
+messages="$(cat "$1")"
+# strip blank lines
+messages=$(echo "${messages}" | sed "/^[[:space:]]*\?$/d")
+# strip comments
+messages=$(echo "${messages}" | sed "/^#/d")
+# pick a random line from the farewells file
+message=$(echo "${messages}" | shuf --random-source='/dev/urandom' -n 1)
+# punctuate
+message=$(echo "${message}" | sed "s/[^[:punct:]]$/&./")
+# capitalize
+message="${message^}"
+
+# wrap based on screen width
+# must export COLUMNS in bashrc for this to work
+targetWidth=$(($COLUMNS - 4))
+if [ "$targetWidth" -gt "0" ]
+then
+	message=$(echo "${message}" | fmt -w "$targetWidth")
+fi
+
+if [ "$optNoCow" = "0" ] && type cowsay >/dev/null 2>&1
+then
+	message=$(echo "${message}" | cowsay -n)
+fi
+
+message=$(echo "${message}" | "$HOME/bin/center")
+
+if type lolcat >/dev/null 2>&1; then
+	message=$(echo "${message}" | lolcat --force)
+fi
+
+echo
+echo "${message}"
+echo

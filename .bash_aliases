@@ -453,88 +453,6 @@ completeme(){
 
 }
 
-xindent(){
-
-	spaces=$(seq -s " " 0 "$1" | sed -E 's/[0-9]+?//g')
-	while read -r; do
-		echo "${REPLY}" | sed -E "s/^/${spaces}/g"
-	done
-}
-center(){
-	text=""
-	i="0"
-	while read -r; do
-		if [ "$i" -ne 0 ]
-		then
-			text+="
-"
-		fi
-		text+="${REPLY}"
-		i=$((i+1))
-	done
-
-	longestLineLen=$(echo "${text}" | wc -L)
-
-	if [ -z "$COLUMNS" ] || [ "$COLUMNS" -le 0 ]
-	then
-		echo "${text}"
-		return 0
-	elif [ "$longestLineLen" -ge "$COLUMNS" ]
-	then
-		echo "${text}"
-		return 0
-	fi
-
-	spaces=$((($COLUMNS - $longestLineLen) / 2))
-
-
-	echo "${text}" | xindent "${spaces}"
-
-}
-
-goodbyemessage()
-{
-	# very possible to hardcode messages here
-	#messages[0]="goodnight"
-
-	#size=${#messages[@]}
-	#index=$(($RANDOM % $size))
-	#message="${messages[$index]}"
-
-	# read farewells file
-	messages="$(cat ~/.config/messages/farewells.txt)"
-	# strip blank lines
-	messages=$(echo "${messages}" | sed "/^[[:space:]]*\?$/d")
-	# strip comments
-	messages=$(echo "${messages}" | sed "/^#/d")
-	# pick a random line from the farewells file
-	message=$(echo "${messages}" | shuf --random-source='/dev/urandom' -n 1)
-	# punctuate
-	message=$(echo "${message}" | sed "s/[^[:punct:]]$/&./")
-	# capitalize
-	message="${message^}"
-	# wrap based on screen width
-	targetWidth=$(($COLUMNS - 4))
-	if [ "$targetWidth" -gt "0" ]
-	then
-		message=$(echo "${message}" | fmt -w "$targetWidth")
-	fi
-
-	if type cowsay >/dev/null 2>&1; then
-		message=$(echo "${message}" | cowsay -n)
-	fi
-
-	message=$(echo "${message}" | center)
-
-	if type lolcat >/dev/null 2>&1; then
-		message=$(echo "${message}" | lolcat --force)
-	fi
-
-	echo
-	echo "${message}"
-	echo
-}
-
 shutdown() {
 	# TODO expand OS checking into a user enviro variable or function
 	# include cygwin as windows
@@ -557,7 +475,7 @@ shutdown() {
 		if [ $OSTYPE == 'msys' ] && [ "$2" = "-r" ]
 		then
 			clear
-			goodbyemessage
+			goodbye-message
 			sleep $cowtime 
 
 			`which shutdown` -r -f -t 0
@@ -565,7 +483,7 @@ shutdown() {
 		elif [ $OSTYPE == 'msys' ] && [ -z "$2" ]
 		then
 			clear
-			goodbyemessage
+			goodbye-message
 			sleep $cowtime
 
 			# -hybrid not supported on some platforms
@@ -578,7 +496,7 @@ shutdown() {
 			if test -w $(which shutdown)
 			then
 				clear
-				goodbyemessage
+				goodbye-message
 				sleep $cowtime
 
 				`which shutdown` $@
@@ -590,7 +508,7 @@ shutdown() {
 				then
 
 					clear
-					goodbyemessage
+					goodbye-message
 					sleep $cowtime
 
 					sudo `which shutdown` $@

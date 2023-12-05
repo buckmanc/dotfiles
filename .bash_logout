@@ -7,5 +7,5 @@ if [ "$SHLVL" = 1 ]; then
 fi
 
 clear
-goodbyemessage
+goodbye-message
 sleep 2
