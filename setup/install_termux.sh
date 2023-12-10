@@ -8,6 +8,9 @@ export LDFLAGS="-landroid-spawn -lm -lpython3.11"
 pip install git+https://github.com/numpy/numpy
 pip install git+https://github.com/TotallyNotChase/glitch-this
 
+pkg install ruby
+gem install lolcat
+
 termux-setup-storage
 
 

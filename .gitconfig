@@ -58,6 +58,9 @@
 [filter "starship"]
 	# standardize nerdfont moon glyphs and support #gitignore
 	clean = "sed -b -e 's/[]//g' -e '/#gitignore$/d'"
+[filter "termux_shell"]
+	clean = "sed 's|^#!/data/data/com.termux/files/usr/bin/bash|#!/usr/bin/env bash|g'"
+	smudge = "sed 's|^#!/usr/bin/env bash|#!/data/data/com.termux/files/usr/bin/bash|g'"
 [filter "xml"]
 	# deterministic xml sorting
 	# specifically for visual studios and ssms that shuffle their arrays

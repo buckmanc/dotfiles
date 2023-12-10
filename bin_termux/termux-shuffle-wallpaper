@@ -1,8 +1,9 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 
 titleText="Homescreen Wallpaper Updated"
 
 optFloater=0
+optNoNotify=0
 
 for arg in "$@"
 do
@@ -13,6 +14,9 @@ do
 	elif [ "$arg" = "--floater" ]
 	then
 		optFloater=1
+	elif [ "$arg" = "--no-notify" ]
+	then
+		optNoNotify=1
 	else
 		args+=("$arg")
 	fi
@@ -61,6 +65,12 @@ echo "Setting wallpaper to:"
 echo "$paperFileName"
 termux-wallpaper $lockArg -f "$paperPath"
 termux-media-scan "$paperPath"
+
+# back out early
+if [ "$optNoNotify" = "1" ]
+then
+	exit 0
+fi
 
 # elaborate notification with actions to take
 # gotta escape the dashes im the args

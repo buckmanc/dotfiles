@@ -26,6 +26,14 @@ then
 		$HOME/bin/download-threadless "$1" "$outDir"
 		termux-media-scan "$outDir"
 
+	# download astrobin
+	elif echo "$1" | grep -iq "astrobin.com"
+	then
+		outDir="$HOME/storage/downloads/$domain"
+		mkdir -p "$outDir"
+		$HOME/bin/download-astrobin "$1" "$outDir"
+		termux-media-scan "$outDir"
+
 	# download images off this unknown page
 	else
 		outDir="$HOME/storage/downloads/$domain"

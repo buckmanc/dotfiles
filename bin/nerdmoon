@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
 # moon phases in nerdfont glyphs
-if [ -z ${MOONPHASE_NERDFONT_GLYPHS} ]
-then
-	echo "$MOONPHASE_NERDFONT_GLYPHS is missing"
-	exit 1
-fi
+
+# position of moonphase glyphs correspond to the day of the moon
+# this string is also hardcoded in .gitconfig to prevent constant changes to .config/starship.toml
+MOONPHASE_NERDFONT_GLYPHS=""
 
 url="wttr.in/?format=%M"
 moonday="$(timeout 10s bash -c "curl -s \"${url}\"")"

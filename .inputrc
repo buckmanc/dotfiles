@@ -1,9 +1,19 @@
 # Respect default shortcuts.
 $include /etc/inputrc
 set completion-ignore-case On
+set completion-map-case On
 set bell-style none
 
-## arrow up
+# enable-keypad (Off)
+# can this be set to tput lines?
+# completion-query-items (100)
+set show-all-if-ambiguous On
+set show-all-if-unmodified On
+set colored-stats On
+
+# change default up/dowm behaviour to vim-like history search for whatever commands start with what's been typed
+# default up/down behaviour shifted to ctrl+up/down
 "\e[A":history-search-backward
-## arrow down
 "\e[B":history-search-forward
+"\e[1;5A":previous-history
+"\e[1;5B":next-history

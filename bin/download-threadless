@@ -30,7 +30,7 @@ outNames=$(echo "$imageUrls" | sort -u | xargs -L 1 --no-run-if-empty curl --sil
 
 if [ ! $? -eq 0 ]
 then
-	echo "failure: $1" >> "$2/download-page-images.log"
+	echo "failure: $1" >> "$2/download-threadless.log"
 	exit $?
 fi
 
@@ -44,3 +44,4 @@ do
 	fi
 done
 
+termux-media-scan "$2"

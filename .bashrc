@@ -16,9 +16,6 @@ fi
 
 export XENVIRO
 
-# position of moonphase glyphs correspond to the day of the moon
-export MOONPHASE_NERDFONT_GLYPHS=""
-
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -196,4 +193,12 @@ then
 	}
 
 	complete -f -F _dotnet_bash_complete dotnet
+fi
+
+if [ "$XENVIRO" = "mobile" ]
+then
+        hello-message > /data/data/com.termux/files/usr/etc/motd
+elif [ "$XENVIRO" = "mobile" ]
+then
+	hello-message > /etc/motd
 fi

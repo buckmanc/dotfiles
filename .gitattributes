@@ -5,6 +5,9 @@
 .config/messages/*.txt merge=union
 .vim/spell/*.add merge=union
 .vim/spell/*.add filter=sort
+*.sh filter=termux_shell
+bin/* filter=termux_shell
+bin_termux/* filter=termux_shell
 *.bmp diff=image
 *.gif diff=image
 *.jpeg diff=image
