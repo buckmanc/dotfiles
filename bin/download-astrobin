@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# set -e
+
+if [[ -z "$1" || -z "$2" ]]
+then
+	echo "need url and dest dir"
+	exit 1
+fi
+
+if [ ! -d "$2" ]
+then
+	echo "output dir does not exist"
+	exit 1
+fi
+
+body="$(curl -L --silent "$1" | tac | tac)"
+# body="$(cat "$HOME/page.html")"
+
+# tr is just to stop warnings
+title="$(echo "$body" | grep -iPoz '(?s)(?<=<title>).*(?=</title>)' | tr -d '\000')"
+name="$(echo "$title" | grep -iPoz '^.+(?=\s\(\s+)' | tr -d '\000' | recode html..utf8)"
+author="$(echo "$title" | grep -iPoz '(?<=\s{5})\w.+\w(?=\s+)' | tr -d '\000')" 
+
+
+jsonUrl="$(echo "${1}/thumb/real" | sed 's|//|/|g')"
+jsonBody="$(curl --silent -L "${jsonUrl}" | tac | tac)"
+imgUrl="$(echo "$jsonBody" | jq '.url' | sed 's/"//g')"
+
+# echo "title: $title"
+echo "name: $name"
+echo "author: $author"
+if [ -z "$imgUrl" ]
+then
+	echo "could not find full image url"
+	echo "$jsonBody" > "${name}.json"
+	exit 1
+fi
+
+outName="$(curl --silent -O --output-dir "$2" "$imgUrl" -w '%{filename_effective}\n' | tac | tac)"
+
+if [ ! $? -eq 0 ]
+then
+	echo "failure: $1" >> "$2/download-astrobin.log"
+	exit $?
+fi
+
+if [ -f "$outName" ]
+then
+
+	finalFileName="${name}_by_${author}.${outName##*.}"
+
+	# sanitize with detox if it's installed
+	if ( type detox >/dev/null 2>&1 )
+	then
+		finalFileName="$(echo "$finalFileName" | detox --inline)"
+	else
+		finalFileName="$(echo "$finalFileName" | xargs -d '\n' "$HOME/bin/sanitize-file-name")"
+	fi
+
+	echo "finalFileName: $finalFileName"
+
+	mv --backup=numbered "$outName" "$(dirname "$outName")/$finalFileName"
+
+	if ( type termux-media-scan >/dev/null 2>&1 )
+	then
+		termux-media-scan "$finalFileName"
+	fi
+
+	echo "success"
+	echo
+fi

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# https://stackoverflow.com/a/43517547/1995812
+echo -n $1 | sed 's/ /_/g' | perl -pe 's/[\?\[\]\/\\=<>:;,''ʼ"“”&\$#*()|~`!{}%+]//g;' -pe 's/[\r\n\t -]+/-/g;'
+

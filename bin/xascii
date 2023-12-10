@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+widthDefault=80
+width="$widthDefault"
+
+if [[ "$COLUMNS" -lt "$widthDefault" && "$COLUMNS" -gt "0" ]]
+then
+	width="$COLUMNS"
+fi
+
+ascii-image-converter --color --width "$width" "$@"

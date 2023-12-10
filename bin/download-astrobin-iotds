@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ -z "$1" ]] || [ ! -d "$1" ]
+then
+	echo "need output dir, doofus"
+	exit 1
+fi
+
+productUrlPath="$1/urls.log"
+if [ -f "$productUrlPath" ]
+then
+	rm "$productUrlPath"
+fi
+
+seq 50 | while read -r i
+do
+	url="https://www.astrobin.com/iotd/archive/?page=$i"
+	echo "base page: $url"
+	curl --silent "${url}" | tac | tac | grep -i 'astrobin-image' | grep -iPo '(?<=href=").+?(?=")' >> "$productUrlPath"
+done
+
+sort -u -o "$productUrlPath" "$productUrlPath"
+
+cat "$productUrlPath" | xargs --no-run-if-empty -I {} "$HOME/bin/download-astrobin" "http://astrobin.com{}" "$1"
+
+# clean up
+if [ -f "$productUrlPath" ]
+then
+	rm "$productUrlPath"
+fi
