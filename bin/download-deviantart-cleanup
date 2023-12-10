@@ -8,17 +8,16 @@ fi
 
 if [ ! -f "$1" ]
 then
-	echo "file does not exist"
+	# echo "file does not exist"
+	echo "file does not exist: $1"
 	exit 1
 fi
 
 for arg in "$@"
 do
 	outname=$(echo "$arg" | \
-		sed -E 's/(^[-_]{0,5}TT[-_]|[-_]SEPS|[-_]800x800|[-_]4200x4200|[-_]site[-_]comp|[-_]teeturtle|[-_]license|[-_]close[-_]ups?|[-_]products?|[-_]t[-_]shirts?|[-_]socks?|[-_]stickers?)//Ig' | \
+		sed -E 's/([-_][a-z0-9]{7}[-_]fullview)//Ig' | \
 		sed -E 's/(^[-_]*)//Ig' | \
-		sed -E 's/(seps|[-_]1|[-_]final)\././Ig' | \
-		sed -E 's/[-_]{0,10}\././Ig' | \
 		sed -E 's/[-_]{2,}/-/Ig')
 
 	# echo "input: $arg"
