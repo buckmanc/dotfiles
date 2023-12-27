@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# transparent or black more useful?
+# optional arg?
+# optional percent could really be handy
+
+convert "$1" -channel RGB -fuzz 20% -fill none -draw 'color 0,0 replace' "${1%.*}_out${1##*.}"

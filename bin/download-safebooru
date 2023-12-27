@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ -z "$1" || -z "$2" ]]
+then
+	echo "need url and dest dir"
+	exit 1
+fi
+
+if [ ! -d "$2" ]
+then
+	echo "output dir does not exist"
+	exit 1
+fi
+
+url="$1"
+dir="$2"
+optDesc="0"
+if [[ "$3" == "--desc" ]]
+then
+	optDesc="1"
+fi
+
+domain="$(echo "$url" | grep -iPo '(https://)(www\\.)?[^/]+')" || true
+
+productUrlPath="$dir/urls.log"
+if [ -f "$productUrlPath" ]
+then
+	rm "$productUrlPath"
+fi
+
+# parse post links from search pages
+if [[ "$url" == *"tags"* || "$url" == *"page"* ]]
+then
+	seq 100 | while read -r i
+	do
+		url="$(echo "$url" | perl -pe 's/&page=\d{1,3}//g')"
+		url="${url}&page=$i"
+		echo "base page: $url"
+		body="$(curl --silent "${url}")" 
+		if [[ "$body" == *"<p>No posts found.</p>"* ]]
+		then
+			break
+		fi
+		echo "$body" | grep -i '/posts/' | grep -iv '/posts/random?' | grep -iPo '(?<=href=").+?(?=")' | sort -u | perl -pe "s|^(?=.)|$domain|g" >> "$productUrlPath"
+
+	done
+
+# handle direct post links, not just search page links
+else
+	echo "$url" > "$productUrlPath"
+fi
+
+cat "$productUrlPath" | while read -r productURL
+do
+
+	body="$(curl --silent "${productURL}")"
+
+	desc="$(echo "$body" | grep -iP 'class="prose ?"' | perl -pe 's/<.+?>//g' | perl -pe 's/^$//g' | "$HOME/bin/htmldecode")"
+	imgURL="$(echo "${body}" | grep -i '/original/' | grep -iP '(a download|a class="image-view-original-link|size: a)' | grep -iPo '(?<=href=").+?(?=")' | head -n 1)"
+	outName="$(curl --silent -O --output-dir "$2" "$imgURL" -w '%{filename_effective}\n')"
+	
+	if [ ! $? -eq 0 ] || [ ! -f "$outName" ]
+	then
+		echo "failure: $productURL" >> "$2/download-safebooru.log"
+		continue
+	fi
+
+	
+	if [[ "$optDesc" == "0" ]]
+	then
+		finalFileName="$(dirname "$outName")/$(basename "$outName" | perl -pe 's/(^__|_and_\d{1,3}_more)//g')"
+	else
+		# TODO put a character limit on desc
+		if ( type detox >/dev/null 2>&1 )
+		then
+			desc="$(echo "$desc" | detox --inline)"
+		fi
+		outNameEnd="$(echo "$outName" | grep -iPo '_drawn_by_.*')"
+		desc="$(echo "$desc" | perl -00pe 's/\.\n//g' | xargs -d '\n' "$HOME/bin/sanitize-file-name")"
+
+		finalFileName="$(dirname "$outName")/${desc}${outNameEnd}"
+	fi
+
+	finalFileName="$(echo "$finalFileName" | perl -pe "s/\?download=\d//g")"
+
+	echo "finalFileName: $finalFileName"
+	 
+	if [[ "$finalFileName" != "$outName" ]]
+	then
+		mv --backup=numbered "$outName" "$finalFileName"
+	fi
+
+	if ( type termux-media-scan >/dev/null 2>&1 )
+	then
+		termux-media-scan "$finalFileName"
+	fi
+
+	echo "success"
+	echo
+
+done
+
+# clean up
+if [ -f "$productUrlPath" ]
+then
+	rm "$productUrlPath"
+fi

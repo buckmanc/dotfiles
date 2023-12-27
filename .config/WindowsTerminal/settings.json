@@ -41,6 +41,7 @@
   "copyFormatting": "none",
   "copyOnSelect": false,
   "defaultProfile": "{e9961a24-1111-2222-3333-835a2d22397d}",
+  "largePasteWarning": false,
   "multiLinePasteWarning": false,
   "newTabMenu": [
     {
@@ -49,6 +50,7 @@
   ],
   "profiles": {
     "defaults": {
+      "antialiasingMode": "cleartype",
       "backgroundImage": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\totk_ouroboros_grey.png",
       "bellStyle": "window",
       "colorScheme": "Synth Midnight Dark",
@@ -389,6 +391,7 @@
       "yellow": "#C4A000"
     }
   ],
+  "tabSwitcherMode": "disabled",
   "tabWidthMode": "titleLength",
   "themes": [
     {

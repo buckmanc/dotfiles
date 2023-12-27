@@ -53,6 +53,7 @@
 	borker	en-US
 	borks	en-US
 	bs	en-US
+	Buer	en-US
 	Bulbapedia	en-US
 	bupkis	en-US
 	burgo	en-US
@@ -63,6 +64,7 @@
 	cancelling	en-US
 	canopic	en-US
 	CEOs	en-US
+	channelling	en-US
 	cheebo	en-US
 	cheerleading	en-US
 	chicky	en-US
@@ -153,6 +155,7 @@
 	github	en-US
 	gitignore	en-US
 	globbing	en-US
+	gma	en-US
 	Goodreads	en-US
 	greataxe	en-US
 	grifter	en-US
@@ -164,6 +167,7 @@
 	headachey	en-US
 	headspace	en-US
 	hearted	en-US
+	hexmas	en-US
 	HIPAA	en-US
 	hm	en-US
 	hodge	en-US
@@ -198,6 +202,7 @@
 	intersex	en-US
 	interwebs	en-US
 	ish	en-US
+	Ittibitz	en-US
 	ivermectin	en-US
 	Jackbox	en-US
 	Jemisin's	en-US
@@ -221,6 +226,7 @@
 	Logitech	en-US
 	lunner	en-US
 	Machina	en-US
+	magick	en-US
 	mahjong	en-US
 	Malwart	en-US
 	marvelling	en-US
@@ -266,6 +272,7 @@
 	playthrough	en-US
 	plushie	en-US
 	podge	en-US
+	pokemon	en-US
 	positivity	en-US
 	PowerShell	en-US
 	powershell	en-US
@@ -291,6 +298,7 @@
 	raspi3	en-US
 	raspi4	en-US
 	raspi5	en-US
+	rasterize	en-US
 	readme	en-US
 	realtor	en-US
 	recency	en-US
@@ -332,6 +340,7 @@
 	Shia	en-US
 	shoppy	en-US
 	skelly	en-US
+	skyping	en-US
 	sleevies	en-US
 	sms	en-US
 	societally	en-US
@@ -397,6 +406,7 @@
 	VPN	en-US
 	waifu	en-US
 	Walgreens	en-US
+	walmart	en-US
 	Warnke	en-US
 	watchings	en-US
 	watchthrough	en-US
@@ -410,8 +420,17 @@
 	woohoo	en-US
 	worldbuilding	en-US
 	WWIII	en-US
+	x2	en-US
+	x3	en-US
+	x4	en-US
+	x5	en-US
+	x6	en-US
+	x7	en-US
+	x8	en-US
+	x9	en-US
 	xmas	en-US
 	xyz	en-US
+	Y2K	en-US
 	yacking	en-US
 	Yay	en-US
 	yeet	en-US

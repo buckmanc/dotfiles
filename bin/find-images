@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# echo "args received by find-images: $@" > $(tty)
+
 input="$1"
 if [ -z "$input" ] || [[ ! -d "$input" ]]
 then
@@ -8,6 +10,7 @@ else
   shift
 fi
 
+# stackoverflow.com/a/60559975/1995812
 find "$input" "$@" -type f |
 file --mime-type -f - |
 grep -F image/ |

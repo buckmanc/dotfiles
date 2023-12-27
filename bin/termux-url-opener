@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 
 domain="$(echo "$1" | grep -iPo '(https://)(www\\.)?[^/]+' | sed 's/\(https:\/\/\|www\.\)//g')" || true
 trackingNum=$(echo "$1" | grep -iPo '([\d ]{10,40}|[a-z\d]{10-40})') || true

@@ -1,0 +1,275 @@
+#!/usr/bin/env bash
+set -e
+
+help(){
+echo "
+generate wallpapers from graphics that don't fit or text
+
+options:
+o	output path
+m	mode [portrait|landscape|terminal|terminal-corner]
+
+t	text to use (probably a single character)
+i	input image path
+
+f	font to use (probably one with weird glyphs)
+g	geometry; WxH percent offset
+s	image scale percent
+a	color using image alpha
+"
+}
+
+
+# defaults
+geoOffset="0x0"
+offset="+0"
+scale="0"
+optBlur=0
+optVerbose=0
+optAlphaMask=0
+defaultColor="grey24"
+defaultLength="4000"
+
+while getopts ":t:f:i:o:g:s:m:bvha" opt
+do
+	case "${opt}" in
+		i)
+			inPath="${OPTARG}"
+			;;
+		t)
+			text="${OPTARG}"
+			;;
+		f)
+			font="${OPTARG}"
+			;;
+		o)
+			outPath="${OPTARG}"
+			;;
+		g)
+			geoOffset="${OPTARG}"
+			;;
+		s)
+			scale="${OPTARG}"
+			;;
+		m)
+			mode="${OPTARG,,}"
+			;;
+		b)
+			optBlur=1
+			;;
+		v)
+			optVerbose=1
+			;;
+		a)
+			optAlphaMask=1
+			;;
+		h)
+			help
+			exit 0
+			;;
+		\?)
+			echo "invalid option: $name"
+			exit 1
+			;;
+		*)
+			echo "not sure what happened here: $name"
+			exit 1
+			;;
+	esac
+done
+
+if [[ -z "$mode" ]]
+then
+	echo "need a mode (-m)"
+	exit 1
+elif [[ -z "$outPath" ]]
+then
+	echo "need an output path (-o)"
+	exit 1
+elif [[ -z "$inPath" && -z "$text" ]]
+then
+	echo "need a source (-i or -t)"
+	exit 1
+elif [[ -n "$inPath" && ! -f "$inPath" ]]
+then
+	echo "input path does not exist:"
+	echo "$inPath"
+	exit 1
+fi
+
+if [[ "$geoOffset" != *"x"* ]]
+then
+	geoOffset="${geoOffset}x${geoOffset}"
+	echo "adjusting geoOffset: $geoOffset"
+fi
+
+inPathExt="${inPath##*.}"
+inPathExt="${inPathExt,,}"
+inPathTemp="/tmp/wallpaper-magick-$(basename "$outPath")"
+inPathTemp="$(echo "$inPathTemp" | sed 's/ /-/g')"
+
+if [[ "$inPathExt" == "svg" ]]
+then
+	rsvg-convert --keep-aspect-ratio --background-color transparent --width "$defaultLength" --format png --output "$inPathTemp" -- "$inPath" 
+elif [[ "$inPathExt" == "eps" ]]
+then
+	convert "$inPath" -size "x${defaultLength}" -stroke "$defaultColor" -background none "$inPathTemp"
+# copy input image to a temp file so we can modify it freely
+elif [[ -n "$inPath" ]]
+then
+	cp "$inPath" "$inPathTemp"
+# if -t is supplied
+# then generate a new source image from text
+# after this, text handling is the same as input image handling
+elif [[ -n "$text" ]]
+then
+	textRes="${defaultLength}x${defaultLength}"	
+
+	# render text to temp path
+	convert -background none -size "${textRes}" -gravity center -fill "$defaultColor" -font "$font" caption:"$text" "$inPathTemp"
+fi
+
+# would love to trim the source image, however this will decenter it in many cases
+# need to use a custom centering trim
+# https://github.com/ImageMagick/ImageMagick/discussions/5877
+
+# thanks Fred
+# https://www.fmwconcepts.com/imagemagick/centertrim/index.php
+if [[ -f "$HOME/bin/centertrim" ]]
+then
+	"$HOME/bin/centertrim" "$inPathTemp" "$inPathTemp"
+fi
+
+# echo -n "line $LINENO: " && identify -format '%wx%h\n' "$inPathTemp"
+
+bgColor="$(convert "$inPathTemp" -format "%[pixel:p{0,0}]" info:)"
+colorProfile="$(identify -format '%r' "$inPathTemp")"
+width="$(identify -format '%w' "$inPathTemp")"
+height="$(identify -format '%h' "$inPathTemp")"
+
+if [[ "$optAlphaMask" == 1 ]]
+then
+	# TODO check that the image type supports transparentcy
+	# https://superuser.com/questions/718755/transfer-transparency-from-one-image-to-another-using-imagemagick
+	convert \( -size "${width}x${height}" "xc:$defaultColor" \) "$inPathTemp" -compose CopyOpacity -composite "$inPathTemp"
+fi
+
+if [[ "$mode" == "landscape" ]]
+then
+	aspectRatio="16/9"
+	targetHeight="$height"
+	targetWidth=$(echo "scale=0;${targetHeight}*(${aspectRatio})" | bc -l)
+	targetWidth="${targetWidth%%.*}"
+elif [[ "$mode" == "portrait" ]]
+then
+	# TODO why is this backwards
+	aspectRatio="20/9"
+	targetWidth="$width"
+	targetHeight=$(echo "scale=0;$targetWidth*($aspectRatio)" | bc -l)
+	targetHeight="${targetHeight%%.*}"
+elif [[ "$mode" == "terminal"* ]]
+then
+	aspectRatio="16/9"
+
+	if [[ "$mode" == "terminal-corner" ]]
+	then
+		termResRatio="0.4"
+		offsetRatio="4"
+	
+	else
+		termResRatio=1.6
+		offsetRatio="2"
+	fi
+
+	termResRatio="$(echo "$termResRatio + $scale" | bc -l)"
+	termRes="$(echo "scale=4;${width} * ${termResRatio}" | bc -l)x$(echo "scale=4;${height} * ${termResRatio}" | bc -l)"
+
+	targetHeight="$(echo "scale=0;${height} / ${termResRatio}" | bc -l)"
+	targetWidth=$(echo "scale=0;${targetHeight}*(${aspectRatio})" | bc -l)
+	widthOffsetOpt="${geoOffset%%x*}"
+	heightOffsetOpt="${geoOffset##*x}"
+
+
+	widthOffset="$(echo "$offsetRatio - $widthOffsetOpt" | bc -l)"
+	heightOffset="$(echo "$offsetRatio - $heightOffsetOpt" | bc -l)"
+
+	offset="+$(echo "scale=0;${targetWidth} / ${widthOffset}" | bc -l)+$(echo "scale=0;${targetHeight} / ${heightOffset}" | bc -l)"
+fi
+
+targetDimensions="${targetWidth}x${targetHeight}"
+blurOutPath="${outPath%.*}_blur.${outPath##*.}"
+bgOutPath="${outPath%.*}_background.${outPath##*.}"
+
+# offset="+0+0"
+if [[ "$optVerbose" == 1 ]]
+then
+	echo "   file: $(basename "$inPathTemp")"
+	echo "textRes: $textRes"
+	echo "wOffset: $widthOffset"
+	echo "hOffset: $heightOffset"
+	echo " offset: $offset"
+	echo " colors: $colorProfile"
+	echo "bgColor: $bgColor"
+	echo "   mode: $mode"
+	echo "  input: ${width}x${height}"
+	echo " output: $targetDimensions"
+
+	currentRes="$(identify -format '%wx%h' "$inPathTemp")"
+	if [[ "$currentRes" != "${width}x${height}" ]]
+	then
+		echo "inPathTemp changed from ${width}x${height} to $currentRes"
+	fi
+fi
+
+convert -background none -size "$targetDimensions" "xc:$bgColor" "${bgOutPath}"
+
+rm -f "$outPath"
+
+if [[ "$optBlur" == 1 ]]
+then
+	# convert "$inPathTemp" -background none -resize 250% -blur 0x25 -modulate 30 -gravity center -extent "$targetDimensions" "$blurOutPath"
+        #
+	# # final output
+	# convert -background none -gravity center "$bgOutPath" "$blurOutPath" -composite "$inPathTemp" -composite "$outPath"
+
+	# TODO make sure the offset and extent changes work here
+	# otherwise, original wallpaper-fitter for these two lines is above
+	convert "$inPathTemp" -background none -resize 250% -blur 0x25 -modulate 30 -gravity center "$blurOutPath"
+
+	# final output
+	convert -background none -gravity center "$bgOutPath" "$blurOutPath" -geometry "${offset}" -composite "$inPathTemp" -geometry "${offset}" -composite -extent "$targetDimensions" "$outPath"
+
+else
+	# final output
+	convert -gravity center "$bgOutPath" "$inPathTemp" -geometry "${offset}" -composite "$outPath"
+fi 
+
+colorProfileOut="$(identify -format '%r' "$outPath")"
+if [[ "$optVerbose" == 1 ]]
+then
+	echo " colors: $colorProfileOut"
+fi
+
+# # for testing only
+# if [[ -n "$text" ]]
+# then
+# 	cp "$inPathTemp" "$(dirname "$outPath")/tmp_$(basename "$inPathTemp")"
+# fi
+
+rm -f "$bgOutPath"
+rm -f "$blurOutPath"
+rm -f "$inPathTemp"
+
+if [[ "${colorProfile,,}" != *"gray"* && "${colorProfileOut,,}" == *"gray"* ]]
+then
+	echo "image magick grayscale bug detected!"
+	echo "changing your output to a png should fix this"
+	# exit 1
+fi
+
+echo "-------------"
+# ascii-image-converter "$outPath" --height "$(($(tput lines)-5))"
+ascii-image-converter "$outPath" --color --full
+echo "-------------"
+identify -format "%wx%h" "$outPath"
+

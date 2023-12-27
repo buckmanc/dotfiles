@@ -58,6 +58,8 @@ hi SpellLocal ctermbg=235
 hi SpellBad ctermbg=240
 hi! link IncSearch Search
 hi Search cterm=reverse term=reverse gui=reverse ctermbg=none ctermfg=none 
+" hi! link MatchParen Search
+hi! MatchParen cterm=underline ctermbg=none ctermfg=none
 hi! Error ctermbg=darkred
 hi! link ErrorMsg Error
 

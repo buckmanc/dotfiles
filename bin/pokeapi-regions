@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+curl "https://pokeapi.co/api/v2/generation" | jq '.results[].url' | tr -d '\r' | xargs -L 1 curl | jq '(.id,.name,.main_region.name,.version_groups[].name,"-----")'

@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+set -e
+
+help(){
+echo "
+generate wallpapers for terminal guis
+
+options:
+t	text to use (probably a single character)
+f	font to use (probably one with weird glyphs)
+g	geometry; WxH percent offset
+s	font scale percent
+o	output path
+r	target resolution
+c	in the corner instead of clipping through the corner
+"
+}
+
+# inputs for testing
+font="$HOME/.config/mintty/fonts/Fira Code Regular Nerd Font Complete Mono Windows Compatible.ttf"
+text='X'
+text='󰮭'
+text=''
+
+# defaults
+res="1920x1080"
+optCorner=0
+geoOffset="0x0"
+scale="0"
+
+while getopts ":t:fo:g:s:hr:c" opt
+do
+	case "${opt}" in
+		t)
+			text="${OPTARG}"
+			;;
+		f)
+			font="${OPTARG}"
+			;;
+		o)
+			outPath="${OPTARG}"
+			;;
+		g)
+			geoOffset="${OPTARG}"
+			;;
+		s)
+			scale="${OPTARG}"
+			;;
+		r)	
+			res="${OPTARG}"
+			;;
+		c)
+			optCorner=1
+			;;
+		h)
+			help
+			exit 0
+			;;
+		*)
+			help
+			exit 1
+			;;
+		\?)
+			echo "invalid option"
+			exit 1
+			;;
+	esac
+done
+
+width="${res%%x*}"
+height="${res##*x}"
+textResRatio=2.5
+textResRatio="$(echo "$textResRatio + $scale" | bc)"
+textRes="$(echo "${width} * ${textResRatio}" | bc)x$(echo "${height} * ${textResRatio}" | bc)" # round to whole only
+offsetRatio="2"
+widthOffsetOpt="${geoOffset%%x*}"
+heightOffsetOpt="${geoOffset##*x}"
+widthOffset="$(echo "$offsetRatio - $widthOffsetOpt" | bc)"
+heightOffset="$(echo "$offsetRatio - $heightOffsetOpt" | bc)"
+
+offset="+$(echo "${width} / ${widthOffset}" | bc)+$(echo "${height} / ${heightOffset}" | bc)" # round to whole only
+
+echo " height: $height"
+echo "  width: $width"
+echo "textRes: $textRes"
+echo " offset: $offset"
+
+rm -f "$outPath"
+
+convert -size "$res" xc:black \
+	\( -background none -size "${textRes}" -gravity center -fill gray -font "$font" caption:"$text" \) \
+	-gravity center -geometry "${offset}" \
+	-compose over -composite "$outPath"
+
+echo "-------------"
+ascii-image-converter "$outPath" --height "$(($(tput lines)-5))"
+echo "-------------"
+identify -format "%wx%h" "$outPath"
+

@@ -52,15 +52,15 @@
 [status]
 	renames = copies
 [filter "notepad++ignore"]
-	clean = ~/.config/Notepad++/git_clean_filter.sh
+	clean = ~/.config/gitconfig_scripts/notepad++_clean_filter.sh
 [filter "gitignore"]
 	clean = "sed -b '/#gitignore$/d'"
 [filter "starship"]
 	# standardize nerdfont moon glyphs and support #gitignore
 	clean = "sed -b -e 's/[]//g' -e '/#gitignore$/d'"
 [filter "termux_shell"]
-	clean = "sed 's|^#!/data/data/com.termux/files/usr/bin/bash|#!/usr/bin/env bash|g'"
-	smudge = "sed 's|^#!/usr/bin/env bash|#!/data/data/com.termux/files/usr/bin/bash|g'"
+	clean = "~/.config/gitconfig_scripts/termux_filter.sh --clean"
+	smudge = "~/.config/gitconfig_scripts/termux_filter.sh --smudge"
 [filter "xml"]
 	# deterministic xml sorting
 	# specifically for visual studios and ssms that shuffle their arrays
