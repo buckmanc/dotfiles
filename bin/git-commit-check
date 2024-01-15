@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "project contains $(git xgrep -iP "(//|#) ?TODO( |:)" | wc -l) TODOs"
+
 if ! git diff HEAD --check
 then
 	exit 1
@@ -27,6 +29,24 @@ then
 	then
 		exit 1
 	fi
+
+	gitRoot="$(git rev-parse --show-toplevel)"
+	migrationsProject="$(find "$gitRoot" -type d -iname 'migrations' | head -n 1 | xargs dirname)"
+
+	if [[ -n "$migrationsProject" && "$migrationsProject" != "." ]] && ( type dotnet-ef > /dev/null 2>&1 ) && ( dotnet-ef migrations list --no-build --project "$migrationsProject" 2>&1 | grep -Pivq "(this package is required|no project found)" )
+	then
+		if ! dotnet-ef migrations has-pending-model-changes --no-build --project "$migrationsProject"
+		then
+			exit 1
+		fi
+	fi
+	
+	# TODO find a migrations folder and backup one level from that to use as the project dir
+	# TODO check if dotnet-ef is installed
+	# TODO check if dotnet-ef migrations list works or Microsoft.EntityFrameworkCore.Design is referenced
+	# TODO check for pending migrations
+	# dotnet-ef migrations has-pending-model-changes
+	# TODO decide this is too little bang for the buck
 fi
 
 exit 0

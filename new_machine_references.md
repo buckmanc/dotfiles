@@ -24,6 +24,8 @@ New Machine References
 - [Market Holidays](https://www.nyse.com/markets/hours-calendars)
 - [jq Cheat Sheet](https://gist.github.com/olih/f7437fb6962fb3ee9fe95bda8d2c8fa4)
 - [bash filename parsing](https://stackoverflow.com/a/965069/1995812)
+- [sqlite3 cheat sheet](https://sqlitetutorial.net/sqlite-commands)
+- [dotnet ef commands](https://learn.microsoft.com/en-us/ef/core/cli/dotnet#using-the-tools)
 
 ## Bookmarklets
 

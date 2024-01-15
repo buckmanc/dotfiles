@@ -129,6 +129,7 @@ ETL
 etl
 etls
 ETLs
+etsy
 exvangelical
 fakeout
 fam
@@ -249,6 +250,7 @@ nanite
 nerddom
 neurodivergent
 neurotypical
+Nextdoor
 noir
 noob
 NPC
@@ -355,6 +357,10 @@ stardrive
 staycation
 strategizing
 stressors
+svg
+svgs
+symlink
+symlinks
 talkbox
 taze
 Teradata
@@ -432,6 +438,7 @@ xyz
 Y2K
 yacking
 Yay
+yay
 yeet
 yeetability
 yeeter
@@ -1010,6 +1017,7 @@ Gossifleur
 Gothita
 Gothitelle
 Gothorita
+Gouging-Fire
 Gourgeist
 Grafaiai
 Granbull
@@ -1064,6 +1072,7 @@ Houndoom
 Houndour
 Houndstone
 Huntail
+Hydrapple
 Hydreigon
 Hypno
 Igglybuff
@@ -1083,6 +1092,7 @@ Iron Moth
 Iron Thorns
 Iron Treads
 Iron Valiant
+Iron-Boulder
 Ivysaur
 Jangmo-o
 Jellicent
@@ -1302,6 +1312,7 @@ Pawmi
 Pawmo
 Pawmot
 Pawniard
+Pecharunt
 Pelipper
 Perrserker
 Persian

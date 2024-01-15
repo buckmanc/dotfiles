@@ -52,6 +52,7 @@
     "defaults": {
       "antialiasingMode": "cleartype",
       "backgroundImage": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\totk_ouroboros_grey.png",
+      "backgroundImageAlignment": "bottomRight",
       "bellStyle": "window",
       "colorScheme": "Synth Midnight Dark",
       "experimental.retroTerminalEffect": true,

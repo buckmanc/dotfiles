@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+dir="$1"
+configPath="$HOME/.config/WindowsTerminal/settings.json"
+
+if [[ ! -f "$configPath" ]]
+then
+	echo "windows terminal config file not found at $configPath"
+	exit 1
+fi
+
+if [[ ! -d "$dir" ]]
+then
+	echo "need a dir"
+	exit 1
+fi
+
+
+imgPath="$("$HOME/bin/find-images" "$dir" | shuf -n 1)"
+if ( type cygpath >/dev/null 2>&1 )
+then
+	# swap unix to windows path
+	# escaping windows wrong way slashes
+	imgPath="$(cygpath -w "$imgPath" | sed 's/\\/\\\\/g')"
+fi
+
+# sed -i "s|^.*\"backgroundimage\"|$imgPath|g" "$configPath"
+# perl -pi -e "s|^.*\"backgroundImage\"|$imgPath|g" "$configPath"
+perl -pi -e "s|(?<=^\s{1,50}\"backgroundImage\": ?\")[^\"]+(?=\",?$)|$imgPath|g" "$configPath"

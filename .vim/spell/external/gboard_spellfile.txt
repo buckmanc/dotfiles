@@ -130,6 +130,7 @@
 	etl	en-US
 	etls	en-US
 	ETLs	en-US
+	etsy	en-US
 	exvangelical	en-US
 	fakeout	en-US
 	fam	en-US
@@ -250,6 +251,7 @@
 	nerddom	en-US
 	neurodivergent	en-US
 	neurotypical	en-US
+	Nextdoor	en-US
 	noir	en-US
 	noob	en-US
 	NPC	en-US
@@ -356,6 +358,10 @@
 	staycation	en-US
 	strategizing	en-US
 	stressors	en-US
+	svg	en-US
+	svgs	en-US
+	symlink	en-US
+	symlinks	en-US
 	talkbox	en-US
 	taze	en-US
 	Teradata	en-US
@@ -433,6 +439,7 @@
 	Y2K	en-US
 	yacking	en-US
 	Yay	en-US
+	yay	en-US
 	yeet	en-US
 	yeetability	en-US
 	yeeter	en-US
@@ -1011,6 +1018,7 @@
 	Gothita	en-US
 	Gothitelle	en-US
 	Gothorita	en-US
+	Gouging-Fire	en-US
 	Gourgeist	en-US
 	Grafaiai	en-US
 	Granbull	en-US
@@ -1065,6 +1073,7 @@
 	Houndour	en-US
 	Houndstone	en-US
 	Huntail	en-US
+	Hydrapple	en-US
 	Hydreigon	en-US
 	Hypno	en-US
 	Igglybuff	en-US
@@ -1084,6 +1093,7 @@
 	Iron Thorns	en-US
 	Iron Treads	en-US
 	Iron Valiant	en-US
+	Iron-Boulder	en-US
 	Ivysaur	en-US
 	Jangmo-o	en-US
 	Jellicent	en-US
@@ -1303,6 +1313,7 @@
 	Pawmo	en-US
 	Pawmot	en-US
 	Pawniard	en-US
+	Pecharunt	en-US
 	Pelipper	en-US
 	Perrserker	en-US
 	Persian	en-US
