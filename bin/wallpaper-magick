@@ -30,6 +30,7 @@ optVerbose=0
 optAlphaMask=0
 rotateDegrees=0
 defaultColor="grey24"
+defaultIconColor="white"
 defaultBg="black"
 defaultLength="4000"
 maxRes="4000x4000>^"
@@ -108,6 +109,11 @@ if [[ "$geoOffset" != *"x"* ]]
 then
 	geoOffset="${geoOffset}x${geoOffset}"
 	# echo "adjusting geoOffset: $geoOffset"
+fi
+
+if [[ "$mode" == "icon" ]]
+then
+	defaultColor="$defaultIconColor"
 fi
 
 inPathExt="${inPath##*.}"
@@ -261,6 +267,12 @@ then
 	heightOffsetOutputPercMaterialized="$(echo "${targetHeight} * ${heightOffsetOutputPerc}" | bc -l)"
 
 	offset="+$(echo "${widthOffsetInputPercMaterialized} + ${widthOffsetOutputPercMaterialized}" | bc -l)+$(echo "${heightOffsetInputPercMaterialized} + ${heightOffsetOutputPercMaterialized}" | bc -l)"
+elif [[ "$mode" == "icon" ]]
+then
+	gravity="center"
+	targetWidth="256"
+	targetHeight="256"
+	convert "$inPathTemp" -resize "${targetWidth}x${targetHeight}" "$inPathTemp"
 else
 	echo "unrecognized mode: $mode"
 	exit 1
