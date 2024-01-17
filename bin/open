@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+if [ -n "$SSH_CLIENT" ] && ( type vim >/dev/null 2>&1)
+then
+	# TODO make vim open in tabs with -p instead of making multiple calls
+	# try adding all found paths to a var
+	# then running that var through xargs -o to openy program
+	openy=vim
+elif ( type explorer >/dev/null 2>&1)
+then
+	openy=explorer
+elif ( type xdg-open >/dev/null 2>&1)
+then
+	openy=xdg-open
+else
+	echo 'cannot find a program to open with'
+	exit 1
+fi
+
+# add pipe args to the list of regular args
+args="$@"
+[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
+
+log=()
+
+# iterate over args
+for i in "$@"
+do
+	# ignore empty args, which show up when using pipes for some reason
+	if [[ -z $i ]]
+	then
+		continue
+	fi
+
+	# echo $i
+
+	# absolutepath=$(readlink -f "$i")
+	absolutepath=$(realpath --no-symlinks "$i")
+
+	# if the file doesn't exist try again removing everything after :
+	# makes this function play nice with grep results
+	if [[ ! -f "${absolutepath}" ]]
+	then
+		absolutepath=$(echo "${absolutepath}" | grep -iPo '^.{2}[^:]+')
+	fi
+
+	# skip dupes
+	# makes this function play nice with grep results
+	if [[ " ${log[*]} " =~ " ${absolutepath} " ]]
+	then
+		continue
+	fi
+
+	if [[ -f "$absolutepath" ]]
+	then
+		foldername=$(dirname -- "$absolutepath")
+		filename=$(basename -- "$absolutepath")
+	elif [[ -d "$absolutepath" ]]
+	then
+		foldername="$absolutepath"
+		filename="."
+	else
+		echo "could not find ${absolutepath}"
+		continue
+	fi
+
+	# echo "filename: $filename"
+	# echo "absolutepath: $absolutepath"
+
+	cd "$foldername" && $openy "$filename"
+
+	log+=("${absolutepath}")
+done
+
+# return success
+exit 0

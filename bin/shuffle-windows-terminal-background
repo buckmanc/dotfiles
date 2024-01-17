@@ -16,12 +16,12 @@ then
 fi
 
 
-imgPath="$("$HOME/bin/find-images" "$dir" | shuf -n 1)"
+imgPath="$("$HOME/bin/find-images" "$dir" | shuf -n 1 | xargs -I {} realpath "{}")"
 if ( type cygpath >/dev/null 2>&1 )
 then
 	# swap unix to windows path
-	# escaping windows wrong way slashes
-	imgPath="$(cygpath -w "$imgPath" | sed 's/\\/\\\\/g')"
+	# escape once for windows terminal and once for the perl command below
+	imgPath="$(cygpath -w "$imgPath" | sed -e 's/\\/\\\\/g' -e 's/\\/\\\\/g')"
 fi
 
 # sed -i "s|^.*\"backgroundimage\"|$imgPath|g" "$configPath"

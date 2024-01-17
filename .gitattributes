@@ -2,7 +2,6 @@
 .config/starship.toml filter=starship
 *.cs filter=gitignore
 .gitattributes merge=theirs
-.config/WindowsTerminal/state.json merge=theirs
 .config/WindowsTerminal/*.json filter=json
 .config/messages/*.txt merge=union
 .vim/spell/*.add merge=union
