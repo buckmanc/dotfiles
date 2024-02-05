@@ -9,6 +9,7 @@ alias xhist='xhistory'
 alias gwap='git diff -w --no-color | git apply --cached --ignore-whitespace && git checkout -- . && git reset && git add -p'
 alias gut='git'
 alias got='git'
+alias it='git'
 alias vum='vim'
 alias vom='vim'
 alias vin='echo "praise the Ascendant Warrior"'
@@ -488,9 +489,32 @@ export -f wttr
 
 xwttr(){
 
+	locPath="$HOME/.config/xwttrlocs"
+	if [[ -n "$locPath" ]]
+	then
+		locText="$(cat "$locPath")"
+		# take first field before comma
+		locs="{$(echo "$locText" | cut -d, -f1 | perl -pe 's/\n/,/g' | perl -pe 's/,$//g' | perl -pe 's/,{2,}/,/g')}"
+		aliasLines="$(echo "$locText" | grep ',')"
+
+	else
+		locs=''
+		aliasLines=''
+	fi
 	if [ $# -eq 0 ]
 	then
-		timeout 5s bash -c "wttr '' 'format=""+%c+%t""'"
+		results="$(timeout 5s bash -c "wttr '$locs' 'format=%l:~%t(%f)~%c%C\n'")"
+		while read -r line
+		do
+			oldText="$(echo "$line" | cut -d, -f1)"
+			newText="$(echo "$line" | cut -d, -f2)"
+			results="$(echo "$results" | sed "s/$oldText/$newText/g")"
+
+		done < <(echo "$aliasLines")
+		degrees="$(echo "$results" | grep -iPo '°\w' | head -n 1)"
+
+		echo "$results" | sed -e 's/ \{2,\}/ /g' -e 's/°[CF]//g' -e 's/\+//g' -e "s/)/) $degrees/g" | column --table --separator '~'
+
 	elif [ "$1" = "moon" ]
 	then
 		timeout 5s bash -c "wttr $@"
@@ -792,8 +816,8 @@ xsleep(){
 alias xleep='xsleep'
 
 xrsync() {
-    rsync -Przzu "$1"/* "$2"
-    rsync -Przzu "$2"/* "$1"
+    rsync -Przzut "$1"/* "$2"
+    rsync -Przzut "$2"/* "$1"
 }
 
 superreplace(){

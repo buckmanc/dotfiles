@@ -23,9 +23,12 @@ New Machine References
 - [Pokemon Go Countdowns](https://p337.info/pokemongo/)
 - [Market Holidays](https://www.nyse.com/markets/hours-calendars)
 - [jq Cheat Sheet](https://gist.github.com/olih/f7437fb6962fb3ee9fe95bda8d2c8fa4)
-- [bash filename parsing](https://stackoverflow.com/a/965069/1995812)
+- [bash filename parsing / extraction](https://stackoverflow.com/a/965069/1995812)
 - [sqlite3 cheat sheet](https://sqlitetutorial.net/sqlite-commands)
 - [dotnet ef commands](https://learn.microsoft.com/en-us/ef/core/cli/dotnet#using-the-tools)
+- [JSON2CSharp (and XML, etc)](https://json2cscharp.com)
+- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
+- [URL Decode / Encode](https://urlencoder.org)
 
 ## Bookmarklets
 
@@ -72,4 +75,5 @@ New Machine References
 - [Dungeon Synth Archives](https://youtube.com/@TheDungeonSynthArchives/videos)
 - [LoFi Study Girl](https://youtube.com/watch?v=jfKfPfyJRdk)
 - [LoFi Air Traffic Control](https://www.lofiatc.com/)
+- [OC Remix Radio](https://rainwave.cc/ocremix/)
 - ~~[Voices of the Ainur](https://www.podchaser.com/podcasts/voices-of-the-ainur-1487083/episodes/recent)~~

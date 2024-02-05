@@ -3,44 +3,40 @@
 domain="$(echo "$1" | grep -iPo '(https://)(www\\.)?[^/]+' | sed 's/\(https:\/\/\|www\.\)//g')" || true
 trackingNum=$(echo "$1" | grep -iPo '([\d ]{10,40}|[a-z\d]{10-40})') || true
 
-echo "input: $1"
-echo "domain: $domain"
-echo "trackingNum: $trackingNum"
+# echo "input: $1"
+# echo "domain: $domain"
+# echo "trackingNum: $trackingNum"
 
 # if you provided a url
 if [ -n "$domain" ]
 then
+	outDir="$HOME/storage/downloads/$domain"
+	mkdir -p "$outDir"
+
+	# TODO log what files are already in the folder so new files can be sanitized
+
 	# download big teeturtle images
 	if echo "$1" | grep -iq "teeturtle.com"
 	then
-		outDir="$HOME/storage/downloads/TeeTurtle/"
-		mkdir -p "$outDir"
 		$HOME/bin/download-teeturtle "$1" "$outDir"
-		termux-media-scan "$outDir"
-
 	# download big teeturtle images
 	elif echo "$1" | grep -iq "threadless.com"
 	then
-		outDir="$HOME/storage/downloads/$domain"
-		mkdir -p "$outDir"
 		$HOME/bin/download-threadless "$1" "$outDir"
-		termux-media-scan "$outDir"
-
 	# download astrobin
 	elif echo "$1" | grep -iq "astrobin.com"
 	then
-		outDir="$HOME/storage/downloads/$domain"
-		mkdir -p "$outDir"
 		$HOME/bin/download-astrobin "$1" "$outDir"
-		termux-media-scan "$outDir"
-
 	# download images off this unknown page
 	else
-		outDir="$HOME/storage/downloads/$domain"
-		mkdir -p "$outDir"
-		$HOME/bin/download-page-images "$1" "$outDir"
-		termux-media-scan "$outDir"
+		if ! gallery-dl -D "$outDir" "$1"
+		then
+			echo "Could not download with gallery-dl. Falling back to generic downloader."
+			$HOME/bin/download-page-images "$1" "$outDir"
+		fi
 	fi
+
+	termux-media-scan "$outDir"
 # google the tracking number
 elif [ -n "$trackingNum" ]
 then

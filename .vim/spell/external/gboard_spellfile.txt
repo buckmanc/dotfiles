@@ -63,6 +63,8 @@
 	cancelled	en-US
 	cancelling	en-US
 	canopic	en-US
+	castlevania	en-US
+	castlevanias	en-US
 	CEOs	en-US
 	channelling	en-US
 	cheebo	en-US
@@ -87,6 +89,8 @@
 	covid	en-US
 	coz	en-US
 	crashdown	en-US
+	Cricut	en-US
+	cricut	en-US
 	cringey	en-US
 	Dafoe's	en-US
 	Darkspace	en-US
@@ -100,11 +104,14 @@
 	dev	en-US
 	devs	en-US
 	dialer	en-US
+	dir	en-US
 	direness	en-US
+	dirs	en-US
 	discog	en-US
 	dl	en-US
 	DLC	en-US
 	DLCs	en-US
+	dls	en-US
 	DNS	en-US
 	docu	en-US
 	docuseries	en-US
@@ -116,13 +123,16 @@
 	dotfiles	en-US
 	dotnet	en-US
 	DQ	en-US
+	dropbox	en-US
 	Duggar	en-US
+	Duplos	en-US
 	dystopia	en-US
 	earlyish	en-US
 	easter	en-US
 	ectoplasmic	en-US
 	el	en-US
 	eldritch	en-US
+	Elon	en-US
 	Elrod	en-US
 	else's	en-US
 	esque	en-US
@@ -150,6 +160,7 @@
 	gaslighting	en-US
 	gaslit	en-US
 	GBA	en-US
+	gcn	en-US
 	GDQ	en-US
 	Gemma	en-US
 	gitconfig	en-US
@@ -158,6 +169,7 @@
 	globbing	en-US
 	gma	en-US
 	Goodreads	en-US
+	gotta	en-US
 	greataxe	en-US
 	grifter	en-US
 	groc	en-US
@@ -203,6 +215,7 @@
 	intersex	en-US
 	interwebs	en-US
 	ish	en-US
+	isos	en-US
 	Ittibitz	en-US
 	ivermectin	en-US
 	Jackbox	en-US
@@ -231,9 +244,11 @@
 	mahjong	en-US
 	Malwart	en-US
 	marvelling	en-US
+	matryoshka	en-US
 	me's	en-US
 	mech	en-US
 	meds	en-US
+	metroidvania	en-US
 	midwest	en-US
 	mins	en-US
 	mislisting	en-US
@@ -249,6 +264,7 @@
 	mvp	en-US
 	nanite	en-US
 	nerddom	en-US
+	nerdfont	en-US
 	neurodivergent	en-US
 	neurotypical	en-US
 	Nextdoor	en-US
@@ -278,11 +294,13 @@
 	positivity	en-US
 	PowerShell	en-US
 	powershell	en-US
+	ppl	en-US
 	pre	en-US
 	prep'd	en-US
 	prep'ing	en-US
 	programmatically	en-US
 	PS5	en-US
+	psp	en-US
 	pukified	en-US
 	punkos	en-US
 	puppeteering	en-US
@@ -290,6 +308,7 @@
 	Q2	en-US
 	Q3	en-US
 	Q4	en-US
+	quickgrid	en-US
 	Quiplash	en-US
 	ramen	en-US
 	ramped	en-US
@@ -314,14 +333,18 @@
 	repointed	en-US
 	repointing	en-US
 	resemblant	en-US
+	retroarch	en-US
 	rewatch	en-US
 	rng	en-US
 	RNG	en-US
 	robo	en-US
 	Rogan	en-US
+	rom	en-US
 	Romani	en-US
+	roms	en-US
 	roomba	en-US
 	rotavirus	en-US
+	rsync	en-US
 	Runza	en-US
 	scripter	en-US
 	scritches	en-US
@@ -355,6 +378,7 @@
 	SSH'ing	en-US
 	stabby	en-US
 	stardrive	en-US
+	starship	en-US
 	staycation	en-US
 	strategizing	en-US
 	stressors	en-US
@@ -363,10 +387,12 @@
 	symlink	en-US
 	symlinks	en-US
 	talkbox	en-US
+	taskbar	en-US
 	taze	en-US
 	Teradata	en-US
 	Termux	en-US
 	Tetris	en-US
+	tf	en-US
 	that	en-US
 	that'll	en-US
 	themself	en-US
@@ -378,6 +404,8 @@
 	timelines	en-US
 	timestamped	en-US
 	timestamps	en-US
+	todo	en-US
+	toml	en-US
 	toon	en-US
 	toons	en-US
 	transgressive	en-US
@@ -407,6 +435,7 @@
 	vax	en-US
 	vaxxed	en-US
 	VBS	en-US
+	vibing	en-US
 	vids	en-US
 	vimrc	en-US
 	VPN	en-US
@@ -422,6 +451,7 @@
 	wfh	en-US
 	what'd	en-US
 	whoever's	en-US
+	wii	en-US
 	Willem	en-US
 	woohoo	en-US
 	worldbuilding	en-US
@@ -450,6 +480,7 @@
 	Zenni	en-US
 	Adolin	en-US
 	Adolin's	en-US
+	Adonalsium	en-US
 	Albus	en-US
 	Allant	en-US
 	Amaram	en-US
@@ -457,14 +488,18 @@
 	Amphibia	en-US
 	Arishem	en-US
 	Armello	en-US
+	Ashyn	en-US
 	Beckman	en-US
 	Bioshock	en-US
+	Bjendal	en-US
 	Blart	en-US
 	Bonemass	en-US
 	Borat	en-US
 	BotW	en-US
 	BotW's	en-US
+	Braize	en-US
 	Brudder	en-US
+	Canticle	en-US
 	Casper	en-US
 	Castlevania	en-US
 	Catan	en-US
@@ -478,9 +513,11 @@
 	deathsquitos	en-US
 	Drakon	en-US
 	draugr	en-US
+	Drominad	en-US
 	Ecclesia	en-US
 	Edgedancer	en-US
 	Eggman	en-US
+	Elantris	en-US
 	Elden	en-US
 	Elhokar	en-US
 	Elric	en-US
@@ -524,11 +561,13 @@
 	Kaladin	en-US
 	Kaladin's	en-US
 	Karun	en-US
+	Komashi	en-US
 	l4d2	en-US
 	L4D2	en-US
 	Li'l	en-US
 	Lothlorien	en-US
 	LotR	en-US
+	Lumar	en-US
 	Madoka	en-US
 	Magica	en-US
 	Maneater	en-US
@@ -543,12 +582,16 @@
 	Moder	en-US
 	Morbius	en-US
 	Murderbot	en-US
+	Mythos	en-US
+	Nalthis	en-US
 	Narwa	en-US
 	Nightvale	en-US
 	Oathbringer	en-US
+	Obrodai	en-US
 	Olimar's	en-US
 	Paddington	en-US
 	Parangosky	en-US
+	perpendicularity	en-US
 	Phallanx	en-US
 	Phasmophobia	en-US
 	Pikmin	en-US
@@ -564,11 +607,14 @@
 	Rodericka	en-US
 	Rosalina	en-US
 	Rosalina's	en-US
+	Roshar	en-US
 	RRR	en-US
 	Samus	en-US
 	Sanderson	en-US
 	Sanderson's	en-US
 	Sando	en-US
+	Scadrial	en-US
+	Sel	en-US
 	Shadowland	en-US
 	Shallan	en-US
 	Shallan's	en-US
@@ -586,6 +632,8 @@
 	Stormblessed	en-US
 	Stormlight	en-US
 	Sunreach	en-US
+	Taldain	en-US
+	Threnody	en-US
 	TMNT	en-US
 	TNG	en-US
 	TotK	en-US
@@ -594,7 +642,9 @@
 	Udolpho	en-US
 	Undertale	en-US
 	UNSC	en-US
+	UTol	en-US
 	Valheim	en-US
+	Vax	en-US
 	Wakanda	en-US
 	Wario	en-US
 	Witcher	en-US
@@ -603,6 +653,8 @@
 	Wonka's	en-US
 	Wyndle	en-US
 	wyrm	en-US
+	Yolen	en-US
+	Yumi	en-US
 	afaik	en-US
 	afk	en-US
 	asl	en-US

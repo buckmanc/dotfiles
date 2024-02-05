@@ -6,6 +6,14 @@ then
 	exit 1
 fi
 
+if (! type 7z > /dev/null 2>&1) && [[ -f '/c/Program Files/7-Zip/7z.exe' ]]
+then
+	# alias 7z='/c/Program Files/7-Zip/7z.exe'
+	7z(){
+		'/c/Program Files/7-Zip/7z.exe' "$@"
+	}
+fi
+
 for archivePath in "$@"
 do
 	if [[ ! -f "$archivePath" ]]
@@ -16,8 +24,24 @@ do
 
 	dirIn="$(dirname "$archivePath")"
 	filename="$(basename "$archivePath")"
-	dirOut="$dirIn/${filename%%.*}"
+	ext="$(echo "${archivePath##*.}")"
+	# sanitize multiple dot file extension zips from the dir name
+	dirName="$(echo "${filename%.*}" | perl -pe 's/(\.pkg|\.tar|\.gz){1,3}$//g')"
+	dirOut="$dirIn/$dirName"
 
-	7z x -spe "-o$dirOut" -aos -- "$archivePath" | grep -i "extracting"
+	# 7zip doesn't have zstd support
+	if [[ "${ext,,}" == "zst" ]]
+	then
+		if zstd -d "$archivePath"
+		then
+			rm "$archivePath"
+			archivePath="${archivePath%.*}"
+		fi
+	fi
+
+	if 7z x -spe "-o$dirOut" -aos -- "$archivePath" | grep -i "extracting"
+	then
+		rm "$archivePath"
+	fi
 
 done
