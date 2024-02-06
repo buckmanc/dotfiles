@@ -67,41 +67,41 @@
         "commandline": "%PROGRAMFILES%\\Git\\bin\\bash.exe -l -i",
         "guid": "{e9961a24-1111-2222-3333-835a2d22397d}",
         "hidden": false,
-        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\git.png",
+        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\png\\git.png",
         "name": "Git Bash"
       },
       {
         "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
         "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
         "hidden": true,
-        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\powershell_old.png",
+        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\png\\powershell_old.png",
         "name": "Windows PowerShell"
       },
       {
         "commandline": "%SystemRoot%\\System32\\cmd.exe",
         "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
         "hidden": false,
-        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\cmd.png",
+        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\png\\cmd.png",
         "name": "Command Prompt"
       },
       {
         "guid": "{1f7e119c-fd13-57b5-bbea-140543a62489}",
         "hidden": true,
-        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\visual_studio.png",
+        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\png\\visual_studio.png",
         "name": "Developer Command Prompt for VS 2022",
         "source": "Windows.Terminal.VisualStudio"
       },
       {
         "guid": "{4c40f4ac-9419-5ec1-911a-1fce4b410571}",
         "hidden": true,
-        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\visual_studio.png",
+        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\png\\visual_studio.png",
         "name": "Developer PowerShell for VS 2022",
         "source": "Windows.Terminal.VisualStudio"
       },
       {
         "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
         "hidden": false,
-        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\powershell_new.png",
+        "icon": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\icons\\png\\powershell_new.png",
         "name": "PowerShell",
         "source": "Windows.Terminal.PowershellCore"
       },
