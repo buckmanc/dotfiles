@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+# any args before the last two are file paths
+while [ $# -gt 2 ]
+do
+	files+="$1"$'\n'
+	shift 1
+done
+
+if [[ -z "$files" ]]
+then
+	gitRoot=$(git rev-parse --show-toplevel)
+	files=git -C "$gitRoot" ls-files
+fi
+
+# echo "files: $files"
+
+echo "$files" | while read oldShortPath
+do
+	# skip blank lines
+	if [[ -z "$oldShortPath" ]]
+	then
+		continue
+	fi
+
+	newShortPath=$(echo "${oldShortPath}" | sed -e "s/${1}/${2}/g" -e "s/${1,}/${2,}/g" -e "s/${1,,}/${2,,}/g")
+	if [[ -n "$gitRoot" ]]
+	then
+		oldFullPath="${gitRoot}/${oldShortPath}"
+		newFullPath="${gitRoot}/${newShortPath}"
+	else
+		# if these paths didn't come from git then continue with the relative paths
+		oldFullPath="${oldShortPath}"
+		newFullPath="${newShortPath}"
+	fi
+
+	# echo "oldFullPath: $oldFullPath"
+
+	if [[ ! -f "$oldFullPath" ]]
+	then
+		continue
+	fi
+
+	# echo "checking $oldShortPath..."
+
+	fileType="$(file --brief --mime-type "$oldFullPath" | cut -d '/' -f1)"
+
+	# only mess with the contents of the file if
+	# it's a text file and
+	# it contains the string
+
+	if [[ "$fileType" == "text" ]] && grep -iq "$1" "$oldFullPath"
+	then
+		echo "modifying $oldShortPath..."
+		sed -i -e "s/${1}/${2}/g" -e "s/${1,}/${2,}/g" -e "s/${1,,}/${2,,}/g" "${oldFullPath}"
+	fi
+
+	if [[ ! "${oldFullPath}" -ef "${newFullPath}" ]]
+	then
+		echo "moving $oldShortPath..."
+		mv "${oldFullPath}" "${newFullPath}"
+	fi
+
+done

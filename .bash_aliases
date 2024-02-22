@@ -820,26 +820,6 @@ xrsync() {
     rsync -Przzut "$2"/* "$1"
 }
 
-superreplace(){
-	local gitRoot=$(git rev-parse --show-toplevel)
-	git ls-files | while read oldShortPath
-	do
-		local newShortPath=$(echo "${oldShortPath}" | sed -e "s/${1}/${2}/g" -e "s/${1,}/${2,}/g" -e "s/${1,,}/${2,,}/g")
-		local oldFullPath="${gitRoot}/${oldShortPath}"
-		local newFullPath="${gitRoot}/${newShortPath}"
-
-		sed -i -e "s/${1}/${2}/g" -e "s/${1,}/${2,}/g" -e "s/${1,,}/${2,,}/g" "${oldFullPath}"
-		if [[ ! "${oldFullPath}" -ef "${newFullPath}" ]]
-		then
-			# git mv "${oldFullPath}" "${newFullPath}"
-			mv "${oldFullPath}" "${newFullPath}"
-		fi
-
-	done
-
-
-}
-
 dotnewt(){
 
 	if [ $# -eq 0 ]

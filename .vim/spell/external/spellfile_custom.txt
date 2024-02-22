@@ -28,7 +28,10 @@ audiobook
 audiobooks
 autocatching
 B2B
+Baahubali
 backend
+backend
+backends
 Bathory
 bb
 bbq
@@ -131,6 +134,7 @@ easter
 ectoplasmic
 el
 eldritch
+electroswing
 Elon
 Elrod
 else's
@@ -192,8 +196,10 @@ homeschoolers
 homeschooling
 homeworld
 hotdog
+https
 HTTSKWLALSKWT
 hubbers
+hun
 hurty
 hydroxychloroquine
 hyperdrive
@@ -247,6 +253,7 @@ matryoshka
 me's
 mech
 meds
+meme'd
 metroidvania
 midwest
 mins
@@ -272,6 +279,7 @@ noob
 NPC
 numbingly
 offput
+onesie
 oof
 other's
 ouija
@@ -279,11 +287,13 @@ outro
 overprotection
 overstimulation
 overworld
+paracord
 parter
 pathing
 Pattinson
 personhood
 pinky
+PJ
 PJs
 Plandemic
 playthrough
@@ -372,6 +382,7 @@ sp
 spoop
 spotify
 Spotify
+sproc
 sqlbulkcopy
 SqlBulkCopy
 SSH'ing
@@ -384,6 +395,7 @@ stressors
 svg
 svgs
 symlink
+symlinked
 symlinks
 talkbox
 taskbar
@@ -404,6 +416,7 @@ timelines
 timestamped
 timestamps
 todo
+Tollywood
 toml
 toon
 toons

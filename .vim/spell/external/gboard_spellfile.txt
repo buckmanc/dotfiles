@@ -29,7 +29,10 @@
 	audiobooks	en-US
 	autocatching	en-US
 	B2B	en-US
+	Baahubali	en-US
 	backend	en-US
+	backend	en-US
+	backends	en-US
 	Bathory	en-US
 	bb	en-US
 	bbq	en-US
@@ -132,6 +135,7 @@
 	ectoplasmic	en-US
 	el	en-US
 	eldritch	en-US
+	electroswing	en-US
 	Elon	en-US
 	Elrod	en-US
 	else's	en-US
@@ -193,8 +197,10 @@
 	homeschooling	en-US
 	homeworld	en-US
 	hotdog	en-US
+	https	en-US
 	HTTSKWLALSKWT	en-US
 	hubbers	en-US
+	hun	en-US
 	hurty	en-US
 	hydroxychloroquine	en-US
 	hyperdrive	en-US
@@ -248,6 +254,7 @@
 	me's	en-US
 	mech	en-US
 	meds	en-US
+	meme'd	en-US
 	metroidvania	en-US
 	midwest	en-US
 	mins	en-US
@@ -273,6 +280,7 @@
 	NPC	en-US
 	numbingly	en-US
 	offput	en-US
+	onesie	en-US
 	oof	en-US
 	other's	en-US
 	ouija	en-US
@@ -280,11 +288,13 @@
 	overprotection	en-US
 	overstimulation	en-US
 	overworld	en-US
+	paracord	en-US
 	parter	en-US
 	pathing	en-US
 	Pattinson	en-US
 	personhood	en-US
 	pinky	en-US
+	PJ	en-US
 	PJs	en-US
 	Plandemic	en-US
 	playthrough	en-US
@@ -373,6 +383,7 @@
 	spoop	en-US
 	spotify	en-US
 	Spotify	en-US
+	sproc	en-US
 	sqlbulkcopy	en-US
 	SqlBulkCopy	en-US
 	SSH'ing	en-US
@@ -385,6 +396,7 @@
 	svg	en-US
 	svgs	en-US
 	symlink	en-US
+	symlinked	en-US
 	symlinks	en-US
 	talkbox	en-US
 	taskbar	en-US
@@ -405,6 +417,7 @@
 	timestamped	en-US
 	timestamps	en-US
 	todo	en-US
+	Tollywood	en-US
 	toml	en-US
 	toon	en-US
 	toons	en-US
