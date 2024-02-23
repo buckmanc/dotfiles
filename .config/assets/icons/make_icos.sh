@@ -19,7 +19,7 @@ do
 	# echo "inPath: $inPath"
 	# echo "outPath: $outPath"
 
-	convert "$inPath" "$outPath"
+	convert -resize "256x256>" "$inPath" "$outPath"
 done
 
 echo "$(ls "$pngDir/"*.png | wc -l) pngs"
