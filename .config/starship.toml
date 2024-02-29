@@ -29,6 +29,7 @@ $git_metrics\
 $cmd_duration\
 $line_break\
 $character\
+$status\
 """
 
 command_timeout = 1500
@@ -326,14 +327,6 @@ detect_extensions = ["sql"]
 style = "dev"
 description = "A symbol indicating if SQL files are present."
 
-[character]
-success_symbol = "[ ❯](git)"
-error_symbol   = "[ ❯](error)"
-vimcmd_symbol  = "[ ❯](git)"
-#success_symbol = "[留❯](git)"
-#error_symbol   = "[六❯](error)"
-#vimcmd_symbol  = "[留❯](git)"
-
 [git_branch]
 format = "[\\($symbol$branch(:$remote_branch)\\)]($style)"
 style = "git"
@@ -349,16 +342,18 @@ style = "git"
 [git_status]
 # the zero width space prints correctly in juicessh
 # but prints as a regular space in windows terminal
-format = "[($conflicted$ahead_behind$stashed$staged)[(*$untracked$modified$renamed$deleted)]()]($style)"
+format = "[($conflicted$ahead_behind$stashed$staged)[(*$untracked$modified$renamed$deleted$typechanged)]()]($style)"
 style = "git"
 untracked	= "​"
 modified	= "​"
 renamed		= "​"
 deleted		= "​"
+typechanged	= "​"
+# up_to_date	= " ✓"
 stashed		= "≡"
-#conflicted	= "ﲅ"
+conflicted	= "ﲅ"
 #conflicted	= "󰞇"
-conflicted	= "理"
+# conflicted	= "理"
 
 [git_metrics]
 added_style = "priority-1"
@@ -370,3 +365,25 @@ disabled = true
 format = "[ $duration]($style)"
 style = "priority-1"
 
+## simple character module
+# [character]
+# success_symbol = "[留❯](git)"
+# error_symbol   = "[六❯](error)"
+
+## character module for swapping in nerdmoon
+# [character]
+# success_symbol = "[ ❯ ](git)"
+# error_symbol   = "[ ❯ ](error)"
+# vimcmd_symbol  = "[ ❯ ](git)"
+
+# error data in the middle of the prompt using status and character modules
+[character]
+format = '$symbol'
+success_symbol = "[ ❯ ](git)"
+error_symbol = ''
+
+[status]
+success_symbol = ''
+disabled = false
+pipestatus = true
+format = '[( $common_meaning$signal_name$maybe_int) ❯ ]($style)'
