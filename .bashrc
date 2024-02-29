@@ -197,8 +197,5 @@ fi
 
 if [ "$XENVIRO" = "mobile" ]
 then
-        hello-message > /data/data/com.termux/files/usr/etc/motd
-elif [ "$XENVIRO" = "mobile" ]
-then
-	hello-message > /etc/motd
+        "$HOME/bin/fancy-message-hello" > /data/data/com.termux/files/usr/etc/motd
 fi

@@ -4,7 +4,7 @@
 
 # position of moonphase glyphs correspond to the day of the moon
 # this string is also hardcoded in .gitconfig to prevent constant changes to .config/starship.toml
-MOONPHASE_NERDFONT_GLYPHS=""
+nerdmoonGlyphs="$("$HOME/bin/_nerdmoon_glyphs")"
 
 url="wttr.in/?format=%M"
 moonday="$(timeout 10s bash -c "curl -s \"${url}\"")"
@@ -30,7 +30,7 @@ fi
 # zero base our moonday
 moonday=$(($moonday-1))
 
-output=${MOONPHASE_NERDFONT_GLYPHS:$moonday:1}
+output=${nerdmoonGlyphs:$moonday:1}
 
 echo "${output}"
 echo "output:   ${output}" >> "${logPath}"

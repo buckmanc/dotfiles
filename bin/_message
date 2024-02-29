@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+if [[ ! -e "$1" ]]
+then
+	echo "need messages file path"
+	exit 1
+fi
+
+optNoCap=0
+if [[ "$2" == "--no-cap" ]]
+then
+	optNoCap=1
+fi
+
+# read messages file
+messages="$(cat "$1")"
+# strip blank lines
+messages=$(echo "${messages}" | sed "/^[[:space:]]*\?$/d")
+# strip comments
+messages=$(echo "${messages}" | sed "/^#/d")
+# pick a random line from the file
+message=$(echo "${messages}" | shuf --random-source='/dev/urandom' -n 1)
+if [[ "$optNoCap" == 0 ]]
+then
+	# punctuate
+	message=$(echo "${message}" | sed "s/[^[:punct:]]$/&./")
+	# capitalize
+	message="${message^}"
+fi
+
+echo "$message"
+

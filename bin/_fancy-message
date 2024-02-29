@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+message="$(cat -)"
+
+optNoCow=0
+if [ "$1" = "--no-cow" ]
+then
+	optNoCow=1
+fi
+
+# wrap based on screen width
+# must export COLUMNS in bashrc for this to work
+targetWidth=$(($COLUMNS - 4))
+if [ "$targetWidth" -gt "0" ]
+then
+	message=$(echo "${message}" | fmt -w "$targetWidth")
+fi
+
+if [ "$optNoCow" = "0" ] && type cowsay >/dev/null 2>&1
+then
+	message=$(echo "${message}" | cowsay -n)
+fi
+
+message=$(echo "${message}" | "$HOME/bin/center")
+
+if type lolcat >/dev/null 2>&1; then
+	message=$(echo "${message}" | lolcat --force)
+fi
+
+echo
+echo "${message}"
+echo

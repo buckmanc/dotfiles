@@ -12,7 +12,11 @@ alias got='git'
 alias it='git'
 alias vum='vim'
 alias vom='vim'
-alias vin='echo "praise the Ascendant Warrior"'
+alias vin='echo "praise the Ascendant Warrior" ; vim'
+alias :q="echo \"this isn't vim, "'$("$HOME/bin/message-error-name")'"\""
+alias :wq=":q"
+alias :x=":q"
+alias x=":q"
 if [ -d ~/.jpsxdec ]
 then
 	alias jpsxdec='java -jar ~/.jpsxdec/jpsxdec.jar'
@@ -371,87 +375,42 @@ completeme(){
 		shortCmd=$(echo "${cmd}" | perl -pe 's/^(.+) --.+/\1/g')
 	fi
 
+	helpText="$($cmd)"
+
+	options="$(echo "$helpText" | grep -Pio '(?<=[\s^|])\-\-[\w\-]+?(?=[\s<$,])')"
+	verbs="$(echo "$helpText"| grep -Pio '(?<=^  )\w[\w\-]+?(?=  )')"
+
+	# echo "input:    $@"
 	# echo "cmd:      ${cmd}"
 	# echo "shortCmd: ${shortCmd}"
+	# echo "options:  ${options}"
+	# echo "verbs:    ${verbs}"
 
-	output=$($cmd | grep -Pio '(?<=[\s^])\-\-[\w\-]+?(?=[\s<$,])' | sort | uniq | tr '\n' ' ' | perl -pe 's/[ \t]$//g')
+	allArgs="$options"$'\n'"$verbs"
+
+	output=$(echo "$allArgs" | sort | uniq | grep -iv '^$' | tr '\n' ' ' | perl -pe 's/[ \t]$//g')
 	echo "complete -W \"${output}\" $shortCmd"
 
+	# run this command on verbs, following the tree all the way down
+	# this could easy get out of control
+	# this works, but the syntax for "complete" is wrong; sub commands overwrite the higher commands somehow
+	# TODO write some kind of dynamic function for these
+	# echo "$verbs" | while read -r verb
+	# do
+	# 	# skip bupkiss
+	# 	if [[ -z "$verb" ]]
+	# 	then
+	# 		continue
+	# 	fi
+        #
+	# 	# echo "calling completeme from input '$@' on verb '$verb'"
+        #
+	# 	# explicit subshell is essential here
+	# 	(completeme "$shortCmd $verb")
+        #
+	# done
+
 }
-
-shutdown() {
-	# TODO expand OS checking into a user enviro variable or function
-	# include cygwin as windows
-
-	cowtime=2
-
-	if [ $1 == 'now' ] && [ -z "$3" ]
-	then
-		
-		#confirm if the user REALLY WANTS to shutdown this machine
-		if [ -n "$SSH_CLIENT" ] && [ -z "$2" ]
-		then
-			read -p "Are you sure you want to shutdown this remote machine?" -n 1 -r
-			if [[ $REPLY =~ ^[^Yy]$ ]]
-			then
-				return 0
-			fi
-		fi
-
-		if [ $OSTYPE == 'msys' ] && [ "$2" = "-r" ]
-		then
-			clear
-			goodbye-message
-			sleep $cowtime 
-
-			`which shutdown` -r -f -t 0
-
-		elif [ $OSTYPE == 'msys' ] && [ -z "$2" ]
-		then
-			clear
-			goodbye-message
-			sleep $cowtime
-
-			# -hybrid not supported on some platforms
-			`which shutdown` -s -hybrid -f -t 0 || `which shutdown` -s -f -t 0
-
-		elif [ $OSTYPE == 'linux-gnu' ] && ( [ -z "$2" ] || [ "$2" == "-r" ] )
-		then
-
-			# if we have shutdown perms, don't ask for sudo
-			if test -w $(which shutdown)
-			then
-				clear
-				goodbye-message
-				sleep $cowtime
-
-				`which shutdown` $@
-
-			# if we don't have shutdown perms, check for sudo first
-			else
-				sudo echo
-				if [ $? -eq 0 ]
-				then
-
-					clear
-					goodbye-message
-					sleep $cowtime
-
-					sudo `which shutdown` $@
-				fi
-			fi
-		else
-			`which shutdown` $@
-		fi
-
-		return "$?"
-
-	# if not doing "shutdown now", just pass the args along, no special behaviour
-	else
-		`which shutdown` $@
-	fi
-}
-export shutdown
 
 # start wttr.in/:bash.function
 # If you source this file, it will set WTTR_PARAMS as well as show weather.

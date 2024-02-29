@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+"$HOME/bin/message-farewell" | "$HOME/bin/_fancy-message"
+

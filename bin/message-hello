@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+"$HOME/bin/_message" "$HOME/.config/messages/greetings.txt"

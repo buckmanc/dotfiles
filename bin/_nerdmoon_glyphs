@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# position of moonphase glyphs correspond to the day of the moon
+# used in nerdmoon scripts
+echo ""

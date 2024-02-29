@@ -9,5 +9,6 @@ then
 exit 1
 fi
 
+nerdmoonGlyphs="$("$HOME/bin/_nerdmoon_glyphs")"
 # replace any glyph from our chosen set of moon phase glyphs with the current moon phase glyph
-sed -i "s/[${MOONPHASE_NERDFONT_GLYPHS}]/${glyph}/g" "$HOME/.config/starship.toml"
+sed -i "s/[${nerdmoonGlyphs}]/${glyph}/g" "$HOME/.config/starship.toml"

@@ -9,8 +9,8 @@ done
 
 if [[ -z "$files" ]]
 then
-	gitRoot=$(git rev-parse --show-toplevel)
-	files=git -C "$gitRoot" ls-files
+	gitRoot="$(git rev-parse --show-toplevel)"
+	files="$(git -C "$gitRoot" ls-files)"
 fi
 
 # echo "files: $files"
