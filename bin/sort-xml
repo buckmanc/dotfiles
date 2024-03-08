@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# deterministic xml sorting
+# specifically for visual studios and ssms that shuffle their arrays
+# winget install jqlang.jq && pip install yq
+# note that strings are case sensitive
+
+xq -x -S 'walk(if type == "array" then sort_by(."@name", ."@Name", ."@GUID") else . end)'

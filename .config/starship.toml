@@ -383,7 +383,10 @@ success_symbol = "[ ❯ ](git)"
 error_symbol = ''
 
 [status]
-success_symbol = ''
+success_symbol = '✓'
 disabled = false
-pipestatus = true
-format = '[( $common_meaning$signal_name$maybe_int) ❯ ]($style)'
+pipestatus = false
+format = '[( $common_meaning$signal_name$maybe_int ❯ )]($style)'
+# handy pipestatus_format if I could get it to hide on success
+# pipestatus_format = '[ \[$pipestatus\] => $common_meaning$signal_name$maybe_int ❯ ]($style)'
+# pipestatus_segment_format = '[ $symbol$maybe_int ]($style)'

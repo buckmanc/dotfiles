@@ -62,13 +62,9 @@
 	clean = "~/.config/gitconfig_scripts/termux_filter.sh --clean"
 	smudge = "~/.config/gitconfig_scripts/termux_filter.sh --smudge"
 [filter "xml"]
-	# deterministic xml sorting
-	# specifically for visual studios and ssms that shuffle their arrays
-	# winget install jqlang.jq && pip install yq
-	# note that strings are case sensitive
-	clean = "xq -x -S 'walk(if type == \"array\" then sort_by(.\"@name\", .\"@Name\", .\"@GUID\") else . end)'"
+	clean = "~/bin/sort-xml"
 [filter "json"]
-	clean = "jq -S 'walk(if type == \"array\" then sort_by(.) else . end)'"
+	clean = "~/bin/sort-json"
 [filter "sort"]
 	clean = "~/bin/pysort"
 [help]

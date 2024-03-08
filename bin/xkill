@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [[ -z "$1" ]]
+then
+	jorbs="$(jobs -l)"
+	if [[ -n "$jorbs" ]]
+	then
+		kill %1
+		exit 0
+	fi
+
+	echo "need process name"
+	exit 1
+fi
+
+if [[ "$OSTYPE" == "msys" ]]
+then
+	taskkill -f -im "$1"
+else
+	pkill -f "$1"
+fi

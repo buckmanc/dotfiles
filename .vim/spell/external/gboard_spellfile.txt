@@ -22,6 +22,8 @@
 	apnea	en-US
 	appt	en-US
 	Arby's	en-US
+	arcana	en-US
+	ascii	en-US
 	ASMR	en-US
 	assholery	en-US
 	async	en-US
@@ -30,7 +32,6 @@
 	autocatching	en-US
 	B2B	en-US
 	Baahubali	en-US
-	backend	en-US
 	backend	en-US
 	backends	en-US
 	Bathory	en-US
@@ -43,12 +44,12 @@
 	biomes	en-US
 	Blackcraft	en-US
 	Blazor	en-US
-	Blegh	en-US
+	blegh	en-US
 	BLM	en-US
 	blotchiness	en-US
 	bluetooth	en-US
 	boi	en-US
-	Booktuber	en-US
+	booktuber	en-US
 	booped	en-US
 	bootlickers	en-US
 	bork	en-US
@@ -171,6 +172,7 @@
 	github	en-US
 	gitignore	en-US
 	globbing	en-US
+	glyphs	en-US
 	gma	en-US
 	Goodreads	en-US
 	gotta	en-US
@@ -356,6 +358,7 @@
 	rotavirus	en-US
 	rsync	en-US
 	Runza	en-US
+	scanline	en-US
 	scripter	en-US
 	scritches	en-US
 	se	en-US
@@ -371,6 +374,7 @@
 	SGDQ2022	en-US
 	SGDQ2023	en-US
 	SGDQ2024	en-US
+	shader	en-US
 	Shang	en-US
 	Shia	en-US
 	shoppy	en-US
@@ -601,6 +605,7 @@
 	Nightvale	en-US
 	Oathbringer	en-US
 	Obrodai	en-US
+	ODST	en-US
 	Olimar's	en-US
 	Paddington	en-US
 	Parangosky	en-US
@@ -644,6 +649,7 @@
 	Steris	en-US
 	Stormblessed	en-US
 	Stormlight	en-US
+	stormlight	en-US
 	Sunreach	en-US
 	Taldain	en-US
 	Threnody	en-US

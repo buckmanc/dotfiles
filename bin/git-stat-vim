@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# TODO limit to only paths that exist
+# as deletes will show up in the git stat too
+git status --porcelain | perl -pe 's/(^ ?.{1,2} |.+ -> )//g' | xargs -o vim

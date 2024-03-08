@@ -10,12 +10,15 @@ done
 if [[ -z "$files" ]]
 then
 	gitRoot="$(git rev-parse --show-toplevel)"
-	files="$(git -C "$gitRoot" ls-files)"
+	# files="$(git -C "$gitRoot" ls-files)"
+	# using the built in git functionality for find matches in files is far, far faster than checking the files ourselves
+	files+="$(git -C "$gitRoot" grep -i --files-with-matches "${1}")"
+	files+="$(git -C "$gitRoot" ls-files | grep -i "${1}")"
 fi
 
 # echo "files: $files"
 
-echo "$files" | while read oldShortPath
+echo "$files" | while read -r oldShortPath
 do
 	# skip blank lines
 	if [[ -z "$oldShortPath" ]]
