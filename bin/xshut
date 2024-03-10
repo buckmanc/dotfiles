@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+set -e
+
+# TODO expand OS checking into a user enviro variable or function
+# include cygwin as windows
+
+farewell="$HOME/bin/fancy-message-farewell"
+
+cowtime=2
+optRestart=0
+# lazy arg parsing
+if [[ "$1" == "-r" ]]
+then
+	optRestart=1
+fi
+
+#confirm if the user REALLY WANTS to shutdown this machine
+if [ -n "$SSH_CLIENT" ] && [[ "$optRestart" == 0 ]]
+then
+	read -p "Are you sure you want to shutdown this remote machine?" -n 1 -r
+	if [[ $REPLY =~ ^[^Yy]$ ]]
+	then
+		echo
+		exit 0
+	fi
+fi
+
+if [ "$OSTYPE" == 'msys' ] && [[ "$optRestart" == 1 ]]
+then
+	clear
+	farewell
+	sleep $cowtime 
+
+	"$(which shutdown)" -r -f -t 0
+
+elif [ "$OSTYPE" == 'msys' ]
+then
+	clear
+	farewell
+	sleep $cowtime
+
+	# -hybrid not supported on some platforms
+	"$(which shutdown)" -s -hybrid -f -t 0 || "$(which shutdown)" -s -f -t 0
+
+elif [ "$OSTYPE" == 'linux-gnu' ]
+then
+
+	# if we have shutdown perms, don't ask for sudo
+	if test -w "$(which shutdown)"
+	then
+		clear
+		farewell
+		sleep $cowtime
+
+		"$(which shutdown)" now "$@"
+
+	# if we don't have shutdown perms, check for sudo first
+	else
+		sudo echo
+		if [ $? -eq 0 ]
+		then
+
+			clear
+			farewell
+			sleep $cowtime
+
+			sudo "$(which shutdown)" now "$@"
+		fi
+	fi
+else
+	echo "unknown OS: $OSTYPE"
+	exit 1
+fi
+
+exit "$?"
