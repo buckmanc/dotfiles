@@ -1,12 +1,17 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 
-stringy=$(termux-clipboard-get)
-sanStringy=$(echo "$stringy" | sed 's/\(ref=\|\?\).*//g')
+stringy="$(termux-clipboard-get)"
+sanStringy="$(echo "$stringy" | perl -pe 's/(ref=|\?).*$//g')" 
 
-if [ "$stringy" != "$sanStringy" ]
+if [[ -z "$stringy" ]]
+then
+	# note that the clipboard cannot be read when termux is in the background
+	termux-toast "no input"
+elif [[ "$stringy" != "$sanStringy" ]]
 then
 	echo "${sanStringy}" | termux-clipboard-set
 	termux-toast "sanitized"
 else
-	termux-toast "no match"
+	# termux-toast "no match"
+	termux-toast "no match: $stringy"
 fi

@@ -50,6 +50,7 @@
   ],
   "profiles": {
     "defaults": {
+      "adjustIndistinguishableColors": "always",
       "antialiasingMode": "cleartype",
       "backgroundImage": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\backgrounds\\totk_ouroboros_grey.png",
       "backgroundImageAlignment": "bottomRight",

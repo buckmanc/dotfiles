@@ -29,7 +29,7 @@ fi
 if [ "$OSTYPE" == 'msys' ] && [[ "$optRestart" == 1 ]]
 then
 	clear
-	farewell
+	"$farewell"
 	sleep $cowtime 
 
 	"$(which shutdown)" -r -f -t 0
@@ -37,7 +37,7 @@ then
 elif [ "$OSTYPE" == 'msys' ]
 then
 	clear
-	farewell
+	"$farewell"
 	sleep $cowtime
 
 	# -hybrid not supported on some platforms
@@ -50,7 +50,7 @@ then
 	if test -w "$(which shutdown)"
 	then
 		clear
-		farewell
+		"$farewell"
 		sleep $cowtime
 
 		"$(which shutdown)" now "$@"
@@ -62,7 +62,7 @@ then
 		then
 
 			clear
-			farewell
+			"$farewell"
 			sleep $cowtime
 
 			sudo "$(which shutdown)" now "$@"

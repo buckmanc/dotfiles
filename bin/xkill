@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-if [[ -z "$1" ]]
+killme="$1"
+
+if [[ -z "$killme" ]]
 then
 	jorbs="$(jobs -l)"
 	if [[ -n "$jorbs" ]]
@@ -15,7 +17,19 @@ fi
 
 if [[ "$OSTYPE" == "msys" ]]
 then
-	taskkill -f -im "$1"
+	# if the name given does *not* end in .exe
+	# try appending .exe *first*
+
+	ext="${killme##*.}"
+	if [[ "${ext,,}" != "exe" ]]
+	then
+		if ! taskkill -f -im "${killme}.exe"
+		then
+			taskkill -f -im "$killme"
+		fi
+	else
+		taskkill -f -im "$killme"
+	fi
 else
-	pkill -f "$1"
+	pkill -f "$killme"
 fi

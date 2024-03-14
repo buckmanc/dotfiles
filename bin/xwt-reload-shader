@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+settingsPath="$HOME/.config/WindowsTerminal/settings.json"
+backupPath="/tmp/wt.json"
+
+cp "$settingsPath" "$backupPath"
+jq 'del(.. | ."experimental.pixelShaderPath"?)' "$backupPath" > "$settingsPath"
+mv "$backupPath" "$settingsPath"
+

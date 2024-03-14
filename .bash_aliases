@@ -26,6 +26,12 @@ then
 	alias dropbox='python3 ~/dropbox.py'
 fi
 
+# backwards compatibility for the old image magick convert command
+if (type magick >/dev/null 2>&1)
+then
+	alias convert='magick convert'
+fi
+
 screeny() {
 	name=$1
 	if [ -z "$name" ]

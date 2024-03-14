@@ -1,0 +1,216 @@
+#!/usr/bin/env bash
+
+titleText="Homescreen Wallpaper Updated"
+
+optLockScreen=0
+optFloater=0
+optGlitch=0
+optChillGlitch=0
+optNoNotify=0
+optWindowsTerminal=0
+optReadArgsFromCache=0
+
+for arg in "$@"
+do
+	if [[ "$arg" == "-l" || "$arg" == "--lockscreen" ]]
+	then
+		optLockScreen=1
+		lockArg="-l"
+		titleText="Lockscreen Wallpaper Updated"
+	elif [[ "$arg" == "--floater" ]]
+	then
+		optFloater=1
+	elif [[ "$arg" == "--no-notify" ]]
+	then
+		optNoNotify=1
+	elif [[ "$arg" == "--windows-terminal" || "$arg" == "--terminal" ]]
+	then
+		optWindowsTerminal=1
+		titleText="Windows Terminal Wallpaper Updated"
+	elif [[ "$arg" == "--glitch" ]]
+	then
+		optGlitch=1
+	elif [[ "$arg" == "--chill-glitch" ]]
+	then
+		optGlitch=1
+		optChillGlitch=1
+	else
+		# add to our arg array, thus filtering out valid options from paths
+		args+=("$arg")
+	fi
+done
+
+targetName="wallpaper-args-${OSTYPE}"
+if [[ "$optWindowsTerminal" == 1 ]]
+then
+	targetName+="-winterm"
+elif [[ "$optLockScreen" == 1 ]]
+then
+	targetName+="-lockscreen"
+else
+	targetName+="-default"
+fi
+
+argCachePath="$HOME/.cache/${targetName}.log"
+
+if [[ -z "$args" ]]
+then
+	args="$(cat "$argCachePath")"
+	optReadArgsFromCache=1
+fi
+
+if [[ -z "$args" ]]
+then
+	echo "need wallpaper paths"
+	exit 1
+fi
+
+topArg="$(echo "$args" | head -n 1)"
+
+if [[ ! -e "$topArg" ]]
+then
+	echo "bad path"
+	# echo "bad path: $topArg"
+	exit 1
+elif [[ -d "$topArg" ]]
+then
+	files="$(echo "$args" | xargs -d '\n' -I{} find "{}" -type f -not -iname '*.md')"
+else
+	files="$args"
+fi
+
+if [[ "$OSTYPE" == "linux-android" ]]
+then
+	tempDir="/data/data/com.termux/files/home/storage/shared"
+else
+	tempDir="/tmp"
+fi
+paperPath="$(echo "$files" | shuf --random-source='/dev/urandom' -n 1)"
+paperFileName="$(basename "$paperPath")"
+glitchDir="$tempDir/Wallpapers_Glitched"
+resizedDir="$tempDir/Wallpapers_Resized"
+mkdir -p "$glitchDir"
+mkdir -p "$resizedDir"
+paperPathGlitched="${glitchDir}/glitched_$paperFileName"
+paperPathResized="${resizedDir}/resized_$paperFileName"
+
+if [[ "$optGlitch" == "1" ]]
+then
+	if ( type glitch_this >/dev/null 2>&1 )
+	then
+		# fractional glitch level if bc is installed
+		if [[ "$optChillGlitch" == "1" ]]
+		then
+			glitchLevel=3
+		elif ( type bc >/dev/null 2>&1 )
+		then
+			glitchLevel="$(bc -l <<< "$(shuf -i 300-800 -n 1)/100")"
+		else
+			glitchLevel="$(shuf -i 3-8 -n 1)"
+		fi
+
+		glitch_this         -c -o    "$paperPathGlitched" "$paperPath"         "$glitchLevel" > /dev/null
+		if [[ "$optChillGlitch" = 0 ]]
+		then
+			glitch_this -c -f -o "$paperPathGlitched" "$paperPathGlitched" "$glitchLevel" > /dev/null
+			glitch_this -c -f -o "$paperPathGlitched" "$paperPathGlitched" "$glitchLevel" > /dev/null
+		fi
+		paperPath="$paperPathGlitched"
+	else
+		echo "glitch_this is not installed"
+	fi
+fi
+
+if [ "$optFloater" = "1" ]
+then
+	if ( type identify >/dev/null 2>&1 && type convert >/dev/null 2>&1 )
+	then
+		aspectRatio="9/20"
+		width=$(identify -ping -format '%w' "${paperPath}")
+			targetHeight=$(echo "$width/($aspectRatio)" | bc -l)
+			targetHeight="${targetHeight%%.*}"
+			targetDimensions="${width}x${targetHeight}"
+
+			# convert -background "black" -resize "${targetDimensions}" -gravity Center -extent "$targetDimensions" +repage "$paperPath" "$paperPathResized"
+			# convert -background "black" -resize "${targetDimensions}" -gravity Center +repage "$paperPath" "$paperPathResized"
+			convert -background "black" -gravity Center -extent "$targetDimensions" +repage "$paperPath" "$paperPathResized"
+
+			paperPath="$paperPathResized"
+	else
+		echo "imagemagick not installed"
+	fi
+fi
+
+echo "Setting wallpaper to:"
+echo "$paperFileName"
+if [[ "$optWindowsTerminal" == 1 ]]
+then
+	wtDir="$(find "${LOCALAPPDATA}/Packages/" -maxdepth 2 -wholename "*WindowsTerminal*" -name LocalState -print -quit)"
+	settingsPath="${wtDir}/settings.json"
+	if [[ ! -d "$wtDir" || ! -f "$settingsPath" ]]
+	then
+		echo "cannot find windows terminal settings"
+		exit 1
+	fi
+	
+	wtPaperPath="$(echo "$paperPath" | xargs -I {} realpath "{}")"
+	# swap unix to windows path
+	if ( type cygpath >/dev/null 2>&1 )
+	then
+		wtPaperPath="$(cygpath -w "$wtPaperPath")"
+	fi
+	# escape once for windows terminal and once for the perl command below
+	wtPaperPath="$(echo "$wtPaperPath" | sed -e 's/\\/\\\\/g' -e 's/\\/\\\\/g')"
+
+	# update the path in the windows terminal settings file
+	perl -pi -e "s|(?<=^\s{1,50}\"backgroundImage\": ?\")[^\"]+(?=\",?$)|$wtPaperPath|g" "$settingsPath"
+elif [[ "$OSTYPE" == "linux-android" ]]
+then
+	termux-wallpaper $lockArg -f "$paperPath"
+	termux-media-scan "$paperPath"
+elif [[ "$OSTYPE" == "msys" ]]
+then
+	echo "OS $OSTYPE not yet supported"
+else
+	echo "OS $OSTYPE not yet supported"
+fi
+
+if [[ "$optReadArgsFromCache" == 0 ]]
+then
+	echo "$args" > "$argCachePath"
+fi
+
+# notify if appropriate and possible
+if [[ "$optNoNotify" == "0" ]]
+then
+	if [[ -f "$HOME/bin/git-file-url" ]]
+	then
+		sharePath="$("$HOME/bin/git-file-url" "$paperPath")"
+	else
+		sharePath="$paperPath"
+	fi
+
+	if [[ "$OSTYPE" == "linux-android" ]]
+	then
+		# elaborate notification with actions to take
+		# gotta escape the dashes im the args
+		# oddly quotes are not enough
+		reshuffleAction="\"$HOME/bin/shuffle-wallpaper\" $(echo "$@" | sed 's/\-/\\-/g')"
+
+		# TODO change "share" to figure out the remote URL if it's a repo file and use that instead
+		# or should that be the "view" click?
+		termux-notification --image-path "$paperPath" --title "$titleText" --content "$(basename "$paperPath")" --group autopaper --id "$titleText" \
+			--button1 "reshuffle" \
+			--button1-action "$reshuffleAction" \
+			--button2 "copy url" \
+			--button2-action "termux-clipboard-set \"$sharePath\"" \
+			--button3 "glitch" \
+			--button3-action "$HOME/bin/shuffle-wallpaper --glitch $lockArg \"$paperPath\""
+
+			# termux-open cannot handle URLs at present
+			# --action "termux-open --view \"$sharePath\""
+	else
+		# if this isn't android, just print the status
+		echo "${titleText,,} to $(basename "$paperPath")"
+	fi
+fi

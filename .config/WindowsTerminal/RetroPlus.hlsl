@@ -17,6 +17,7 @@ cbuffer PixelShaderSettings
 #define SCANLINE_FACTOR 0.5f
 #define SCALED_SCANLINE_PERIOD scale
 #define SCALED_GAUSSIAN_SIGMA (2.0f * scale)
+#define BLACKLEVEL_FLOOR float3(0.05, 0.05, 0.05)
 
 static const float M_PI = 3.14159265f;
 
@@ -81,6 +82,14 @@ float3 refreshLines(float3 color, float2 uv)
   return saturate(color);
 }
 
+float3 blacklevel(float3 color)
+{
+    color.rgb -= BLACKLEVEL_FLOOR;
+    color.rgb = saturate(color.rgb);
+    color.rgb += BLACKLEVEL_FLOOR;
+    return saturate(color);
+}
+
 // clang-format off
 float4 main(float4 pos : SV_POSITION, float2 tex : TEXCOORD, float2 uv : TEXCOORD0) : SV_TARGET
 // clang-format on
@@ -90,7 +99,8 @@ float4 main(float4 pos : SV_POSITION, float2 tex : TEXCOORD, float2 uv : TEXCOOR
     color += Blur(shaderTexture, tex, SCALED_GAUSSIAN_SIGMA) * 0.3f;
     color = Scanline(color, pos);
 	
-	color.rgb = refreshLines(color.rgb, uv);
+    color.rgb = blacklevel(color.rgb);
+    color.rgb = refreshLines(color.rgb, uv);
 
     return color;
 }

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+inpath="$1"
+if [[ -z "$inpath" ]]
+then
+	echo "need path"
+	exit 1
+elif [[ ! -e "$inpath" ]]
+then
+	echo "bad path"
+	exit 1
+fi
+
+if [[ -f "$inpath" ]]
+then
+	dirPath="$(dirname "$inpath")"
+	~/bin/open "$inpath"
+elif [[ -d "$inpath" ]]
+then
+	dirPath="$inpath"
+else
+	echo "I have no idea what that is"
+	exit 1
+fi
+
+~/bin/open "$dirPath"
+~/bin/xwt "$dirPath"
+

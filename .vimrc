@@ -118,6 +118,8 @@ augroup FileTypeSpecificAutocommands
 	autocmd BufNewFile,BufRead *.vimrc_local set filetype=vim
 	autocmd BufNewFile,BufRead *.bash_* set filetype=bash
 	autocmd BufNewFile,BufRead *.add set filetype=text
+	autocmd BufNewFile,BufRead *.vssettings set filetype=xml
+	autocmd BufNewFile,BufRead *.hlsl set filetype=c
 	autocmd BufNewFile,BufRead *.MD set filetype=markdown " uppercase markdown is still markdown
 
 	" autocommand actions
