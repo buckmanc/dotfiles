@@ -9,4 +9,4 @@ fi
 
 clear
 "$HOME/bin/fancy-message-farewell"
-sleep 2
+sleep 3

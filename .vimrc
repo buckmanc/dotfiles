@@ -132,6 +132,11 @@ augroup FileTypeSpecificAutocommands
 	" file type and BufNewFile autocommands cannot be combined
 	autocmd FileType sh,bash,python silent! ShebangInsert
 
+	" doesn't work
+	" autocmd FileChangedRO * echohl WarningMsg | echo "read-only file" | echohl None
+	" works but disables the readonly flag entirely
+	" autocmd! InsertEnter * if &readonly | set noreadonly | endif
+
 augroup end
 endif " has('autocmd')
 

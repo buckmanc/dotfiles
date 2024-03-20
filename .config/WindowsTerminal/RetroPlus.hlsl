@@ -17,7 +17,7 @@ cbuffer PixelShaderSettings
 #define SCANLINE_FACTOR 0.5f
 #define SCALED_SCANLINE_PERIOD scale
 #define SCALED_GAUSSIAN_SIGMA (2.0f * scale)
-#define BLACKLEVEL_FLOOR float3(0.05, 0.05, 0.05)
+#define BLACKLEVEL_FLOOR float3(0.005, 0.005, 0.005)
 
 static const float M_PI = 3.14159265f;
 

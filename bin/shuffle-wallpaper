@@ -9,6 +9,8 @@ optChillGlitch=0
 optNoNotify=0
 optWindowsTerminal=0
 optReadArgsFromCache=0
+optOutPath=''
+optNextIsOutPath=0
 
 for arg in "$@"
 do
@@ -34,28 +36,47 @@ do
 	then
 		optGlitch=1
 		optChillGlitch=1
+	elif [[ "$arg" == "--output" ]]
+	then
+		optNextIsOutPath=1
+	elif [[ "$optNextIsOutPath" == "1" ]]
+	then
+		optOutPath="$arg"
+		optNextIsOutPath=0
 	else
 		# add to our arg array, thus filtering out valid options from paths
 		args+=("$arg")
 	fi
 done
 
+if [[ -n "$outPath" && ! -f "$outPath" ]]
+then
+	echo "output path does not exist"
+	exit 1
+fi
+
 targetName="wallpaper-args-${OSTYPE}"
 if [[ "$optWindowsTerminal" == 1 ]]
 then
 	targetName+="-winterm"
+	optDefaultTarget=0
 elif [[ "$optLockScreen" == 1 ]]
 then
 	targetName+="-lockscreen"
+	optDefaultTarget=0
 else
 	targetName+="-default"
+	optDefaultTarget=1
 fi
 
 argCachePath="$HOME/.cache/${targetName}.log"
 
 if [[ -z "$args" ]]
 then
-	args="$(cat "$argCachePath")"
+	if [[ -f "$argCachePath" ]]
+	then
+		args="$(cat "$argCachePath")"
+	fi
 	optReadArgsFromCache=1
 fi
 
@@ -85,6 +106,38 @@ then
 else
 	tempDir="/tmp"
 fi
+
+if [[ "$OSTYPE" == "msys" && -z "$optOutPath" ]] && [[ "$optLockScreen" == "1" || "$optDefaultTarget" == "1" ]]
+then
+	if [[ "$optDefaultTarget" == "1" ]]
+	then
+		winOutDir="$APPDATA/Microsoft/Windows/Themes"
+		findIName="transcoded_*"
+	elif [[ "$optLockScreen" == "1" ]]
+	then
+		winOutDir="$ProgramData/Microsoft/Windows/SystemData"
+		findIName="lockscreen.*"
+	fi
+
+	if [[ -z "$winOutDir" ||  -d "$winOutDir" ]]
+	then
+		echo "wallpaper folder cannot be found"
+		exit 1
+	fi
+
+	# replace each wallpaper in the wallpaper dir
+	outPaths="$(find "$winOutDir" -type f -iname "$findIName")"
+
+	echo "$outPaths" | while read -r outPath
+	do
+		./"$0" "$@" --output "$outPath"
+	done
+
+	# reload wallpapers
+	RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,True
+
+fi
+
 paperPath="$(echo "$files" | shuf --random-source='/dev/urandom' -n 1)"
 paperFileName="$(basename "$paperPath")"
 glitchDir="$tempDir/Wallpapers_Glitched"
@@ -143,7 +196,10 @@ fi
 
 echo "Setting wallpaper to:"
 echo "$paperFileName"
-if [[ "$optWindowsTerminal" == 1 ]]
+if [[ -n "$outPath" ]]
+then
+	cp "$paperPath" "$outPath"
+elif [[ "$optWindowsTerminal" == 1 ]]
 then
 	wtDir="$(find "${LOCALAPPDATA}/Packages/" -maxdepth 2 -wholename "*WindowsTerminal*" -name LocalState -print -quit)"
 	settingsPath="${wtDir}/settings.json"
@@ -168,9 +224,6 @@ elif [[ "$OSTYPE" == "linux-android" ]]
 then
 	termux-wallpaper $lockArg -f "$paperPath"
 	termux-media-scan "$paperPath"
-elif [[ "$OSTYPE" == "msys" ]]
-then
-	echo "OS $OSTYPE not yet supported"
 else
 	echo "OS $OSTYPE not yet supported"
 fi
@@ -209,8 +262,5 @@ then
 
 			# termux-open cannot handle URLs at present
 			# --action "termux-open --view \"$sharePath\""
-	else
-		# if this isn't android, just print the status
-		echo "${titleText,,} to $(basename "$paperPath")"
 	fi
 fi

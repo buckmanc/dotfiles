@@ -50,6 +50,7 @@
 	bluetooth	en-US
 	boi	en-US
 	booktuber	en-US
+	boop	en-US
 	booped	en-US
 	bootlickers	en-US
 	bork	en-US
@@ -89,6 +90,7 @@
 	convo	en-US
 	cosleep	en-US
 	cosleeping	en-US
+	coupley	en-US
 	COVID	en-US
 	covid	en-US
 	coz	en-US
@@ -112,6 +114,7 @@
 	direness	en-US
 	dirs	en-US
 	discog	en-US
+	disincentivizing	en-US
 	dl	en-US
 	DLC	en-US
 	DLCs	en-US
@@ -154,6 +157,7 @@
 	favs	en-US
 	feets	en-US
 	Fibbage	en-US
+	fingie	en-US
 	floaty	en-US
 	FMLA	en-US
 	followable	en-US
@@ -176,6 +180,7 @@
 	gma	en-US
 	Goodreads	en-US
 	gotta	en-US
+	grammaflage	en-US
 	greataxe	en-US
 	grifter	en-US
 	groc	en-US
@@ -218,6 +223,7 @@
 	immunocompromised	en-US
 	incel	en-US
 	ing	en-US
+	ingrate	en-US
 	intellisense	en-US
 	interoception	en-US
 	intersex	en-US
@@ -268,6 +274,7 @@
 	mons	en-US
 	moreso	en-US
 	mothership	en-US
+	mowhawk	en-US
 	mssql	en-US
 	MSSQL	en-US
 	mvp	en-US
@@ -284,6 +291,7 @@
 	offput	en-US
 	onesie	en-US
 	oof	en-US
+	Orson	en-US
 	other's	en-US
 	ouija	en-US
 	outro	en-US
@@ -351,6 +359,7 @@
 	RNG	en-US
 	robo	en-US
 	Rogan	en-US
+	rollout	en-US
 	rom	en-US
 	Romani	en-US
 	roms	en-US
@@ -397,6 +406,7 @@
 	staycation	en-US
 	strategizing	en-US
 	stressors	en-US
+	stuffie	en-US
 	svg	en-US
 	svgs	en-US
 	symlink	en-US
@@ -495,6 +505,7 @@
 	Yoshi	en-US
 	youtube	en-US
 	Zenni	en-US
+	zonking	en-US
 	Adolin	en-US
 	Adolin's	en-US
 	Adonalsium	en-US

@@ -101,6 +101,7 @@ addtopath "${jqPath}"
 addtopath "${ANDROID_HOME}/cmdline-tools/latest/bin"
 addtopath "${ANDROID_HOME}/platform-tools"
 addtopath "${LOCALAPPDATA}/Pandoc"
+addtopath "$ProgramData/AutoHotkey/AutoHotkey.exe"
 
 if [ -d "${ANDROID_HOME}" ]
 then
@@ -118,6 +119,8 @@ fi
 if [ -z "$USER" ]; then
 	export USER="$USERNAME"
 fi
+
+complete -F _command which-vim
 
 # prefer vim over nano
 # crontab reads this variable
@@ -195,7 +198,6 @@ then
 	complete -f -F _dotnet_bash_complete dotnet
 fi
 
-if [ "$XENVIRO" = "mobile" ]
-then
-        "$HOME/bin/fancy-message-hello" > /data/data/com.termux/files/usr/etc/motd
+if type thefuck	>/dev/null 2>&1; then
+	eval "$(thefuck --alias)"
 fi
