@@ -201,3 +201,7 @@ fi
 if type thefuck	>/dev/null 2>&1; then
 	eval "$(thefuck --alias)"
 fi
+
+if type pandoc >/dev/null 2>&1; then
+	eval "$(pandoc --bash-completion)"
+fi

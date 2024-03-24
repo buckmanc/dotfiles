@@ -13,7 +13,9 @@ then
 	# files="$(git -C "$gitRoot" ls-files)"
 	# using the built in git functionality for find matches in files is far, far faster than checking the files ourselves
 	files+="$(git -C "$gitRoot" grep -i --files-with-matches "${1}")"
+	files+=$'\n'
 	files+="$(git -C "$gitRoot" ls-files | grep -i "${1}")"
+	files="$(echo "$files" | sort -u)"
 fi
 
 # echo "files: $files"

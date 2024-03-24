@@ -102,7 +102,8 @@ function DateStamp(...)
 	return strftime('%Y-%m-%d', ( localtime() + daySeconds ))
 endfunction
 command -bar -nargs=? Date put =DateStamp(<args>)
-command Run !"%:p"
+command RunMe !"%:p"
+command GitAddMe Git add %:p
 
 " create the undo dir if it doesn't exist
 if !isdirectory(&undodir)
@@ -159,6 +160,7 @@ if filereadable(expand("~/.vim/plug.vim"))
 	Plug 'vim-airline/vim-airline-themes'
 	" Plug 'airblade/vim-gitgutter'	" git in the gutter, freezing on excessively large repos
 	Plug 'mhinz/vim-signify'	" git in the gutter
+	Plug 'tpope/vim-fugitive'		" git commands, namely :Git add
 	Plug 'preservim/vim-markdown'	" improved markdown syntax
 	Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }	" intellisense
 	" Plug 'sirver/ultisnips'

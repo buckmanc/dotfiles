@@ -477,6 +477,7 @@
 	webtoons	en-US
 	wfh	en-US
 	what'd	en-US
+	whatevs	en-US
 	whoever's	en-US
 	wii	en-US
 	Willem	en-US
@@ -528,9 +529,13 @@
 	Braize	en-US
 	Brudder	en-US
 	Canticle	en-US
+	Cardassia	en-US
+	Cardassian	en-US
+	Cardassians	en-US
 	Casper	en-US
 	Castlevania	en-US
 	Catan	en-US
+	Chakotay	en-US
 	Cherryh	en-US
 	Cherryh's	en-US
 	CJ	en-US
@@ -583,6 +588,7 @@
 	Hyrule	en-US
 	Ico	en-US
 	IDW	en-US
+	Janeway	en-US
 	Jokabi	en-US
 	Juste	en-US
 	KACL	en-US
@@ -599,6 +605,7 @@
 	Madoka	en-US
 	Magica	en-US
 	Maneater	en-US
+	Maquis	en-US
 	MCU	en-US
 	Melnibone	en-US
 	Metroid	en-US
@@ -655,6 +662,8 @@
 	Spiderman	en-US
 	Spidermen	en-US
 	Splatoon	en-US
+	stardate	en-US
+	Starfleet	en-US
 	Stargate	en-US
 	Starsight	en-US
 	Steris	en-US

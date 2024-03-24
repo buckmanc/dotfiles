@@ -9,8 +9,7 @@ then
 fi
 
 # wrap based on screen width
-# must export COLUMNS in bashrc for this to work
-targetWidth=$(($COLUMNS - 4))
+targetWidth=$(($(tput cols) - 4))
 if [ "$targetWidth" -gt "0" ]
 then
 	message=$(echo "${message}" | fmt -w "$targetWidth")
