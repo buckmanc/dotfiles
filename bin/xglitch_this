@@ -40,7 +40,12 @@ do
 	do
 		outpath="$(dirname "$src")/glitched_${i}_$(basename "$src")"
 		echo "outpath: $outpath"
-		/home/hammer/.local/bin/glitch_this -c -o "$outpath" "$src" "$glitchLevel"
+		/data/data/com.termux/files/usr/bin/glitch_this -c -o "$outpath" "$src" "$glitchLevel" -g
+
+		if ( type termux-media-scan >/dev/null 2>&1)
+		then
+			termux-media-scan "$outpath"
+		fi
 	done
 done
 

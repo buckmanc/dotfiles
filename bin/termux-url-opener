@@ -27,6 +27,18 @@ then
 	elif echo "$1" | grep -iq "astrobin.com"
 	then
 		$HOME/bin/download-astrobin "$1" "$outDir"
+	elif echo "$domain" | grep -Piq "wp.com$" && echo "$1" | grep -iq "gamechops"
+	then
+		modUrl2="$(echo "$1" | perl -pe "s/(-scaled|\?.+$)//g")"
+		modUrl1="$(echo "$modUrl2" | perl -pe "s/3000x3000-//g")"
+		outDir="$(echo "$outDir" | perl -pe "s/[^\.\/\\\\]+\.wp.com/GameChops/g")"
+		mkdir -p "$outDir"
+
+		# echo "modUrl: $modUrl"
+		# echo "outDir: $outDir"
+
+		curl -O "$modUrl1" --output-dir "$outDir"
+		curl -O "$modUrl2" --output-dir "$outDir"
 	# download images off this unknown page
 	else
 		if ! gallery-dl -D "$outDir" "$1"
@@ -48,3 +60,4 @@ else
 	termux-toast "$error"
 	exit 1
 fi
+

@@ -9,6 +9,9 @@ then
 elif ( type explorer >/dev/null 2>&1)
 then
 	openy=explorer
+elif ( type termux-share >/dev/null 2>&1)
+then
+	openy="termux-share -d"
 elif ( type xdg-open >/dev/null 2>&1)
 then
 	openy=xdg-open

@@ -2,7 +2,7 @@
 	# These values are set in ~/.gitconfig_local
 [alias]
 	# word diff
-	wdiff=diff --color-words='\\w+|.' --ignore-cr-at-eol
+	wdiff=diff --color-words="\\w+|." --ignore-cr-at-eol
 	# letter diff
 	ldiff=diff --color-words='.' --ignore-cr-at-eol
 	dbdiff=wdiff --ignore-matching-lines='^USE \\[\\w+\\]$'
