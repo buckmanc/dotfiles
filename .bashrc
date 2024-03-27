@@ -93,6 +93,7 @@ then
 	addtopath "${HOME}/.shortcuts/tasks"
 fi
 addtopathstart "${LOCALAPPDATA}/Microsoft/WinGet/Links"
+addtopathstart "$PROGRAMFILES/Vim/vim91"
 addtopath "${HOME}/go/bin"
 addtopath "${pyPath}"
 addtopath "${pyPath}/scripts"

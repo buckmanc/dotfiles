@@ -11,6 +11,7 @@ set ruler		" show cursor position
 set number		" show line numbers
 set showmatch		" bracket matching
 set t_Co=256		" no really we have colors here (for airline on certain platforms)
+set notitle		" don't update the window title
 
 " behaviour
 set breakindent		" visual indenting
@@ -52,19 +53,22 @@ set commentstring=#%s	" default comment string, is changed downstream as needed
 " color tweaks
 " fewer screaming colors
 " designed to match with base16 Midnight Synth terminal theme
-hi! TODO ctermbg=green
-" hi SpellRare ctermbg=DarkMagenta
-hi SpellLocal ctermbg=235
-hi SpellBad ctermbg=240
+hi! TODO	ctermbg=green
+" hi SpellRare	ctermbg=DarkMagenta
+hi SpellLocal	ctermbg=235
+hi SpellBad	ctermbg=240
+" hi Search	cterm=reverse term=reverse gui=reverse ctermbg=none ctermfg=none 
+hi  Search	ctermfg=0 ctermbg=9 " cterm=reverse no longer works
+hi! MatchParen	cterm=underline ctermbg=none ctermfg=none
+hi! Error	ctermbg=darkred
+hi! normal	ctermbg=none	" don't wipe out terminal backgrounds
+hi! EndOfBuffer	ctermbg=none
+hi! NonText	ctermbg=none
 hi! link IncSearch Search
-hi Search cterm=reverse term=reverse gui=reverse ctermbg=none ctermfg=none 
-" hi! link MatchParen Search
-hi! MatchParen cterm=underline ctermbg=none ctermfg=none
-hi! Error ctermbg=darkred
 hi! link ErrorMsg Error
 
 " spellcheck
-set spellcapcheck=					" turn off capitalization check. too bad this doesn't exist for SpellLocal
+set spellcapcheck=	" turn off capitalization check. too bad this doesn't exist for SpellLocal
 set spellsuggest+=10	" limit spell suggest for small screens
 
 " iterate over custom spellfiles
@@ -139,6 +143,11 @@ augroup FileTypeSpecificAutocommands
 	" autocmd! InsertEnter * if &readonly | set noreadonly | endif
 
 augroup end
+
+" auto reload vimrc on save
+augroup myvimrc
+	au!
+	au BufWritePost .vimrc so $MYVIMRC
 endif " has('autocmd')
 
 " github.com/junegunn/vim-plug
@@ -190,6 +199,7 @@ if filereadable(expand("~/.vim/plug.vim"))
 	let g:airline_detect_spell=0
 	let g:airline_skip_empty_sections = 1
 	let g:airline_section_z = '%p%%%'
+	let g:airline#extensions#hunks#enabled=0	" turn off changes, leave only branch name in section b
 	let g:airline_whitespace_checks= [ 'indent', 'trailing', 'mixed-indent-file', 'conflicts' ]
 	" fix airline delay on mode change
 	" affects gcc command
@@ -215,14 +225,11 @@ if filereadable(expand("~/.vim/plug.vim"))
 
 	" gitgutter/signify config
 	" wipe the conspicuous colors from the gutter
-	highlight LineNr ctermfg=darkblue
-	highlight SignColumn ctermbg=NONE cterm=NONE guibg=NONE gui=NONE
-	" highlight! DiffChange ctermfg=5 ctermbg=none
-	" highlight! DiffAdd ctermfg=5 ctermbg=none
-	" highlight! DiffDelete ctermfg=5 ctermbg=none
-	highlight! DiffChange ctermfg=darkmagenta ctermbg=none
-	highlight! link DiffAdd DiffChange
-	highlight! link DiffDelete DiffChange
+	hi LineNr	ctermfg=darkblue
+	hi SignColumn	ctermbg=NONE cterm=NONE guibg=NONE gui=NONE
+	hi! DiffChange	ctermfg=darkmagenta ctermbg=none
+	hi! link DiffAdd DiffChange
+	hi! link DiffDelete DiffChange
 
 	" let g:gitgutter_diff_args = '-w'  " ignore whitespace changes
 	let g:signify_sign_change = '~'
