@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+linkPath="$1"
+
+if [[ -f "$linkPath" ]]
+then
+	echo "need full link path"
+	exit 1
+fi
+
+if [[ "$OSTYPE" = "mysys" ]]
+then
+	pwshCommand="(new-object -comobject Shell.Application).Namespace(0).ParseName(\"$linkPath\").InvokeVerb(\"taskbarunpin\")"
+	pwshOutput="$(pwsh -noprofile -command "$pwshCommand" | tail -n 1)"
+	echo "$pwshOutput"
+else
+	echo "$OSTYPE not supported"
+fi

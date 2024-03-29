@@ -137,10 +137,9 @@ disabled = false
 
 # display the shell level as an exponent
 [custom.shlvl]
-command = "echo $SHLVL | sed 'y|1234567890|¹²³⁴⁵⁶⁷⁸⁹⁰|'"
+command = "echo $SHLVL | sed 'y|1234567890|¹²³⁴⁵⁶⁷⁸⁹⁰|' | sed 's/^1$//g"
 description = "Show the current shell level if greater than one."
 style = "main"
-when = """ test "$SHLVL" != "1" """
 shell = ["bash", "--noprofile", "--norc"]
 format = "[$output]($style)"
 
@@ -284,42 +283,32 @@ style = 'dev'
 format = '[($tfm )]($style)'
 
 [custom.shellscripts]
-# if it's the home dir and bash, backspace over the symbol and the space
-# this way you still get the symbol in other shells
 symbol = "#!"
-command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008\u0008'; fi'''
-#when = """ test "${HOME,,}" != "${PWD,,}" """
 detect_extensions = ['sh']
 style = "dev"
 description = "A symbol indicating if shell scripts are present."
-format = "[$symbol $output]($style)"
+format = "[$symbol]($style)"
 
 [custom.powershell]
 symbol = ""
-command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008'; fi'''
-#when = """ test "${HOME,,}" != "${PWD,,}" """
 detect_extensions = ["ps1","psm1"]
 style = "dev"
 description = "A symbol indicating if powershell scripts are present."
-format = "[$symbol $output]($style)"
+format = "[$symbol]($style)"
 
 [custom.batch]
 symbol = ""
-command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008'; fi'''
-#when = """ test "${HOME,,}" != "${PWD,,}" """
 detect_extensions = ["bat"]
 style = "dev"
 description = "A symbol indicating if batch files are present."
-format = "[$symbol $output]($style)"
+format = "[$symbol]($style)"
 
 [custom.python]
 symbol = ""
-command = '''if [ "${HOME,,}" == "${PWD,,}" ]; then printf '\u0008\u0008'; fi'''
-#when = """ test "${HOME,,}" != "${PWD,,}" """
 detect_extensions = ["py"]
 style = "dev"
 description = "A symbol indicating if python scripts are present."
-format = "[$symbol $output]($style)"
+format = "[$symbol]($style)"
 
 [custom.sql]
 symbol = ""

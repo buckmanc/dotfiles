@@ -1,2 +1,30 @@
 #!/usr/bin/env bash
 
+"$HOME/bin/fancy-message-hello --no-cow"
+
+# wait for internet
+# wait-for-good-ping "8.8.8.8"
+
+dirStartGlobal="$ProgramData/Microsoft/Windows/Start Menu/Programs"
+dirStartLocal="$APPDATA/Microsoft/Windows/Start Menu/Programs"
+
+# open apps
+open "~/.config/autohotkey.ahk"
+xwt
+open "$dirStartGlobal/Notepad++.lnk"
+
+
+# open projects
+# open-project '/z/ProjectDir/project/project.sln'
+
+# kill stuff
+xkill onenotem
+xkill node
+xkill msedge
+xkill msedgewebview2
+
+# deprioritize stuff
+set-process-priority onedrive idle
+
+# run scripts inline?
+nerdmoon_to_starship

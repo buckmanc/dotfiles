@@ -2,3 +2,4 @@
 # some protection against adding sensitive files from your home directory
 
 *
+# !bin/

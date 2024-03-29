@@ -10,7 +10,7 @@ fi
 
 maxFiles=10
 maxFilesPlusOne=$((maxFiles+1))
-outputFormat="%(n_entries+1-playlist_index)0d_%(title)s"
+outputFormat="%(playlist_count+1-playlist_index)0d_%(title)s"
 playlistPath="$cacheDir/Dungeon Synth Archives.m3u"
 
 mkdir -p "$cacheDir"

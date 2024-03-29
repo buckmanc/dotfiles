@@ -106,7 +106,7 @@ then
 	exit 1
 elif [[ -d "$topArg" ]]
 then
-	files="$(echo "$args" | xargs -d '\n' -I{} find "{}" -type f -not -iname '*.md')"
+	files="$(echo "$args" | xargs -d '\n' -I {} find "{}" -type f -not -iname '*.md')"
 else
 	files="$args"
 fi
@@ -203,12 +203,10 @@ then
 	fi
 fi
 
-echo "Setting wallpaper to:"
-echo "$paperFileName"
 if [[ -n "$optOutPath" ]]
 then
 	cp "$paperPath" "$optOutPath"
-elif [[ "$optWindowsTerminal" == 1 ]]
+elif [[ "$OSTYPE" == "msys" && "$optWindowsTerminal" == 1 ]]
 then
 	wtDir="$(find "${LOCALAPPDATA}/Packages/" -maxdepth 2 -wholename "*WindowsTerminal*" -name LocalState -print -quit)"
 	settingsPath="${wtDir}/settings.json"
@@ -218,7 +216,7 @@ then
 		exit 1
 	fi
 	
-	wtPaperPath="$(echo "$paperPath" | xargs -I {} realpath "{}")"
+	wtPaperPath="$(echo "$paperPath" | xargs -d '\n' -I {} realpath "{}")"
 	# swap unix to windows path
 	if ( type cygpath >/dev/null 2>&1 )
 	then
@@ -233,14 +231,26 @@ elif [[ "$OSTYPE" == "linux-android" ]]
 then
 	termux-wallpaper $lockArg -f "$paperPath"
 	termux-media-scan "$paperPath"
+elif [[ "$OSTYPE" == "linux-gnu" && "$optWindowsTerminal" == "1" ]]
+then
+	# how do we know if we're on an xfce system?
+	# if this file is in your dotfiles it will exist every time
+	xfceTermRcPath="$HOME/.config/xfce/terminal/terminalrc"
+
+	perl -pi -e "s|(?<=^BackgroundImageFile=).+$|$paperPath|g" "$xfceTermRcPath"
+
 else
 	echo "OS $OSTYPE not yet supported"
 fi
 
 if [[ "$optReadArgsFromCache" == 0 ]]
 then
-	echo "$args" > "$argCachePath"
+	# cache paths
+	# convert to full paths so quick shuffle works from anywhere
+	echo "$args" | xargs -d '\n' -I {} realpath "{}" > "$argCachePath"
 fi
+
+echo "$paperFileName"
 
 # notify if appropriate and possible
 if [[ "$optNoNotify" == "0" ]]

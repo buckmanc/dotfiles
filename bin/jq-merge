@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+jq -s '[.[] | to_entries] | flatten | reduce .[] as $dot ({}; .[$dot.key] += $dot.value)'
