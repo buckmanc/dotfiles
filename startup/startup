@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-"$HOME/bin/fancy-message-hello --no-cow"
+fancy-message-hello --no-cow
 
 # wait for internet
 # wait-for-good-ping "8.8.8.8"
@@ -9,7 +9,7 @@ dirStartGlobal="$ProgramData/Microsoft/Windows/Start Menu/Programs"
 dirStartLocal="$APPDATA/Microsoft/Windows/Start Menu/Programs"
 
 # open apps
-open "~/.config/autohotkey.ahk"
+open ~/.config/autohotkey.ahk
 xwt
 open "$dirStartGlobal/Notepad++.lnk"
 
