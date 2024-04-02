@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ "$OSTYPE" = "msys" ]]
+then
+	pwshCommand="& \"$(realpath "$HOME/bin/_FocusAllWindows.ps1")"
+	pwsh -noprofile -command "$pwshCommand" | tail -n 1
+else
+	echo "$OSTYPE not supported"
+fi
