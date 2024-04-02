@@ -23,9 +23,9 @@ then
 	ext="${killme##*.}"
 	if [[ "${ext,,}" != "exe" ]]
 	then
-		if ! taskkill -f -im "${killme}.exe"
+		if ! taskkill -f -im "${killme}.exe" 2> /dev/null | sed -E 's/ with PID [0-9]+//g' | sort -u
 		then
-			taskkill -f -im "$killme"
+			taskkill -f -im "$killme" | sed -E 's/ with PID [0-9]+//g' | sort -u
 		fi
 	else
 		taskkill -f -im "$killme"

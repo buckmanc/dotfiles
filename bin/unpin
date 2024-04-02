@@ -2,17 +2,21 @@
 
 linkPath="$1"
 
-if [[ -f "$linkPath" ]]
+if [[ ! -f "$linkPath" ]]
 then
 	echo "need full link path"
 	exit 1
 fi
 
-if [[ "$OSTYPE" = "mysys" ]]
+if [[ "$OSTYPE" = "msys" ]]
 then
-	pwshCommand="(new-object -comobject Shell.Application).Namespace(0).ParseName(\"$linkPath\").InvokeVerb(\"taskbarunpin\")"
+	pwshCommand="(new-object -comobject Shell.Application).Namespace(0).ParseName(\"$(cygpath -w "$linkPath")\").InvokeVerb(\"taskbarunpin\")"
 	pwshOutput="$(pwsh -noprofile -command "$pwshCommand" | tail -n 1)"
-	echo "$pwshOutput"
+
+	if [[ -n "$pwshOutput" ]]
+	then
+		echo "$pwshOutput"
+	fi
 else
 	echo "$OSTYPE not supported"
 fi
