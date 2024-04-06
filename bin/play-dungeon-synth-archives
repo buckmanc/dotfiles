@@ -10,7 +10,10 @@ fi
 
 maxFiles=10
 maxFilesPlusOne=$((maxFiles+1))
-outputFormat="%(playlist_count+1-playlist_index)0d_%(title)s"
+# calc an absolute index for the filename
+# brakes with many other args
+# outputFormat="%(playlist_count+1-playlist_index)0d_%(title)s"
+outputFormat="%(upload_date)s_%(title)s"
 playlistPath="$cacheDir/Dungeon Synth Archives.m3u"
 
 mkdir -p "$cacheDir"
@@ -20,7 +23,7 @@ then
 	echo "skipping download on mobile data"
 else
 	# download the x most recent videos
-	yt-dlp 'https://www.youtube.com/@TheDungeonSynthArchives/videos' --extract-audio --embed-metadata --embed-thumbnail --break-on-existing --audio-format "mp3" --audio-quality 1 --output "$cacheDir/$outputFormat.%(ext)s" --download-archive "$cacheDir/archive.log" --max-downloads "$maxFiles" --restrict-filenames --no-overwrites --print "$outputFormat" --no-simulate
+	yt-dlp 'https://www.youtube.com/@TheDungeonSynthArchives/videos' --extract-audio --embed-metadata --embed-thumbnail --audio-format "mp3" --audio-quality 1 --output "$cacheDir/$outputFormat.%(ext)s" --playlist-items "1:$maxFiles" --download-archive "$cacheDir/archive.log" --max-downloads "$maxFiles" --restrict-filenames --no-overwrites --print "$outputFormat" --no-simulate --no-warnings
 fi
 
 # remove files beyond the max
@@ -31,8 +34,6 @@ files="$(find "$cacheDir" -type f -iname '*.mp3' | sort -r)"
 if type cygpath > /dev/null 2>&1 && [[ "$OSTYPE" = "msys" ]]
 then
 	files="$(echo "$files" | xargs --delimiter $'\n' cygpath --windows)"
-	playlistPathWin="$(cygpath --windows "$playlistPath")"
-
 fi
 
 if [[ -z "$files" ]]
@@ -45,5 +46,4 @@ echo "$files" > "$playlistPath"
 
 # open with the default program
 # recommended: vlc for win, aimp for android
-# TODO: check if playlistPathWin is needed at all
 "$HOME/bin/open" "$playlistPath"

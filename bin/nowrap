@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# if [[ "$COLUMNS" -le 0 ]]
+# then
+# 	???
+# fi
+
+cut -c -"$COLUMNS"
