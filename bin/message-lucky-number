@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo "Today's lucky number is $(shuf --input-range=0-100 -n 1)"

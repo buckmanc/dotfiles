@@ -80,7 +80,16 @@ else
 	optDefaultTarget=1
 fi
 
-argCachePath="$HOME/.cache/${targetName}.log"
+if [[ "$OSTYPE" == "linux-android" ]]
+then
+	cacheDir="/data/data/com.termux/files/home/storage/shared/shuffle_wallpapers"
+else
+	cacheDir="$HOME/.cache/shuffle_wallpapers"
+fi
+
+mkdir -p "$cacheDir"
+
+argCachePath="$cacheDir/${targetName}.log"
 
 if [[ -z "$args" ]]
 then
@@ -109,13 +118,6 @@ then
 	files="$(echo "$args" | xargs -d '\n' -I {} find "{}" -type f -not -iname '*.md')"
 else
 	files="$args"
-fi
-
-if [[ "$OSTYPE" == "linux-android" ]]
-then
-	tempDir="/data/data/com.termux/files/home/storage/shared"
-else
-	tempDir="/tmp"
 fi
 
 if [[ "$OSTYPE" == "msys" && -z "$optOutPath" ]] && [[ "$optLockScreen" == "1" || "$optDefaultTarget" == "1" ]]
@@ -155,8 +157,8 @@ fi
 
 paperPath="$(echo "$files" | shuf --random-source='/dev/urandom' -n 1)"
 paperFileName="$(basename "$paperPath")"
-glitchDir="$tempDir/Wallpapers_Glitched"
-resizedDir="$tempDir/Wallpapers_Resized"
+glitchDir="$cacheDir/glitched"
+resizedDir="$cacheDir/resized"
 mkdir -p "$glitchDir"
 mkdir -p "$resizedDir"
 paperPathGlitched="${glitchDir}/glitched_$paperFileName"
