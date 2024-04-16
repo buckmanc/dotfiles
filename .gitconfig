@@ -67,6 +67,8 @@
 	clean = "~/bin/sort-json"
 [filter "sort"]
 	clean = "~/bin/pysort"
+[filter "terminal_config"]
+	clean = "~/.config/gitconfig_scripts/terminal_config_clean_filter.sh"
 [help]
 	autocorrect = 50
 [diff]

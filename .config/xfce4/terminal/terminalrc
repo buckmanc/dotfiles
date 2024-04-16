@@ -41,5 +41,3 @@ BackgroundMode=TERMINAL_BACKGROUND_IMAGE
 BackgroundImageShading=0.000000
 BackgroundImageStyle=TERMINAL_BACKGROUND_STYLE_FILLED
 BackgroundImageFile=.config/assets/backgrounds/totk_ouroboros_grey.png
-
-

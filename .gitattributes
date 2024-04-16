@@ -2,7 +2,8 @@
 .config/starship.toml filter=starship
 *.cs filter=gitignore
 .gitattributes merge=theirs
-.config/WindowsTerminal/*.json filter=json
+.config/WindowsTerminal/*.json filter=terminal_config
+.config/xfce4/terminal/terminalrc filter=terminal_config
 .config/messages/*.txt merge=union
 .vim/spell/*.add merge=union
 .vim/spell/*.add filter=sort
