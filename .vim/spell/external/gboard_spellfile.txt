@@ -23,6 +23,7 @@
 	appt	en-US
 	Arby's	en-US
 	arcana	en-US
+	args	en-US
 	ascii	en-US
 	ASMR	en-US
 	assholery	en-US
@@ -48,6 +49,7 @@
 	BLM	en-US
 	blotchiness	en-US
 	bluetooth	en-US
+	Bo	en-US
 	boi	en-US
 	booktuber	en-US
 	boop	en-US
@@ -68,6 +70,7 @@
 	cancelled	en-US
 	cancelling	en-US
 	canopic	en-US
+	Carcassonne	en-US
 	castlevania	en-US
 	castlevanias	en-US
 	CEOs	en-US
@@ -98,6 +101,7 @@
 	Cricut	en-US
 	cricut	en-US
 	cringey	en-US
+	Culver's	en-US
 	Dafoe's	en-US
 	Darkspace	en-US
 	deathcore	en-US
@@ -161,6 +165,7 @@
 	floaty	en-US
 	FMLA	en-US
 	followable	en-US
+	foregoed	en-US
 	frans	en-US
 	frutti	en-US
 	fundie	en-US
@@ -171,6 +176,7 @@
 	GBA	en-US
 	gcn	en-US
 	GDQ	en-US
+	geez	en-US
 	Gemma	en-US
 	gitconfig	en-US
 	github	en-US
@@ -236,9 +242,13 @@
 	Jemisin's	en-US
 	jiggler	en-US
 	journaling	en-US
+	journalled	en-US
+	journalling	en-US
 	json	en-US
+	Juneteenth	en-US
 	kaiju	en-US
 	Khaw	en-US
+	Kondo's	en-US
 	Kool	en-US
 	Koolaid	en-US
 	kraken	en-US
@@ -247,6 +257,7 @@
 	Lactaid	en-US
 	Larkwood's	en-US
 	Lenscrafters	en-US
+	LeVar	en-US
 	LGBTQ	en-US
 	lifesign	en-US
 	lifesigns	en-US
@@ -269,6 +280,9 @@
 	mislisting	en-US
 	mitzvah	en-US
 	MLKJ	en-US
+	mmx	en-US
+	mofo	en-US
+	Moines	en-US
 	mon	en-US
 	monologuing	en-US
 	mons	en-US
@@ -354,6 +368,7 @@
 	repointing	en-US
 	resemblant	en-US
 	retroarch	en-US
+	retweeted	en-US
 	rewatch	en-US
 	rng	en-US
 	RNG	en-US
@@ -505,6 +520,8 @@
 	Yoder	en-US
 	Yoshi	en-US
 	youtube	en-US
+	Zelda	en-US
+	ZeldaSymphony	en-US
 	Zenni	en-US
 	zonking	en-US
 	Adolin	en-US
@@ -518,6 +535,7 @@
 	Arishem	en-US
 	Armello	en-US
 	Ashyn	en-US
+	batton	en-US
 	Beckman	en-US
 	Bioshock	en-US
 	Bjendal	en-US
@@ -595,6 +613,7 @@
 	Kaladin	en-US
 	Kaladin's	en-US
 	Karun	en-US
+	keese	en-US
 	Komashi	en-US
 	l4d2	en-US
 	L4D2	en-US

@@ -1,5 +1,26 @@
 #!/usr/bin/env bash
 
+optMore=0
+
+helpDeets="
+download and play a playlist of recent tracks from Dungeon Synth Archives
+
+   --more	download more than the default (will be slower)
+   -h, --help	display this help
+"
+
+for arg in "$@"
+do
+	if [[ "$arg" == "-h" || "$arg" == "--help" ]]
+	then
+		echo "$helpDeets"
+		exit 0
+	elif [[ "$arg" == "--more" ]]
+	then
+		optMore=1
+	fi
+done
+
 if [[ "$OSTYPE" = "linux-android" ]]
 then
 	# android apps need these files to be in a public, non . directory
@@ -8,8 +29,15 @@ else
 	cacheDir="$HOME/.cache/play-dungeon-synth"
 fi
 
-maxFiles=10
-maxFilesPlusOne=$((maxFiles+1))
+maxFilesToDownload=10
+maxFilesToKeep=20
+maxFilesToKeepPlusOne=$((maxFilesToKeep+1))
+
+if [[ "$optMore" == 1 ]]
+then
+	maxFilesToDownload="$maxFilesToKeep"
+fi
+
 # calc an absolute index for the filename
 # brakes with many other args
 # outputFormat="%(playlist_count+1-playlist_index)0d_%(title)s"
@@ -23,11 +51,11 @@ then
 	echo "skipping download on mobile data"
 else
 	# download the x most recent videos
-	yt-dlp 'https://www.youtube.com/@TheDungeonSynthArchives/videos' --extract-audio --embed-metadata --embed-thumbnail --audio-format "mp3" --audio-quality 1 --output "$cacheDir/$outputFormat.%(ext)s" --playlist-items "1:$maxFiles" --download-archive "$cacheDir/archive.log" --max-downloads "$maxFiles" --restrict-filenames --no-overwrites --print "$outputFormat" --no-simulate --no-warnings
+	yt-dlp 'https://www.youtube.com/@TheDungeonSynthArchives/videos' --extract-audio --embed-metadata --embed-thumbnail --audio-format "mp3" --audio-quality 1 --output "$cacheDir/$outputFormat.%(ext)s" --playlist-items "1:$maxFilesToDownload" --download-archive "$cacheDir/archive.log" --max-downloads "$maxFilesToDownload" --restrict-filenames --no-overwrites --print "$outputFormat" --no-simulate --no-warnings
 fi
 
 # remove files beyond the max
-ls -t "$cacheDir/"*.mp3 | tail -n +"$maxFilesPlusOne" | xargs --delimiter '\n' --no-run-if-empty rm
+ls -t "$cacheDir/"*.mp3 | tail -n +"$maxFilesToKeepPlusOne" | xargs --delimiter '\n' --no-run-if-empty rm
 
 # build the playlist in descending order
 files="$(find "$cacheDir" -type f -iname '*.mp3' | sort -r)"

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # schedule me!
 
 spellDir="$HOME/.vim/spell"
@@ -5,6 +7,8 @@ externalDir="${spellDir}/external"
 customPath="${externalDir}/spellfile_custom.txt"
 externalPath="${spellDir}/external.add"
 gboardPath="${externalDir}/gboard_spellfile.txt"
+
+# TODO dedupe core spellfiles
 
 # unzip any zips in externalDir
 if 7z e "${externalDir}"/*.zip -aoa -o"${externalDir}"
@@ -20,7 +24,7 @@ currentWordsPath=$(mktemp -t currentWords.txt.XXX)
 cat "${externalDir}"/*.txt | grep -Piv '(^checksum_v1|^# Gboard Dictionary version|^# From OS)' | perl -pe 's/(\ten-US$|\t)//g' | pysort > "${sanitizedExternalWordsPath}"
 cat "${spellDir}"/*.add > "${currentWordsPath}"
 
-newExternalWords=$(grep -hivx -f "${currentWordsPath}" "${sanitizedExternalWordsPath}")
+newExternalWords=$(grep -hivx -f "${currentWordsPath}" "${sanitizedExternalWordsPath}" | uniq)
 oldExternalWords=$(cat "${externalPath}")
 
 # only write externally added words file if it's changed
@@ -33,7 +37,7 @@ fi
 "${spellDir}"/sort.sh
 
 # mash all vim spell files into one text file for outside use
-ls "${spellDir}"/*.add | grep -iv private | xargs cat | grep -Piv '/!$' | sed '/^[ \t]*$/d' > "${customPath}" 
+ls "${spellDir}"/*.add | grep -iv private | xargs cat | grep -Piv '/!$' | sed '/^[ \t]*$/d' | uniq > "${customPath}" 
 
 # write gboard file from spellfile_custom
 newGboardText="# Gboard Dictionary version:1

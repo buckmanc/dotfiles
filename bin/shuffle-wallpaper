@@ -7,10 +7,27 @@ optFloater=0
 optGlitch=0
 optChillGlitch=0
 optNoNotify=0
-optWindowsTerminal=0
+optTerminal=0
 optReadArgsFromCache=0
 optOutPath=''
 optNextIsOutPath=0
+
+helpDeets="
+
+shuffle-wallpaper [paths] [options]
+
+paths: any list of files and directories. if called with no arguments, pulls cached paths from previous runs
+
+  --lockscreen		target lockscreen instead of home screen
+  --terminal		target terminal instead of home screen
+
+  --glitch		use glitch-this to glitch the wallpaper first
+  --chill-glitch	glitch, but less
+  --floater		center the design on black first
+  --no-notify		don't notify (android only)
+  --output		copy the wallpaper somewhere; primarily for internal use
+  --help		display this help dialogue
+"
 
 glitchLevel(){
 
@@ -25,7 +42,11 @@ glitchLevel(){
 
 for arg in "$@"
 do
-	if [[ "$arg" == "-l" || "$arg" == "--lockscreen" ]]
+	if [[ "$arg" == "-h" || "$arg" == "--help" ]]
+	then
+		echo "$helpDeets"
+		exit 0
+	elif [[ "$arg" == "-l" || "$arg" == "--lockscreen" ]]
 	then
 		optLockScreen=1
 		lockArg="-l"
@@ -36,9 +57,9 @@ do
 	elif [[ "$arg" == "--no-notify" ]]
 	then
 		optNoNotify=1
-	elif [[ "$arg" == "--windows-terminal" || "$arg" == "--terminal" ]]
+	elif [[ "$arg" == "--terminal" ]]
 	then
-		optWindowsTerminal=1
+		optTerminal=1
 		titleText="Windows Terminal Wallpaper Updated"
 	elif [[ "$arg" == "--glitch" ]]
 	then
@@ -67,7 +88,7 @@ then
 fi
 
 targetName="${OSTYPE}"
-if [[ "$optWindowsTerminal" == 1 ]]
+if [[ "$optTerminal" == 1 ]]
 then
 	targetName+="-winterm"
 	optDefaultTarget=0
@@ -246,7 +267,7 @@ fi
 if [[ -n "$optOutPath" ]]
 then
 	cp "$paperPath" "$optOutPath"
-elif [[ "$OSTYPE" == "msys" && "$optWindowsTerminal" == 1 ]]
+elif [[ "$OSTYPE" == "msys" && "$optTerminal" == 1 ]]
 then
 	wtDir="$(find "${LOCALAPPDATA}/Packages/" -maxdepth 2 -wholename "*WindowsTerminal*" -name LocalState -print -quit)"
 	settingsPath="${wtDir}/settings.json"
@@ -271,7 +292,7 @@ elif [[ "$OSTYPE" == "linux-android" ]]
 then
 	termux-wallpaper $lockArg -f "$paperPath"
 	termux-media-scan "$paperPath"
-elif [[ "$OSTYPE" == "linux-gnu" && "$optWindowsTerminal" == "1" ]]
+elif [[ "$OSTYPE" == "linux-gnu" && "$optTerminal" == "1" ]]
 then
 	# how do we know if we're on an xfce system?
 	# if this file is in your dotfiles it will exist every time

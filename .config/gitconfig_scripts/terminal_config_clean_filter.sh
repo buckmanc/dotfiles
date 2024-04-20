@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# this git filter script standardizes terminal wallpaper settings to a default when git looks at them
+# this allows for wallpaper shuffling without dirtying the repo
+# windows terminal and xfce terminal supported at present
+
 input="$(cat)"
 if [[ "${input::1}" == "{" ]]
 then
