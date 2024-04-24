@@ -15,7 +15,7 @@ fi
 if [[ "$OSTYPE" = "msys" ]]
 then
 	pwshCommand="& \"$(realpath "$HOME/bin/_SetProcessPriority.ps1" | xargs -d '\n' cygpath -w)\" '$processName' '$priority'"
-	pwshOutput="$(pwsh -noprofile -command "$pwshCommand" | tail -n 1)"
+	pwshOutput="$(pwsh -noprofile -command "$pwshCommand" 2>&1 | tail -n 1)"
 	if [[ -n "$pwshOutput" ]]
 	then
 		echo "$pwshOutput" | perl -pe 's/^.+? +\| //g'

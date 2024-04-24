@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# letter diff
+# works fine in .gitconfig but moved to be alongside git wdiff, which does not
+git diff --color-words="." --ignore-cr-at-eol "$@"

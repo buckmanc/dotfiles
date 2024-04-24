@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# word diff
+# at some point this stopped working in .gitconfig
+git diff --color-words="\w+|." --ignore-cr-at-eol "$@"

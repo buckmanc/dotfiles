@@ -8,23 +8,32 @@ fancy-message-hello --no-cow
 dirStartGlobal="$ProgramData/Microsoft/Windows/Start Menu/Programs"
 dirStartLocal="$APPDATA/Microsoft/Windows/Start Menu/Programs"
 
-# open apps
+echo "opening apps..."
 open ~/.config/autohotkey.ahk
-xwt
 open "$dirStartGlobal/Notepad++.lnk"
+open "$dirStartGlobal/Outlook.lnk" # I guess if it's installed we should open it, blegh
 
+# TODO firefox || chrome || edge
+# TODO discord || slack || teams
 
-# open projects
+shuffle-wallpaper --terminal
+xwt
+
+# echo "opening projects..."
 # open-project '/z/ProjectDir/project/project.sln'
 
-# kill stuff
+echo "killing apps..."
 xkill onenotem
 xkill node
 xkill msedge
 xkill msedgewebview2
 
-# deprioritize stuff
+echo "deprioritizing apps..."
 set-process-priority onedrive idle
 
 # run scripts inline?
 nerdmoon_to_starship
+message-lucky-number
+
+echo "done"
+read -rsn1 -t 60 || true

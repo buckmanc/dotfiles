@@ -8,8 +8,6 @@ then
 	exit 1
 fi
 
-echo "waiting for a response from $url"
-
 if [[ "$OSTYPE" = "msys" ]]
 then
 	pingy="ping -n 1"
@@ -17,12 +15,19 @@ else
 	pingy="ping -c 1"
 fi
 
+announced=0
 
 while true
 do
 	if $pingy "$url" > /dev/null 2>&1
 	then
 		break
+	fi
+
+	if [[ "$announced" == 0 ]]
+	then
+		echo "waiting for a response from $url"
+		announced=1
 	fi
 
 	sleep 2s

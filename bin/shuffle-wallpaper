@@ -60,7 +60,7 @@ do
 	elif [[ "$arg" == "--terminal" ]]
 	then
 		optTerminal=1
-		titleText="Windows Terminal Wallpaper Updated"
+		titleText="Terminal Wallpaper Updated"
 	elif [[ "$arg" == "--glitch" ]]
 	then
 		optGlitch=1
@@ -90,7 +90,7 @@ fi
 targetName="${OSTYPE}"
 if [[ "$optTerminal" == 1 ]]
 then
-	targetName+="-winterm"
+	targetName+="-term"
 	optDefaultTarget=0
 elif [[ "$optLockScreen" == 1 ]]
 then

@@ -1,10 +1,10 @@
 [user]
 	# These values are set in ~/.gitconfig_local
 [alias]
-	# word diff
-	wdiff=diff --color-words="\\w+|." --ignore-cr-at-eol
-	# letter diff
-	ldiff=diff --color-words='.' --ignore-cr-at-eol
+	# # word diff
+	# wdiff=diff --color-words="\\w+|." --ignore-cr-at-eol
+	# # letter diff
+	# ldiff=diff --color-words='.' --ignore-cr-at-eol
 	dbdiff=wdiff --ignore-matching-lines='^USE \\[\\w+\\]$'
 	# short stat
 	stat=status -s
@@ -33,7 +33,7 @@
 		}; f;"
 	# allows for neat tricks like cd `git root`
 	root=rev-parse --show-toplevel
-	fixcarriagereturn=!git ls-files --eol | grep -Pi 'w/(mixed|crlf)' | grep -Pio '(?<=\\s{4}\\S.+' | xargs perl -i -pe 's/\\r//g'
+	fixcarriagereturn=!git ls-files --eol | grep -Pi 'w/(mixed|crlf)' | grep -Pio '(?<=\t).+$' | xargs -d '\n' -I {} perl -i -pe 's/\\r//g' '{}'
 	fixtw=!git ls-files | xargs -d '\n' sed -i 's/[ \t]*\\(\\r\\?\\)$/\\1/'
 [core]
 	editor = vim
