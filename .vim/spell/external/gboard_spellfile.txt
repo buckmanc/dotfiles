@@ -107,6 +107,8 @@
 	deathcore	en-US
 	debilitatingly	en-US
 	decenters	en-US
+	dedupe	en-US
+	deets	en-US
 	demonological	en-US
 	Des	en-US
 	DeSantis	en-US
@@ -255,6 +257,7 @@
 	Kwik	en-US
 	LaBeouf	en-US
 	Lactaid	en-US
+	lappy	en-US
 	Larkwood's	en-US
 	Lenscrafters	en-US
 	LeVar	en-US
@@ -508,6 +511,7 @@
 	x8	en-US
 	x9	en-US
 	xmas	en-US
+	Xubuntu	en-US
 	xyz	en-US
 	Y2K	en-US
 	yacking	en-US

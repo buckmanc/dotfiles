@@ -31,7 +31,7 @@ then
 	fi
 
 	gitRoot="$(git rev-parse --show-toplevel)"
-	migrationsProject="$(find "$gitRoot" -type d -iname 'migrations' | head -n 1 | xargs dirname)"
+	migrationsProject="$(find "$gitRoot" -type d -iname 'migrations' | head -n 1 | xargs --no-run-if-empty dirname)"
 
 	if [[ -n "$migrationsProject" && "$migrationsProject" != "." ]] && ( type dotnet-ef > /dev/null 2>&1 ) && ( dotnet-ef migrations list --no-build --project "$migrationsProject" 2>&1 | grep -Pivq "(this package is required|no project found)" )
 	then

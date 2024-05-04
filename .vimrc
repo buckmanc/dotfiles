@@ -12,6 +12,9 @@ set number		" show line numbers
 set showmatch		" bracket matching
 set t_Co=256		" no really we have colors here (for airline on certain platforms)
 set notitle		" don't update the window title
+" experimental
+
+set tabstop=4 shiftwidth=4 softtabstop=4
 
 " behaviour
 set breakindent		" visual indenting
@@ -57,7 +60,7 @@ hi! TODO	ctermbg=green
 " hi SpellRare	ctermbg=DarkMagenta
 hi SpellLocal	ctermbg=235
 hi SpellBad	ctermbg=240
-" hi Search	cterm=reverse term=reverse gui=reverse ctermbg=none ctermfg=none 
+" hi Search	cterm=reverse term=reverse gui=reverse ctermbg=none ctermfg=none
 hi  Search	ctermfg=0 ctermbg=9 " cterm=reverse no longer works
 hi! MatchParen	cterm=underline ctermbg=none ctermfg=none
 hi! Error	ctermbg=darkred
@@ -178,7 +181,7 @@ if filereadable(expand("~/.vim/plug.vim"))
 	Plug 'tmadsen/vim-compiler-plugin-for-dotnet'
 	Plug 'tpope/vim-dispatch'	" async :Make
 	Plug 'mhinz/vim-startify'	" startup screen
-	Plug 'sbdchd/vim-shebang'	" :ShebangInsert 
+	Plug 'sbdchd/vim-shebang'	" :ShebangInsert
 	Plug 'glensc/vim-syntax-lighttpd'
 
 	call plug#end()
@@ -257,7 +260,7 @@ if filereadable(expand("~/.vim/plug.vim"))
 	" let g:UltiSnipsExpandTrigger = '<C-j>'
 	" let g:UltiSnipsJumpForwardTrigger = '<C-j>'
 	" let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
-	
+
 	let g:shebang#shebangs = {
 				\ 'sh': '#!/usr/bin/env bash',
 				\ 'termux': '#!/data/data/com.termux/files/usr/bin/bash'

@@ -753,31 +753,6 @@ quoter_update(){
 	fi
 }
 
-xsleep(){
-	# use regex replace to support sleep syntax
-	# 1s, 1h, 1m, 1d etc
-	local input=$(echo "$*" \
-		| perl -pe 's/(\d+)s( |$)/\1second\2/g' \
-		| perl -pe 's/(\d+)m( |$)/\1minute\2/g' \
-		| perl -pe 's/(\d+)h( |$)/\1hour\2/g' \
-		| perl -pe 's/(\d+)d( |$)/\1day\2/g' \
-		| perl -pe 's/(\d+)d( |$)/\1week\2/g' \
-	)
-
-	local startEpochSec=$(date +"%s")
-	local targetEpochSec=$(date --date="$input" +"%s")
-	local secToWait="$(($targetEpochSec-$startEpochSec))"
-	echo "sleeping til $(date --date=@$targetEpochSec --rfc-3339=second | cut -c -19)"
-
-	sleep "$secToWait"
-
-	# TODO make this a countdown instead
-	# while [ "$targetEpochSec" > $(date +"%s") ]
-	# do
-	# 	echo ""
-	# 	sleep 1s
-	# done
-}
 alias xleep='xsleep'
 
 xrsync() {

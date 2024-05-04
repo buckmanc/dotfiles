@@ -13,7 +13,16 @@ input=$(echo "$*" \
 startEpochSec=$(date +"%s")
 targetEpochSec=$(date --date="$input" +"%s")
 secToWait="$(($targetEpochSec-$startEpochSec))"
+
+# echo "raw input: $*"
+# echo "input: $input"
+# echo "startEpochSec:  $startEpochSec"
+# echo "targetEpochSec: $targetEpochSec"
+# echo "secToWait: $secToWait"
+# echo "--------"
+
 echo "sleeping til $(date --date=@$targetEpochSec --rfc-3339=second | cut -c -19)"
+
 
 sleep "$secToWait"
 
