@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+git grep -iP $'\uFEFF?^using.+;[ \r]*?$' | grep -iPo '[^:]+$' | sort -u | perl -pe 's/^/global /g'

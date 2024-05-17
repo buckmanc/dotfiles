@@ -15,6 +15,7 @@ open "$dirStartGlobal/Outlook.lnk" # I guess if it's installed we should open it
 
 # TODO firefox || chrome || edge
 # TODO discord || slack || teams
+# TODO beekeeper || ssms
 
 shuffle-wallpaper --terminal
 xwt

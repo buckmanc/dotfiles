@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+fileList="$(find . -type f -iname '*.cs')"
+echo "$fileList" | xargs -d '\n' sed -E -i $'/^\uFEFF?using /d'
+echo "$fileList" | xargs -d '\n' sed -i '1{/^[[:space:]]*$/d}'
