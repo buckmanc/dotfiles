@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+drives="$(lsblk --output NAME | grep -Piv '^(name|loop|├|└)')"
+hasOutput=0
+
+while read -r drive
+do
+	drivePath="/dev/$drive"
+
+	# echo "testing $drivePath"
+	smartctl --test=short "$drivePath" -q silent
+
+	while smartctl -c "$drivePath" | grep -iq "routine in progress"
+	do
+		sleep 10s
+	done
+
+	output="$(smartctl -q errorsonly -a "$drivePath" 2>&1)"
+
+	if [[ -n "$output" ]]
+	then
+		echo "$drivePath has errors"
+		hasOutput=1
+	fi
+
+done < <( echo "$drives" )
+
+if [[ "$hasOutput" -eq 0 ]]
+then
+	echo "no hard drive errors found"
+fi
+

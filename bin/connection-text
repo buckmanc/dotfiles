@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+ips+="192.0.43.10"
+ips+=$'\n'
+ips+="8.8.8.8"
+ips+=$'\n'
+ips+="4.2.2.2"
+
+lastFailCount=0
+
+while true
+do
+	# pick a random IP to test
+	testIP="$(echo "$ips" | shuf -n 1)"
+
+	echo -n "pinging $testIP..."
+
+	# test it
+	if ping -c 5 "$testIP" 2>&1 > /dev/null
+	then
+		echo " success"
+		lastFailCount=0
+	else
+		echo " failure"
+		((lastFailCount++))
+	fi
+
+	# only consider the internet down with three consecutive failures
+	if [[ "$lastFailCount" -ge 3 ]]
+	then
+		msg="the internet appears to be down"
+		echo "$msg"
+		"$HOME/bin_local/txtme" "$msg"
+		# "$HOME/bin_local/txtk" "$msg"
+
+		while true
+		do
+			# text when internet is restored and wait to go back to checking for it to fail again
+			if ping -c 5 "$testIP" 2>&1 > /dev/null
+			then
+				msg="internet is back"
+				echo "$msg"
+				"$HOME/bin_local/txtme" "$msg"
+				"$HOME/bin_local/txtk" "$msg"
+
+				break
+			fi
+
+			sleep 2m
+		done
+	fi
+
+	# if the last test was good, wait longer to test again
+	if [[ "$lastFailCount" == 0 ]]
+	then
+		sleep 15m
+	else
+		sleep 2m
+	fi
+done

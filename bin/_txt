@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+numberPath="$1"
+text="$2"
+
+dir="$(dirname "$numberPath")"
+
+if [[ ! -d "$dir" ]]
+then
+	mkdir "$dir"
+fi
+if [[ ! -f "$numberPath" ]]
+then
+	touch "$numberPath"
+fi
+
+number="$(cat "$numberPath")"
+justnumber="$(echo "$number" | grep -Po '^[^@]+')"
+
+if [[ -z "$number" ]]
+then
+	echo "no number found in $numberPath"
+elif (type termux-sms-send >/dev/null 2>&1)
+then
+	termux-sms-send -n "$justnumber" "$text"
+elif (type mutt >/dev/null 2>&1)
+then
+	echo "$text" | mutt "$number"
+else
+	echo "no program found to send texts with"
+	return 1
+fi
