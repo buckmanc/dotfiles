@@ -112,6 +112,7 @@
 	demonological	en-US
 	Des	en-US
 	DeSantis	en-US
+	deserialize	en-US
 	Deus	en-US
 	dev	en-US
 	devs	en-US
@@ -392,6 +393,7 @@
 	secondaries	en-US
 	secrеting	en-US
 	selah	en-US
+	serialize	en-US
 	SGDQ	en-US
 	SGDQ2017	en-US
 	SGDQ2018	en-US
