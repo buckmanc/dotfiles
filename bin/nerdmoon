@@ -9,8 +9,11 @@ nerdmoonGlyphs="$("$HOME/bin/_nerdmoon_glyphs")"
 url="wttr.in/?format=%M"
 moonday="$(timeout 10s bash -c "curl -s \"${url}\"")"
 
-logPath="${HOME}/.logs/nerdmoon/$(date -Iseconds).txt"
+logPath="${HOME}/.logs/nerdmoon/$(date '+%Y%m').txt"
 mkdir -p "${HOME}/.logs/nerdmoon/"
+
+echo "--------------------" >> "${logPath}"
+echo "date:     $(date '+%F %R')" >> "${logPath}"
 echo "url:      ${url}" >> "${logPath}"
 echo "response: ${moonday}" >> "${logPath}"
 

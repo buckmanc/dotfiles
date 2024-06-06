@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+logPath="$HOME/.logs/speedtest/$(date +'%Y%m').log"
+logDir="$(dirname "$logPath")"
+
+mkdir -p "$logDir"
+
+if [[ ! -f "$logPath" ]]
+then
+	echo "Date,Download,Upload,Ping" >> "$logPath"
+fi
+
+results="$(speedtest --simple || speedtest --simple || speedtest --simple 2>&1)"
+resDate="$(date '+%F %R')"
+resPing="$(echo "$results" | grep -iPo '(?<=^ping: ).+$')"
+resDl="$(echo "$results" | grep -iPo '(?<=^download: ).+$')"
+resUl="$(echo "$results" | grep -iPo '(?<=^upload: ).+$')"
+
+if [[ -z "$resDl" ]]
+then
+	output="$resDate,$results"
+else
+	output="$resDate,$resDl,$resUl,$resPing"
+fi
+
+echo "$output" | tee -a "$logPath"

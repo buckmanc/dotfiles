@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+logPath="$HOME/.logs/connection_text/$(date +'%Y%m').log"
+logDir="$(dirname "$logPath")"
+
+mkdir -p "$logDir"
+
+if [[ "$OSTYPE" = "msys" ]]
+then
+	pingy="ping -n 5"
+else
+	pingy="ping -c 5"
+fi
+
 ips+="192.0.43.10"
 ips+=$'\n'
 ips+="8.8.8.8"
@@ -13,15 +25,16 @@ do
 	# pick a random IP to test
 	testIP="$(echo "$ips" | shuf -n 1)"
 
-	echo -n "pinging $testIP..."
+	dateString="$(date '+%F %R')"
+	printf '%-22s' "$dateString pinging $testIP..." | tee -a "$logPath"
 
 	# test it
-	if ping -c 5 "$testIP" 2>&1 > /dev/null
+	if $pingy "$testIP" 2>&1 > /dev/null
 	then
-		echo " success"
+		echo " success" | tee -a "$logPath"
 		lastFailCount=0
 	else
-		echo " failure"
+		echo " failure" | tee -a "$logPath"
 		((lastFailCount++))
 	fi
 
@@ -29,32 +42,33 @@ do
 	if [[ "$lastFailCount" -ge 3 ]]
 	then
 		msg="the internet appears to be down"
-		echo "$msg"
-		"$HOME/bin_local/txtme" "$msg"
-		# "$HOME/bin_local/txtk" "$msg"
+		echo "$msg" | tee -a "$logPath"
+		# can't send when the internet is down
+		# "$HOME/bin/txtme" "$msg"
+		# "$HOME/bin/txtk" "$msg"
 
 		while true
 		do
 			# text when internet is restored and wait to go back to checking for it to fail again
-			if ping -c 5 "$testIP" 2>&1 > /dev/null
+			if $pingy "$testIP" 2>&1 > /dev/null
 			then
 				msg="internet is back"
-				echo "$msg"
-				"$HOME/bin_local/txtme" "$msg"
-				"$HOME/bin_local/txtk" "$msg"
+				echo "$msg" | tee -a "$logPath"
+				"$HOME/bin/txtme" "$msg" 2>%1
+				"$HOME/bin/txtk" "$msg" 2>%1
 
 				break
 			fi
 
-			sleep 2m
+			sleep 1m
 		done
 	fi
 
 	# if the last test was good, wait longer to test again
 	if [[ "$lastFailCount" == 0 ]]
 	then
-		sleep 15m
+		sleep 10m
 	else
-		sleep 2m
+		sleep 1m
 	fi
 done
