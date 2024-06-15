@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+# supports termux, linux, and git bash on windows
+
+if (type termux-wifi-scaninfo >/dev/null 2>&1)
+then
+	# turn json output into sorta csv
+	# termux-wifi-scaninfo does not actively scan, only returns results of the last scan
+	logLines=$(termux-wifi-scaninfo | jq -r '.[] | "\"\(.ssid)\",\(.bssid)"')
+	deviceName="phone"
+elif (type nmcli >/dev/null 2>&1)
+then
+	# split on unescaped :
+	# blank SSIDs start with the separator, so fix those
+	# unescape remaining :
+	logLines="$(nmcli --get-values 'ssid,bssid' dev wifi | perl -pe 's/(.*)(?<=[^\\]):(.+)/"$1",$2/g' | perl -pe 's/^:/"",/g' | perl -pe 's/\\:/:/g')"
+	deviceName="$HOSTNAME"
+elif (type netsh >/dev/null 2>&1)
+then
+	# run a wifi scan if possible
+	# otherwise netsh just returns the results of the last scan
+	if (type wifi >/dev/null 2>&1)
+	then
+		wifi scan >/dev/null 2>&1
+	else
+		echo "consider installing winwifi to actively scan, instead of logging the results of the prior scan"
+		echo "pip install winwifi"
+	fi
+
+	logLines="$(netsh wlan show networks mode=bssid | grep -i ssid | tr -d '\r' | perl -00pe 's/SSID \d+ : ?(.*?)?\n +BSSID \d+ +: ([^\s\n]+)/"$1",$2/g')"
+	ssid=""
+
+	# netsh groups bssids under ssids, so need to expand those out
+	while read -r line
+	do
+		if echo "$line" | grep -Piq '^"'
+		then
+			ssid="$(echo "$line" | grep -Pio '^"[^"]*"')"
+			tempLogLine="$line"
+			# echo "ssid tempLogLine: $tempLogLine"
+		else
+			bssid="$(echo "$line" | grep -Pio '\S+$')"
+			tempLogLine="$ssid,$bssid"
+			# echo "bssid tempLogLine: $tempLogLine"
+		fi
+
+		tempLogLines+="$tempLogLine"$'\n'
+	done < <( echo "$logLines" )
+
+	tempLogLines="$(echo "$tempLogLines" | perl -00pe 's/\n+$//g')"
+	logLines="$tempLogLines"
+	deviceName="$HOSTNAME"
+else
+	echo "couldn't find a program to scan wifi with"
+	return 1
+fi
+
+logPath="${HOME}/.logs/wifi/${deviceName,,}_$(date +'%Y%m').log"
+logDir=$(dirname "${logPath}")
+dateString="$(date +'%Y%m%d,%H%M,')"
+
+mkdir -p "${logDir}"
+touch -a "${logPath}"
+newRecords=0
+
+# iterate over lines / networks
+while read -r logLine
+do
+	# only log new stuff
+	if ! grep -iq "${logLine}" "${logDir}/"*
+	then
+		echo "$dateString$logLine" | tee -a "${logPath}"
+		newRecords=1
+	fi
+done < <( echo "$logLines" )
+
+if [[ "$newRecords" -eq 0 ]]
+then
+	echo "no new networks found"
+fi

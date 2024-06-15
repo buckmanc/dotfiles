@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# speed test cannot be run on minutes 0 or 30
+# servers seem to auto block then
+
 logPath="$HOME/.logs/speedtest/$(date +'%Y%m').log"
 logDir="$(dirname "$logPath")"
 
@@ -10,7 +13,8 @@ then
 	echo "Date,Download,Upload,Ping" >> "$logPath"
 fi
 
-results="$(speedtest --simple || speedtest --simple || speedtest --simple 2>&1)"
+results="$(speedtest --simple --secure || speedtest --simple --secure || speedtest --simple --secure 2>&1)"
+
 resDate="$(date '+%F %R')"
 resPing="$(echo "$results" | grep -iPo '(?<=^ping: ).+$')"
 resDl="$(echo "$results" | grep -iPo '(?<=^download: ).+$')"

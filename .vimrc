@@ -30,6 +30,9 @@ set whichwrap+=<,>,h,l	" allow moving to next line from the ends
 set backspace=indent,eol,start	" 'normal' backspace behavior
 set undodir=~/.vim/undodir	" where to save undo history
 set undofile			" enable persistent undo
+set backupdir=~/.vim/backupdir  " backups
+set backup
+set directory=~/.vim/swap
 set mouse=		" disable mouse/touch controls
 set clipboard=		" unjoin from system clipboard on windows for consistent cross-platform behaviour
 
@@ -115,6 +118,16 @@ command GitAddMe Git add %:p
 " create the undo dir if it doesn't exist
 if !isdirectory(&undodir)
 	call mkdir(&undodir, "p")
+endif
+
+" create the backup dir if it doesn't exist
+if !isdirectory(&backupdir)
+	call mkdir(&backupdir, "p")
+endif
+
+" create the swap dir if it doesn't exist
+if !isdirectory(&directory)
+	call mkdir(&directory, "p")
 endif
 
 if has('autocmd')
