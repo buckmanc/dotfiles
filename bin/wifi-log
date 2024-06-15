@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# supports termux, linux, and git bash on windows
+# supports termux, ubuntu, ubuntu server, pi, git bash on windows, and likely more
 
 if (type termux-wifi-scaninfo >/dev/null 2>&1)
 then
@@ -14,7 +14,14 @@ then
 	# blank SSIDs start with the separator, so fix those
 	# unescape remaining :
 	logLines="$(nmcli --get-values 'ssid,bssid' dev wifi | perl -pe 's/(.*)(?<=[^\\]):(.+)/"$1",$2/g' | perl -pe 's/^:/"",/g' | perl -pe 's/\\:/:/g')"
-	deviceName="$HOSTNAME"
+elif (type iwlist >/dev/null 2>&1) || [[ -x /sbin/iwlist ]]
+then
+	# find iwlist if it's not on path
+	iwlistCommand="$(which iwlist || echo "/sbin/iwlist")"
+
+	# iwlist usually needs sudo to show more than just the connected network
+	logLines="$($iwlistCommand wlan0 scan | grep -iP '(ssid|address)' | perl -00pe 's/ +Cell \d+ - Address: (.+)\n +ESSID:([^\n]+)/$2,$1/g')"
+
 elif (type netsh >/dev/null 2>&1)
 then
 	# run a wifi scan if possible
@@ -49,10 +56,19 @@ then
 
 	tempLogLines="$(echo "$tempLogLines" | perl -00pe 's/\n+$//g')"
 	logLines="$tempLogLines"
-	deviceName="$HOSTNAME"
 else
 	echo "couldn't find a program to scan wifi with"
 	return 1
+fi
+
+if [[ -z "$deviceName" ]]
+then
+	deviceName="$HOSTNAME"
+fi
+
+if [[ -z "$deviceName" ]] && (type hostname >/dev/null 2>&1)
+then
+	deviceName="$(hostname)"
 fi
 
 logPath="${HOME}/.logs/wifi/${deviceName,,}_$(date +'%Y%m').log"
@@ -62,6 +78,8 @@ dateString="$(date +'%Y%m%d,%H%M,')"
 mkdir -p "${logDir}"
 touch -a "${logPath}"
 newRecords=0
+
+# echo "logLines: $logLines"
 
 # iterate over lines / networks
 while read -r logLine
