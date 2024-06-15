@@ -63,6 +63,8 @@ do
 	if [[ ! "${oldFullPath}" -ef "${newFullPath}" ]]
 	then
 		echo "moving $oldShortPath..."
+		dir="$(dirname "$newFullPath")"
+		mkdir -p "$dir"
 		mv "${oldFullPath}" "${newFullPath}"
 	fi
 
