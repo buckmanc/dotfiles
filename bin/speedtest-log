@@ -3,28 +3,17 @@
 # speed test cannot be run on minutes 0 or 30
 # servers seem to auto block then
 
-logPath="$HOME/.logs/speedtest/$(date +'%Y%m').log"
-logDir="$(dirname "$logPath")"
-
-mkdir -p "$logDir"
-
-if [[ ! -f "$logPath" ]]
-then
-	echo "Date,Download,Upload,Ping" >> "$logPath"
-fi
-
 results="$(speedtest --simple --secure || speedtest --simple --secure || speedtest --simple --secure 2>&1)"
 
-resDate="$(date '+%F %R')"
 resPing="$(echo "$results" | grep -iPo '(?<=^ping: ).+$')"
 resDl="$(echo "$results" | grep -iPo '(?<=^download: ).+$')"
 resUl="$(echo "$results" | grep -iPo '(?<=^upload: ).+$')"
 
 if [[ -z "$resDl" ]]
 then
-	output="$resDate,$results"
+	output="$results"
 else
-	output="$resDate,$resDl,$resUl,$resPing"
+	output="$resDl,$resUl,$resPing"
 fi
 
-echo "$output" | tee -a "$logPath"
+"$HOME/bin/_log" speedtest "$output" --all
