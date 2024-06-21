@@ -4,8 +4,6 @@ bluetoothctl power on
 
 optLoop=0
 optAllDeets=0
-timeoutTime=30
-timeoutTimePlus=$((timeoutTime+5))
 newRecords=0
 
 for arg in "$@"
@@ -19,6 +17,14 @@ do
 	fi
 done
 
+timeoutTime=30
+timeoutTimePlus=$((timeoutTime+5))
+if [[ "$optLoop" == "0" ]]
+then
+	timeoutCommand="timeout --preserve-status $timeoutTimePlus"
+fi
+
+macAddyRegex='([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
 start="$EPOCHSECONDS"
 
 echo "scanning..."
@@ -32,24 +38,28 @@ do
 	# strip control chars
 	line=$(echo "$line" | ansi2txt | perl -pe 's/[\cA\cB]//g') 
 	# event=$(echo "$line" | grep -Pio '^\[\w+?\] ' | perl -pe 's/[ \[\]]//g')
-	# deviceName=$(echo "$line" | perl -pe 's/^(\S+?) (\S+?) (\S+?) (.+)$/\4/g')
-	macAddy=$(echo "$line" | grep -Pio '([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})')
+	deviceName=$(echo "$line" | perl -pe 's/^(\S+?) (\S+?) (\S+?) (.+)$/\4/g')
+	macAddy=$(echo "$line" | grep -Pio "$macAddyRegex" | head -n 1)
 
 
 	bInfo=$(bluetoothctl info "$macAddy")
 	bName=$(echo "$bInfo" | grep -Pio '(?<=name: ).+?(?=     |$)')
 
-	# # only accept device name from the "new" event of the main scan
-	# # otherwise, use the one nabbed from bluetoothctl info
-	# if [ "$event" != "NEW" ]
-	# then
-	# 	deviceName="$bName"
-	# fi
+	# use the name from bluetoothctl info if present
+	if [[ -n "$bName" ]]
+	then
+		deviceName="$bName"
+	fi
 
-	# device name from bluetoothctl info seems more reliable than from the scan
-	# "new" event *usually* has the name but sometimes has the mac address instead
-	# logResult="$("$HOME/bin/_log" "bluetooth" "$deviceName,$macAddy")"
-	logResult="$("$HOME/bin/_log" "bluetooth" "$bName,$macAddy")"
+	if echo "$deviceName" | grep -Piq '(rssi|txpower): '
+	then
+		deviceName=''
+	else
+		# temp logging to assist in debugging
+		"$HOME/bin/_log" "bluetooth-raw" "$line,$bName" > /dev/null
+	fi
+
+	logResult="$("$HOME/bin/_log" "bluetooth" "\"$deviceName\",$macAddy")"
 
 	if [[ "$optAllDeets" == "1" ]]
 	then
@@ -76,7 +86,7 @@ do
 
 # read bluetooth scan one line at a time, with a hard timeout in case no lines are ever returned for the above timeout to hit
 # using timeoutTimePlus to favor clean timeout over hard timeout
-done < <( stdbuf -oL timeout --preserve-status "$timeoutTimePlus" bluetoothctl scan on )
+done < <( stdbuf -oL $timeoutCommand bluetoothctl scan on )
 
 if [[ "$newRecords" == "0" && "$optLoop" == "0" ]]
 then
