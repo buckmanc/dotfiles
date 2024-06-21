@@ -88,6 +88,7 @@ CJ
 clergical
 cli
 Cocomelon
+compy
 config
 convo
 cosleep
@@ -267,6 +268,7 @@ lifesigns
 lofi
 Logitech
 lunner
+M2
 Machina
 magick
 mahjong
@@ -319,6 +321,7 @@ paracord
 parter
 pathing
 Pattinson
+PCIe
 personhood
 pinky
 PJ
@@ -419,6 +422,7 @@ sproc
 sqlbulkcopy
 SqlBulkCopy
 SSH'ing
+SSID
 stabby
 stardrive
 starship
@@ -477,6 +481,7 @@ unvaccinated
 unvaxxed
 upsert
 Urfaust
+usb
 UX
 vax
 vaxxed
@@ -498,6 +503,7 @@ wfh
 what'd
 whatevs
 whoever's
+wifi
 wii
 Willem
 woohoo

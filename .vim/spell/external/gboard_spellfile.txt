@@ -89,6 +89,7 @@
 	clergical	en-US
 	cli	en-US
 	Cocomelon	en-US
+	compy	en-US
 	config	en-US
 	convo	en-US
 	cosleep	en-US
@@ -268,6 +269,7 @@
 	lofi	en-US
 	Logitech	en-US
 	lunner	en-US
+	M2	en-US
 	Machina	en-US
 	magick	en-US
 	mahjong	en-US
@@ -320,6 +322,7 @@
 	parter	en-US
 	pathing	en-US
 	Pattinson	en-US
+	PCIe	en-US
 	personhood	en-US
 	pinky	en-US
 	PJ	en-US
@@ -420,6 +423,7 @@
 	sqlbulkcopy	en-US
 	SqlBulkCopy	en-US
 	SSH'ing	en-US
+	SSID	en-US
 	stabby	en-US
 	stardrive	en-US
 	starship	en-US
@@ -478,6 +482,7 @@
 	unvaxxed	en-US
 	upsert	en-US
 	Urfaust	en-US
+	usb	en-US
 	UX	en-US
 	vax	en-US
 	vaxxed	en-US
@@ -499,6 +504,7 @@
 	what'd	en-US
 	whatevs	en-US
 	whoever's	en-US
+	wifi	en-US
 	wii	en-US
 	Willem	en-US
 	woohoo	en-US

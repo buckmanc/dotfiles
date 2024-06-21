@@ -1,4 +1,5 @@
 well met
+merry meet
 carpe diem
 carpe noctum
 hail!
@@ -11,9 +12,12 @@ nice to see you
 it's been a while
 howdy
 Ahoy!
+ahoy-hoy
 What's up, Buttercup
 Welcome, traveler
 How are you keeping?
+How do you do?
+What's shakin'?
 I am honored by your presence
 good day
 Care to dance?
@@ -21,10 +25,16 @@ I bid thee a hearty welcome
 Well aren't you a sore for sight eyes
 What'll it be?
 Having the usual today?
+Well slap my liver and call me a pickle
+Well X my Y and call me a Z
+Am I getting paid for this?
+Here we go again
 #star trek
 Something new from Forcas Three?
 Temba, at rest
 Set phasers to stun
+Welcome aboard
+May this be the first of many visits.
 #alexa
 good morning, sunshine
 #shakespeare
@@ -45,3 +55,8 @@ Fate rewards us with acquaintance!
 Hails and horns!
 #gideon the ninth
 Saddle up, sunshine.
+#sanderson
+Carp Diem. Seize the fish.
+Carp Diem. Fish the day.
+#elder scrolls
+I used to be an adventurer like you
