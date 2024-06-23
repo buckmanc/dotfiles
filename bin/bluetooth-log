@@ -17,15 +17,14 @@ do
 	fi
 done
 
-timeoutTime=30
-timeoutTimePlus=$((timeoutTime+5))
 if [[ "$optLoop" == "0" ]]
 then
-	timeoutCommand="timeout --preserve-status $timeoutTimePlus"
+	timeoutTime=30
+else
+	timeoutTime=99999
 fi
 
 macAddyRegex='([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
-start="$EPOCHSECONDS"
 
 echo "scanning..."
 while read -r line
@@ -51,7 +50,7 @@ do
 		deviceName="$bName"
 	fi
 
-	if echo "$deviceName" | grep -Piq '(rssi|txpower): '
+	if echo "$deviceName" | grep -Piq '(rssi|txpower): ' || echo "$deviceName" | grep -Piq "$macAddyRegex"
 	then
 		deviceName=''
 	else
@@ -77,16 +76,8 @@ do
 		newRecords=1
 	fi
 
-	# scan until timeout unless told to loop
-	# hopefully this hits more than the hard timeout
-	if [[ "$optLoop" == "0" ]] && (( EPOCHSECONDS-start > timeoutTime ))
-	then
-		break
-	fi
-
-# read bluetooth scan one line at a time, with a hard timeout in case no lines are ever returned for the above timeout to hit
-# using timeoutTimePlus to favor clean timeout over hard timeout
-done < <( stdbuf -oL $timeoutCommand bluetoothctl scan on )
+# timeout option is required for non interactive scanning
+done < <( stdbuf -oL bluetoothctl --timeout "$timeoutTime" scan on )
 
 if [[ "$newRecords" == "0" && "$optLoop" == "0" ]]
 then
