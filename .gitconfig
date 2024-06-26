@@ -9,6 +9,7 @@
 	# short stat
 	stat=status -s
 	statu=status -s
+	sat=status -s
 	# comm=!git diff --check && git commit
 	# diff check and dotnet test before committing
 	comm=!"~/bin/git-commit-check && git commit"
