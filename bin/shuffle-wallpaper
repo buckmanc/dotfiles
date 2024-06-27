@@ -298,7 +298,15 @@ then
 	# if this file is in your dotfiles it will exist every time
 	xfceTermRcPath="$HOME/.config/xfce4/terminal/terminalrc"
 
-	perl -pi -e "s|(?<=^BackgroundImageFile=).+$|$paperPath|g" "$xfceTermRcPath"
+	if [[ -f "$xfceTermRcPath" ]]
+	then
+		perl -pi -e "s|(?<=^BackgroundImageFile=).+$|$paperPath|g" "$xfceTermRcPath"
+	fi
+
+	if ( type xfconf-query >/dev/null 2>&1 )
+	then
+		xfconf-query -c xfce4-terminal -p /background-image-file -s "$paperPath"
+	fi
 
 else
 	echo "OS $OSTYPE not yet supported"
