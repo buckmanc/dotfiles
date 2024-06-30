@@ -76,7 +76,7 @@ do
 	logResult="$("$HOME/bin/_log" wifi "$logLines")"
 
 	# transform nopers message
-	if echo "$logResult" | grep -Piq "^no new"
+	if echo "$logResult" | grep -Piq "^(no new|please provide)"
 	then
 		# but only if not looping forever
 		if [[ "$optLoop" == "0" ]]
