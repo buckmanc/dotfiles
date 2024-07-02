@@ -4,8 +4,7 @@ url="$1"
 
 if [[ -z "$url" ]]
 then
-	echo "need a url to ping"
-	exit 1
+	url="$("$HOME/bin/_get-test-ip")"
 fi
 
 if [[ "$OSTYPE" = "msys" ]]

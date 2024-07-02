@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+ips+="192.0.43.10"
+ips+=$'\n'
+ips+="8.8.8.8"
+ips+=$'\n'
+ips+="4.2.2.2"
+
+echo "$ips" | shuf -n 1 --random-source='/dev/urandom'

@@ -12,18 +12,12 @@ else
 	pingy="ping -c 5"
 fi
 
-ips+="192.0.43.10"
-ips+=$'\n'
-ips+="8.8.8.8"
-ips+=$'\n'
-ips+="4.2.2.2"
-
 lastFailCount=0
 
 while true
 do
 	# pick a random IP to test
-	testIP="$(echo "$ips" | shuf -n 1)"
+	testIP="$("$HOME/bin/_get-test-ip")"
 
 	dateString="$(date '+%F %R')"
 	printf '%-22s' "$dateString pinging $testIP..." | tee -a "$logPath"
