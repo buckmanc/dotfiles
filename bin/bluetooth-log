@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 # pass --loop or --all
-"$HOME/bin/bluetoothctl-aggressive-pair.sh" --log-only "$@"
+"$HOME/bin/bluetoothctl-aggressive-pair" --log-only "$@"

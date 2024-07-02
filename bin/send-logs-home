@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if [[ -d "$HOME/.logs/wifi" ]]
+then
+	rsync -hau $HOME/.logs/wifi* loggy:.logs/
+fi
+
+if [[ -d "$HOME/.logs/bluetooth" ]]
+then
+	rsync -hau $HOME/.logs/bluetooth* loggy:.logs/
+fi

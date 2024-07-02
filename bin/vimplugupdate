@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-vimPlugPath="~/.vim/plug.vim"
+vimPlugPath="$HOME/.vim/plug.vim"
 
 if [[ ! -f "$vimPlugPath" ]]
 then

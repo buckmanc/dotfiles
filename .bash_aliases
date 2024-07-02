@@ -2,6 +2,7 @@
 
 # aliases / functions starting with an x indicate a custom variant of a command, or a way of avoiding overwriting another command
 
+alias unmount=umount
 alias xtree='tree -fi | grep -i --color'
 alias xgrep='grep -i --color'
 alias xhistory='history | cut -c 8- | grep -ivE  "^x?hist(ory | )" | grep -i --color'
