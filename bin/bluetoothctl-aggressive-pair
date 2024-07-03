@@ -5,7 +5,14 @@
 #changed fast connect to true
 
 gitRoot="$(git rev-parse --show-toplevel)"
-exclusionsPath="$gitRoot/bt_exclusions.config"
+backupDir="$HOME/.local/share/bluetoothctl-aggressive-pair"
+if [[ -z "$gitRoot" ]] || [[ "$gitRoot" == "$HOME" ]]
+then
+	mkdir -p "$backupDir"
+	exclusionsPath="$backupDir/bt_exclusions.config"
+else
+	exclusionsPath="$gitRoot/bt_exclusions.config"
+fi
 logPathConnectAttemptsDir="$HOME/.logs/bluetooth_connect_attempts/"
 mkdir -p "$logPathConnectAttemptsDir"
 
