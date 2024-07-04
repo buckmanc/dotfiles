@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+screen -ls | grep -iPo '^\s+\d+\.' | grep -iPo '\d+' | xargs kill
