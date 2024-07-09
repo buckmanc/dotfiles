@@ -71,6 +71,7 @@
 	cancelling	en-US
 	canopic	en-US
 	Carcassonne	en-US
+	carpe	en-US
 	castlevania	en-US
 	castlevanias	en-US
 	CEOs	en-US
@@ -118,6 +119,7 @@
 	dev	en-US
 	devs	en-US
 	dialer	en-US
+	diem	en-US
 	dir	en-US
 	direness	en-US
 	dirs	en-US
@@ -196,6 +198,7 @@
 	groc	en-US
 	hacky	en-US
 	hander	en-US
+	hardstyle	en-US
 	hatewatch	en-US
 	hatewatched	en-US
 	headachey	en-US
@@ -214,6 +217,7 @@
 	homeschooling	en-US
 	homeworld	en-US
 	hotdog	en-US
+	hotdogs	en-US
 	https	en-US
 	HTTSKWLALSKWT	en-US
 	hubbers	en-US
@@ -252,6 +256,7 @@
 	Juneteenth	en-US
 	kaiju	en-US
 	Khaw	en-US
+	kinda	en-US
 	Kondo's	en-US
 	Kool	en-US
 	Koolaid	en-US
@@ -276,6 +281,7 @@
 	Malwart	en-US
 	marvelling	en-US
 	matryoshka	en-US
+	mayhaps	en-US
 	me's	en-US
 	mech	en-US
 	meds	en-US
@@ -304,6 +310,7 @@
 	neurodivergent	en-US
 	neurotypical	en-US
 	Nextdoor	en-US
+	noctum	en-US
 	noir	en-US
 	noob	en-US
 	NPC	en-US
@@ -390,6 +397,7 @@
 	rsync	en-US
 	Runza	en-US
 	scanline	en-US
+	SCOTUS	en-US
 	scripter	en-US
 	scritches	en-US
 	se	en-US
@@ -413,7 +421,9 @@
 	skelly	en-US
 	skyping	en-US
 	sleevies	en-US
+	smithing	en-US
 	sms	en-US
+	snapple	en-US
 	societally	en-US
 	sp	en-US
 	spoop	en-US
@@ -443,6 +453,7 @@
 	Termux	en-US
 	Tetris	en-US
 	tf	en-US
+	TGI	en-US
 	that	en-US
 	that'll	en-US
 	themself	en-US
@@ -476,6 +487,7 @@
 	unintuitive	en-US
 	unkillable	en-US
 	unmaintainable	en-US
+	Uno	en-US
 	unshielded	en-US
 	Unsplash	en-US
 	unvaccinated	en-US
@@ -494,6 +506,7 @@
 	waifu	en-US
 	Walgreens	en-US
 	walmart	en-US
+	wanna	en-US
 	Warnke	en-US
 	watchings	en-US
 	watchthrough	en-US
@@ -539,19 +552,31 @@
 	Adolin	en-US
 	Adolin's	en-US
 	Adonalsium	en-US
+	Aetherius	en-US
+	Akatosh	en-US
+	Akatosh's	en-US
 	Albus	en-US
 	Allant	en-US
 	Amaram	en-US
 	AMatWQ	en-US
 	Amphibia	en-US
+	Anu	en-US
 	Arishem	en-US
+	Arkay	en-US
+	Arkay's	en-US
 	Armello	en-US
 	Ashyn	en-US
+	Azura	en-US
+	Azura's	en-US
+	Bat'leth	en-US
+	Battar	en-US
 	batton	en-US
 	Beckman	en-US
 	Bioshock	en-US
 	Bjendal	en-US
 	Blart	en-US
+	Boethiah	en-US
+	Boethiah's	en-US
 	Bonemass	en-US
 	Borat	en-US
 	BotW	en-US
@@ -569,11 +594,17 @@
 	Cherryh	en-US
 	Cherryh's	en-US
 	CJ	en-US
+	Clavicus	en-US
+	Clavicus's	en-US
 	coppermind	en-US
 	Cosmere	en-US
+	cosmere	en-US
 	Cytoverse	en-US
 	Dalinar's	en-US
 	deathsquitos	en-US
+	Dibella	en-US
+	Dibella's	en-US
+	Domi	en-US
 	Drakon	en-US
 	draugr	en-US
 	Drominad	en-US
@@ -596,6 +627,7 @@
 	FFXIV	en-US
 	flayers	en-US
 	FMA	en-US
+	Forcas	en-US
 	Frasier	en-US
 	Froglord	en-US
 	Froglord's	en-US
@@ -603,6 +635,7 @@
 	fulings	en-US
 	Fullmetal	en-US
 	GameChops	en-US
+	gancho	en-US
 	Ghibli	en-US
 	Godrick	en-US
 	Gollum	en-US
@@ -612,33 +645,58 @@
 	GTA	en-US
 	Guacamelee	en-US
 	Hackmud	en-US
+	Hermaeus	en-US
+	Hermaeus's	en-US
 	highstorm	en-US
+	Hircine	en-US
+	Hircine's	en-US
 	Hoid	en-US
 	Homelander	en-US
+	Hylia	en-US
+	Hylia's	en-US
 	Hyrule	en-US
 	Ico	en-US
 	IDW	en-US
+	Ithelia	en-US
+	Ithelia's	en-US
 	Janeway	en-US
+	Jarl	en-US
 	Jokabi	en-US
+	Julianos	en-US
+	Julianos's	en-US
 	Juste	en-US
+	Jyggalag	en-US
+	Jyggalag's	en-US
 	KACL	en-US
 	Kaladin	en-US
 	Kaladin's	en-US
 	Karun	en-US
 	keese	en-US
 	Komashi	en-US
+	Kynareth	en-US
+	Kynareth's	en-US
 	l4d2	en-US
 	L4D2	en-US
 	Li'l	en-US
 	Lothlorien	en-US
 	LotR	en-US
+	luma	en-US
 	Lumar	en-US
+	lumas	en-US
 	Madoka	en-US
 	Magica	en-US
+	Malacath	en-US
+	Malacath's	en-US
 	Maneater	en-US
 	Maquis	en-US
 	MCU	en-US
+	Mehrunes	en-US
+	Mehrunes's	en-US
 	Melnibone	en-US
+	Mephala	en-US
+	Mephala's	en-US
+	Meridia	en-US
+	Meridia's	en-US
 	Metroid	en-US
 	MHR	en-US
 	Mikel	en-US
@@ -646,12 +704,18 @@
 	Minecrafted	en-US
 	Mistborn	en-US
 	Moder	en-US
+	Molag	en-US
+	Molag's	en-US
 	Morbius	en-US
 	Murderbot	en-US
+	Mystara	en-US
 	Mythos	en-US
 	Nalthis	en-US
+	Namira	en-US
+	Namira's	en-US
 	Narwa	en-US
 	Nightvale	en-US
+	Nocturnal's	en-US
 	Oathbringer	en-US
 	Obrodai	en-US
 	ODST	en-US
@@ -659,7 +723,10 @@
 	Paddington	en-US
 	Parangosky	en-US
 	perpendicularity	en-US
+	Peryite	en-US
+	Peryite's	en-US
 	Phallanx	en-US
+	phasers	en-US
 	Phasmophobia	en-US
 	Pikmin	en-US
 	pogo	en-US
@@ -668,6 +735,7 @@
 	pokestops	en-US
 	Promare	en-US
 	Puella	en-US
+	Qapla	en-US
 	Quantumania	en-US
 	re4	en-US
 	Riker	en-US
@@ -680,14 +748,18 @@
 	Sanderson	en-US
 	Sanderson's	en-US
 	Sando	en-US
+	Sanguine's	en-US
 	Scadrial	en-US
 	Sel	en-US
 	Shadowland	en-US
 	Shallan	en-US
 	Shallan's	en-US
 	Shazam	en-US
+	Sheogorath	en-US
+	Sheogorath's	en-US
 	shinies	en-US
 	Silmarillion	en-US
+	Skooma	en-US
 	Skyrim	en-US
 	SotN	en-US
 	Spiderman	en-US
@@ -697,12 +769,17 @@
 	Starfleet	en-US
 	Stargate	en-US
 	Starsight	en-US
+	Stendarr	en-US
+	Stendarr's	en-US
 	Steris	en-US
 	Stormblessed	en-US
 	Stormlight	en-US
 	stormlight	en-US
 	Sunreach	en-US
 	Taldain	en-US
+	Talos	en-US
+	Talos's	en-US
+	Temba	en-US
 	Threnody	en-US
 	TMNT	en-US
 	TNG	en-US
@@ -713,6 +790,8 @@
 	Undertale	en-US
 	UNSC	en-US
 	UTol	en-US
+	Vaermina	en-US
+	Vaermina's	en-US
 	Valheim	en-US
 	Vax	en-US
 	Wakanda	en-US
@@ -723,8 +802,12 @@
 	Wonka's	en-US
 	Wyndle	en-US
 	wyrm	en-US
+	Yaezir's	en-US
 	Yolen	en-US
+	Ysmir's	en-US
 	Yumi	en-US
+	Zenithar	en-US
+	Zenithar's	en-US
 	afaik	en-US
 	afk	en-US
 	asl	en-US

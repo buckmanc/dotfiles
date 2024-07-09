@@ -56,8 +56,6 @@
       "backgroundImageAlignment": "bottomRight",
       "bellStyle": "window",
       "colorScheme": "Synth Midnight Dark",
-      "experimental.pixelShaderPath": "%HOMEDRIVE%%HOMEPATH%\\.config\\WindowsTerminal\\RetroPlus.hlsl",
-      "experimental.retroTerminalEffect": true,
       "font": {
         "face": "FiraCode NFM",
         "size": 14
