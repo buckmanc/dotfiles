@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+# clear the screen
+# echo -n "[2J[;H"
+
+# default logo type/position
+logoArgs="--logo-type small --logo-position top --logo-padding-left 9"
+
+# no column method is working under motd
+columns=$(tput cols)
+if [[ -z "$columns" || "$columns" -le 0 ]]
+then
+	columns="$COLUMNS"
+fi
+
+if [[ -n "$columns" ]] && [[ "$columns" -gt 0 ]]
+then
+	if [[ "$columns" -lt 40 ]]
+	then
+		# do nothing, leave the default
+		:
+	elif [[ "$columns" -lt 80 ]]
+	then
+		# logoArgs="--logo-type small"
+		# do nothing, leave the default
+		:
+	else
+		# reset to big, left logo
+		logoArgs=""
+	fi
+fi
+
+# effective --color=always
+# fix excess newlines on the logo
+# shorten storage abbreviations
+output="$(\
+fastfetch --pipe false $logoArgs "$@" | \
+	perl -00pe 's/\n{3,}/\n\n/g' | \
+	perl -pe 's/([PTGMK])iB/$1/g' \
+)"
+
+# separate and remove the disk lines so they can be formatted
+diskLines="$(echo "$output" | grep -Pi ' / ')"
+output="$(echo "$output" | grep -Piv ' / ')"
+
+# turn the disk lines into columns
+diskLines="$(echo "$diskLines" | sed 's| / |@|g' | column -t -s '@' -o ' / ' | sed 's/ (/@/g' | column -t -s '@' -o ' (' | perl -pe 's/( )([^ ]+ [PTGMB]i?B?)( {2,})/$3$2$1/g')"
+
+# append disk columns
+output="$output"$'\n'"$diskLines"
+
+printf "%s" "$output"
+
+# spit out a new line if unlikely to be running as an motd
+if [[ ! ( -z "$USERNAME" && -z "$USER" ) ]]
+then
+	echo
+fi
