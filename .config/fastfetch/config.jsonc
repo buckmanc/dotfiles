@@ -9,7 +9,7 @@
     }
   },
   "modules": [
-    {"type":"custom", "format":"           󰭟󰭟󰭟  󰭟󰭟󰭟"},
+    {"type":"custom", "format":"          󰭟󰭟󰭟  󰭟󰭟󰭟"},
     {
       "type": "title",
       "color": {
@@ -19,20 +19,20 @@
       },
       "key":""
     },
-    {"type":"host","key":"󱄄"},
+    {"type":"host","key":"󰇅"},
     {"type":"os","key":"󰕈"},
     {"type":"kernel","key":"󰌽"},
+    {"type":"display","key":"󱄄"},
+    {"type":"de","key":"󰧨"},
     {"type":"shell","key":""},
-    {"type":"display","key":" "},
-    {"type":"de","key":" "},
     {"type":"terminal","key":""},
     {"type":"packages","key":"󰏖"},
     {"type":"uptime","key":"󰥔","format":"{1}d {2}h {3}m"},
-    {"type":"custom", "format":"           󰭟󰭟󰭟  󰭟󰭟󰭟"},
+    {"type":"custom", "format":"          󰭟󰭟󰭟  󰭟󰭟󰭟"},
     {"type":"cpuusage","key":"󰻠"},
     {"type":"memory","key":"󰍛"},
-    {"type":"disk","key":"󰋊","format":"{1} / {2} ({3})"},
-    {"type":"battery","key":" "},
-    {"type":"poweradapter","key":" "}
+    {"type":"battery","key":"󱊣","format":"{5} - {4}"},
+    {"type":"poweradapter","key":" "},
+    {"type":"disk","key":"󰋊","format":"{1} / {2} ({3})"}
   ]
 }

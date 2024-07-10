@@ -3,8 +3,20 @@
 # clear the screen
 # echo -n "[2J[;H"
 
+isMotd=0
+if [[ -z "$USERNAME" && -z "$USER" && "$OSTYPE" != "linux-android" ]]
+then
+	isMotd=1
+fi
+
 # default logo type/position
-logoArgs="--logo-type small --logo-position top --logo-padding-left 9"
+if [[ "$OSTYPE" == "linux-android" ]]
+then
+	logoPad=5
+else
+	logoPad=8
+fi
+logoArgs="--logo-type small --logo-position top --logo-padding-left $logoPad"
 
 # no column method is working under motd
 columns=$(tput cols)
@@ -40,11 +52,18 @@ fastfetch --pipe false $logoArgs "$@" | \
 )"
 
 # separate and remove the disk lines so they can be formatted
-diskLines="$(echo "$output" | grep -Pi ' / ')"
-output="$(echo "$output" | grep -Piv ' / ')"
+diskLines="$(echo "$output" | grep -Pi ' / .+\d%')"
+output="$(echo "$output" | grep -Piv ' / .+\d%')"
 
 # turn the disk lines into columns
-diskLines="$(echo "$diskLines" | sed 's| / |@|g' | column -t -s '@' -o ' / ' | sed 's/ (/@/g' | column -t -s '@' -o ' (' | perl -pe 's/( )([^ ]+ [PTGMB]i?B?)( {2,})/$3$2$1/g')"
+diskLines="$(echo "$diskLines" | perl -pe 's| / |@|g' | column -t -s '@' -o ' / ' | perl -pe 's/ \(/@/g' | column -t -s '@' -o ' (' | perl -pe 's/( )([^ ]+ [PTGMB]i?B?)( {2,})/$3$2$1/g')"
+
+# for some reason column under motd is changing nerdfont symbols to escape sequences
+# thus a need to transform them back
+if [[ "$isMotd" == "1" ]]
+then
+	diskLines="$(echo -e "$diskLines")"
+fi
 
 # append disk columns
 output="$output"$'\n'"$diskLines"
@@ -52,7 +71,7 @@ output="$output"$'\n'"$diskLines"
 printf "%s" "$output"
 
 # spit out a new line if unlikely to be running as an motd
-if [[ ! ( -z "$USERNAME" && -z "$USER" ) ]]
+if [[ "$isMotd" == "0" ]]
 then
 	echo
 fi
