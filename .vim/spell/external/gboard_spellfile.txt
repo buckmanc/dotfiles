@@ -18,16 +18,13 @@
 	airpod	en-US
 	airpods	en-US
 	amened	en-US
-	api	en-US
 	apnea	en-US
 	appt	en-US
 	Arby's	en-US
 	arcana	en-US
 	args	en-US
-	ascii	en-US
 	ASMR	en-US
 	assholery	en-US
-	async	en-US
 	audiobook	en-US
 	audiobooks	en-US
 	autocatching	en-US
@@ -44,7 +41,6 @@
 	biome	en-US
 	biomes	en-US
 	Blackcraft	en-US
-	Blazor	en-US
 	blegh	en-US
 	BLM	en-US
 	blotchiness	en-US
@@ -88,10 +84,8 @@
 	cishet	en-US
 	CJ	en-US
 	clergical	en-US
-	cli	en-US
 	Cocomelon	en-US
 	compy	en-US
-	config	en-US
 	convo	en-US
 	cosleep	en-US
 	cosleeping	en-US
@@ -114,15 +108,12 @@
 	demonological	en-US
 	Des	en-US
 	DeSantis	en-US
-	deserialize	en-US
 	Deus	en-US
 	dev	en-US
 	devs	en-US
 	dialer	en-US
 	diem	en-US
-	dir	en-US
 	direness	en-US
-	dirs	en-US
 	discog	en-US
 	disincentivizing	en-US
 	dl	en-US
@@ -136,9 +127,6 @@
 	doneness	en-US
 	donut	en-US
 	doofus	en-US
-	dotfile	en-US
-	dotfiles	en-US
-	dotnet	en-US
 	DQ	en-US
 	dropbox	en-US
 	Duggar	en-US
@@ -154,10 +142,6 @@
 	Elrod	en-US
 	else's	en-US
 	esque	en-US
-	ETL	en-US
-	etl	en-US
-	etls	en-US
-	ETLs	en-US
 	etsy	en-US
 	exvangelical	en-US
 	fakeout	en-US
@@ -184,10 +168,6 @@
 	GDQ	en-US
 	geez	en-US
 	Gemma	en-US
-	gitconfig	en-US
-	github	en-US
-	gitignore	en-US
-	globbing	en-US
 	glyphs	en-US
 	gma	en-US
 	Goodreads	en-US
@@ -195,7 +175,6 @@
 	grammaflage	en-US
 	greataxe	en-US
 	grifter	en-US
-	groc	en-US
 	hacky	en-US
 	hander	en-US
 	hardstyle	en-US
@@ -232,16 +211,13 @@
 	IGN	en-US
 	IGN's	en-US
 	IM's	en-US
-	ImageMagick	en-US
 	IMing	en-US
 	immunocompromised	en-US
 	incel	en-US
 	ing	en-US
 	ingrate	en-US
-	intellisense	en-US
 	interoception	en-US
 	intersex	en-US
-	interwebs	en-US
 	ish	en-US
 	isos	en-US
 	Ittibitz	en-US
@@ -252,7 +228,6 @@
 	journaling	en-US
 	journalled	en-US
 	journalling	en-US
-	json	en-US
 	Juneteenth	en-US
 	kaiju	en-US
 	Khaw	en-US
@@ -274,7 +249,6 @@
 	lofi	en-US
 	Logitech	en-US
 	lunner	en-US
-	M2	en-US
 	Machina	en-US
 	magick	en-US
 	mahjong	en-US
@@ -301,9 +275,6 @@
 	moreso	en-US
 	mothership	en-US
 	mowhawk	en-US
-	mssql	en-US
-	MSSQL	en-US
-	mvp	en-US
 	nanite	en-US
 	nerddom	en-US
 	nerdfont	en-US
@@ -329,7 +300,6 @@
 	parter	en-US
 	pathing	en-US
 	Pattinson	en-US
-	PCIe	en-US
 	personhood	en-US
 	pinky	en-US
 	PJ	en-US
@@ -340,13 +310,10 @@
 	podge	en-US
 	pokemon	en-US
 	positivity	en-US
-	PowerShell	en-US
-	powershell	en-US
 	ppl	en-US
 	pre	en-US
 	prep'd	en-US
 	prep'ing	en-US
-	programmatically	en-US
 	PS5	en-US
 	psp	en-US
 	pukified	en-US
@@ -356,30 +323,15 @@
 	Q2	en-US
 	Q3	en-US
 	Q4	en-US
-	quickgrid	en-US
 	Quiplash	en-US
 	ramen	en-US
 	ramped	en-US
 	rando	en-US
-	raspi	en-US
-	raspi1	en-US
-	raspi2	en-US
-	raspi3	en-US
-	raspi4	en-US
-	raspi5	en-US
-	rasterize	en-US
-	readme	en-US
 	realtor	en-US
-	recency	en-US
 	recraft	en-US
 	Reddit	en-US
 	regen	en-US
 	rehome	en-US
-	remoting	en-US
-	repo	en-US
-	repoint	en-US
-	repointed	en-US
-	repointing	en-US
 	resemblant	en-US
 	retroarch	en-US
 	retweeted	en-US
@@ -398,13 +350,11 @@
 	Runza	en-US
 	scanline	en-US
 	SCOTUS	en-US
-	scripter	en-US
 	scritches	en-US
 	se	en-US
 	secondaries	en-US
 	secrеting	en-US
 	selah	en-US
-	serialize	en-US
 	SGDQ	en-US
 	SGDQ2017	en-US
 	SGDQ2018	en-US
@@ -429,11 +379,6 @@
 	spoop	en-US
 	spotify	en-US
 	Spotify	en-US
-	sproc	en-US
-	sqlbulkcopy	en-US
-	SqlBulkCopy	en-US
-	SSH'ing	en-US
-	SSID	en-US
 	stabby	en-US
 	stardrive	en-US
 	starship	en-US
@@ -441,16 +386,9 @@
 	strategizing	en-US
 	stressors	en-US
 	stuffie	en-US
-	svg	en-US
-	svgs	en-US
-	symlink	en-US
-	symlinked	en-US
-	symlinks	en-US
 	talkbox	en-US
 	taskbar	en-US
 	taze	en-US
-	Teradata	en-US
-	Termux	en-US
 	Tetris	en-US
 	tf	en-US
 	TGI	en-US
@@ -483,26 +421,18 @@
 	underpowered	en-US
 	unfort	en-US
 	ungrounded	en-US
-	uninstallability	en-US
 	unintuitive	en-US
 	unkillable	en-US
-	unmaintainable	en-US
 	Uno	en-US
 	unshielded	en-US
 	Unsplash	en-US
 	unvaccinated	en-US
 	unvaxxed	en-US
-	upsert	en-US
 	Urfaust	en-US
-	usb	en-US
-	UX	en-US
 	vax	en-US
 	vaxxed	en-US
-	VBS	en-US
 	vibing	en-US
 	vids	en-US
-	vimrc	en-US
-	VPN	en-US
 	waifu	en-US
 	Walgreens	en-US
 	walmart	en-US
@@ -532,7 +462,6 @@
 	x8	en-US
 	x9	en-US
 	xmas	en-US
-	Xubuntu	en-US
 	xyz	en-US
 	Y2K	en-US
 	yacking	en-US
@@ -786,6 +715,7 @@
 	TotK	en-US
 	TotK's	en-US
 	tricorder	en-US
+	Triforce	en-US
 	Udolpho	en-US
 	Undertale	en-US
 	UNSC	en-US
@@ -1910,3 +1840,74 @@
 	Paldea	en-US
 	Sinnoh	en-US
 	Unova	en-US
+	api	en-US
+	ascii	en-US
+	async	en-US
+	Blazor	en-US
+	cli	en-US
+	config	en-US
+	deserialize	en-US
+	dir	en-US
+	dirs	en-US
+	dotfile	en-US
+	dotfiles	en-US
+	dotnet	en-US
+	ETL	en-US
+	etl	en-US
+	etls	en-US
+	ETLs	en-US
+	gitconfig	en-US
+	github	en-US
+	gitignore	en-US
+	globbing	en-US
+	groc	en-US
+	ImageMagick	en-US
+	intellisense	en-US
+	interwebs	en-US
+	json	en-US
+	M2	en-US
+	mssql	en-US
+	MSSQL	en-US
+	mvp	en-US
+	PCIe	en-US
+	PowerShell	en-US
+	powershell	en-US
+	programmatically	en-US
+	quickgrid	en-US
+	raspi	en-US
+	raspi1	en-US
+	raspi2	en-US
+	raspi3	en-US
+	raspi4	en-US
+	raspi5	en-US
+	rasterize	en-US
+	readme	en-US
+	recency	en-US
+	remoting	en-US
+	repo	en-US
+	repoint	en-US
+	repointed	en-US
+	repointing	en-US
+	scripter	en-US
+	serialize	en-US
+	sproc	en-US
+	sqlbulkcopy	en-US
+	SqlBulkCopy	en-US
+	SSH'ing	en-US
+	SSID	en-US
+	svg	en-US
+	svgs	en-US
+	symlink	en-US
+	symlinked	en-US
+	symlinks	en-US
+	Teradata	en-US
+	Termux	en-US
+	uninstallability	en-US
+	unmaintainable	en-US
+	upsert	en-US
+	usb	en-US
+	UX	en-US
+	VBS	en-US
+	vimrc	en-US
+	VPN	en-US
+	Xubuntu	en-US
