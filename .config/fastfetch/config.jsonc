@@ -14,12 +14,8 @@
     },
     {
       "type": "title",
-      "color": {
-        "user": "0;39",
-        "at": "0;39",
-        "host": "0;39"
-      },
-      "key": ""
+      "key": "",
+	  "format":"{1}@{2}"
     },
     {
       "type": "host",
@@ -35,7 +31,8 @@
     },
     {
       "type": "display",
-      "key": "󱄄"
+      "key": "󱄄",
+	  "format": "{1}x{2} @ {3}Hz ({6})"
     },
     {
       "type": "de",
@@ -44,14 +41,6 @@
     {
       "type": "shell",
       "key": ""
-    },
-    {
-      "type": "terminal",
-      "key": ""
-    },
-    {
-      "type": "packages",
-      "key": "󰏖"
     },
     {
       "type": "uptime",
