@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+src="$(cat)"
+output="$(echo "$src" | \
+	perl -pe 's/[\r\n]//g' | \
+	grep -iPo '<table.+?</ ?table ?>' | \
+	perl -pe 's/\n/\n\n/g' | \
+	perl -pe 's/<tr ?[^>]*?>/\n/g' | \
+	perl -pe 's/<(td|th) ?[^>]*?>/|/g' | \
+	perl -pe 's/<[^>]+?>//g' | \
+	perl -pe 's/(^\||\|$)//g' \
+	)"
+
+output="$(echo "$output" | "$HOME/bin/htmldecode")"
+echo "$output"

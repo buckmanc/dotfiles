@@ -1,0 +1,197 @@
+#!/usr/bin/env bash
+
+# help="Usage: $(basename "$0") [OPTION] PATTERN
+help="Usage: $FUNCNAME [OPTION] PATTERN
+
+Search for books from Project Gutenberg! And cache aggressively to avoid being blocked.
+
+Options:
+	-v open file in vim (allows for saving progress if you open the file directly)
+	-o print the og, unaltered book
+	-l list matches from the catalog
+	-d list debug vars; urls, ids, paths
+
+	-h  show this help text
+"
+# TODO -e epub
+optVim=0
+optOG=0
+optList=0
+optDebug=0
+optEpub=0
+query=''
+
+for i in "$@"; do
+	if [[ "$i" =~ ^-.*v ]]
+	then
+		optVim=1
+	fi
+
+	if [[ "$i" =~ ^-.*o ]]
+	then
+		optOG=1
+
+	fi
+
+	if [[ "$i" =~ ^-.*l ]]
+	then
+		optList=1
+	fi
+
+	if [[ "$i" =~ ^-.*d ]]
+	then
+		optDebug=1
+	fi
+
+	if [[ "$i" =~ ^-.*h ]]
+	then
+		optHelp=1
+	fi
+
+	if [[ "$i" =~ ^-.*e ]]
+	then
+		optEpub=1
+	fi
+
+	if [[ "$i" =~ ^[^-] ]]
+	then
+		query="$i"
+	fi
+done
+
+# printallvars | grep ^opt
+
+if [ -z "${query}" ] || [ "$optHelp" == 1 ]
+then
+	echo "$help"
+	exit 0
+fi
+
+cacheDir="$HOME/.cache/gutenbook"
+csvPath="${cacheDir}/gutenberg_catalog.csv"
+catalogURI="https://www.gutenberg.org/cache/epub/feeds/pg_catalog.csv"
+
+if [ "${optDebug}" == 1 ]
+then
+	echo "cacheDir:   ${cacheDir}"
+	echo "csvPath:    ${csvPath}"
+	echo "catalogURI: ${catalogURI}"
+fi
+
+# download the csv catalog if it's newer or not yet saved
+if [ ! -f "$csvPath" ]
+then
+	curl --create-dirs --location --compressed --max-time 30 --silent -o "${csvPath}" "${catalogURI}"
+else
+	curl --create-dirs --location --compressed --max-time 30 --silent -o "${csvPath}" -z "${csvPath}" "${catalogURI}"
+fi
+
+# read the file, ignoring anything that isn't formatted correctly and labelled "text"
+# as of now this is only 1) the "Sound" category and 2) CSV error lines
+# the perl regex replaces new lines that are in a field with spaces
+csvText=$(cat "$csvPath" | perl -00pe 's/\r?\n(\D)/ \1/g' | grep -iP '^\d+,Text,')
+
+# list matches, highlighting ID and matches
+# TODO got some duplicate code here
+if [ "${optList}" == 1 ]
+then
+	echo "${csvText}" | grep -iP "${query}" | grep -iP --color "^\d+|${query}"
+	exit 0
+fi
+
+# only nab the first match
+bookID=$(echo "${csvText}" | grep -iP "${query}" | grep -iPo "^\d+" | head -n 1)
+bookPath="${cacheDir}/${bookID}.txt"
+bookOgPath="${cacheDir}/${bookID}_og.txt"
+bookPageURI="https://www.gutenberg.org/ebooks/${bookID}"
+bookURI="https://www.gutenberg.org/ebooks/${bookID}.txt.utf-8"
+
+if [ "${optDebug}" == 1 ]
+then
+	echo "bookID:     ${bookID}"
+	echo "bookPath:   ${bookPath}"
+	echo "bookOgPath: ${bookOgPath}"
+	echo "bookURI:    ${bookURI}"
+	echo "bookPageURI:${bookPageURI}"
+fi
+
+if [ -z "${bookID}" ]
+then
+	echo "could not find ${query}"
+	exit 1
+fi
+
+# ( set -o posix ; set ) | xgrep book
+
+# download the book if it's not yet saved
+if [ ! -f "${bookPath}" ]
+then
+	# check for http errors first
+	httpStatus=$(curl -ILs "${bookURI}" -w "%{http_code}" | tail -n 1)
+	if [[ "${httpStatus}" == "404" ]]
+	then
+		echo "bad book url"
+		exit 1
+	elif [[ "${httpStatus}" != "200" ]]
+	then
+		echo "there was an http problem while fetching the book. http status: ${httpStatus}"
+		exit 1
+	fi
+
+	# grab the book
+	bookText=$(curl --create-dirs --location --compressed --silent --max-time 30 "${bookURI}")
+
+	# don't write that book on failure
+	if [ -z "${bookText}" ]
+	then
+		echo "something went wrong"
+		exit 1
+	elif [[ "${bookText}" =~ ^\<\!DOCTYPE ]]
+	then
+		echo "got a web page instead of a book"
+		exit 1
+	fi
+
+	echo "${bookText}" > "${bookOgPath}"
+
+	startLine=$(echo "${bookText}" | grep -Pin -m1 '\s*?\*\*\*\s*?start( \w+)?( \w+)? project gutenberg' | cut -f1 -d:)
+	if [ -n "${startLine}" ]
+	then
+		# echo "startLine: ${startLine}"
+		startLine=$((startLine + 1))
+		bookText=$(echo "${bookText}" | tail -n +$startLine)
+	fi
+
+	endLine=$(echo "${bookText}" | grep -Pin -m1 '\s*?\*\*\*\s*?end( \w+)?( \w+)? project gutenberg' | cut -f1 -d:)
+	if [ -n "${endLine}" ]
+	then
+		# echo "endLine: ${startLine}"
+		endLine=$((endLine - 1))
+		bookText=$(echo "${bookText}" | head -n +$endLine)
+	fi
+
+	# unwrap the hardwrapping
+	# replace solitary newlines that aren't followed by a space
+	bookText=$(echo "${bookText}" | dos2unix | perl -00pe 's/(?<!\n)\n(?![\n\s])/ /g')
+
+	echo "${bookText}" > "${bookPath}"
+fi
+
+if [ "${optOG}" == 1 ]
+then
+	outPath="${bookOgPath}"
+else
+	outPath="${bookPath}"
+fi
+
+if [ "${optDebug}" == 1 ]
+then
+	echo -n "book stats: "
+	cat "${outPath}" | wc
+	# serve up the book!
+elif [ "${optVim}" == 1 ]
+then
+	vim "${outPath}" +"set nospell"
+else
+	cat "${outPath}" 
+fi

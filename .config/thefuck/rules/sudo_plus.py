@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 # adduser non-sudo error
-patterns = ['only root may']
+# openvpn-install
+patterns = ['only root may',
+        'run with superuser privilage']
 
 
 def match(command):

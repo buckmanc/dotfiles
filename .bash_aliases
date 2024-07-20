@@ -22,6 +22,16 @@ alias :q="echo \"this isn't vim, "'$("$HOME/bin/message-error-name")'"\""
 alias :wq=":q"
 alias :x=":q"
 alias x=":q"
+# long exa
+alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
+
+# aliases for bin stuff
+alias xleep='xsleep'
+alias bookenberg='gutenbook'
+alias screeny='xscreen'
+alias xscr='xscreen'
+alias xscrn='xscreen'
+
 if [ -d ~/.jpsxdec ]
 then
 	alias jpsxdec='java -jar ~/.jpsxdec/jpsxdec.jar'
@@ -36,35 +46,6 @@ if (type magick >/dev/null 2>&1)
 then
 	alias convert='magick convert'
 fi
-
-screeny() {
-	name=$1
-	if [ -z "$name" ]
-	then
-		name="screeny_weeny"
-	fi
-
-	if [ -z "$2" ]
-	then
-		screen -DRRqS "$name" -L
-	fi
-}
- 
-if [ -f /usr/share/bash-completion/completions/screen ]
-then
-	source /usr/share/bash-completion/completions/screen
-fi
-# https://superuser.com/a/947240
-function _complete_screeny() {
-	local does_screen_exist=$(type -t _screen_sessions)
-	local cur=$2 # Needed by _screen_sessions
-	if [[ "function" = "${does_screen_exist}" ]]; then
-		# _screen_sessions "Detached"
-		_screen_sessions
-	fi
-}
-export -f _complete_screeny
-complete -F _complete_screeny -o default screeny
 
 mkdircd() {
 	mkdir "$1"
@@ -182,9 +163,6 @@ done | while read -r n_hex; do
 done
 printf "\n"
 }
-
-# long exa
-alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
 
 builderrors(){
 	
@@ -493,207 +471,6 @@ xwttr(){
 	fi
 }
 
-gutenbook(){
-
-# help="Usage: $(basename "$0") [OPTION] PATTERN
-help="Usage: $FUNCNAME [OPTION] PATTERN
-
-Search for books from Project Gutenberg! And cache aggressively to avoid being blocked.
-
-Options:
-	-v open file in vim (allows for saving progress if you open the file directly)
-	-o print the og, unaltered book
-	-l list matches from the catalog
-	-d list debug vars; urls, ids, paths
-
-	-h  show this help text
-"
-	# TODO -e epub
-	optVim=0
-	optOG=0
-	optList=0
-	optDebug=0
-	optEpub=0
-	query=''
-
-	for i in "$@"; do
-		if [[ "$i" =~ ^-.*v ]]
-		then
-			optVim=1
-		fi
-
-		if [[ "$i" =~ ^-.*o ]]
-		then
-			optOG=1
-
-		fi
-
-		if [[ "$i" =~ ^-.*l ]]
-		then
-			optList=1
-		fi
-
-		if [[ "$i" =~ ^-.*d ]]
-		then
-			optDebug=1
-		fi
-
-		if [[ "$i" =~ ^-.*h ]]
-		then
-			optHelp=1
-		fi
-
-		if [[ "$i" =~ ^-.*e ]]
-		then
-			optEpub=1
-		fi
-
-		if [[ "$i" =~ ^[^-] ]]
-		then
-			query="$i"
-		fi
-	done
-
-	# printallvars | grep ^opt
-
-	if [ -z "${query}" ] || [ "$optHelp" == 1 ]
-	then
-		echo "$help"
-		return 0
-	fi
-
-	cacheDir="$HOME/.cache/gutenbook"
-	csvPath="${cacheDir}/gutenberg_catalog.csv"
-	catalogURI="https://www.gutenberg.org/cache/epub/feeds/pg_catalog.csv"
-
-	if [ "${optDebug}" == 1 ]
-	then
-		echo "cacheDir:   ${cacheDir}"
-		echo "csvPath:    ${csvPath}"
-		echo "catalogURI: ${catalogURI}"
-	fi
-
-	# download the csv catalog if it's newer or not yet saved
-	if [ ! -f "$csvPath" ]
-	then
-		curl --create-dirs --location --compressed --max-time 30 --silent -o "${csvPath}" "${catalogURI}"
-	else
-		curl --create-dirs --location --compressed --max-time 30 --silent -o "${csvPath}" -z "${csvPath}" "${catalogURI}"
-	fi
-
-	# read the file, ignoring anything that isn't formatted correctly and labelled "text"
-	# as of now this is only 1) the "Sound" category and 2) CSV error lines
-	# the perl regex replaces new lines that are in a field with spaces
-	csvText=$(cat "$csvPath" | perl -00pe 's/\r?\n(\D)/ \1/g' | grep -iP '^\d+,Text,')
-
-	# list matches, highlighting ID and matches
-	# TODO got some duplicate code here
-	if [ "${optList}" == 1 ]
-	then
-		echo "${csvText}" | grep -iP "${query}" | grep -iP --color "^\d+|${query}"
-		return 0
-	fi
-
-	# only nab the first match
-	bookID=$(echo "${csvText}" | grep -iP "${query}" | grep -iPo "^\d+" | head -n 1)
-	bookPath="${cacheDir}/${bookID}.txt"
-	bookOgPath="${cacheDir}/${bookID}_og.txt"
-	bookPageURI="https://www.gutenberg.org/ebooks/${bookID}"
-	bookURI="https://www.gutenberg.org/ebooks/${bookID}.txt.utf-8"
-	
-	if [ "${optDebug}" == 1 ]
-	then
-		echo "bookID:     ${bookID}"
-		echo "bookPath:   ${bookPath}"
-		echo "bookOgPath: ${bookOgPath}"
-		echo "bookURI:    ${bookURI}"
-		echo "bookPageURI:${bookPageURI}"
-	fi
-
-	if [ -z "${bookID}" ]
-	then
-		echo "could not find ${query}"
-		return 1
-	fi
-
-	# ( set -o posix ; set ) | xgrep book
-
-	# download the book if it's not yet saved
-	if [ ! -f "${bookPath}" ]
-	then
-		# check for http errors first
-		httpStatus=$(curl -ILs "${bookURI}" -w "%{http_code}" | tail -n 1)
-		if [[ "${httpStatus}" == "404" ]]
-		then
-			echo "bad book url"
-			return 1
-		elif [[ "${httpStatus}" != "200" ]]
-		then
-			echo "there was an http problem while fetching the book. http status: ${httpStatus}"
-			return 1
-		fi
-
-		# grab the book
-		bookText=$(curl --create-dirs --location --compressed --silent --max-time 30 "${bookURI}")
-
-		# don't write that book on failure
-		if [ -z "${bookText}" ]
-		then
-			echo "something went wrong"
-			return 1
-		elif [[ "${bookText}" =~ ^\<\!DOCTYPE ]]
-		then
-			echo "got a web page instead of a book"
-			return 1
-		fi
-
-		echo "${bookText}" > "${bookOgPath}"
-
-		startLine=$(echo "${bookText}" | grep -Pin -m1 '\s*?\*\*\*\s*?start( \w+)?( \w+)? project gutenberg' | cut -f1 -d:)
-		if [ -n "${startLine}" ]
-		then
-			# echo "startLine: ${startLine}"
-    			startLine=$((startLine + 1))
-			bookText=$(echo "${bookText}" | tail -n +$startLine)
-		fi
-
-		endLine=$(echo "${bookText}" | grep -Pin -m1 '\s*?\*\*\*\s*?end( \w+)?( \w+)? project gutenberg' | cut -f1 -d:)
-		if [ -n "${endLine}" ]
-		then
-			# echo "endLine: ${startLine}"
-			endLine=$((endLine - 1))
-			bookText=$(echo "${bookText}" | head -n +$endLine)
-		fi
-
-		# unwrap the hardwrapping
-		# replace solitary newlines that aren't followed by a space
-		bookText=$(echo "${bookText}" | dos2unix | perl -00pe 's/(?<!\n)\n(?![\n\s])/ /g')
-		
-		echo "${bookText}" > "${bookPath}"
-	fi
-
-	if [ "${optOG}" == 1 ]
-	then
-		outPath="${bookOgPath}"
-	else
-		outPath="${bookPath}"
-	fi
-
-	if [ "${optDebug}" == 1 ]
-	then
-		echo -n "book stats: "
-		cat "${outPath}" | wc
-	# serve up the book!
-	elif [ "${optVim}" == 1 ]
-	then
-		vim "${outPath}" +"set nospell"
-	else
-		cat "${outPath}" 
-	fi
-	
-}
-alias bookenberg='gutenbook'
-
 printallvars(){
 	set -o posix; set | sort
 }
@@ -758,12 +535,6 @@ quoter_update(){
 	fi
 }
 
-alias xleep='xsleep'
-
-xrsync() {
-    rsync -Przzut "$1"/* "$2"
-    rsync -Przzut "$2"/* "$1"
-}
 
 dotnewt(){
 

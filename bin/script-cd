@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# allow cd to be used in scripts
+# by injecting a "cd" command into the stream of the parent shell
+# stackoverflow.com/questions/2375003
+
+escapedname=`sed 's/[^a-zA-Z\d._/-]/\\\\&/g' <<< "$1"`
+perl -e 'ioctl(STDIN, 0x5412, $_) for split "", join " ", @ARGV' " cd" "$escapedname" $'\r'

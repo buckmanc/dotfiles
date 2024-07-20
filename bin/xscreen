@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+name=$1
+if [ -z "$name" ]
+then
+	name="screeny_weeny"
+fi
+
+if [ -z "$2" ]
+then
+	screen -DRRqS "$name" -L
+fi

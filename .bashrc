@@ -207,3 +207,20 @@ fi
 if type pandoc >/dev/null 2>&1; then
 	eval "$(pandoc --bash-completion)"
 fi
+
+
+if [[ -f /usr/share/bash-completion/completions/screen ]]
+then
+	source /usr/share/bash-completion/completions/screen
+fi
+# https://superuser.com/a/947240
+function _complete_xscreen() {
+	local does_screen_exist=$(type -t _screen_sessions)
+	local cur=$2 # Needed by _screen_sessions
+	if [[ "function" = "${does_screen_exist}" ]]; then
+		# _screen_sessions "Detached"
+		_screen_sessions
+	fi
+}
+export -f _complete_xscreen
+complete -F _complete_xscreen -o default xscreen
