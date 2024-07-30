@@ -14,6 +14,7 @@ ETL
 etl
 etls
 ETLs
+gif
 gitconfig
 github
 gitignore
@@ -22,12 +23,15 @@ groc
 ImageMagick
 intellisense
 interwebs
+jpeg
+jpg
 json
 M2
 mssql
 MSSQL
 mvp
 PCIe
+png
 PowerShell
 powershell
 programmatically
@@ -60,6 +64,7 @@ symlinked
 symlinks
 Teradata
 Termux
+tiff
 uninstallability
 unmaintainable
 upsert
@@ -68,4 +73,7 @@ UX
 VBS
 vimrc
 VPN
+xls
+xlsm
+xlsx
 Xubuntu

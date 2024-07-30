@@ -72,6 +72,7 @@
 	castlevanias	en-US
 	CEOs	en-US
 	channelling	en-US
+	charcuterie	en-US
 	cheebo	en-US
 	cheerleading	en-US
 	chicky	en-US
@@ -81,11 +82,13 @@
 	chiropraxy	en-US
 	chislic	en-US
 	choco	en-US
+	chonk	en-US
+	chonker	en-US
+	chonkers	en-US
 	cishet	en-US
 	CJ	en-US
 	clergical	en-US
 	Cocomelon	en-US
-	compy	en-US
 	convo	en-US
 	cosleep	en-US
 	cosleeping	en-US
@@ -113,6 +116,7 @@
 	devs	en-US
 	dialer	en-US
 	diem	en-US
+	dimmable	en-US
 	direness	en-US
 	discog	en-US
 	disincentivizing	en-US
@@ -239,7 +243,6 @@
 	Kwik	en-US
 	LaBeouf	en-US
 	Lactaid	en-US
-	lappy	en-US
 	Larkwood's	en-US
 	Lenscrafters	en-US
 	LeVar	en-US
@@ -248,6 +251,7 @@
 	lifesigns	en-US
 	lofi	en-US
 	Logitech	en-US
+	lumen	en-US
 	lunner	en-US
 	Machina	en-US
 	magick	en-US
@@ -259,6 +263,7 @@
 	me's	en-US
 	mech	en-US
 	meds	en-US
+	melonade	en-US
 	meme'd	en-US
 	metroidvania	en-US
 	midwest	en-US
@@ -437,6 +442,7 @@
 	Walgreens	en-US
 	walmart	en-US
 	wanna	en-US
+	Warbreaker	en-US
 	Warnke	en-US
 	watchings	en-US
 	watchthrough	en-US
@@ -738,6 +744,65 @@
 	Yumi	en-US
 	Zenithar	en-US
 	Zenithar's	en-US
+	404'd	en-US
+	AngelCities	en-US
+	arrowed	en-US
+	baleeted	en-US
+	barbzerdry	en-US
+	Bennedetto	en-US
+	breadallelogram	en-US
+	breadpazoid	en-US
+	breadtangle	en-US
+	brhombus	en-US
+	burninate	en-US
+	burninated	en-US
+	burninating	en-US
+	burnination	en-US
+	caffeinergy	en-US
+	cardboardium	en-US
+	compy	en-US
+	concessionstantinople	en-US
+	constabulate	en-US
+	cooldratic	en-US
+	coughiversary	en-US
+	dazzle-mazing	en-US
+	Decemberween	en-US
+	diaperbolical	en-US
+	Embrodak	en-US
+	Emtarkanderundersgunderson	en-US
+	extracurricularrific	en-US
+	fangorious	en-US
+	fangoriously	en-US
+	fangoriousness	en-US
+	fhqwhgads	en-US
+	fleshtangle	en-US
+	Garglemesh	en-US
+	geographist	en-US
+	grood	en-US
+	grumblecakes	en-US
+	ibu-pro-pro	en-US
+	ibupropro	en-US
+	ina-pro-pro	en-US
+	inapropro	en-US
+	jibblies	en-US
+	lappy	en-US
+	mans	en-US
+	melonade	en-US
+	piemonade	en-US
+	preeeeow	en-US
+	pseudoname	en-US
+	raccoonolith	en-US
+	sammich	en-US
+	sbemail	en-US
+	sblounskched	en-US
+	someteen	en-US
+	spamvertisement	en-US
+	squishtangle	en-US
+	streamins	en-US
+	stummy	en-US
+	sworded	en-US
+	voip	en-US
+	wing-a-ling	en-US
 	afaik	en-US
 	afk	en-US
 	asl	en-US
@@ -1856,6 +1921,7 @@
 	etl	en-US
 	etls	en-US
 	ETLs	en-US
+	gif	en-US
 	gitconfig	en-US
 	github	en-US
 	gitignore	en-US
@@ -1864,12 +1930,15 @@
 	ImageMagick	en-US
 	intellisense	en-US
 	interwebs	en-US
+	jpeg	en-US
+	jpg	en-US
 	json	en-US
 	M2	en-US
 	mssql	en-US
 	MSSQL	en-US
 	mvp	en-US
 	PCIe	en-US
+	png	en-US
 	PowerShell	en-US
 	powershell	en-US
 	programmatically	en-US
@@ -1902,6 +1971,7 @@
 	symlinks	en-US
 	Teradata	en-US
 	Termux	en-US
+	tiff	en-US
 	uninstallability	en-US
 	unmaintainable	en-US
 	upsert	en-US
@@ -1910,4 +1980,7 @@
 	VBS	en-US
 	vimrc	en-US
 	VPN	en-US
+	xls	en-US
+	xlsm	en-US
+	xlsx	en-US
 	Xubuntu	en-US
