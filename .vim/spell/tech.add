@@ -2,6 +2,7 @@ api
 ascii
 async
 Blazor
+CC's
 cli
 config
 deserialize
@@ -20,9 +21,11 @@ github
 gitignore
 globbing
 groc
+Hotmail
 ImageMagick
 intellisense
 interwebs
+Jira
 jpeg
 jpg
 json
@@ -53,6 +56,7 @@ repointing
 scripter
 serialize
 sproc
+sprocs
 sqlbulkcopy
 SqlBulkCopy
 SSH'ing
@@ -68,11 +72,14 @@ tiff
 uninstallability
 unmaintainable
 upsert
+uptime
 usb
 UX
 VBS
 vimrc
 VPN
+WebEx
+WebExs
 xls
 xlsm
 xlsx
