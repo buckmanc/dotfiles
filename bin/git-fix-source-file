@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+git ls-files | "$HOME/bin/fix-source-file" "$@"

@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+# TODO
+# test
+# accept files list or dirs
+# wrap with git-fix-source-file
+
+optTw=0
+optCarriageReturn=0
+optCommentSpacing=0
+optTab=0
+for arg in "$@"
+do
+	if [[ "$arg" == "--tw" || "$arg" == "--trailing-whitespace" || "$arg" == "-w" ]]
+	then
+		optTw=1
+		shift
+	elif [[ "$arg" == "--nl" || "$arg" == "--carriage-return" || "$arg" == "--cr" || "$arg" == "-c" ]]
+	then
+		optCarriageReturn=1
+		shift
+	elif [[ "$arg" == "--tab" || "$arg" == "-t" ]]
+	then
+		optTab=1
+		shift
+	elif [[ "$arg" == "--comment" || "$arg" == "-C" ]]
+	then
+		optCommentSpacing=1
+		shift
+	elif [[ "$arg" == "--all" || "$arg" == "-a" ]]
+	then
+		optTw=1
+		optCarriageReturn=1
+		optTab=1
+		optCommentSpacing=1
+		shift
+	elif [[ "$arg" == "-"* ]]
+	then
+		echo "invalid arg: $arg"
+		exit 1
+	fi
+done
+
+
+files=( "$@" )
+
+# add pipe args to the list of regular args
+if [ ! -t 0 ]
+then
+	readarray pipeArgs < /dev/stdin
+	files+=( "${pipeArgs[@]}" )
+fi
+
+# iterate over args
+for file in "${files[@]}"
+do
+	# skip empty args
+	if [[ -z "$file" ]]
+	then
+		continue
+	fi
+
+	fileType="$(file --brief --mime-type "$oldFullPath" | cut -d '/' -f1)"
+
+	# skip non text files
+	if [[ "$fileType" != "text" ]]
+	then
+		continue
+	fi
+
+	if [[ "$optTw" == 1 ]] && grep -Piq '[ \t]+$' "$file"
+	then
+		# perl -pe is better but not as reliably available
+		sed -ir 's/[ \t]\+$//g' "$file"
+	elif [[ "$optCarriageReturn" == 1 ]] && grep -Piq '\r' "$file"
+	then
+		sed -ir 's/\r//g' "$file"
+	elif [[ "$optTab" == 1 ]] && grep -Piq '^\W*?\t+?\W*?\w'
+	then
+		expand -i -t 4 "$file"
+	elif [[ "$optCommentSpacing" == 1 ]]
+	then
+		fileExt="${file##*.,,}"
+		if [[ "$fileExt" == "cs" ]]
+		then
+			commentChar="\\"
+		elif [[ "$fileExt" == "sql" ]]
+		then
+			commentChar="--"
+		else
+			# using # for the default comment char, so no need to test for bash scripts
+			commentChar="#"
+		fi
+
+		perl -pe "s#(?<=[^${commentChar}])${commentChar}(?=[^ !\$${commentChar}])#${commentChar} #g" "$file"
+		perl -pe "s#(?<=^)${commentChar}(?=[^ !\$${commentChar}])#${commentChar} #g" "$file"
+	fi
+
+done

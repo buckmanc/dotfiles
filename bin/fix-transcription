@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# designed to refine gboard speech-to-text transcriptions
+
+filePath="$1"
+if [[ -z "$filePath" ]]
+then
+	echo "please provide a filepath"
+	return 1
+elif [[ ! -f "$filePath" ]]
+then
+	echo "file does not exist"
+	return 1
+fi
+
+fileStringOld="$(cat "$filePath")"
+fileStringNew="$(echo "$fileStringOld" | \
+	tr -d '\r' | \
+	perl -pe 's/(?:parentheses|\() ?(.+?)(?: and| end)? ?(?:parentheses|(?<=^[:;])\(|(?<=[^:;])\))/($1)/g' | \
+	perl -pe 's/(?:quote|") ?(.+?)(?: and| end)? ?(?:quote|")/"$1"/g' | \
+	perl -pe 's/(?:asterisk|\*) ?(.+?) ?(?:asterisk|\*)/\*$1\*/g' | \
+	perl -pe 's/(ampersand|and hersand)/&/g' | \
+	perl -pe 's/([\.!\?]"? ?[a-z])/\U\1/g' | \
+	perl -pe 's/(^[a-z])/\U\1/g' | \
+	perl -pe 's/ \.(?=[^\.])/./g' | \
+	perl -pe 's/^ (?=\S)//g' | \
+	perl -pe 's/new line ?/\n/g' | \
+	cat)"
+
+if [[ "$fileStringOld" != "$fileStringNew" ]]
+then
+	echo "$fileStringNew" > "$filePath"
+else
+	echo "no changes"
+fi

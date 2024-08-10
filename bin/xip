@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if [[ "$OSTYPE" == "msys" ]]
+then
+	localIpString="$(ipconfig -all | grep -i 'preferred')"
+else
+	localIpString="$(ip --brief address)"
+fi
+
+echo "$localIpString" | grep -iPo '192[\d\.]+'
+curl ipinfo.io/ip

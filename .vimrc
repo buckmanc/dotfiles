@@ -106,14 +106,30 @@ endfor
 
 " custom date insert command
 " accepts an integer date offset
-function DateStamp(...)
+function DateStampFunc(...)
 	let days = get(a:, 1, 0)
 	let daySeconds = days * 24 * 60 * 60
 	return strftime('%Y-%m-%d', ( localtime() + daySeconds ))
 endfunction
-command -bar -nargs=? Date put =DateStamp(<args>)
-command RunMe !"%:p"
-command GitAddMe Git add %:p
+
+function! GitAddMeFunc(bang)
+	" write if changed
+	:update
+
+	if a:bang == 0
+		" echo "regular add"
+		Git add %:p
+	else
+		" echo "force add"
+		Git add --force %:p
+	endif
+	" echo a:bang
+endfunction
+
+command -bar -nargs=? Date put =DateStampFunc(<args>)
+command RunMe update | !"%:p"
+" TODO: throws "too many args" when called more than once after writing changes on the first run
+command -bang GitAddMe :call GitAddMeFunc(<bang>0)
 
 " create the undo dir if it doesn't exist
 if !isdirectory(&undodir)
@@ -163,7 +179,8 @@ augroup end
 " auto reload vimrc on save
 augroup myvimrc
 	au!
-	au BufWritePost .vimrc so $MYVIMRC
+	" using silent here as the update called in GitAddMeFunc causes this to throw an error
+	au BufWritePost .vimrc silent! source $MYVIMRC
 endif " has('autocmd')
 
 " github.com/junegunn/vim-plug

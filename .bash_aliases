@@ -20,6 +20,7 @@ alias vom='vim'
 alias vin='echo "praise the Ascendant Warrior" ; vim'
 alias :q="echo \"this isn't vim, "'$("$HOME/bin/message-error-name")'"\""
 alias :wq=":q"
+alias :w=":q"
 alias :x=":q"
 alias x=":q"
 # long exa

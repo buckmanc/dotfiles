@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+urls=( "$@" )
+
+# add pipe args to the list of regular args
+if [ ! -t 0 ]
+then
+    readarray pipeArgs < /dev/stdin
+    urls+=( "${pipeArgs[@]}" )
+fi
+
+# iterate over args
+# for url in "${urls[@]}"
+echo "${urls[@]}" | while read -r url
+do
+    # echo "url: $url"
+    curl "$url" | grep -iPo '<a[^>]+href="[^>]+>([^<]+)' | grep -iPo '(?<=>).+$' | cat
+    sleep 5s # don't get blocked
+done
