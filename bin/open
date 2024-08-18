@@ -70,7 +70,9 @@ do
 	# echo "filename: $filename"
 	# echo "absolutepath: $absolutepath"
 
-	cd "$foldername" && $openy "$filename"
+	# cd so that the file opens with the right relative path
+	# subshell so that directory for the above logic remains standard
+	(cd "$foldername" && $openy "$filename")
 
 	log+=("${absolutepath}")
 done

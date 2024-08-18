@@ -36,8 +36,6 @@
 	axe's	en-US
 	B2B	en-US
 	Baahubali	en-US
-	backend	en-US
-	backends	en-US
 	bandana	en-US
 	baselard	en-US
 	Bathory	en-US
@@ -60,6 +58,7 @@
 	booktuber	en-US
 	boop	en-US
 	booped	en-US
+	bootlicker	en-US
 	bootlickers	en-US
 	bork	en-US
 	borked	en-US
@@ -125,6 +124,8 @@
 	deathcore	en-US
 	debilitatingly	en-US
 	decenters	en-US
+	declutter	en-US
+	decluttering	en-US
 	dedupe	en-US
 	deets	en-US
 	demonological	en-US
@@ -168,6 +169,7 @@
 	esque	en-US
 	etsy	en-US
 	exvangelical	en-US
+	Faire	en-US
 	Faires	en-US
 	fakeout	en-US
 	fam	en-US
@@ -198,6 +200,7 @@
 	Gemma	en-US
 	glyphs	en-US
 	gma	en-US
+	gonna	en-US
 	Goodreads	en-US
 	gotta	en-US
 	grammaflage	en-US
@@ -348,6 +351,7 @@
 	ouija	en-US
 	outro	en-US
 	overprotection	en-US
+	oversized	en-US
 	overstimulation	en-US
 	overworld	en-US
 	pachinko	en-US
@@ -358,6 +362,7 @@
 	Pattinson	en-US
 	Pazuzu	en-US
 	personhood	en-US
+	phonk	en-US
 	pickleball	en-US
 	pincher	en-US
 	pinky	en-US
@@ -460,6 +465,7 @@
 	talkbox	en-US
 	taskbar	en-US
 	taze	en-US
+	TDY	en-US
 	Tetris	en-US
 	tf	en-US
 	TGI	en-US
@@ -497,6 +503,7 @@
 	unintuitive	en-US
 	unkillable	en-US
 	Uno	en-US
+	unremodeled	en-US
 	unshielded	en-US
 	Unsplash	en-US
 	unvaccinated	en-US
@@ -552,6 +559,7 @@
 	Zelda	en-US
 	ZeldaSymphony	en-US
 	Zenni	en-US
+	zonked	en-US
 	zonking	en-US
 	Adolin	en-US
 	Adolin's	en-US
@@ -619,6 +627,7 @@
 	Elhokar	en-US
 	Elric	en-US
 	Encanto	en-US
+	Eowyn	en-US
 	Eragon	en-US
 	Eshonai	en-US
 	Espinas	en-US
@@ -2055,6 +2064,8 @@
 	api	en-US
 	ascii	en-US
 	async	en-US
+	backend	en-US
+	backends	en-US
 	Blazor	en-US
 	CC's	en-US
 	cli	en-US

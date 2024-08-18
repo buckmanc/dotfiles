@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+# copy this script to the localPath below and customize as needed
+localPath="$HOME/bin_local/startup"
+
+# prefer a local startup file if it exists
+if [[ -x "$localPath" ]]
+then
+	"$localPath"
+	exit
+fi
+
+fancy-message-hello --no-cow
+
+# wait for internet
+# wait-for-good-ping "8.8.8.8"
+
+dirStartGlobal="$ProgramData/Microsoft/Windows/Start Menu/Programs"
+dirStartLocal="$APPDATA/Microsoft/Windows/Start Menu/Programs"
+
+# TODO verify some of these paths
+echo "opening apps..."
+open ~/.config/autohotkey.ahk
+open "$dirStartGlobal/Notepad++.lnk"
+open "$dirStartGlobal/Outlook.lnk" # I guess if it's installed we should open it, but punches pilot
+open "$dirStartGlobal/Mozilla Firefox.lnk" || open "$dirStartGlobal/Google Chrome.lnk" || open "$dirStartGlobal/Microsoft Edge.lnk" || echo "no browsers found"
+if ( type ms-teams >/dev/null 2>&1 )
+then
+	start "" ms-teams
+else
+	 open "$dirStartGlobal/Discord.lnk" || open "$dirStartGlobal/Slack.lnk" || echo "no slackcords found"
+fi
+open "$dirStartLocal/Beekeeper Studio.lnk"
+open "$dirStartGlobal/Microsoft SQL Server Tools*/SQL Server Management Studio*.lnk"
+open "$dirStartLocal/Caprine.lnk"
+
+shuffle-wallpaper --terminal
+xwt
+
+# echo "opening projects..."
+# open-project '/z/ProjectDir/project/project.sln'
+
+echo "killing apps..."
+xkill onenotem
+xkill node
+xkill msedge
+xkill msedgewebview2
+
+echo "deprioritizing apps..."
+set-process-priority searchindexer idle
+set-process-priority onedrive idle
+set-process-priority dropbox idle
+# set-process-priority ms-teams belownormal
+# set-process-priority outlook belownormal
+set-process-priority windowsterminal abovenormal
+
+# run scripts inline
+nerdmoon_to_starship
+message-lucky-number
+
+echo "done"
+
+"$HOME/bin/press-any-key"

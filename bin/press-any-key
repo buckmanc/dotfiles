@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+message="press any key to continue"
+timeout=60
+
+if [[ $# -gt 0 ]]
+then
+	message="$1"
+fi
+
+if [[ -n "$2" ]]
+then
+	timeout="$2"
+fi
+
+echo
+echo
+echo
+
+for i in $(seq 0 $((timeout-1)))
+do
+	num=$((i%4))
+	# if [[ "$num" -eq 0 ]]
+	# then
+	# 	echo -ne "\r$message"
+	# else
+	# 	echo -n "."
+	# fi
+
+	msg="\e[A\e[A\e[K$message$(for x in $(seq 1 $num); do echo -n "."; done)\n\n"
+
+	echo -en "$msg"
+
+	if read -rs -n1 -t1
+	then
+		break
+	fi
+done
