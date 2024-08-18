@@ -5,7 +5,7 @@ then
 	# TODO make vim open in tabs with -p instead of making multiple calls
 	# try adding all found paths to a var
 	# then running that var through xargs -o to openy program
-	openy=vim
+	openy="xargs -d \n -o vim"
 elif ( type explorer >/dev/null 2>&1)
 then
 	openy=explorer
@@ -37,19 +37,27 @@ do
 
 	# echo $i
 
-	# absolutepath=$(readlink -f "$i")
-	absolutepath=$(realpath --no-symlinks "$i")
+	absolutepath="$i"
+	absolutepath="$(realpath --no-symlinks --quiet "$absolutepath")"
 
-	# if the file doesn't exist try again removing everything after :
-	# makes this function play nice with grep results
-	if [[ ! -f "${absolutepath}" ]]
+	# if file doesn't exist, tweak paths
+	if [[ ! -f "$absolutepath" ]]
 	then
-		absolutepath=$(echo "${absolutepath}" | grep -iPo '^.{2}[^:]+')
+		# grep results: remove everything after ":"
+		if echo "$absolutepath" | grep -iq ':'
+		then
+			absolutepath="$(echo "$i" | grep -iPo '^.{2}[^:]+')"
+		# git short status results
+		else
+			absolutepath="$(echo "$i" | perl -pe 's/^[ A-Z]{2} "?(.+?)"?$/$1/g')"
+		fi
+
+		absolutepath="$(realpath --no-symlinks --quiet "$absolutepath")"
 	fi
 
 	# skip dupes
 	# makes this function play nice with grep results
-	if [[ " ${log[*]} " =~ " ${absolutepath} " ]]
+	if [[ " ${log[*]} " =~ " $absolutepath " ]]
 	then
 		continue
 	fi
@@ -74,7 +82,7 @@ do
 	# subshell so that directory for the above logic remains standard
 	(cd "$foldername" && $openy "$filename")
 
-	log+=("${absolutepath}")
+	log+=("$absolutepath")
 done
 
 # return success
