@@ -2,8 +2,9 @@
 
 message="press any key to continue"
 timeout=60
+optWaitForever=0
 
-if [[ $# -gt 0 ]]
+if [[ $# -gt 0 && -n "$1" ]]
 then
 	message="$1"
 fi
@@ -13,26 +14,42 @@ then
 	timeout="$2"
 fi
 
+if [[ "$timeout" -le 0 ]]
+then
+	timeout=4
+	optWaitForever=1
+fi
+
 echo
 echo
 echo
 
-for i in $(seq 0 $((timeout-1)))
+while true
 do
-	num=$((i%4))
-	# if [[ "$num" -eq 0 ]]
-	# then
-	# 	echo -ne "\r$message"
-	# else
-	# 	echo -n "."
-	# fi
+	for i in $(seq 0 $((timeout-1)))
+	do
+		num=$((i%4))
+		# if [[ "$num" -eq 0 ]]
+		# then
+		# 	echo -ne "\r$message"
+		# else
+		# 	echo -n "."
+		# fi
 
-	msg="\e[A\e[A\e[K$message$(for x in $(seq 1 $num); do echo -n "."; done)\n\n"
+		msg="\e[A\e[A\e[K$message$(for x in $(seq 1 $num); do echo -n "."; done)\n\n"
 
-	echo -en "$msg"
+		echo -en "$msg"
 
-	if read -rs -n1 -t1
+		if read -rs -n1 -t1
+		then
+			optWaitForever=0
+			break
+		fi
+	done
+
+	if [[ "$optWaitForever" == 0 ]]
 	then
 		break
 	fi
 done
+

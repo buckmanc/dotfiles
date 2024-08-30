@@ -17,10 +17,11 @@ fancy-message-hello --no-cow
 
 dirStartGlobal="$ProgramData/Microsoft/Windows/Start Menu/Programs"
 dirStartLocal="$APPDATA/Microsoft/Windows/Start Menu/Programs"
+dirLocalAppData="$LOCALAPPDATA"
 
 # TODO verify some of these paths
 echo "opening apps..."
-open ~/.config/autohotkey.ahk
+open "$dirLocalAppData/Microsoft/WindowsApps/spotify.exe"
 open "$dirStartGlobal/Notepad++.lnk"
 open "$dirStartGlobal/Outlook.lnk" # I guess if it's installed we should open it, but punches pilot
 open "$dirStartGlobal/Mozilla Firefox.lnk" || open "$dirStartGlobal/Google Chrome.lnk" || open "$dirStartGlobal/Microsoft Edge.lnk" || echo "no browsers found"
@@ -31,7 +32,7 @@ else
 	 open "$dirStartGlobal/Discord.lnk" || open "$dirStartGlobal/Slack.lnk" || echo "no slackcords found"
 fi
 open "$dirStartLocal/Beekeeper Studio.lnk"
-open "$dirStartGlobal/Microsoft SQL Server Tools*/SQL Server Management Studio*.lnk"
+open "$dirStartGlobal"/Microsoft\ SQL\ Server\ Tools*/SQL\ Server\ Management\ Studio*.lnk
 open "$dirStartLocal/Caprine.lnk"
 
 shuffle-wallpaper --terminal
@@ -53,6 +54,9 @@ set-process-priority dropbox idle
 # set-process-priority ms-teams belownormal
 # set-process-priority outlook belownormal
 set-process-priority windowsterminal abovenormal
+
+# ahk script opens more reliably at the end
+open ~/.config/autohotkey.ahk
 
 # run scripts inline
 nerdmoon_to_starship

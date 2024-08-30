@@ -3,6 +3,8 @@
 	achey	en-US
 	adamantine	en-US
 	ADHD	en-US
+	advisor	en-US
+	advisors	en-US
 	aerosoled	en-US
 	aether	en-US
 	affective	en-US
@@ -20,6 +22,7 @@
 	airpod	en-US
 	airpods	en-US
 	Alastair	en-US
+	Alexa	en-US
 	AMA's	en-US
 	amened	en-US
 	apnea	en-US
@@ -73,10 +76,12 @@
 	burgo	en-US
 	caffeination	en-US
 	calc	en-US
+	calcifications	en-US
 	calcs	en-US
 	cancelled	en-US
 	cancelling	en-US
 	canopic	en-US
+	carabiner	en-US
 	Carcassonne	en-US
 	carpe	en-US
 	castlevania	en-US
@@ -99,6 +104,7 @@
 	cishet	en-US
 	CJ	en-US
 	clergical	en-US
+	clipart	en-US
 	Cocomelon	en-US
 	Contra	en-US
 	convo	en-US
@@ -200,6 +206,7 @@
 	Gemma	en-US
 	glyphs	en-US
 	gma	en-US
+	Godfrey	en-US
 	gonna	en-US
 	Goodreads	en-US
 	gotta	en-US
@@ -209,8 +216,11 @@
 	grifter	en-US
 	grimoire	en-US
 	grinch	en-US
+	grody	en-US
+	Gymboree	en-US
 	hacky	en-US
 	hander	en-US
+	hanky	en-US
 	hardstyle	en-US
 	hatewatch	en-US
 	hatewatched	en-US
@@ -239,6 +249,7 @@
 	hurty	en-US
 	hydroxychloroquine	en-US
 	hyperdrive	en-US
+	Ibanez	en-US
 	ideation	en-US
 	Idris	en-US
 	IEnumerable	en-US
@@ -340,6 +351,7 @@
 	NPC	en-US
 	numbingly	en-US
 	offput	en-US
+	ok	en-US
 	olde	en-US
 	omelette	en-US
 	onesie	en-US
@@ -356,11 +368,15 @@
 	overworld	en-US
 	pachinko	en-US
 	pachislot	en-US
+	Paevey	en-US
+	Panera	en-US
+	panky	en-US
 	paracord	en-US
 	parter	en-US
 	pathing	en-US
 	Pattinson	en-US
 	Pazuzu	en-US
+	peridot	en-US
 	personhood	en-US
 	phonk	en-US
 	pickleball	en-US
@@ -369,6 +385,7 @@
 	PJ	en-US
 	PJs	en-US
 	Plandemic	en-US
+	plasticware	en-US
 	playthrough	en-US
 	pls	en-US
 	plushie	en-US
@@ -382,6 +399,7 @@
 	pre	en-US
 	prep'd	en-US
 	prep'ing	en-US
+	PSAT	en-US
 	PTSD	en-US
 	pukified	en-US
 	punkos	en-US
@@ -391,6 +409,7 @@
 	Q3	en-US
 	Q4	en-US
 	Quiplash	en-US
+	raggy	en-US
 	Rahab	en-US
 	Rahab's	en-US
 	ramen	en-US
@@ -423,6 +442,7 @@
 	Runzas	en-US
 	scanline	en-US
 	SCOTUS	en-US
+	screamy	en-US
 	scritches	en-US
 	se	en-US
 	secondaries	en-US
@@ -450,7 +470,9 @@
 	sms	en-US
 	snapple	en-US
 	societally	en-US
+	sockies	en-US
 	sp	en-US
+	spilt	en-US
 	spoop	en-US
 	spotify	en-US
 	Spotify	en-US
@@ -462,17 +484,21 @@
 	stressors	en-US
 	stuffie	en-US
 	styleless	en-US
+	supportively	en-US
 	talkbox	en-US
+	taquitos	en-US
 	taskbar	en-US
 	taze	en-US
 	TDY	en-US
 	Tetris	en-US
 	tf	en-US
 	TGI	en-US
+	Thangles	en-US
 	that	en-US
 	that'll	en-US
 	theatre	en-US
 	themself	en-US
+	Thinsulate	en-US
 	thorts	en-US
 	throwies	en-US
 	TikTok	en-US
@@ -991,6 +1017,7 @@
 	Hathaway	en-US
 	Inacom	en-US
 	Josalyn	en-US
+	Joslyn	en-US
 	Kanesville	en-US
 	KGBI	en-US
 	Kiewit	en-US
@@ -1007,6 +1034,7 @@
 	Plattsmouth	en-US
 	Pottawattamie	en-US
 	Ralston	en-US
+	Rockbrook	en-US
 	Schwab	en-US
 	Scoular	en-US
 	Southroads	en-US
@@ -1015,6 +1043,8 @@
 	Stonecroft	en-US
 	Tourek	en-US
 	Valmont	en-US
+	Vinton	en-US
+	Wehrspann	en-US
 	Westroads	en-US
 	Westwood	en-US
 	Woodman	en-US
@@ -2061,6 +2091,22 @@
 	Paldea	en-US
 	Sinnoh	en-US
 	Unova	en-US
+	Abimelech	en-US
+	Amalek	en-US
+	Barak	en-US
+	Barnea	en-US
+	Edom	en-US
+	Edomites	en-US
+	Heber	en-US
+	Hebron	en-US
+	Jael	en-US
+	Kadesh	en-US
+	Levites	en-US
+	Meribah	en-US
+	Pileser	en-US
+	Seir	en-US
+	Sisera	en-US
+	Tiglath	en-US
 	api	en-US
 	ascii	en-US
 	async	en-US

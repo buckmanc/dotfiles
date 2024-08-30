@@ -5,7 +5,11 @@ text="$2"
 
 dir="$(dirname "$numberPath")"
 
-if [[ ! -d "$dir" ]]
+if [[ -z "$text" ]]
+then
+	echo "no message provided"
+	exit 1
+elif [[ ! -d "$dir" ]]
 then
 	mkdir "$dir"
 fi

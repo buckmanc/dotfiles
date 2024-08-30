@@ -19,14 +19,17 @@ fileStringOld="$(cat "$filePath")"
 fileStringNew="$(echo "$fileStringOld" | \
 	tr -d '\r' | \
 	perl -pe 's/(?:parentheses|\() ?(.+?)(?: and| end| close)? ?(?:parentheses|(?<=[^:;])\(|(?<=[^:;])\))/($1)/g' | \
-	perl -pe 's/(?:quote|quotation mark|") ?(.+?)(?: and| end| close)? ?(?:quote|quotation mark|")/"$1"/g' | \
+	perl -pe 's/(?:quote|quotation mark|") ?([^:].+?)(?: and| end| close)? ?(?:quote|quotation mark|")/"$1"/g' | \
+	perl -pe 's/(?:bracket|\[) ?(.+?)(?: and| end| close)? ?(?:bracket|\])/\[$1\]/g' | \
 	perl -pe 's/(?:asterisk|\*) ?(.+?) ?(?:asterisk|\*)/\*$1\*/g' | \
-	perl -pe 's/(ampersand|and hersand|and persand|and percent)/&/g' | \
+	perl -pe 's/(ampersand|and [hp]ers[ae]nd|and percent)/&/g' | \
+	perl -pe 's/:-\)/:\)/g' | \
+	perl -pe 's/:-\(/:\(/g' | \
+	perl -pe 's/[nN]ew line ?/\n/g' | \
 	perl -pe 's/([\.!\?]"? ?[a-z])/\U\1/g' | \
 	perl -pe 's/(^[a-z])/\U\1/g' | \
 	perl -pe 's/ \.(?=[^\.])/./g' | \
 	perl -pe 's/^ (?=\S)//g' | \
-	perl -pe 's/[nN]ew line ?/\n/g' | \
 	perl -pe 's/ +$//g' | \
 	cat)"
 

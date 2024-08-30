@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+waitPath="$HOME/bin/press-any-key"
+if (! type termux-brightness > /dev/null 2>&1) || [[ ! -x "$waitPath" ]]
+then
+	echo "os not supported"
+	exit 1
+fi
+
+termux-brightness 0
+"$waitPath" "" 0
+termux-brightness auto
+

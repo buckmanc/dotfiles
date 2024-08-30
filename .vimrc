@@ -35,6 +35,8 @@ set backup
 set directory=~/.vim/swap
 set mouse=		" disable mouse/touch controls
 set clipboard=		" unjoin from system clipboard on windows for consistent cross-platform behaviour
+set viminfo+=!		" make sure it can save viminfo
+set viminfo-=<50	" unlimited saved register size
 
 " filenames can have space, comma, ampersand... sigh
 set isfname+=32
@@ -48,7 +50,6 @@ set magic		" special characters available in pattern matching
 set ignorecase		" ignore case in searching
 set smartcase		" only use case sensitive search when capitals are included in
 set infercase		" infer completion case
-set viminfo+=!		" make sure it can save viminfo
 set report=0		" always show 'x lines changed' messages
 set commentstring=#%s	" default comment string, is changed downstream as needed
 

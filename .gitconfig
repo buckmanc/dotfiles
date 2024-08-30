@@ -17,7 +17,7 @@
 	list-alias=!git config -l | grep alias | cut -c 7-
 	# word diff log
 	wlog=log --patch --color-words='\\w+|.'
-	xgrep=!git --no-pager grep -in
+	xgrep=!git --no-pager grep -in -I
 	xtree=!git ls-files | grep -i --color
 	# pretty log
 	plog=log --abbrev-commit --date-order --format=format:'%C(bold blue)%>|(21)%h%C(reset) %C(bold green)(%as)%C(reset) %C(white)%<(60,trunc)%s%C(reset) %C(dim white)- %aN%C(reset)%C(auto)%d%C(reset)' --decorate --graph --all
