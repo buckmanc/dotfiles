@@ -163,7 +163,7 @@ augroup FileTypeSpecificAutocommands
 	" autocommand actions
 	autocmd FileType cs setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
 	autocmd FileType markdown,text setlocal keywordprg=dict
-	autocmd Filetype text setlocal spell spelllang=en_us	" turn on spell check for text files only
+	autocmd Filetype markdown,text setlocal spell spelllang=en_us	" turn on spell check
 	autocmd FileType text hi Search ctermfg=magenta " text theme is white, so reverse search colors make white cursor painful
 	autocmd BufRead,BufNewFile */bin/* silent! ShebangInsert bash
 	" if this gets annoying, use a function with an "if filereadable(expand('%'))" test to check for newness

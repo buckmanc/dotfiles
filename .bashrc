@@ -224,3 +224,4 @@ function _complete_xscreen() {
 }
 export -f _complete_xscreen
 complete -F _complete_xscreen -o default xscreen
+complete -F _complete_xscreen -o default xscrn

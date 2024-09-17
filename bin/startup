@@ -24,12 +24,12 @@ echo "opening apps..."
 open "$dirLocalAppData/Microsoft/WindowsApps/spotify.exe"
 open "$dirStartGlobal/Notepad++.lnk"
 open "$dirStartGlobal/Outlook.lnk" # I guess if it's installed we should open it, but punches pilot
-open "$dirStartGlobal/Mozilla Firefox.lnk" || open "$dirStartGlobal/Google Chrome.lnk" || open "$dirStartGlobal/Microsoft Edge.lnk" || echo "no browsers found"
+open "$dirStartGlobal/Firefox.lnk" || open "$dirStartGlobal/Google Chrome.lnk" || open "$dirStartGlobal/Microsoft Edge.lnk" || echo "no browsers found"
 if ( type ms-teams >/dev/null 2>&1 )
 then
 	start "" ms-teams
 else
-	 open "$dirStartGlobal/Discord.lnk" || open "$dirStartGlobal/Slack.lnk" || echo "no slackcords found"
+	 open "$dirStartLocal/Discord Inc/Discord.lnk" || open "$dirStartGlobal/Slack.lnk" || echo "no slackcords found"
 fi
 open "$dirStartLocal/Beekeeper Studio.lnk"
 open "$dirStartGlobal"/Microsoft\ SQL\ Server\ Tools*/SQL\ Server\ Management\ Studio*.lnk
