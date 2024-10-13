@@ -65,15 +65,21 @@ if ! shopt -oq posix; then
 fi
 
 addtopath(){
-	if [ -d "$1" ]
+	newPath="$1"
+	newPath="$(echo "$newPath" | sed 's|^C:\\|/c/|g')"
+	if [ -d "$newPath" ]
 	then
-		export PATH="${PATH}:${1}"
+
+		export PATH="$PATH:$newPath"
 	fi
 }
 addtopathstart(){
-	if [ -d "$1" ]
+	newPath="$1"
+	newPath="$(echo "$newPath" | sed 's|^C:\\|/c/|g')"
+	if [ -d "$newPath" ]
 	then
-		export PATH="${1}:${PATH}"
+
+		export PATH="$newPath:$PATH"
 	fi
 }
 
@@ -103,7 +109,8 @@ addtopath "${jqPath}"
 addtopath "${ANDROID_HOME}/cmdline-tools/latest/bin"
 addtopath "${ANDROID_HOME}/platform-tools"
 addtopath "${LOCALAPPDATA}/Pandoc"
-addtopath "$ProgramData/AutoHotkey/AutoHotkey.exe"
+addtopath "$PROGRAMFILES/AutoHotkey/"
+addtopath "$PROGRAMFILES/VideoLAN/VLC/"
 
 if [ -d "${ANDROID_HOME}" ]
 then
@@ -200,9 +207,9 @@ then
 	complete -f -F _dotnet_bash_complete dotnet
 fi
 
-if type thefuck	>/dev/null 2>&1; then
-	eval "$(thefuck --alias)"
-fi
+# if type thefuck	>/dev/null 2>&1; then
+# 	eval "$(thefuck --alias)"
+# fi
 
 if type pandoc >/dev/null 2>&1; then
 	eval "$(pandoc --bash-completion)"

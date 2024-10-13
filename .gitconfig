@@ -10,6 +10,7 @@
 	stat=status -s
 	statu=status -s
 	sat=status -s
+	pul=pull
 	# comm=!git diff --check && git commit
 	# diff check and dotnet test before committing
 	comm=!"~/bin/git-commit-check && git commit"
