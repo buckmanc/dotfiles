@@ -44,6 +44,7 @@ B2B
 Baahubali
 bandana
 baselard
+Baskin
 Bathory
 bb
 bbq
@@ -54,6 +55,7 @@ berserker
 bevy
 BGM
 Bing
+binky
 biome
 biomes
 Blackcraft
@@ -112,6 +114,7 @@ choco
 chonk
 chonker
 chonkers
+cinco
 cishet
 CJ
 clergical
@@ -119,6 +122,7 @@ clipart
 cockatiel
 cocklebur
 Cocomelon
+Columbkille's
 Contra
 convo
 cooldown
@@ -169,6 +173,7 @@ DLC
 DLCs
 dls
 DNS
+Dobson
 docu
 docuseries
 dodgeball
@@ -212,6 +217,7 @@ FMLA
 followable
 foregoed
 frans
+freakout
 frutti
 fuddy
 Fukushima
@@ -220,6 +226,7 @@ GAM
 gameplay
 gaslighting
 gaslit
+gazeteer
 gcn
 GDQ
 geez
@@ -282,6 +289,7 @@ IMing
 immunocompromised
 incel
 inerrancy
+infoUSA
 ing
 ingrate
 interoception
@@ -300,6 +308,7 @@ journalled
 journalling
 joycon
 joycons
+Julaine's
 Jumanji
 Juneteenth
 junky
@@ -320,6 +329,7 @@ LaBeouf
 Lactaid
 lambrequin
 Larkwood's
+Legos
 Lenscrafters
 LeVar
 Levenger
@@ -333,11 +343,14 @@ lumen
 lunner
 Machina
 magick
+Magnavox
 mahjong
 malate
 Malwart
 mana
+Mangelsen's
 marvelling
+Mastercuts
 matryoshka
 mayhaps
 McGoey
@@ -387,6 +400,7 @@ NPC
 numbingly
 offput
 ok
+ol'
 olde
 omelette
 onesie
@@ -462,9 +476,12 @@ rehome
 Ren
 Republika
 resemblant
+retcon
+retconned
 retroarch
 retweeted
 rewatch
+rigamarole
 rizz
 rizzed
 rizzler
@@ -487,6 +504,7 @@ Runzas
 Röntgen
 scanline
 SCOTUS
+screamies
 screaminess
 screamy
 scritches
@@ -536,6 +554,7 @@ stressors
 stuffie
 styleless
 supportively
+synergize
 talkbox
 taquitos
 taskbar
@@ -584,6 +603,7 @@ unremodeled
 unrepaired
 unshielded
 Unsplash
+unstyled
 unvaccinated
 unvaxxed
 Urfaust
@@ -591,6 +611,7 @@ vax
 vaxxed
 vibing
 vids
+Vischer
 Wachovia
 waifu
 Walgreens
@@ -625,6 +646,7 @@ x9
 xmas
 xyz
 Y2K
+yack
 yacking
 Yay
 yay
@@ -635,6 +657,7 @@ yeeter
 yeets
 Yoder
 Yoshi
+Younkers
 youtube
 YTD
 Zelda
@@ -650,6 +673,7 @@ Akatosh
 Akatosh's
 Albus
 Allant
+Aloysius
 Amaram
 AMatWQ
 Amphibia
@@ -751,6 +775,7 @@ Hylia's
 Hyrule
 Ico
 IDW
+Iggy
 Ithelia
 Ithelia's
 Janeway
@@ -767,10 +792,13 @@ Kaladin's
 Karun
 keese
 Komashi
+Koopa
+Korok
 Kynareth
 Kynareth's
 l4d2
 L4D2
+Lemmy
 Li'l
 Lothlorien
 LotR
@@ -911,6 +939,7 @@ Famicom
 Gamecube
 GBA
 GCN
+Korok
 NES
 Playstation
 PS2
@@ -1070,6 +1099,7 @@ Farnam
 Florence
 Fontenelle
 Gallup
+Gamer
 Gavilon
 Gretna
 Hathaway
@@ -1086,6 +1116,7 @@ Midtown
 Millard
 Offutt
 OPPD
+Oreapolis
 Orpheum
 Papillion
 Plattsmouth
@@ -2266,7 +2297,9 @@ xls
 xlsm
 xlsx
 Xubuntu
+Baladian
 Berglund
+Bev
 birdfeeder
 bowtie
 bowties
@@ -2297,6 +2330,7 @@ Millroy
 N'Mal
 N'Mal's
 Nikumen
+Rabon
 Randa
 RenFair
 Rhineheart

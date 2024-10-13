@@ -45,6 +45,7 @@
 	Baahubali	en-US
 	bandana	en-US
 	baselard	en-US
+	Baskin	en-US
 	Bathory	en-US
 	bb	en-US
 	bbq	en-US
@@ -55,6 +56,7 @@
 	bevy	en-US
 	BGM	en-US
 	Bing	en-US
+	binky	en-US
 	biome	en-US
 	biomes	en-US
 	Blackcraft	en-US
@@ -113,6 +115,7 @@
 	chonk	en-US
 	chonker	en-US
 	chonkers	en-US
+	cinco	en-US
 	cishet	en-US
 	CJ	en-US
 	clergical	en-US
@@ -120,6 +123,7 @@
 	cockatiel	en-US
 	cocklebur	en-US
 	Cocomelon	en-US
+	Columbkille's	en-US
 	Contra	en-US
 	convo	en-US
 	cooldown	en-US
@@ -170,6 +174,7 @@
 	DLCs	en-US
 	dls	en-US
 	DNS	en-US
+	Dobson	en-US
 	docu	en-US
 	docuseries	en-US
 	dodgeball	en-US
@@ -213,6 +218,7 @@
 	followable	en-US
 	foregoed	en-US
 	frans	en-US
+	freakout	en-US
 	frutti	en-US
 	fuddy	en-US
 	Fukushima	en-US
@@ -221,6 +227,7 @@
 	gameplay	en-US
 	gaslighting	en-US
 	gaslit	en-US
+	gazeteer	en-US
 	gcn	en-US
 	GDQ	en-US
 	geez	en-US
@@ -283,6 +290,7 @@
 	immunocompromised	en-US
 	incel	en-US
 	inerrancy	en-US
+	infoUSA	en-US
 	ing	en-US
 	ingrate	en-US
 	interoception	en-US
@@ -301,6 +309,7 @@
 	journalling	en-US
 	joycon	en-US
 	joycons	en-US
+	Julaine's	en-US
 	Jumanji	en-US
 	Juneteenth	en-US
 	junky	en-US
@@ -321,6 +330,7 @@
 	Lactaid	en-US
 	lambrequin	en-US
 	Larkwood's	en-US
+	Legos	en-US
 	Lenscrafters	en-US
 	LeVar	en-US
 	Levenger	en-US
@@ -334,11 +344,14 @@
 	lunner	en-US
 	Machina	en-US
 	magick	en-US
+	Magnavox	en-US
 	mahjong	en-US
 	malate	en-US
 	Malwart	en-US
 	mana	en-US
+	Mangelsen's	en-US
 	marvelling	en-US
+	Mastercuts	en-US
 	matryoshka	en-US
 	mayhaps	en-US
 	McGoey	en-US
@@ -388,6 +401,7 @@
 	numbingly	en-US
 	offput	en-US
 	ok	en-US
+	ol'	en-US
 	olde	en-US
 	omelette	en-US
 	onesie	en-US
@@ -463,9 +477,12 @@
 	Ren	en-US
 	Republika	en-US
 	resemblant	en-US
+	retcon	en-US
+	retconned	en-US
 	retroarch	en-US
 	retweeted	en-US
 	rewatch	en-US
+	rigamarole	en-US
 	rizz	en-US
 	rizzed	en-US
 	rizzler	en-US
@@ -488,6 +505,7 @@
 	Röntgen	en-US
 	scanline	en-US
 	SCOTUS	en-US
+	screamies	en-US
 	screaminess	en-US
 	screamy	en-US
 	scritches	en-US
@@ -537,6 +555,7 @@
 	stuffie	en-US
 	styleless	en-US
 	supportively	en-US
+	synergize	en-US
 	talkbox	en-US
 	taquitos	en-US
 	taskbar	en-US
@@ -585,6 +604,7 @@
 	unrepaired	en-US
 	unshielded	en-US
 	Unsplash	en-US
+	unstyled	en-US
 	unvaccinated	en-US
 	unvaxxed	en-US
 	Urfaust	en-US
@@ -592,6 +612,7 @@
 	vaxxed	en-US
 	vibing	en-US
 	vids	en-US
+	Vischer	en-US
 	Wachovia	en-US
 	waifu	en-US
 	Walgreens	en-US
@@ -626,6 +647,7 @@
 	xmas	en-US
 	xyz	en-US
 	Y2K	en-US
+	yack	en-US
 	yacking	en-US
 	Yay	en-US
 	yay	en-US
@@ -636,6 +658,7 @@
 	yeets	en-US
 	Yoder	en-US
 	Yoshi	en-US
+	Younkers	en-US
 	youtube	en-US
 	YTD	en-US
 	Zelda	en-US
@@ -651,6 +674,7 @@
 	Akatosh's	en-US
 	Albus	en-US
 	Allant	en-US
+	Aloysius	en-US
 	Amaram	en-US
 	AMatWQ	en-US
 	Amphibia	en-US
@@ -752,6 +776,7 @@
 	Hyrule	en-US
 	Ico	en-US
 	IDW	en-US
+	Iggy	en-US
 	Ithelia	en-US
 	Ithelia's	en-US
 	Janeway	en-US
@@ -768,10 +793,13 @@
 	Karun	en-US
 	keese	en-US
 	Komashi	en-US
+	Koopa	en-US
+	Korok	en-US
 	Kynareth	en-US
 	Kynareth's	en-US
 	l4d2	en-US
 	L4D2	en-US
+	Lemmy	en-US
 	Li'l	en-US
 	Lothlorien	en-US
 	LotR	en-US
@@ -912,6 +940,7 @@
 	Gamecube	en-US
 	GBA	en-US
 	GCN	en-US
+	Korok	en-US
 	NES	en-US
 	Playstation	en-US
 	PS2	en-US
@@ -1071,6 +1100,7 @@
 	Florence	en-US
 	Fontenelle	en-US
 	Gallup	en-US
+	Gamer	en-US
 	Gavilon	en-US
 	Gretna	en-US
 	Hathaway	en-US
@@ -1087,6 +1117,7 @@
 	Millard	en-US
 	Offutt	en-US
 	OPPD	en-US
+	Oreapolis	en-US
 	Orpheum	en-US
 	Papillion	en-US
 	Plattsmouth	en-US
@@ -2267,7 +2298,9 @@
 	xlsm	en-US
 	xlsx	en-US
 	Xubuntu	en-US
+	Baladian	en-US
 	Berglund	en-US
+	Bev	en-US
 	birdfeeder	en-US
 	bowtie	en-US
 	bowties	en-US
@@ -2298,6 +2331,7 @@
 	N'Mal	en-US
 	N'Mal's	en-US
 	Nikumen	en-US
+	Rabon	en-US
 	Randa	en-US
 	RenFair	en-US
 	Rhineheart	en-US
