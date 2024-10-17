@@ -31,11 +31,14 @@ else
 		# tail handles lines overflowing the screen
 		# though there's some flicker when the screen is shrunk after xwatch is started
 		text="$(echo "$text" | tail -n $LINES)"
-		sleep "$sleepTime"
 
 		# nowrap, at present, does not accurately handle color codes
 		# but unless the text nears the screen edge it should do just fine
 		echo -en "\e[H$text" | sed "s/$/$(seq -s ' ' 1 $COLUMNS | tr -dc ' ')/g" | nowrap
+		# clear the screen after the cursor
+		tput ed
+
+		sleep "$sleepTime"
 	done
 
 	cursorVisible

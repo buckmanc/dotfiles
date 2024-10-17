@@ -31,8 +31,11 @@ then
 else
 	 open "$dirStartLocal/Discord Inc/Discord.lnk" || open "$dirStartGlobal/Slack.lnk" || echo "no slackcords found"
 fi
+
+# gotta use compgen to expand the glob before passing it on
+ssmsPath="$(compgen -G "$dirStartGlobal"/Microsoft\ SQL\ Server\ Tools*/SQL\ Server\ Management\ Studio*.lnk)"
 open "$dirStartLocal/Beekeeper Studio.lnk"
-open "$dirStartGlobal"/Microsoft\ SQL\ Server\ Tools*/SQL\ Server\ Management\ Studio*.lnk
+open "$ssmsPath"
 open "$dirStartLocal/Caprine.lnk"
 
 shuffle-wallpaper --terminal

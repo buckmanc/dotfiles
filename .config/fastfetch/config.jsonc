@@ -12,11 +12,11 @@
       "type": "custom",
       "format": "          󰭟󰭟󰭟  󰭟󰭟󰭟"
     },
-    {
-      "type": "title",
-      "key": "",
-	  "format":"{1}@{2}"
-    },
+    // {
+    //   "type": "title",
+    //   "key": "",
+	//   "format":"{1}@{2}"
+    // },
     {
       "type": "host",
       "key": "󰇅"
