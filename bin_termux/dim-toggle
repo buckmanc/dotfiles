@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+if (! type termux-brightness > /dev/null 2>&1)
+then
+	echo "os not supported"
+	exit 1
+fi
+
+toggleFile="$TMPDIR/dim-toggle-file"
+
+if [[ -f "$toggleFile" ]]
+then
+	termux-brightness auto
+	rm "$toggleFile"
+else
+	termux-brightness 40
+	touch "$toggleFile"
+fi

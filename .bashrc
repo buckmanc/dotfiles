@@ -53,6 +53,23 @@ shopt -s nocaseglob # case insensitive globbing
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
+# less options
+# case insensitive, interpret color codes
+export LESS="IR"
+
+# standardize termux and non termux temp dir vars
+if [[ -z "$TMPDIR" && -z "$TEMP" && -d "/tmp" ]]
+then
+	export TEMP="/tmp"
+	export TMPDIR="/tmp"
+elif [[ -z "$TMPDIR" && -n "$TEMP" && -d "$TEMP" ]]
+then
+	export TMPDIR="$TEMP"
+elif [[ -z "$TEMP" && -n "$TMPDIR" && -d "$TMPDIR" ]]
+then
+	export TEMP="$TMPDIR"
+fi
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).

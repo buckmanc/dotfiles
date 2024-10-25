@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+if ( type watch > /dev/null 2>&1 )
+then
+	watch "$@"
+else
+	# simple watch substitute courtesy of gist.github.com/espaciomore
+	sleepTime=10
+	ARGS="${@}"
+	clear;
+	while(true); do
+		OUTPUT="$($ARGS)"
+		clear
+		echo -e "Every ${sleepTime}s: $ARGS"
+		echo ""
+		echo -e "${OUTPUT[@]}"
+		sleep "$sleepTime"
+	done
+fi

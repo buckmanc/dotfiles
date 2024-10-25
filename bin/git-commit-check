@@ -49,4 +49,13 @@ then
 	# TODO decide this is too little bang for the buck
 fi
 
+scriptFiles+="$(git ls-files | grep -iP '\.sh$')"
+scriptFiles+=$'\n'
+scriptFiles+="$(git grep --name-only -iP '^#!.+?bash')"
+
+echo "$scriptFiles" | while read -r scriptFile
+do
+	"$HOME/bin/xshellcheck" "$scriptFile"
+done
+
 exit 0

@@ -12,7 +12,8 @@ path=$(readlink -f "$1")
 
 if [ -d "$path" ]
 then
-	wt new-tab --startingDirectory "$path"
+	shift
+	wt new-tab --startingDirectory "$path" "$@"
 else
 	wt "$@"
 fi

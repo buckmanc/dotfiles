@@ -1,3 +1,17 @@
 #!/usr/bin/env bash
 
-termux-sms-list | jq -r '.[-1].body' | termux-clipboard-set 
+n="$1"
+if [[ -z "$n" ]]
+then
+	n=0
+fi
+
+# adjust for zero based arg in termux-sms-list
+if [[ "$n" -gt 0 ]]
+then
+	n=$((n-1))
+fi
+
+text="$(termux-sms-list -l 1 -o "$n" | jq -r ".[-1].body")"
+echo "$text" | termux-clipboard-set 
+echo "$text"

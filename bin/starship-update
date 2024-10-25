@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# prefer winget if available
+if ( type winget >/dev/null 2>&1 )
+then
+	winget update starship
+else
+
+	tmpPath="/tmp/starship_install.sh"
+
+	curl -sS https://starship.rs/install.sh > "$tmpPath"
+
+	# bug fix for .curlrc breaking install script
+	# --disable must be first parameter or it is ignored
+	if ! grep -Piq 'curl --disable' "$tmpPath"
+	then
+		perl -i -pe 's/curl --fail/curl --disable --fail/g' "$tmpPath"
+	fi
+
+	cat "$tmpPath" | sh
+fi

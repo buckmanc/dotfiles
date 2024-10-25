@@ -7,9 +7,10 @@
 	# ldiff=diff --color-words='.' --ignore-cr-at-eol
 	dbdiff=wdiff --ignore-matching-lines='^USE \\[\\w+\\]$'
 	# short stat
-	stat=status -s
-	statu=status -s
-	sat=status -s
+	stat=!git -c color.ui=always status -s
+	statu=stat
+	sat=stat
+	statl=!git stat | less
 	pul=pull
 	# comm=!git diff --check && git commit
 	# diff check and dotnet test before committing
