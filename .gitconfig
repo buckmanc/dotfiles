@@ -59,8 +59,8 @@
 [filter "gitignore"]
 	clean = "sed -b '/#gitignore$/d'"
 [filter "starship"]
-	# standardize nerdfont moon glyphs and support #gitignore
-	clean = "sed -b -e 's/[]//g' -e '/#gitignore$/d'"
+	clean = "~/.config/gitconfig_scripts/starship_filter.sh --clean"
+	smudge = "~/.config/gitconfig_scripts/starship_filter.sh --smudge"
 [filter "termux_shell"]
 	clean = "~/.config/gitconfig_scripts/termux_filter.sh --clean"
 	smudge = "~/.config/gitconfig_scripts/termux_filter.sh --smudge"

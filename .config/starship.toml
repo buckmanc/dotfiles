@@ -134,6 +134,8 @@ style = "main"
 format = "[$hostname]($style)"
 ssh_only = false
 disabled = false
+# aliases are managed by a git filter
+aliases = { "{hostname}" = "{x}" }
 
 # display the shell level as an exponent
 [custom.shlvl]

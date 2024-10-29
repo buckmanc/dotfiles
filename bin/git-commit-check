@@ -1,61 +1,79 @@
 #!/usr/bin/env bash
 
+exitCode=0
 echo "project contains $(git xgrep -iP "(//|#) ?TODO( |:)" | wc -l) TODOs"
 
 if ! git diff HEAD --check
 then
-	exit 1
+	exitCode=1
 else
 	echo 'git check passed'
-fi
-
-if ( type dotnet > /dev/null 2>&1 ) && [[ "$(dotnet list package 2>&1)" != *"A project or solution file could not be found"* ]]
-then
-	dotnet clean --nologo --verbosity quiet
-	if ! dotnet build --nologo --verbosity:quiet --consoleLoggerParameters:NoSummary --consoleLoggerParameters:ErrorsOnly
-	then
-		exit 1
-	else
-		echo 'build succeeded'
-	fi
-
-	if [[ -z $(dotnet test --nologo --verbosity:quiet --list-tests --consoleLoggerParameters:ErrorsOnly) ]]
-	then
-		echo 'no dotnet unit tests found'
-		exit 0
-	fi
-
-	if ! dotnet test --nologo --verbosity:minimal --consoleLoggerParameters:ErrorsOnly
-	then
-		exit 1
-	fi
-
-	gitRoot="$(git rev-parse --show-toplevel)"
-	migrationsProject="$(find "$gitRoot" -type d -iname 'migrations' | head -n 1 | xargs --no-run-if-empty dirname)"
-
-	if [[ -n "$migrationsProject" && "$migrationsProject" != "." ]] && ( type dotnet-ef > /dev/null 2>&1 ) && ( dotnet-ef migrations list --no-build --project "$migrationsProject" 2>&1 | grep -Pivq "(this package is required|no project found)" )
-	then
-		if ! dotnet-ef migrations has-pending-model-changes --no-build --project "$migrationsProject"
-		then
-			exit 1
-		fi
-	fi
-	
-	# TODO find a migrations folder and backup one level from that to use as the project dir
-	# TODO check if dotnet-ef is installed
-	# TODO check if dotnet-ef migrations list works or Microsoft.EntityFrameworkCore.Design is referenced
-	# TODO check for pending migrations
-	# dotnet-ef migrations has-pending-model-changes
-	# TODO decide this is too little bang for the buck
 fi
 
 scriptFiles+="$(git ls-files | grep -iP '\.sh$')"
 scriptFiles+=$'\n'
 scriptFiles+="$(git grep --name-only -iP '^#!.+?bash')"
 
-echo "$scriptFiles" | while read -r scriptFile
-do
-	"$HOME/bin/xshellcheck" "$scriptFile"
-done
+# remove blank lines
+scriptFiles="$(echo "$scriptFiles" | grep -Piv '^$')"
 
-exit 0
+shellChecked=0
+shellFail=0
+
+while read -r scriptFile
+do
+	shellChecked=1
+	if ! "$HOME/bin/xshellcheck" "$scriptFile"
+	then
+		shellFail=1
+		exitCode=1
+	fi
+done < <( echo "$scriptFiles" )
+
+if [[ "$shellChecked" == "1" && "$shellFail" == "0" ]]
+then
+	echo "shellcheck passed"
+fi
+
+# dotnet
+if ( type dotnet > /dev/null 2>&1 ) && [[ "$(dotnet list package 2>&1)" != *"A project or solution file could not be found"* ]]
+then
+	dotnet clean --nologo --verbosity quiet
+	if ! dotnet build --nologo --verbosity:quiet --consoleLoggerParameters:NoSummary --consoleLoggerParameters:ErrorsOnly
+	then
+		exitCode=1
+	else
+		echo 'build succeeded'
+
+		if [[ -z $(dotnet test --nologo --verbosity:quiet --list-tests --consoleLoggerParameters:ErrorsOnly) ]]
+		then
+			echo 'no dotnet unit tests found'
+		else
+
+			if ! dotnet test --nologo --verbosity:minimal --consoleLoggerParameters:ErrorsOnly
+			then
+				exitCode=1
+			fi
+		fi
+
+		gitRoot="$(git rev-parse --show-toplevel)"
+		migrationsProject="$(find "$gitRoot" -type d -iname 'migrations' | head -n 1 | xargs --no-run-if-empty dirname)"
+
+		if [[ -n "$migrationsProject" && "$migrationsProject" != "." ]] && ( type dotnet-ef > /dev/null 2>&1 ) && ( dotnet-ef migrations list --no-build --project "$migrationsProject" 2>&1 | grep -Pivq "(this package is required|no project found)" )
+		then
+			if ! dotnet-ef migrations has-pending-model-changes --no-build --project "$migrationsProject"
+			then
+				exitCode=1
+			fi
+		fi
+		
+		# TODO find a migrations folder and backup one level from that to use as the project dir
+		# TODO check if dotnet-ef is installed
+		# TODO check if dotnet-ef migrations list works or Microsoft.EntityFrameworkCore.Design is referenced
+		# TODO check for pending migrations
+		# dotnet-ef migrations has-pending-model-changes
+		# TODO decide this is too little bang for the buck
+	fi
+fi
+
+exit "$exitCode"
