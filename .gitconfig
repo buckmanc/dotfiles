@@ -59,11 +59,11 @@
 [filter "gitignore"]
 	clean = "sed -b '/#gitignore$/d'"
 [filter "starship"]
-	clean = "~/.config/gitconfig_scripts/starship_filter.sh --clean"
-	smudge = "~/.config/gitconfig_scripts/starship_filter.sh --smudge"
+	clean = "~/.config/gitconfig_scripts/starship_filter.sh" --clean
+	smudge = "~/.config/gitconfig_scripts/starship_filter.sh" --smudge
 [filter "termux_shell"]
-	clean = "~/.config/gitconfig_scripts/termux_filter.sh --clean"
-	smudge = "~/.config/gitconfig_scripts/termux_filter.sh --smudge"
+	clean = "~/.config/gitconfig_scripts/termux_filter.sh" --clean
+	smudge = "~/.config/gitconfig_scripts/termux_filter.sh" --smudge
 [filter "xml"]
 	clean = "~/bin/sort-xml"
 [filter "json"]
