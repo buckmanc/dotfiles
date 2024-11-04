@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+spellList="$(cd ~/.vim/spell/ && ls *.add | nl | perl -pe 's/\.add$//g')"
+
+if [ $# -eq 0 ]
+then
+    echo "$spellList"
+    exit 0
+fi
+

@@ -5,6 +5,10 @@
 # accept files list or dirs
 # wrap with git-fix-source-file
 
+# this script uses perl instead of sed because
+# - perl has better regex support
+# - sed was inconsistently duplicating the file with an added 'r' at the end of the filename
+
 optTw=0
 optCarriageReturn=0
 optCommentSpacing=0
@@ -60,7 +64,7 @@ do
 		continue
 	fi
 
-	fileType="$(file --brief --mime-type "$oldFullPath" | cut -d '/' -f1)"
+	fileType="$(file --brief --mime-type "$file" | cut -d '/' -f1)"
 
 	# skip non text files
 	if [[ "$fileType" != "text" ]]
@@ -70,12 +74,11 @@ do
 
 	if [[ "$optTw" == 1 ]] && grep -Piq '[ \t]+$' "$file"
 	then
-		# perl -pe is better but not as reliably available
-		sed -ir 's/[ \t]\+$//g' "$file"
-	elif [[ "$optCarriageReturn" == 1 ]] && grep -Piq '\r' "$file"
+		perl -i -pe 's/[ \t]\+$//g' "$file"
+	elif [[ "$optCarriageReturn" == 1 ]] && grep -q --binary $'\r' "$file"
 	then
-		sed -ir 's/\r//g' "$file"
-	elif [[ "$optTab" == 1 ]] && grep -Piq '^\W*?\t+?\W*?\w'
+		perl -i -pe 's/\r//g' "$file"
+	elif [[ "$optTab" == 1 ]] && grep -Piq '^\W*?\t+?\W*?\w' "$file"
 	then
 		expand -i -t 4 "$file"
 	elif [[ "$optCommentSpacing" == 1 ]]
