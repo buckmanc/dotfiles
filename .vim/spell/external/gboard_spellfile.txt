@@ -26,6 +26,7 @@
 	Alastair	en-US
 	aleck	en-US
 	Alexa	en-US
+	alopecia	en-US
 	AMA's	en-US
 	amened	en-US
 	Anji	en-US
@@ -60,6 +61,7 @@
 	biome	en-US
 	biomes	en-US
 	Blackcraft	en-US
+	blankie	en-US
 	blegh	en-US
 	BLM	en-US
 	blotchiness	en-US
@@ -80,6 +82,7 @@
 	borks	en-US
 	brekkers	en-US
 	brigandine	en-US
+	Bruegger's	en-US
 	bs	en-US
 	Buer	en-US
 	Bulbapedia	en-US
@@ -112,6 +115,7 @@
 	chiropraxy	en-US
 	chislic	en-US
 	choco	en-US
+	chocolatier	en-US
 	chonk	en-US
 	chonker	en-US
 	chonkers	en-US
@@ -123,6 +127,7 @@
 	cockatiel	en-US
 	cocklebur	en-US
 	Cocomelon	en-US
+	Columbkille	en-US
 	Columbkille's	en-US
 	Contra	en-US
 	convo	en-US
@@ -213,6 +218,7 @@
 	feets	en-US
 	Fibbage	en-US
 	fingie	en-US
+	Fitbit	en-US
 	floaty	en-US
 	FMLA	en-US
 	followable	en-US
@@ -290,7 +296,6 @@
 	immunocompromised	en-US
 	incel	en-US
 	inerrancy	en-US
-	infoUSA	en-US
 	ing	en-US
 	ingrate	en-US
 	interoception	en-US
@@ -307,9 +312,9 @@
 	journaling	en-US
 	journalled	en-US
 	journalling	en-US
+	joven	en-US
 	joycon	en-US
 	joycons	en-US
-	Julaine's	en-US
 	Jumanji	en-US
 	Juneteenth	en-US
 	junky	en-US
@@ -340,6 +345,7 @@
 	lofi	en-US
 	Logitech	en-US
 	Longaberger	en-US
+	lovey-dovey	en-US
 	lumen	en-US
 	lunner	en-US
 	Machina	en-US
@@ -350,8 +356,10 @@
 	Malwart	en-US
 	mana	en-US
 	Mangelsen's	en-US
+	Mardi Gras	en-US
 	marvelling	en-US
 	Mastercuts	en-US
+	Matisyahu	en-US
 	matryoshka	en-US
 	mayhaps	en-US
 	McGoey	en-US
@@ -359,6 +367,7 @@
 	mech	en-US
 	meds	en-US
 	meme'd	en-US
+	Menards	en-US
 	merch	en-US
 	metroidvania	en-US
 	midwest	en-US
@@ -379,6 +388,8 @@
 	mon	en-US
 	monologuing	en-US
 	mons	en-US
+	moolah	en-US
+	moolahs	en-US
 	moreso	en-US
 	Morgana	en-US
 	Morgana's	en-US
@@ -399,6 +410,7 @@
 	noob	en-US
 	NPC	en-US
 	numbingly	en-US
+	Odwalla	en-US
 	offput	en-US
 	ok	en-US
 	ol'	en-US
@@ -461,6 +473,7 @@
 	Q2	en-US
 	Q3	en-US
 	Q4	en-US
+	quinceaños	en-US
 	Quiplash	en-US
 	raggy	en-US
 	Rahab	en-US
@@ -546,6 +559,7 @@
 	spoop	en-US
 	spotify	en-US
 	Spotify	en-US
+	squeezy	en-US
 	stabby	en-US
 	stardrive	en-US
 	starship	en-US
@@ -564,6 +578,7 @@
 	Tetris	en-US
 	tf	en-US
 	TGI	en-US
+	th	en-US
 	Thangles	en-US
 	that	en-US
 	that'll	en-US
@@ -583,9 +598,11 @@
 	toml	en-US
 	toon	en-US
 	toons	en-US
+	Tracfone	en-US
 	transgressive	en-US
 	transphobic	en-US
 	treaters	en-US
+	Trumpers	en-US
 	tupper	en-US
 	Tzu	en-US
 	Uber	en-US
@@ -690,6 +707,7 @@
 	Battar	en-US
 	batton	en-US
 	Beckman	en-US
+	Ben-Hur	en-US
 	Bioshock	en-US
 	Bjendal	en-US
 	Blart	en-US
@@ -926,6 +944,7 @@
 	Witchlight	en-US
 	Wonka	en-US
 	Wonka's	en-US
+	Wygol	en-US
 	Wyndle	en-US
 	wyrm	en-US
 	Yaezir's	en-US
@@ -940,7 +959,6 @@
 	Gamecube	en-US
 	GBA	en-US
 	GCN	en-US
-	Korok	en-US
 	NES	en-US
 	Playstation	en-US
 	PS2	en-US
@@ -1105,6 +1123,7 @@
 	Gretna	en-US
 	Hathaway	en-US
 	Inacom	en-US
+	infoUSA	en-US
 	Joslyn	en-US
 	Kanesville	en-US
 	KGBI	en-US
@@ -2224,6 +2243,7 @@
 	dotfile	en-US
 	dotfiles	en-US
 	dotnet	en-US
+	DSL	en-US
 	ETL	en-US
 	etl	en-US
 	etls	en-US
@@ -2304,6 +2324,10 @@
 	birdfeeder	en-US
 	bowtie	en-US
 	bowties	en-US
+	BPQ	en-US
+	BPQ's	en-US
+	Bravadas	en-US
+	BVOV	en-US
 	carseat	en-US
 	carseats	en-US
 	Chas	en-US
@@ -2312,9 +2336,14 @@
 	Delahanty	en-US
 	diningroom	en-US
 	dustmopped	en-US
+	Elsbernd	en-US
 	enquire	en-US
+	fleecie	en-US
+	fleecies	en-US
+	fleecy	en-US
 	flyer	en-US
 	flyers	en-US
+	Gaspard	en-US
 	gauché	en-US
 	Hallo'een	en-US
 	Hallowe'en	en-US
@@ -2323,21 +2352,30 @@
 	JoAnne's	en-US
 	Joanne's	en-US
 	Judi	en-US
+	KCM	en-US
+	Kriskeys	en-US
 	Lennertz	en-US
 	livingroom	en-US
 	M'Nal	en-US
 	M'Nal's	en-US
+	Matisyahu	en-US
+	Meghann	en-US
+	Meghann's	en-US
 	Millroy	en-US
 	N'Mal	en-US
 	N'Mal's	en-US
 	Nikumen	en-US
+	QWest	en-US
 	Rabon	en-US
 	Randa	en-US
 	RenFair	en-US
 	Rhineheart	en-US
 	Robarge	en-US
 	Robarges	en-US
+	Slobodnik	en-US
 	synthroid	en-US
+	Ta-Da	en-US
+	TabTeam	en-US
 	Timm	en-US
 	Tobycloth	en-US
 	Wal-Mart	en-US

@@ -13,6 +13,7 @@ dirs
 dotfile
 dotfiles
 dotnet
+DSL
 ETL
 etl
 etls
