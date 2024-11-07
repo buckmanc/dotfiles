@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+localClipPath="/tmp/xclip"
+optNextIsSsh=0
+optSsh=''
+optVerbose=0
+
+verbEcho(){
+	if [[ "$optVerbose" == "1" ]]
+	then
+		echo "$1"
+	fi
+}
+
+for arg in "$@"
+do
+	if [[ "$arg" == "--ssh" ]]
+	then
+		optNextIsSsh=1
+	elif [[ "$optNextIsSsh" == "1" ]]
+	then
+		optSsh="$arg"
+		optNextIsSsh=0
+	elif [[ "$arg" == "--verbose" || "$arg" == "-v" ]]
+	then
+		optVerbose=1
+	else
+		echo "not sure what '$arg' means"
+	fi
+done
+
+# copy
+if read -t 0
+then
+	verbEcho "copying..."
+
+	input="$(</dev/stdin)"
+
+	# pipe input to this same script on the host
+	if [[ -n "$optSsh" ]]
+	then
+		verbEcho "...to ssh"
+
+		if [[ "$optVerbose" == "1" ]]
+		then
+			verboseArg=" -v"
+		fi
+
+		echo "$input" | ssh "$optSsh" "cat | \"$HOME/bin/xclip\"$verboseArg"
+	elif ( type termux-clipboard-set > /dev/null 2>&1 )
+	then
+		verbEcho "...to 'termux-clipboard-set'"
+
+		echo "$input" | termux-clipboard-set
+	elif ( type pbcopy > /dev/null 2>&1 )
+	then
+		verbEcho "...to 'pbcopy'"
+
+		echo "$input" | pbcopy
+	elif [ -f "/dev/clipboard" ]
+	then
+		verbEcho "...to /dev/clipboard"
+
+		echo "$input" > /dev/clipboard
+	else
+		verbEcho "...to $localClipPath"
+
+		echo "$input" > "$localClipPath"
+	fi
+	
+# paste
+else
+	verbEcho "pasting..."
+
+	# get output of this same script on the server
+	if [[ -n "$optSsh" ]]
+	then
+		verbEcho "...from ssh"
+
+		if [[ "$optVerbose" == "1" ]]
+		then
+			verboseArg=" -v"
+		fi
+
+		ssh "$optSsh" "\"$HOME/bin/xclip\"$verboseArg"
+	elif ( type termux-clipboard-get > /dev/null 2>&1 )
+	then
+		verbEcho "...from 'termux-clipboard-get'"
+
+		termux-clipboard-get
+	elif ( type pbpaste > /dev/null 2>&1 )
+	then
+		verbEcho "...from 'pbpaste'"
+
+		 pbpaste
+	elif [ -f "/dev/clipboard" ]
+	then
+		verbEcho "...from /dev/clipboard"
+
+		cat /dev/clipboard
+	else
+		verbEcho "...from $localClipPath"
+
+		cat "$localClipPath"
+	fi
+fi
