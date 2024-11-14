@@ -22,7 +22,7 @@ else
 fi
 repoRoot="$(git -C "$inDir" ls-remote --get-url "$remoteName" | perl -pe 's/(^git@|\.git$)//g' | perl -pe 's/(?<=\.com):/\//')"
 branchName="$(git -C "$inDir" branch --show-current)"
-outUrl="${repoRoot}/blob/${branchName}/${urlFilePath}"
+outUrl="https://${repoRoot}/blob/${branchName}/${urlFilePath}"
 
 echo "$outUrl"
 
