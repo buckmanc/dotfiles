@@ -57,7 +57,7 @@ then
 		verbEcho "...to 'pbcopy'"
 
 		echo "$input" | pbcopy
-	elif [ -f "/dev/clipboard" ]
+	elif [ -e "/dev/clipboard" ]
 	then
 		verbEcho "...to /dev/clipboard"
 
@@ -93,7 +93,7 @@ else
 		verbEcho "...from 'pbpaste'"
 
 		 pbpaste
-	elif [ -f "/dev/clipboard" ]
+	elif [ -e "/dev/clipboard" ]
 	then
 		verbEcho "...from /dev/clipboard"
 
