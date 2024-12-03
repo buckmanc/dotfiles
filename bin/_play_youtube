@@ -1,0 +1,206 @@
+#!/usr/bin/env bash
+
+optMore=0
+optAll=0
+optSortByLatest=1
+optIgnoreDate=0
+optUrl=""
+optNextIsUrl=0
+optName=""
+optNextIsName=0
+optRegex=""
+optNextIsRegex=0
+
+for arg in "$@"
+do
+	if [[ "$arg" == "--more" ]]
+	then
+		optMore=1
+	elif [[ "$arg" == "--all" ]]
+	then
+		optAll=1
+	elif [[ "$arg" == "--latest" ]]
+	then
+		optSortByLatest=1
+	elif [[ "$arg" == "--chron" || "$arg" == "--chronological" ]]
+	then
+		optSortByLatest=0
+	elif [[ "$arg" == "--ignore-date" ]]
+	then
+		optIgnoreDate=1
+	elif [[ "$arg" == "--url" ]]
+	then
+		optNextIsUrl=1
+	elif [[ "$optNextIsUrl" == "1" ]]
+	then
+		optUrl="$arg"
+		optNextIsUrl=0
+	elif [[ "$arg" == "--name" ]]
+	then
+		optNextIsName=1
+	elif [[ "$optNextIsName" == "1" ]]
+	then
+		optName="$arg"
+		optNextIsName=0
+	elif [[ "$arg" == "--regex" ]]
+	then
+		optNextIsRegex=1
+	elif [[ "$optNextIsRegex" == "1" ]]
+	then
+		optRegex="$arg"
+		optNextIsRegex=0
+	elif [[ "$arg" == "-h" || "$arg" == "--help" ]]
+	then
+		helpDeets="
+		download and play a playlist of recent tracks from $optName
+
+		   --more	download more than the default (will be slower)
+		   --all	download all tracks (could be MUCH slower)
+		   --latest	play tracks newest first (default)
+		   --chron	play tracks in chronological order
+		   -h, --help	display this help
+		"
+		echo "$helpDeets"
+		exit 0
+	else
+		echo "I don't know what $arg is"
+		exit 1
+	fi
+done
+
+if [[ -z "$optName" ]]
+then
+	echo "name cannot be null"
+	exit 1
+elif [[ -z "$optUrl" ]]
+then
+	echo "url cannot be null"
+	exit 1
+fi
+
+if [[ "$OSTYPE" = "linux-android" ]]
+then
+	# android apps need these files to be in a public, non . directory
+	cacheDir="$(realpath "$HOME/storage/shared/Music/play-$optName/")"
+else
+	cacheDir="$HOME/.cache/play-$optName"
+fi
+
+maxFilesToDownload=10
+maxFilesToKeep=20
+maxFilesToKeepPlusOne=$((maxFilesToKeep+1))
+
+if [[ "$optAll" == 1 ]]
+then
+	maxFilesToDownload=999
+	maxFilesToKeep=999
+	maxFilesToKeepPlusOne=$((maxFilesToKeep+1))
+elif [[ "$optMore" == 1 ]]
+then
+	maxFilesToDownload="$maxFilesToKeep"
+fi
+
+# calc an absolute index for the filename
+# breaks with many other args
+# outputFormat="%(playlist_count+1-playlist_index)0d_%(title)s"
+if [[ "$optIgnoreDate" == "0" ]]
+then
+	outputFormat="%(upload_date)s_%(title)s"
+else
+	outputFormat="%(title)s"
+fi
+playlistPath="$cacheDir/$optName.m3u"
+regexArg=""
+if [[ -n "$optRegex" ]]
+then
+	regexArg="--match-title ""$optRegex"""
+	# regexArg="--match-filters ""title~=(?i)\b$optRegex\b"""
+fi
+
+mkdir -p "$cacheDir"
+
+if [[ "$OSTYPE" = "linux-android" ]] && ! "$HOME/bin_termux/termux-on-wifi"
+then
+	echo "skipping download on mobile data"
+else
+	# download the x most recent videos
+	yt-dlp "$optUrl" --extract-audio --embed-metadata --embed-thumbnail --audio-format "mp3" --audio-quality 1 --output "$cacheDir/$outputFormat.%(ext)s" --playlist-items "1:$maxFilesToDownload" --download-archive "$cacheDir/archive.log" --max-downloads "$maxFilesToDownload" $regexArg --restrict-filenames --no-overwrites --print "$outputFormat" --no-simulate --no-warnings --write-thumbnail --convert-thumbnails png
+fi
+
+# bad form, I know
+if [[ ! -d "$cacheDir" ]]
+then
+	echo "no files found"
+	exit 1
+elif ! ls -A "$cacheDir/"*.mp3 1> /dev/null 2>&1
+then
+	echo "no files found"
+	exit 1
+fi
+
+# remove files beyond the max
+ls -t "$cacheDir/"*.mp3 | tail -n +"$maxFilesToKeepPlusOne" | xargs --delimiter '\n' --no-run-if-empty rm
+
+# trim black bars off thumbnails
+if (type magick >/dev/null 2>&1 && type ffmpeg >/dev/null 2>&1)
+then
+	find "$cacheDir" -type f -iname '*.mp3' | while read -r vidPath
+	do
+		thumbPath="$(echo "$vidPath" | perl -pe 's/\.mp3$/.png/')"
+		newThumbPath="$(echo "$vidPath" | perl -pe 's/\.mp3$/_new.png/')"
+		tempVidPath="$(echo "$vidPath" | perl -pe 's/\.mp3$/_temp.mp3/')"
+
+		if [[ -z "$vidPath" || ! -f "$thumbPath" ]]
+		then
+			continue
+		fi
+
+		# trim thumbnail
+		magick convert "$thumbPath" -background black -fuzz 5% -trim "$newThumbPath"
+		
+		# embed thumbnail
+		ffmpeg -nostdin -hide_banner -loglevel error -i "$vidPath" -i "$newThumbPath" -c copy -map 0:a -map 1 "$tempVidPath"
+
+		# clean up
+		mv "$tempVidPath" "$vidPath"
+		rm "$thumbPath"
+		rm "$newThumbPath"
+
+	done
+fi
+
+# build the playlist in descending order
+if [[ "$optSortByLatest" == "1" ]]
+then
+	files="$(find "$cacheDir" -type f -iname '*.mp3' | sort -r)"
+else
+	files="$(find "$cacheDir" -type f -iname '*.mp3' | sort)"
+fi
+
+# convert to windows paths as necessary
+if type cygpath > /dev/null 2>&1 && [[ "$OSTYPE" = "msys" ]]
+then
+	files="$(echo "$files" | xargs --delimiter $'\n' cygpath --windows)"
+	# playlistPath="$(echo "$playlistPath" | xargs --delimiter $'\n' cygpath --windows)"
+fi
+
+if [[ -z "$files" ]]
+then
+	echo "no files found"
+	exit 1
+fi
+
+echo "$files" > "$playlistPath"
+
+# if (type vlc >/dev/null 2>&1)
+# then
+# 	vlc --qt-minimal-view "$playlistPath"
+# else
+# 	# open with the default program
+# 	# recommended: vlc for win, aimp for android
+# 	"$HOME/bin/open" "$playlistPath"
+# fi
+
+# open with the default program
+# recommended: vlc for win, aimp for android
+"$HOME/bin/open" "$playlistPath"

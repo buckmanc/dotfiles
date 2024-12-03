@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+"$HOME/bin/_play_youtube" --url https://www.youtube.com/playlist?list=PLOt3Kp6xo5oiv0vHYAObDEgVOjs4T8Pij --name "ode-to-castlevania-ost" --all --chronological --ignore-date --regex "castlevania" "$@"
