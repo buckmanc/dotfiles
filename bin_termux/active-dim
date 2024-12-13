@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+pluggedIn=0
+lastPluggedIn=0
+
+dimToggle="$HOME/bin_termux/dim-toggle"
+
+getPluggedIn(){
+	batStat="$(termux-battery-status | jq -r .plugged)"
+	if [[ "${batStat,,}" == *"unplugged"* ]]
+	then
+		echo 0
+	else
+		echo 1
+	fi
+}
+
+while true
+do
+	lastPluggedIn="$pluggedIn"
+
+	pluggedIn="$(getPluggedIn)"
+
+	if [[ "$pluggedIn" != "$lastPluggedIn" ]]
+	then
+		echo -n "$(date +'%R') "
+		if [[ "$pluggedIn" == 0 ]]
+		then
+			"$dimToggle" auto
+		else
+			"$dimToggle" default
+		fi
+	fi
+
+	# could do much more if
+	# 1) we knew if a bluetooth device was connected or
+	# 2) we knew the name of connected bluetooth devices
+	
+	sleep 0.5s
+done
+
