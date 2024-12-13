@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# short status
+git -c color.ui=always status -s "$@"

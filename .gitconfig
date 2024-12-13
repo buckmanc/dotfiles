@@ -2,17 +2,16 @@
 	# These values are set in ~/.gitconfig_local
 [alias]
 	# # word diff
-	# wdiff=diff --color-words="\\w+|." --ignore-cr-at-eol
+	# wdiff
 	# # letter diff
-	# ldiff=diff --color-words='.' --ignore-cr-at-eol
+	# ldiff
 	dbdiff=wdiff --ignore-matching-lines='^USE \\[\\w+\\]$'
 	# short stat
-	stat=!git -c color.ui=always status -s
+	# stat
 	statu=stat
 	sat=stat
-	statl=!git stat | less
+	# statl
 	pul=pull
-	# comm=!git diff --check && git commit
 	# diff check and dotnet test before committing
 	comm=!"~/bin/git-commit-check && git commit"
 	undo-commit=reset HEAD~

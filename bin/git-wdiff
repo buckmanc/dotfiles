@@ -2,4 +2,6 @@
 
 # word diff
 # at some point this stopped working in .gitconfig
-git diff --color-words="\w+|." --ignore-space-change "$@"
+# git diff --color-words="\w+|." --ignore-space-change "$@"
+# change to this format for termux compatibility
+git diff --color-words='\\\\w+|.' --ignore-space-change "$@"
