@@ -46,7 +46,7 @@ then
 			verboseArg=" -v"
 		fi
 
-		echo "$input" | ssh "$optSsh" "cat | \"$HOME/bin/xclip\"$verboseArg"
+		echo "$input" | ssh "$optSsh" "cat | \"\$HOME/bin/xclip\"$verboseArg"
 	elif ( type termux-clipboard-set > /dev/null 2>&1 )
 	then
 		verbEcho "...to 'termux-clipboard-set'"
@@ -82,7 +82,7 @@ else
 			verboseArg=" -v"
 		fi
 
-		ssh "$optSsh" "\"$HOME/bin/xclip\"$verboseArg"
+		ssh "$optSsh" "\"\$HOME/bin/xclip\"$verboseArg"
 	elif ( type termux-clipboard-get > /dev/null 2>&1 )
 	then
 		verbEcho "...from 'termux-clipboard-get'"
