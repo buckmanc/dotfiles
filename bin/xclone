@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# simple script to allow git clone with shortform urls
+
+path="$1"
+
+if [[ -z "$path" ]]
+then
+	git clone "$@"
+	exit
+fi
+
+shift 1
+
+if [[ "$path" != http* ]]
+then
+	if [[ "$path" != *'.com'* ]]
+	then
+		path="github.com/$path"
+	fi
+
+	path="https://$path"
+fi
+
+if [[ "$path" != *'.git' ]]
+then
+	path="${path}.git"
+fi
+
+git clone "$path" "$@"
+

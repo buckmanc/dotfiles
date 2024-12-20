@@ -12,7 +12,7 @@ input=$(echo "$*" \
 
 startEpochSec=$(date +"%s")
 targetEpochSec=$(date --date="$input" +"%s")
-secToWait="$(($targetEpochSec-$startEpochSec))"
+secToWait="$((targetEpochSec-startEpochSec))"
 
 # echo "raw input: $*"
 # echo "input: $input"
@@ -21,10 +21,22 @@ secToWait="$(($targetEpochSec-$startEpochSec))"
 # echo "secToWait: $secToWait"
 # echo "--------"
 
-echo "sleeping til $(date --date=@$targetEpochSec --rfc-3339=second | cut -c -19)"
+cursorVisible() {
+	# should be tput cnomr, but that disables cursor blink for some reason
+	tput cvvis
+	exit
+}
+
+trap cursorVisible SIGINT
+
+tput civis
+
+echo "sleeping til $(date --date=@"$targetEpochSec" --rfc-3339=second | cut -c -19)"
 
 
 sleep "$secToWait"
+
+cursorVisible
 
 # TODO make this a countdown instead
 # while [ "$targetEpochSec" > $(date +"%s") ]

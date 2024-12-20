@@ -226,7 +226,18 @@ fi
 
 # if type thefuck	>/dev/null 2>&1; then
 # 	eval "$(thefuck --alias)"
+# else
+# 	# alias thefuck='pip install thefuck --user'
+# 	# install bug fix version for now
+# 	alias thefuck='pip install https://github.com/DJStompZone/thefuck/archive/master.zip --break-system-packages --user'
 # fi
+
+# thefuck is dead, long live pay-respects
+# github.com/nvbn/thefuck/issues/1466
+if type pay-respects >/dev/null 2>&1; then
+	eval "$(pay-respects bash --alias)"
+	alias fuck=f
+fi
 
 if type pandoc >/dev/null 2>&1; then
 	eval "$(pandoc --bash-completion)"

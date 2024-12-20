@@ -4,16 +4,39 @@ if ( type watch > /dev/null 2>&1 )
 then
 	watch "$@"
 else
+
+	cursorVisible() {
+		# should be tput cnomr, but that disables cursor blink for some reason
+		tput cvvis
+		exit
+	}
+
+	trap cursorVisible SIGINT
+
+	tput civis
+
 	# simple watch substitute courtesy of gist.github.com/espaciomore
 	sleepTime=10
 	ARGS="${@}"
 	clear;
 	while(true); do
 		OUTPUT="$($ARGS)"
-		clear
-		echo -e "Every ${sleepTime}s: $ARGS"
-		echo ""
-		echo -e "${OUTPUT[@]}"
+
+		text=''
+
+		text+="Every ${sleepTime}s: $ARGS\n"
+		text+="\n"
+		text+="${OUTPUT[@]}"
+
+		# tail handles lines overflowing the screen
+		# though there's some flicker when the screen is shrunk after xwatch is started
+		text="$(echo "$text" | tail -n $LINES)"
 		sleep "$sleepTime"
+
+		# nowrap, at present, does not accurately handle color codes
+		# but unless the text nears the screen edge it should do just fine
+		echo -en "\e[H$text" | sed "s/$/$(seq -s ' ' 1 $COLUMNS | tr -dc ' ')/g" | nowrap
 	done
+
+	cursorVisible
 fi
