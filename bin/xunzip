@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# intuitive, simple unzip behaviour
+# wraps 7z for core functionality
+
 if [[ -z "$@" ]]
 then
 	echo "need an archive path"
@@ -24,9 +27,9 @@ do
 
 	dirIn="$(dirname "$archivePath")"
 	filename="$(basename "$archivePath")"
-	ext="$(echo "${archivePath##*.}")"
+	ext="${archivePath#*.}"
 	# sanitize multiple dot file extension zips from the dir name
-	dirName="$(echo "${filename%.*}" | perl -pe 's/(\.pkg|\.tar|\.gz){1,3}$//g')"
+	dirName="$(echo "${filename%.*}" | perl -pe 's/(\.pkg|\.tar|\.gz){1,3}$//g' | perl -pe 's/\.//g')"
 	dirOut="$dirIn/$dirName"
 
 	# 7zip doesn't have zstd support
@@ -39,9 +42,28 @@ do
 		fi
 	fi
 
+	# unzip
 	if 7z x -spe "-o$dirOut" -aos -- "$archivePath" | grep -i "extracting"
 	then
+		# if successful, delete the archive
 		rm "$archivePath"
+	fi
+
+	# double unzip .tar.gz files
+	if [[ "${ext,,}" == "tar.gz" ]]
+	then
+		tarPath="$(find "$dirOut" -type f -iname '*.tar' -print -quit)"
+
+		if [[ -f "$tarPath" ]]
+		then
+			if "$HOME/bin/xunzip" "$tarPath"
+			then
+				# if unzip successful, move file contents one dir down and eliminate the extra directory
+				tarOutDir="$(find "$dirOut" -maxdepth 1 -mindepth 1 -type d)"
+				mv "$tarOutDir"/* "$dirOut"
+				rm "$tarOutDir" -r
+			fi
+		fi
 	fi
 
 done
