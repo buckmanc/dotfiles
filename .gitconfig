@@ -56,7 +56,7 @@
 [filter "notepad++ignore"]
 	clean = ~/.config/gitconfig_scripts/notepad++_clean_filter.sh
 [filter "gitignore"]
-	clean = "sed -b '/#gitignore$/d'"
+	clean = "sed -b '/# \\?gitignore\\r\\?$/d'"
 [filter "starship"]
 	clean = "~/.config/gitconfig_scripts/starship_filter.sh" --clean
 	smudge = "~/.config/gitconfig_scripts/starship_filter.sh" --smudge
