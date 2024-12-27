@@ -24,7 +24,7 @@
 	plog=log --abbrev-commit --date-order --format=format:'%C(bold blue)%>|(21)%h%C(reset) %C(bold green)(%as)%C(reset) %C(white)%<(60,trunc)%s%C(reset) %C(dim white)- %aN%C(reset)%C(auto)%d%C(reset)' --decorate --graph --all
 	# one line log
 	olog=log --abbrev-commit --date-order --format=format:'%C(bold green)%ad%C(reset) %C(white)%<(45,trunc)%s%C(reset) %C(dim white)- %aN%C(reset)%C(auto)%+d%C(reset)'
-	dumpchanges=!git clean -fd && git checkout .
+	# dumpchanges
 	pullall="!f() { \
 		test -z \"$(git status --porcelain)\" || { echo 'Uncommitted changes!' && exit 1; };\
 		currentbranch=$(git branch | grep \\* | cut -c 3-);\

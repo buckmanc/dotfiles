@@ -22,6 +22,11 @@ shellFail=0
 
 while read -r scriptFile
 do
+	if [[ -z "$scriptFile" ]]
+	then
+		continue
+	fi
+
 	shellChecked=1
 	if ! "$HOME/bin/xshellcheck" "$scriptFile"
 	then
