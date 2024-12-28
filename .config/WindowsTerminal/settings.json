@@ -52,6 +52,7 @@
       "antialiasingMode": "cleartype",
       "backgroundImage": "%HOMEDRIVE%%HOMEPATH%\\.config\\assets\\backgrounds\\totk_ouroboros_grey.png",
       "backgroundImageAlignment": "bottomRight",
+      "backgroundImageOpacity": 0.5,
       "bellStyle": "window",
       "colorScheme": "Synth Midnight Dark",
       "cursorShape": "filledBox",
@@ -59,6 +60,7 @@
         "face": "FiraCode NFM",
         "size": 14
       },
+      "opacity": 75,
       "startingDirectory": "%HOMEDRIVE%%HOMEPATH%"
     },
     "list": [
