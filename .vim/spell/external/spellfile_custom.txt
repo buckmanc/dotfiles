@@ -174,6 +174,7 @@ Dios
 direness
 discog
 disincentivizing
+disposability
 DLC
 DLCs
 dls
@@ -189,6 +190,7 @@ DQ
 dropbox
 duddy
 Duggar
+Duplo
 Duplos
 durian
 dystopia
@@ -214,6 +216,7 @@ Fauci
 faux
 favs
 Fazoli's
+fearmongering
 feets
 Fibbage
 fingie
@@ -250,6 +253,7 @@ grifter
 grimoire
 grinch
 grody
+gummies
 Gymboree
 hacky
 hander
@@ -351,6 +355,7 @@ Machina
 magick
 Magnavox
 mahjong
+mal
 malate
 Malwart
 mana
@@ -374,6 +379,7 @@ Mina
 Mina's
 minigame
 minigames
+minigolf
 mins
 mislisting
 mitzvah
@@ -386,6 +392,8 @@ mofo
 Moines
 mon
 monologuing
+monospace
+monospaced
 mons
 moolah
 moolahs
@@ -396,6 +404,7 @@ mothership
 mowhawk
 must've
 nanite
+nd
 necklet
 nerddom
 nerdfont
@@ -417,6 +426,7 @@ olde
 omelette
 onesie
 oof
+oogle
 Orobourous
 Orson
 OST
@@ -468,6 +478,7 @@ pukey
 pukified
 punkos
 puppeteering
+Puyo
 Q1
 Q2
 Q3
@@ -601,6 +612,7 @@ Tracfone
 transgressive
 transphobic
 treaters
+trippy
 Trumpers
 tupper
 Tzu
@@ -626,6 +638,7 @@ unvaxxed
 Urfaust
 vax
 vaxxed
+VGM
 vibing
 vids
 Vischer
@@ -660,6 +673,9 @@ x6
 x7
 x8
 x9
+xfer
+xfered
+xferring
 xmas
 xyz
 Y2K
@@ -807,6 +823,8 @@ Jyggalag's
 KACL
 Kaladin
 Kaladin's
+Karoma
+Karoma's
 Karun
 keese
 Komashi
@@ -906,6 +924,7 @@ Skyrim
 SotN
 Spiderman
 Spidermen
+Spidey
 Splatoon
 stardate
 Starfleet
@@ -925,6 +944,7 @@ Temba
 Threnody
 TMNT
 TNG
+Toadette
 TotK
 TotK's
 tricorder
@@ -1125,6 +1145,7 @@ Inacom
 infoUSA
 Joslyn
 Kanesville
+Kearney
 KGBI
 Kiewit
 Lauritzen

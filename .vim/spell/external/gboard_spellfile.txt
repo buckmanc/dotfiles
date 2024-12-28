@@ -175,6 +175,7 @@
 	direness	en-US
 	discog	en-US
 	disincentivizing	en-US
+	disposability	en-US
 	DLC	en-US
 	DLCs	en-US
 	dls	en-US
@@ -190,6 +191,7 @@
 	dropbox	en-US
 	duddy	en-US
 	Duggar	en-US
+	Duplo	en-US
 	Duplos	en-US
 	durian	en-US
 	dystopia	en-US
@@ -215,6 +217,7 @@
 	faux	en-US
 	favs	en-US
 	Fazoli's	en-US
+	fearmongering	en-US
 	feets	en-US
 	Fibbage	en-US
 	fingie	en-US
@@ -251,6 +254,7 @@
 	grimoire	en-US
 	grinch	en-US
 	grody	en-US
+	gummies	en-US
 	Gymboree	en-US
 	hacky	en-US
 	hander	en-US
@@ -352,6 +356,7 @@
 	magick	en-US
 	Magnavox	en-US
 	mahjong	en-US
+	mal	en-US
 	malate	en-US
 	Malwart	en-US
 	mana	en-US
@@ -375,6 +380,7 @@
 	Mina's	en-US
 	minigame	en-US
 	minigames	en-US
+	minigolf	en-US
 	mins	en-US
 	mislisting	en-US
 	mitzvah	en-US
@@ -387,6 +393,8 @@
 	Moines	en-US
 	mon	en-US
 	monologuing	en-US
+	monospace	en-US
+	monospaced	en-US
 	mons	en-US
 	moolah	en-US
 	moolahs	en-US
@@ -397,6 +405,7 @@
 	mowhawk	en-US
 	must've	en-US
 	nanite	en-US
+	nd	en-US
 	necklet	en-US
 	nerddom	en-US
 	nerdfont	en-US
@@ -418,6 +427,7 @@
 	omelette	en-US
 	onesie	en-US
 	oof	en-US
+	oogle	en-US
 	Orobourous	en-US
 	Orson	en-US
 	OST	en-US
@@ -469,6 +479,7 @@
 	pukified	en-US
 	punkos	en-US
 	puppeteering	en-US
+	Puyo	en-US
 	Q1	en-US
 	Q2	en-US
 	Q3	en-US
@@ -602,6 +613,7 @@
 	transgressive	en-US
 	transphobic	en-US
 	treaters	en-US
+	trippy	en-US
 	Trumpers	en-US
 	tupper	en-US
 	Tzu	en-US
@@ -627,6 +639,7 @@
 	Urfaust	en-US
 	vax	en-US
 	vaxxed	en-US
+	VGM	en-US
 	vibing	en-US
 	vids	en-US
 	Vischer	en-US
@@ -661,6 +674,9 @@
 	x7	en-US
 	x8	en-US
 	x9	en-US
+	xfer	en-US
+	xfered	en-US
+	xferring	en-US
 	xmas	en-US
 	xyz	en-US
 	Y2K	en-US
@@ -808,6 +824,8 @@
 	KACL	en-US
 	Kaladin	en-US
 	Kaladin's	en-US
+	Karoma	en-US
+	Karoma's	en-US
 	Karun	en-US
 	keese	en-US
 	Komashi	en-US
@@ -907,6 +925,7 @@
 	SotN	en-US
 	Spiderman	en-US
 	Spidermen	en-US
+	Spidey	en-US
 	Splatoon	en-US
 	stardate	en-US
 	Starfleet	en-US
@@ -926,6 +945,7 @@
 	Threnody	en-US
 	TMNT	en-US
 	TNG	en-US
+	Toadette	en-US
 	TotK	en-US
 	TotK's	en-US
 	tricorder	en-US
@@ -1126,6 +1146,7 @@
 	infoUSA	en-US
 	Joslyn	en-US
 	Kanesville	en-US
+	Kearney	en-US
 	KGBI	en-US
 	Kiewit	en-US
 	Lauritzen	en-US
