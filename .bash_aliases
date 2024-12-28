@@ -7,7 +7,6 @@ alias xtree='tree -fi | grep -i --color'
 alias xgrep='grep -i --color'
 alias xhistory='history | cut -c 8- | grep -ivE  "^x?hist(ory | )" | grep -i --color'
 alias xhist='xhistory'
-alias gwap='git diff -w --no-color | git apply --cached --ignore-whitespace && git checkout -- . && git reset && git add -p'
 alias gut='git'
 alias got='git'
 alias it='git'
@@ -24,6 +23,8 @@ alias :wq=":q"
 alias :w=":q"
 alias :x=":q"
 alias x=":q"
+alias ZZ=":q"
+alias dc="cd"
 # long exa
 alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
 
