@@ -139,6 +139,15 @@ function! GitAddMeFunc(bang)
 	" echo a:bang
 endfunction
 
+function BaShebang()
+	" don't add a shebang to 
+	" .bashrc, .bash_alias, etc
+	if expand("%:t") =~ '^\.bash'
+		return
+	endif
+	ShebangInsert bash
+endfunction
+
 command -bar -nargs=? Date put =DateStampFunc(<args>)
 command RunMe update | !"%:p"
 " TODO: throws "too many args" when called more than once after writing changes on the first run
@@ -179,10 +188,11 @@ augroup FileTypeSpecificAutocommands
 	autocmd FileType markdown,text setlocal keywordprg=dict
 	autocmd Filetype markdown,text setlocal spell spelllang=en_us	" turn on spell check
 	autocmd FileType text hi Search ctermfg=magenta " text theme is white, so reverse search colors make white cursor painful
-	autocmd BufRead,BufNewFile */bin/* silent! ShebangInsert bash
+	autocmd BufRead,BufNewFile ~/bin*/* silent! ShebangInsert bash
 	" if this gets annoying, use a function with an "if filereadable(expand('%'))" test to check for newness
 	" file type and BufNewFile autocommands cannot be combined
-	autocmd FileType sh,bash,python silent! ShebangInsert
+	autocmd FileType sh,python silent! ShebangInsert
+	autocmd FileType sh,bash,python silent! call BaShebang()
 
 	" doesn't work
 	" autocmd FileChangedRO * echohl WarningMsg | echo "read-only file" | echohl None
