@@ -50,11 +50,13 @@ knobs: 2
 ## Knobs can be rotated counter-clockwise (ccw) or clockwise (cw)
 ## and pressed down.
 
+# win-alt-k is a windows mic mute shortcut
+
 layers:
   - buttons:
-      - ["play", "prev", "next", "mute"]
-      - ["printscreen,win-shift-s", "space", "space", "win-l"]
-      - ["space", "space", "shift-home,delete", "enter"]
+      - ["play", "prev", "next", "win-alt-k"]
+      - ["printscreen,win-shift-s", "escape", "escape", "win-l"]
+      - ["escape", "escape", "shift-home,delete", "enter"]
     knobs:
       - ccw: "volumedown"
         press: "mute"
@@ -64,21 +66,21 @@ layers:
         cw: "ctrl-tab"
 
   - buttons:
-      - ["play", "prev", "next", "mute"]
-      - ["printscreen,win-shift-s", "space", "space", "win-l"]
-      - ["space", "space", "shift-home,delete", "enter"]
+      - ["a", "b", "c", "d"]
+      - ["e", "f", "g", "h"]
+      - ["i", "j", "k", "l"]
     knobs:
       - ccw: "volumedown"
         press: "mute"
         cw: "volumeup"
-      - ccw: "ctrl-shift-tab"
-        press: "enter"
-        cw: "ctrl-tab"
+      - ccw: "wheeldown"
+        press: "z"
+        cw: "wheelup"
 
   - buttons:
-      - ["play", "prev", "next", "mute"]
-      - ["printscreen,win-shift-s", "space", "space", "win-l"]
-      # - ["space", "space", "shift-home,delete", "enter"]
+      - ["play", "prev", "next", "win-alt-k"]
+      # - ["printscreen,win-shift-s", "escape", "escape", "win-l"]
+      # - ["escape", "escape", "shift-home,delete", "enter"]
     knobs:
       - ccw: "volumedown"
         press: "mute"

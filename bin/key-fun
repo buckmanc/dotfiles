@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+
+if ( type figlet > /dev/null 2>&1 )
+then
+	hasFiglet=1
+else
+	hasFiglet=0
+fi
+
+while true
+do
+	read -rsn1 input
+
+	ucase="${input^^}"
+	lcase="${input,,}"
+	if [[ "$lcase" == "$ucase" ]]
+	then
+		output="$input"
+	else
+		output="$ucase $lcase"
+	fi
+
+	if [[ "$hasFiglet" == 1 ]]
+	then
+		figlet -c -f 'Doh' "$output"
+	else
+		liney="$(echo "-----" | "$HOME/bin/center")"
+		output2=''
+		output2+="\n"
+		output2+="$liney\n"
+		output2+="$(echo "$output" | "$HOME/bin/center")\n"
+		output2+="$liney\n"
+		output2+="\n"
+
+		echo -e "$output2"
+	fi
+	
+	
+done
