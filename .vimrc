@@ -28,15 +28,22 @@ set wildmenu		" command line tab completion
 set wildignorecase	" ignore case when tab completing paths
 set whichwrap+=<,>,h,l	" allow moving to next line from the ends
 set backspace=indent,eol,start	" 'normal' backspace behavior
-set undodir=~/.vim/undodir	" where to save undo history
-set undofile			" enable persistent undo
-set backupdir=~/.vim/backupdir  " backups
-set backup
-set directory=~/.vim/swap
 set mouse=		" disable mouse/touch controls
 set clipboard=		" unjoin from system clipboard on windows for consistent cross-platform behaviour
 set viminfo+=!		" make sure it can save viminfo
 set viminfo-=<50	" unlimited saved register size
+
+" problematic behaviour
+" these setting vars are comma delineated
+" which means any paths assigned to them need to have the commas escaped
+" you're right, commas should *never* be in your home dir
+" but some things cannot be controlled
+let vimDirCommaless=escape(expand("~/.vim/"), ',')
+let &undodir=vimDirCommaless . 'undodir'	" where to save undo history
+set undofile			" enable persistent undo
+let &backupdir=vimDirCommaless . 'backupdir'  " backups
+set backup
+let &directory=vimDirCommaless . 'swap'
 
 " filenames can have space, comma, ampersand... sigh
 set isfname+=32
@@ -91,6 +98,11 @@ for d in glob('~/.vim/spell/*.add', 1, 1)
 
 		" append the file path to the list
 
+		" spellfile is comma delineated
+		" so commas in the paths must be escaped
+		" can't escape earlier as it breaks file system functions
+		let d = escape(d, ',')
+
 		if (len(spellPaths) == 0)
 			let spellPaths=fnameescape(d)
 		else
@@ -132,20 +144,21 @@ command RunMe update | !"%:p"
 " TODO: throws "too many args" when called more than once after writing changes on the first run
 command -bang GitAddMe :call GitAddMeFunc(<bang>0)
 
-" create the undo dir if it doesn't exist
-if !isdirectory(&undodir)
-	call mkdir(&undodir, "p")
-endif
+" create some internal dirs if they don't exist
+" with support for multiple values
+" and escaped commas
+let dirsToMake=&undodir . ',' . &backupdir . ',' . &directory
 
-" create the backup dir if it doesn't exist
-if !isdirectory(&backupdir)
-	call mkdir(&backupdir, "p")
-endif
+" split on comma not preceded by backslash
+for dir in split(dirsToMake, '\(\\\)\@<!,')
+	" unescape the path
+	let dir = substitute(dir, '\\,', ',', 'g')
 
-" create the swap dir if it doesn't exist
-if !isdirectory(&directory)
-	call mkdir(&directory, "p")
-endif
+	" mkdir if it doesn't exist
+	if !isdirectory(dir)
+		call mkdir(dir, "p")
+	endif
+endfor
 
 if has('autocmd')
 augroup FileTypeSpecificAutocommands
