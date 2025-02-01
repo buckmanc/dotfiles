@@ -43,10 +43,12 @@ axe
 axe's
 B2B
 Baahubali
+bam
 bandana
 baselard
 Baskin
 Bathory
+batshit
 bb
 bbq
 BCP
@@ -264,6 +266,7 @@ hatewatched
 Havisham
 headachey
 headspace
+healings
 hearted
 hexmas
 HIPAA
@@ -309,6 +312,7 @@ isos
 Ittibitz
 ivermectin
 Jackbox
+Janzen's
 JD
 Jemisin's
 jiggler
@@ -363,7 +367,6 @@ Mangelsen's
 Mardi Gras
 marvelling
 Mastercuts
-Matisyahu
 matryoshka
 mayhaps
 McGoey
@@ -408,6 +411,7 @@ nd
 necklet
 nerddom
 nerdfont
+Netgear
 neurodivergence
 neurodivergencies
 neurodivergent
@@ -416,6 +420,7 @@ Nextdoor
 noctum
 noir
 noob
+nopers
 NPC
 numbingly
 Odwalla
@@ -467,6 +472,7 @@ polos
 poofy
 porkpie
 positivity
+potate
 ppl
 pre
 prep'd
@@ -552,6 +558,7 @@ shifter
 Shoney's
 shoppy
 si
+sippy
 skelly
 skibidi
 skirl
@@ -619,6 +626,7 @@ Tzu
 Uber
 umami
 unanswering
+unboxed
 uncancelled
 uncomplicatedly
 underpowered
@@ -636,6 +644,7 @@ unstyled
 unvaccinated
 unvaxxed
 Urfaust
+vampiric
 vax
 vaxxed
 VGM
@@ -698,6 +707,7 @@ ZeldaSymphony
 Zenni
 zonked
 zonking
+Kaladin Stormblessed
 Adolin
 Adolin's
 Adonalsium
@@ -750,7 +760,9 @@ coppermind
 Cosmere
 cosmere
 Cytoverse
+Dalinar
 Dalinar's
+Davar
 deathsquitos
 Dibella
 Dibella's
@@ -807,6 +819,7 @@ Homelander
 Hylia
 Hylia's
 Hyrule
+Héra
 Ico
 IDW
 Iggy
@@ -814,6 +827,7 @@ Ithelia
 Ithelia's
 Janeway
 Jarl
+Jasnah
 Jokabi
 Julianos
 Julianos's
@@ -827,6 +841,7 @@ Karoma
 Karoma's
 Karun
 keese
+Kholin
 Komashi
 Koopa
 Korok
@@ -836,6 +851,7 @@ l4d2
 L4D2
 Lemmy
 Li'l
+Lopen
 Lothlorien
 LotR
 luma
@@ -863,6 +879,7 @@ Mikel
 Minecraft
 Minecrafted
 Mistborn
+Moash
 Moder
 Molag
 Molag's
@@ -874,10 +891,12 @@ Nalthis
 Namira
 Namira's
 Narwa
+Navani
 Nightvale
 Nocturnal's
 Oathbringer
 Obrodai
+Octonauts
 ODST
 Olimar's
 Paddington
@@ -898,8 +917,10 @@ Puella
 Qapla
 Quantumania
 re4
+Renarin
 Riker
 Rodericka
+Rohirrim
 Rosalina
 Rosalina's
 Roshar
@@ -937,9 +958,13 @@ Stormblessed
 Stormlight
 stormlight
 Sunreach
+Szeth
+Szeth's
 Taldain
 Talos
 Talos's
+Taravangian
+Teft
 Temba
 Threnody
 TMNT
@@ -956,7 +981,9 @@ UTol
 Vaermina
 Vaermina's
 Valheim
+Vallano
 Vax
+Venli
 Wakanda
 Wario
 Witcher

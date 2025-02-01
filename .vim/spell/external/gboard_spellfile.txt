@@ -44,10 +44,12 @@
 	axe's	en-US
 	B2B	en-US
 	Baahubali	en-US
+	bam	en-US
 	bandana	en-US
 	baselard	en-US
 	Baskin	en-US
 	Bathory	en-US
+	batshit	en-US
 	bb	en-US
 	bbq	en-US
 	BCP	en-US
@@ -265,6 +267,7 @@
 	Havisham	en-US
 	headachey	en-US
 	headspace	en-US
+	healings	en-US
 	hearted	en-US
 	hexmas	en-US
 	HIPAA	en-US
@@ -310,6 +313,7 @@
 	Ittibitz	en-US
 	ivermectin	en-US
 	Jackbox	en-US
+	Janzen's	en-US
 	JD	en-US
 	Jemisin's	en-US
 	jiggler	en-US
@@ -364,7 +368,6 @@
 	Mardi Gras	en-US
 	marvelling	en-US
 	Mastercuts	en-US
-	Matisyahu	en-US
 	matryoshka	en-US
 	mayhaps	en-US
 	McGoey	en-US
@@ -409,6 +412,7 @@
 	necklet	en-US
 	nerddom	en-US
 	nerdfont	en-US
+	Netgear	en-US
 	neurodivergence	en-US
 	neurodivergencies	en-US
 	neurodivergent	en-US
@@ -417,6 +421,7 @@
 	noctum	en-US
 	noir	en-US
 	noob	en-US
+	nopers	en-US
 	NPC	en-US
 	numbingly	en-US
 	Odwalla	en-US
@@ -468,6 +473,7 @@
 	poofy	en-US
 	porkpie	en-US
 	positivity	en-US
+	potate	en-US
 	ppl	en-US
 	pre	en-US
 	prep'd	en-US
@@ -553,6 +559,7 @@
 	Shoney's	en-US
 	shoppy	en-US
 	si	en-US
+	sippy	en-US
 	skelly	en-US
 	skibidi	en-US
 	skirl	en-US
@@ -620,6 +627,7 @@
 	Uber	en-US
 	umami	en-US
 	unanswering	en-US
+	unboxed	en-US
 	uncancelled	en-US
 	uncomplicatedly	en-US
 	underpowered	en-US
@@ -637,6 +645,7 @@
 	unvaccinated	en-US
 	unvaxxed	en-US
 	Urfaust	en-US
+	vampiric	en-US
 	vax	en-US
 	vaxxed	en-US
 	VGM	en-US
@@ -699,6 +708,7 @@
 	Zenni	en-US
 	zonked	en-US
 	zonking	en-US
+	Kaladin Stormblessed	en-US
 	Adolin	en-US
 	Adolin's	en-US
 	Adonalsium	en-US
@@ -751,7 +761,9 @@
 	Cosmere	en-US
 	cosmere	en-US
 	Cytoverse	en-US
+	Dalinar	en-US
 	Dalinar's	en-US
+	Davar	en-US
 	deathsquitos	en-US
 	Dibella	en-US
 	Dibella's	en-US
@@ -808,6 +820,7 @@
 	Hylia	en-US
 	Hylia's	en-US
 	Hyrule	en-US
+	Héra	en-US
 	Ico	en-US
 	IDW	en-US
 	Iggy	en-US
@@ -815,6 +828,7 @@
 	Ithelia's	en-US
 	Janeway	en-US
 	Jarl	en-US
+	Jasnah	en-US
 	Jokabi	en-US
 	Julianos	en-US
 	Julianos's	en-US
@@ -828,6 +842,7 @@
 	Karoma's	en-US
 	Karun	en-US
 	keese	en-US
+	Kholin	en-US
 	Komashi	en-US
 	Koopa	en-US
 	Korok	en-US
@@ -837,6 +852,7 @@
 	L4D2	en-US
 	Lemmy	en-US
 	Li'l	en-US
+	Lopen	en-US
 	Lothlorien	en-US
 	LotR	en-US
 	luma	en-US
@@ -864,6 +880,7 @@
 	Minecraft	en-US
 	Minecrafted	en-US
 	Mistborn	en-US
+	Moash	en-US
 	Moder	en-US
 	Molag	en-US
 	Molag's	en-US
@@ -875,10 +892,12 @@
 	Namira	en-US
 	Namira's	en-US
 	Narwa	en-US
+	Navani	en-US
 	Nightvale	en-US
 	Nocturnal's	en-US
 	Oathbringer	en-US
 	Obrodai	en-US
+	Octonauts	en-US
 	ODST	en-US
 	Olimar's	en-US
 	Paddington	en-US
@@ -899,8 +918,10 @@
 	Qapla	en-US
 	Quantumania	en-US
 	re4	en-US
+	Renarin	en-US
 	Riker	en-US
 	Rodericka	en-US
+	Rohirrim	en-US
 	Rosalina	en-US
 	Rosalina's	en-US
 	Roshar	en-US
@@ -938,9 +959,13 @@
 	Stormlight	en-US
 	stormlight	en-US
 	Sunreach	en-US
+	Szeth	en-US
+	Szeth's	en-US
 	Taldain	en-US
 	Talos	en-US
 	Talos's	en-US
+	Taravangian	en-US
+	Teft	en-US
 	Temba	en-US
 	Threnody	en-US
 	TMNT	en-US
@@ -957,7 +982,9 @@
 	Vaermina	en-US
 	Vaermina's	en-US
 	Valheim	en-US
+	Vallano	en-US
 	Vax	en-US
+	Venli	en-US
 	Wakanda	en-US
 	Wario	en-US
 	Witcher	en-US
