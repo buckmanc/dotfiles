@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+while read -r json
+do
+	packageName="$(echo "$json" | jq -r '.packageName')"
+	packageName="$(echo "$packageName" | perl -pe 's/^((com|android|samsung)\.)+//g')"
+	packageName="$(echo "$packageName" | perl -pe 's/(\.(orca|android|frontpage|application|mShop|shopping|katana|music))+$//g')"
+	title="$(echo "$json" | jq -r '.title')"
+	content="$(echo "$json" | jq -r '.content')"
+
+	if [[ "$packageName" == "termux" || "$packageName" == "reddit" || "$packageName" == "spotify" ]]
+	then
+		continue
+	elif [[ -z "$title" && -z "$content" ]]
+	then
+		continue
+	fi
+	
+	output+="$packageName: $title"$'\n'
+	output+="$content"$'\n'
+	
+	# output+="--------"$'\n'
+	
+	output+=$'\n'
+	output+="--------"$'\n'
+	output+=$'\n'
+done < <( termux-notification-list | jq 'sort_by(.when)' | jq -rc '.[]' ) 
+
+echo "$output" | head -n -3 | less
+

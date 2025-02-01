@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# pkg update
+pkg upgrade
+apt autoremove
+pkg clean

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+bluetoothConnected="$(termux-audio-info | jq '.BLUETOOTH_A2DP_IS_ON')"
+
+if [[ "$bluetoothConnected" != "true" ]]
+then
+	termux-volume music 0
+fi
+
+# termux-brightness auto
+"$HOME/bin_termux/dim-toggle" auto
+
+termux-toast "midnight settings updated"
