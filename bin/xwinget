@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# winget  | is pronounced |  wing get
+# xwinget | is pronounced | zwing get
+
+# slapping .exe on the end makes the results greppable
+# for some arcane reason
+
+if ( ! type winget.exe >/dev/null 2>&1)
+then
+	"$HOME/bin/open" "https://learn.microsoft.com/en-us/windows/package-manager/winget/"
+	echo "winget not installed"
+	exit 1
+fi
+
+verb="$1"
+echo "verb: $verb"
+
+if [[ "$verb" == "upgrade" ]]
+then
+	shift 1
+	for arg in "$@"
+	do
+		echo "attempting to upgrade $arg"
+		winget.exe upgrade "$arg"
+		echo "----------"
+	done
+else
+	winget.exe "$@"
+fi

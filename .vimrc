@@ -145,7 +145,7 @@ function BaShebang()
 	if expand("%:t") =~ '^\.bash'
 		return
 	endif
-	ShebangInsert bash
+	silent! ShebangInsert bash
 endfunction
 
 command -bar -nargs=? Date put =DateStampFunc(<args>)
@@ -192,7 +192,7 @@ augroup FileTypeSpecificAutocommands
 	" if this gets annoying, use a function with an "if filereadable(expand('%'))" test to check for newness
 	" file type and BufNewFile autocommands cannot be combined
 	autocmd FileType sh,python silent! ShebangInsert
-	autocmd FileType sh,bash,python silent! call BaShebang()
+	autocmd FileType bash call BaShebang()
 
 	" doesn't work
 	" autocmd FileChangedRO * echohl WarningMsg | echo "read-only file" | echohl None
@@ -233,10 +233,11 @@ if filereadable(expand("~/.vim/plug.vim"))
 	" Plug 'sirver/ultisnips'
 	Plug 'editorconfig/editorconfig-vim'
 	Plug 'jlcrochet/vim-razor'	" razor syntax
-	Plug 'tmadsen/vim-compiler-plugin-for-dotnet'
+	Plug 'datamadsen/vim-compiler-plugin-for-dotnet'
 	Plug 'tpope/vim-dispatch'	" async :Make
 	Plug 'mhinz/vim-startify'	" startup screen
-	Plug 'sbdchd/vim-shebang'	" :ShebangInsert
+	" Plug 'sbdchd/vim-shebang'	" :ShebangInsert
+	Plug 'buckmanc/vim-shebang', { 'branch': 'blank_line_dev' }
 	Plug 'glensc/vim-syntax-lighttpd'
 
 	call plug#end()
@@ -316,6 +317,7 @@ if filereadable(expand("~/.vim/plug.vim"))
 	" let g:UltiSnipsJumpForwardTrigger = '<C-j>'
 	" let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
 
+	let g:shebang#blank_line = 1
 	let g:shebang#shebangs = {
 				\ 'sh': '#!/usr/bin/env bash',
 				\ 'termux': '#!/data/data/com.termux/files/usr/bin/bash'

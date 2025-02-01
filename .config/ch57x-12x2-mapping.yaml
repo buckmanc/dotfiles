@@ -61,9 +61,9 @@ layers:
       - ccw: "volumedown"
         press: "mute"
         cw: "volumeup"
-      - ccw: "ctrl-shift-tab"
-        press: "enter"
-        cw: "ctrl-tab"
+      - ccw: "left"
+        press: "win-tab"
+        cw: "right"
 
   - buttons:
       - ["a", "b", "c", "d"]
@@ -82,9 +82,9 @@ layers:
       # - ["printscreen,win-shift-s", "escape", "escape", "win-l"]
       # - ["escape", "escape", "shift-home,delete", "enter"]
     knobs:
-      - ccw: "volumedown"
-        press: "mute"
-        cw: "volumeup"
+      - ccw: "wheeldown"
+        press: "escape"
+        cw: "wheelup"
       - ccw: "ctrl-shift-tab"
-        press: "enter"
+        press: "escape"
         cw: "ctrl-tab"

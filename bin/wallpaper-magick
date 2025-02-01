@@ -17,6 +17,8 @@ g	geometry; WxH percent offset
 s	image scale percent
 a	color using image alpha
 r	rotate degrees, or h or v for horizontal/vertical flip
+n	no centertrim (to handle rare bugs in centertrim)
+F	overwrite destination if exists
 "
 }
 
@@ -34,11 +36,13 @@ defaultIconColor="white"
 defaultBg="black"
 defaultLength="4000"
 maxRes="4000x4000>^"
+optForce=0
+optNoCenterTrim=0
 
 imageOutlinePath="$HOME/bin/image-outline"
 centerTrimPath="$HOME/bin/centertrim"
 
-while getopts ":t:f:i:o:g:s:m:r:bvha" opt
+while getopts ":t:f:i:o:g:s:m:r:bvhaFn" opt
 do
 	case "${opt}" in
 		i)
@@ -78,6 +82,12 @@ do
 			help
 			exit 0
 			;;
+		F)
+			optForce=1
+			;;
+		n)
+			optNoCenterTrim=1
+			;;
 		\?)
 			echo "invalid option: $name"
 			exit 1
@@ -106,6 +116,10 @@ then
 	echo "input path does not exist:"
 	echo "$inPath"
 	exit 1
+elif [[ -f "$outPath" && "$optForce" == 0 ]]
+then
+	echo "$(basename "$outPath") already exists"
+	exit 0
 fi
 
 if [[ "$geoOffset" != *"x"* ]]
@@ -154,14 +168,14 @@ fi
 
 # thanks Fred
 # https://www.fmwconcepts.com/imagemagick/centertrim/index.php
-if [[ -f "$centerTrimPath" ]]
+if [[ -f "$centerTrimPath" && "$optNoCenterTrim" == 0 ]]
 then
 	"$centerTrimPath" "$inPathTemp" "$inPathTemp"
 fi
 
 if [[ "$rotateDegrees" -gt 0 ]]
 then
-	convert "$inPathTemp" -rotate "$rotateDegrees" "PNG64:$inPathTemp"
+	convert "$inPathTemp" -background none -rotate "$rotateDegrees" "PNG64:$inPathTemp"
 elif [[ "$rotateDegrees" == "h" ]]
 then
 	convert "$inPathTemp" -flop "PNG64:$inPathTemp"
@@ -369,5 +383,5 @@ fi
 # ascii-image-converter "$outPath" --color --full
 # echo "-------------"
 # identify -format "%wx%h\n" "$outPath"
-echo "$(basename "$outPath")"
+basename "$outPath"
 

@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+optVerbose=0
+tldRegex='\.(com|org|net|cc)(/.+)?$'
+mediaUrlRegex='\.(m3u|mp\d)$'
+
+# could cache $openy somewhere for a little performance boost
 if [ -n "$SSH_CLIENT" ] && ( type vim >/dev/null 2>&1)
 then
 	# TODO make vim open in tabs with -p instead of making multiple calls
@@ -20,6 +25,13 @@ else
 	exit 1
 fi
 
+if ( type vlc >/dev/null 2>&1)
+then
+	mediaOpeny=vlc
+else
+	mediaOpeny="$openy"
+fi
+
 # add pipe args to the list of regular args
 args="$@"
 [[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
@@ -29,16 +41,21 @@ log=()
 # iterate over args
 for i in "$@"
 do
-	# ignore empty args, which show up when using pipes for some reason
 	if [[ -z $i ]]
 	then
 		continue
 	fi
 
-	# echo $i
+	if [[ "$optVerbose" == 1 ]]
+	then
+		echo "input: $i"
+	fi
 
+	# could be a path, could be a url
 	absolutepath="$i"
 	absolutepath="$(realpath --no-symlinks --quiet "$absolutepath")"
+
+	url="$(echo "$i" | grep -iPo '^https?://.+$')"
 
 	# if file doesn't exist, tweak paths
 	if [[ ! -f "$absolutepath" ]]
@@ -57,12 +74,28 @@ do
 
 	# skip dupes
 	# makes this function play nice with grep results
-	if [[ " ${log[*]} " =~ " $absolutepath " ]]
+	# need to check log after formatting paths or else it doesn't work on grep results
+	if [[ -n "$url" && " ${log[*]} " =~ " $url" ]]
 	then
+		if [[ "$optVerbose" == 1 ]]
+		then
+			echo "skipping dupe"
+		fi
+		continue
+	elif [[ -n "$absolutepath" && " ${log[*]} " =~ " $absolutepath " ]]
+	then
+		if [[ "$optVerbose" == 1 ]]
+		then
+			echo "skipping dupe"
+		fi
 		continue
 	fi
 
-	if [[ -f "$absolutepath" ]]
+	if [[ -n "$url" ]]
+	then
+		# skip the following file checks
+		:
+	elif [[ -f "$absolutepath" ]]
 	then
 		foldername=$(dirname -- "$absolutepath")
 		filename=$(basename -- "$absolutepath")
@@ -71,18 +104,40 @@ do
 		foldername="$absolutepath"
 		filename="."
 	else
-		echo "could not find ${absolutepath}"
-		continue
+		if echo "$i" | grep -Piq "$tldRegex"
+		then
+			url="https://$i"
+		else
+			echo "could not find ${absolutepath}"
+			continue
+		fi
 	fi
 
-	# echo "filename: $filename"
-	# echo "absolutepath: $absolutepath"
+	if [[ "$optVerbose" == 1 ]]
+	then
+		echo "filename: $filename"
+		echo "absolutepath: $absolutepath"
+		echo "url: $url"
+	fi
 
-	# cd so that the file opens with the right relative path
-	# subshell so that directory for the above logic remains standard
-	(cd "$foldername" && $openy "$filename")
+	if [[ -n "$url" ]]
+	then
+		# support for directly opening streaming urls in a media player if possible
+		if echo "$url" | grep -Piq "$mediaUrlRegex"
+		then
+			($mediaOpeny "$url")
+		else
+			($openy "$url")
+		fi
 
-	log+=("$absolutepath")
+		log+=("$url")
+	else
+		# cd so that the file opens with the right relative path
+		# subshell so that directory for the above logic remains standard
+		(cd "$foldername" && $openy "$filename")
+		log+=("$absolutepath")
+	fi
+
 done
 
 # return success

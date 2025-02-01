@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+cacheDir="$HOME/.cache"
+playlistPath="$cacheDir/vgm_radio.m3u"
+scriptPath="$0"
+playlistString='#EXTM3U
+#PLAYLIST:VGM Radio
+
+#EXTINF:-1,OC Remix Radio
+https://rainwave.cc/tune_in/2.mp3.m3u
+
+#EXTINF:-1,Sprite Layer Video Game Radio
+https://www.spritelayerradio.com/public/spritelayer_video_game_radio/playlist.pls
+
+#EXTINF:-1,VGM Radio
+http://radio.vgmradio.com:8040/stream
+'
+
+# only write the playlist file if it's missing or out of date
+if [[ ! -f "$playlistPath" || "$scriptPath" -nt "$playlistPath" ]]
+then
+	echo "$playlistString" > "$playlistPath"
+fi
+
+open "$playlistPath"
