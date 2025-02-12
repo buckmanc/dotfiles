@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Input image file
+input_image="$1"
+maskPath="/tmp/opaque_pixel_transparency_mask.png"
+
+if [[ -z "$input_image" ]]
+then
+	echo "need image path"
+	exit 1
+fi
+
+# TODO doesn't handle svgs at all
+# only matters for min max determinations though; you'll be using this script after they've been rasterized
+
+# the weakness here is it's counting any level of opaque as a full value, not a partial value for partially opaque pixels
+# so glows really throw off the count
+# TODO mod to only count solid pixels?
+
+# convert the image to a grayscale version where transparent pixels are black
+convert "$input_image" -alpha extract -threshold 0 -negate "$maskPath"
+
+# get the total number of pixels in the image
+total_pixels=$(identify -format "%[fx:w*h]" "$input_image")
+
+# count the number of transparent pixels (black pixels in the mask)
+transparent_pixels=$(convert "$maskPath" -format "%[fx:mean*h*w]" info:)
+
+# convert scientific notation to decimal format
+total_pixels=$(printf "%.0f" "$total_pixels")
+transparent_pixels=$(printf "%.0f" "$transparent_pixels")
+
+# calculate the percentage of transparent pixels
+opaque_pixels=$(echo "$total_pixels - $transparent_pixels" | bc -l)
+# opaque_percent=$(echo "($opaque_pixels/ $total_pixels) * 100" | bc -l)
+opaque_percent=$(echo "$opaque_pixels/ $total_pixels" | bc -l)
+
+# output the result
+echo "$opaque_percent"
+
+# clean up temporary files
+rm "$maskPath"

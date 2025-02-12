@@ -1,0 +1,153 @@
+#!/usr/bin/env bash
+
+set -e
+
+maxOpacityPerc=0.5
+minOpacityPerc=0.07
+opacityPercRange="$(echo "$maxOpacityPerc - $minOpacityPerc" | bc -l)"
+maxShiftDistancePerc=0.0125
+minShiftDistancePerc=0.003
+shiftDistancePercRange="$(echo "$maxShiftDistancePerc - $minShiftDistancePerc" | bc -l)"
+
+shiftDistancePerc="0.01"
+optVerbose=0
+
+# Input and output files
+input="$1"
+output="$2"
+
+if [[ -z "$input" ]]
+then
+	echo "need input path and optionally output path"
+	exit 1
+elif [[ -z "$output" ]]
+then
+	output="${input%.*}_ca.png"
+fi
+
+if [[ "$3" == "-v" || "$3" == "--verbose" ]]
+then
+	optVerbose=1
+fi
+
+outDir="$(dirname "$output")"
+tempDir="/tmp/chromatically_aberrate"
+opacityPercPath="$HOME/bin/opacity_percent"
+
+if [[ "$optVerbose" == 1 ]]
+then
+	tempDir="$outDir/ca_temp"
+fi
+
+if [[ -d "$tempDir" ]]
+then
+	rm -f "$tempDir/"*
+fi
+
+mkdir -p "$tempDir"
+inputTemp="$tempDir/$(basename "$input")"
+
+opacityPerc="$("$opacityPercPath" "$input")"
+# if [[ "$opacityPerc" -le "$minOpacityPerc" ]]
+# if (( "$opacityPerc" <= "$minOpacityPerc" ))
+# the above tests can't handle decimals
+# bc outputs 1 or 0 for logic tests
+if [[ "$(echo "$opacityPerc <= $minOpacityPerc" | bc -l)" == "1" ]]
+then
+	shiftDistancePerc="$minShiftDistancePerc"
+	percThruOpacityRange=0
+elif [[ "$(echo "$opacityPerc >= $maxOpacityPerc" | bc -l)" == "1" ]]
+then
+	shiftDistancePerc="$maxShiftDistancePerc"
+	percThruOpacityRange=1
+else
+	percThruOpacityRange="$(echo "($opacityPerc - $minOpacityPerc) / $opacityPercRange" | bc -l)"
+	shiftDistancePerc="$(echo "($shiftDistancePercRange * $percThruOpacityRange) + $minShiftDistancePerc" | bc -l)"
+fi
+
+if [[ "$optVerbose" == 1 ]]
+then
+	echo "filename: $(basename "$input")"
+	echo "opacityPerc: $opacityPerc"
+	echo "opacityPercRange: $opacityPercRange"
+	echo "percThruOpacityRange: $percThruOpacityRange"
+	echo "shiftDistancePercRange: $shiftDistancePercRange"
+	echo "shiftDistancePerc: $shiftDistancePerc"
+fi
+
+
+width="$(identify -format "%w" "$input")"
+height="$(identify -format "%h" "$input")"
+shiftWidth="$(echo "${width}*${shiftDistancePerc}" | bc -l)"
+
+convert "$input" -background none -compose copy -bordercolor none -border "$shiftWidth" "$inputTemp"
+# cp "$input" "$inputTemp"
+
+# # shift alpha *and* opacity for channel alpha masks
+# convert "$inputTemp" \
+# 				-fx "p[w *  $shiftDistancePerc,0]" \
+#   \( +clone -alpha extract	-fx "p[w *  $shiftDistancePerc,0]" \) \
+#   -compose CopyOpacity -composite "$tempDir/red_alpha.png"
+# convert "$inputTemp" \
+# 				-fx "p[0,0]" \
+#   \( +clone -alpha extract	-fx "p[0,0]" \) \
+#   -compose CopyOpacity -composite "$tempDir/green_alpha.png"
+# convert "$inputTemp" \
+# 				-fx "p[w * -$shiftDistancePerc,0]" \
+#   \( +clone -alpha extract	-fx "p[w * -$shiftDistancePerc,0]" \) \
+#   -compose CopyOpacity -composite "$tempDir/blue_alpha.png"
+#
+# shift alpha *and* opacity for channel alpha masks
+convert "$inputTemp" \
+				-fx "p[$shiftWidth,0]" \
+  \( +clone -alpha extract	-fx "p[$shiftWidth,0]" \) \
+  -compose CopyOpacity -composite "$tempDir/red_alpha.png"
+convert "$inputTemp" \
+				-fx "p[0,0]" \
+  \( +clone -alpha extract	-fx "p[0,0]" \) \
+  -compose CopyOpacity -composite "$tempDir/green_alpha.png"
+convert "$inputTemp" \
+				-fx "p[-$shiftWidth,0]" \
+  \( +clone -alpha extract	-fx "p[-$shiftWidth,0]" \) \
+  -compose CopyOpacity -composite "$tempDir/blue_alpha.png"
+
+# faster extent/crop method, but messes up the colors
+# convert "$inputTemp" \
+# 	-background none \
+# 	-gravity west -chop "${shiftWidth}x0" -extent "${width}x${height}" \
+# 	PNG64:"$tempDir/red_alpha.png"
+# convert "$inputTemp" \
+# 	-background none \
+# 	-gravity east -chop "${shiftWidth}x0" -extent "${width}x${height}" \
+# 	PNG64:"$tempDir/blue_alpha.png"
+# convert "$inputTemp" \
+# 	-background none \
+# 	-gravity east -chop "0x0" -extent "${width}x${height}" \
+# 	PNG64:"$tempDir/green_alpha.png"
+
+# derive channel masks from the alpha channels for efficiency sake
+convert "$tempDir/red_alpha.png" -channel R -separate PNG64:"$tempDir/red_shifted.png"
+convert "$tempDir/green_alpha.png" -channel R -separate PNG64:"$tempDir/green_shifted.png"
+convert "$tempDir/blue_alpha.png" -channel R -separate PNG64:"$tempDir/blue_shifted.png"
+
+# combine alpha masks
+convert "$tempDir/red_alpha.png" "$tempDir/green_alpha.png" "$tempDir/blue_alpha.png" -compose Blend -evaluate-sequence Mean PNG64:"$tempDir/alpha_mask.png"
+
+# recombine the channels
+convert \
+	\( "$tempDir/red_shifted.png" "$tempDir/green_shifted.png" "$tempDir/blue_shifted.png" -combine \) \
+	"$tempDir/alpha_mask.png" -compose CopyOpacity \
+	-composite "PNG64:$output"
+
+if [[ "$optVerbose" == 1 ]]
+then
+	# test output
+	convert "$output" -background black -flatten "$tempDir/ca_test_on_black.png"
+	convert "$output" -background white -flatten "$tempDir/ca_test_on_white.png"
+fi
+
+# clean up
+if [[ "$optVerbose" == 0 ]]
+then
+	rm -r "$tempDir"
+fi
