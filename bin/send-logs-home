@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-if [[ -d "$HOME/.logs/wifi" ]]
-then
-	rsync -hau $HOME/.logs/wifi* loggy:.logs/
-fi
+logDirs="$(find "$HOME/.logs" -maxdepth 1 -mindepth 1 -type d)"
 
-if [[ -d "$HOME/.logs/bluetooth" ]]
-then
-	rsync -hau $HOME/.logs/bluetooth* loggy:.logs/
-fi
+echo "$logDirs" | while read -r dir
+do
+	if find "$dir" -maxdepth 1 -mindepth 1 -type f | grep -iPq '/\w+_\d{6}\.log$'
+	then
+		# echo "syncing $dir"
+		rsync -hau --no-perms --no-owner --no-group "$dir" loggy:.logs/
+	fi
+done
