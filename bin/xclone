@@ -12,7 +12,7 @@ fi
 
 shift 1
 
-if [[ "$path" != http* ]]
+if [[ "$path" != http* && "$path" != ssh* ]]
 then
 	if [[ "$path" != *'.com'* ]]
 	then

@@ -14,7 +14,7 @@ then
 fi
 
 verb="$1"
-echo "verb: $verb"
+# echo "verb: $verb"
 
 if [[ "$verb" == "upgrade" ]]
 then

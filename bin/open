@@ -2,7 +2,7 @@
 
 optVerbose=0
 tldRegex='\.(com|org|net|cc)(/.+)?$'
-mediaUrlRegex='\.(m3u|mp\d)$'
+mediaUrlRegex='\.(m3u|mp\d|pls)$'
 
 # could cache $openy somewhere for a little performance boost
 if [ -n "$SSH_CLIENT" ] && ( type vim >/dev/null 2>&1)

@@ -296,7 +296,8 @@ vlc			= "󰕼"
 "clock"		= "󰥔"
 "nsfw"		= ""
 "NSFW"		= ""
-
+"shuffle"	= "󰒟"
+"cache"		= "$$$"
 
 
 [dotnet]
