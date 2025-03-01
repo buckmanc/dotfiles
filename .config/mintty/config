@@ -9,5 +9,6 @@ FontSmoothing=full
 Ligatures=2
 BellType=0
 Scrollbar=none
-Transparency=off
+Transparency=60
 RightClickAction=paste
+CursorType=block
