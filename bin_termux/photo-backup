@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+sshHost="$1"
+destDir="$2"
+
+sourceDirs=""
+sourceDirs+="$HOME/storage/dcim/Camera"
+sourceDirs+=$'\n'
+sourceDirs+="$HOME/storage/dcim/USBCamera/"
+
+if [[ -z "$sshHost" || -z "$destDir" ]]
+then
+	echo "need ssh host name and destination path as two args, in that order"
+	exit 1
+fi
+
+# by the nine do NOT send gbs of photos over mobile data
+if ! "$HOME/bin_termux/termux-on-wifi"
+then
+	termux-notification --title "Camera Backup" --content "Wifi not connected."
+	exit 1
+fi
+
+while read -r sourceDir
+do
+	if [[ -z "$sourceDir" || ! -d "$sourceDir" ]]
+	then
+		continue
+	fi
+
+	echo "backing up dir:"
+	echo "$sourceDir"
+
+	rsync -auz --max-delete=-1 "$sourceDir/" "$sshHost:$destDir"
+
+done < <( echo "$sourceDirs" )
+
+termux-notification --title "Camera Backup" --content "Camera backed up."
+echo "Camera backed up."
