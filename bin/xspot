@@ -1,0 +1,334 @@
+#!/usr/bin/env bash
+
+set -e
+
+# based on https://github.com/Flowm/spotify-api-bash/
+
+# *should* auto reauth if perms change
+perms="user-library-modify user-read-currently-playing user-read-playback-state user-modify-playback-state user-library-read"
+configPath="$HOME/.config/xspot.json"
+tokenPath="$HOME/.cache/xspot_tokens.json"
+
+# Funcs
+create_playlist() {
+	# Creates a new private playlist
+	name=$1
+	curl -s -X POST "https://api.spotify.com/v1/users/${user_id}/playlists" --data "{\"name\":\"$name\", \"public\":false}" "${headers[@]}" | jq -r ".id"
+}
+
+add_tracks_to_playlist() {
+	# Add track_ids from a file to a playlist_id
+	filename=$1
+	playlist=$2
+	count=1
+	trackuris=""
+
+	for track in $(cat $filename-tracks); do
+		if [ $count -lt 10 ]; then
+			trackuris="${trackuris}spotify:track:$track,"
+			count=$(expr $count + 1)
+		else
+			trackuris="${trackuris}spotify:track:$track"
+			echo $trackuris
+			curl -s -X POST "https://api.spotify.com/v1/users/${user_id}/playlists/${playlist}/tracks?uris=$trackuris" "${headers[@]}"
+			trackuris=""
+			count=1
+			sleep 1
+		fi
+	done
+	if [ -n "$trackuris" ]; then
+		curl -s -X POST "https://api.spotify.com/v1/users/${user_id}/playlists/${playlist}/tracks?uris=$trackuris" "${headers[@]}"
+	fi
+}
+
+currentNameExp='([.item.artists[].name] | join(", ")) + " - " + .item.name + " (" + .item.album.release_date[0:4] + ")"'
+currentIdExp=".item.id"
+currentBothExp="$currentIdExp + \"|\" + $currentNameExp"
+get_current(){
+	typey="$1"
+	if [[ "${typey,,}" == "name" ]]
+	then
+		jqExp="$currentNameExp"
+	elif [[ "${typey,,}" == "id" ]]
+	then
+		jqExp="$currentIdExp"
+	elif [[ "${typey,,}" == "both" ]]
+	then
+		jqExp="$currentBothExp"
+	else
+		echo "invalid get_current type"
+		exit 1
+	fi
+
+	curl -s -X GET "https://api.spotify.com/v1/me/player/currently-playing" "${headers[@]}" | jq -r "$jqExp"
+}
+
+play_toggle(){
+	json="$(curl -s -X GET "https://api.spotify.com/v1/me/player" "${headers[@]}")"
+	echo "$json" | jq . > test.json
+
+	isPlaying="$(echo "$json" | jq -r ".is_playing")"
+	deviceName="$(echo "$json" | jq -r ".device.name")"
+
+	if [[ "${isPlaying,,}" == "true" ]]
+	then
+		# pause
+		url="https://api.spotify.com/v1/me/player/pause"
+		symbol="||"
+	else
+		# play
+		url="https://api.spotify.com/v1/me/player/play"
+		symbol="|>"
+	fi
+
+	echo "$symbol $deviceName"
+
+	curl -s -X PUT "$url" "${headers[@]}" --header "Content-Length:0" > /dev/null &
+}
+
+skip_next(){
+	curl -s -X POST "https://api.spotify.com/v1/me/player/next" "${headers[@]}" --header "Content-Length:0" > /dev/null &
+}
+
+skip_previous(){
+	curl -s -X POST "https://api.spotify.com/v1/me/player/previous" "${headers[@]}" --header "Content-Length:0" > /dev/null &
+}
+
+like_track(){
+	alreadyLiked=0
+	alreadyLikedString=""
+	optQuick=0
+	if [[ "$2" == "--quick" ]]
+	then
+		optQuick=1
+	fi
+
+	trackUris="$(echo "$1" | cut -d "|" -f 1)"
+	trackTitle="$(echo "$1" | cut -d "|" -f 2)"
+
+	# null coalesce the track name
+	# won't occur without external scripting
+	if [[ -z "$trackTitle" ]]
+	then
+		trackTitle="track"
+	fi
+
+	# unless using --like-quick, do an additional check to see if the track is already liked
+	# --like-quick skips this check for non- or semi-interactive uses
+	if [[ "$optQuick" == 0 ]]
+	then
+		json="$(curl -s -X GET "https://api.spotify.com/v1/me/tracks/contains?ids=$trackUris" "${headers[@]}")"
+		if [[ "$(echo "$json" | jq 'all(.[]; . == true) and .[0] == true')" == "true" ]]
+		then
+			alreadyLiked=1
+			alreadyLikedString="already "
+		fi
+	fi
+
+	# like the track
+	if [[ "$alreadyLiked" == 0 ]]
+	then
+		curl -s -X PUT "https://api.spotify.com/v1/me/tracks?ids=$trackUris" "${headers[@]}" --header "Content-Length:0"
+	fi
+
+	echo "${alreadyLikedString}liked $trackTitle"
+}
+
+get_tokens(){
+	typey="$1"
+	timestamp="$(date "+%s")"
+	authString="$(echo -ne "${client_id}:${client_secret}" | base64 --wrap 0)"
+
+	if [[ "${typey,,}" == "--initial" ]]
+	then
+		permString="$(echo "$perms" | perl -pe 's/ /%20/g')"
+		url="https://accounts.spotify.com/authorize?client_id=$client_id&response_type=code&redirect_uri=http%3A%2F%2Flocalhost&scope=$permString"
+		echo "please authenticate at the below url and paste the response access code or broken page url here"
+		echo "$url"
+
+		read -p "access code / url:" -r
+		echo
+
+		access_code="$(echo "$REPLY" | grep -iPo '[^\s=&]{200,}')"
+		if [[ -z "$access_code" ]]
+		then
+			echo "invalid access code"
+			exit 1
+		fi
+
+		json="$(curl -s -X POST "https://accounts.spotify.com/api/token" --data-urlencode "grant_type=authorization_code" --data-urlencode "code=$access_code" --data-urlencode "redirect_uri=http://localhost" --header "Authorization: Basic $authString" --header "Content-Type: application/x-www-form-urlencoded")"
+
+	elif [[ "${typey,,}" == "--refresh" ]]
+	then
+		echo "refreshing access token..."
+
+		json="$(curl -s -X POST "https://accounts.spotify.com/api/token" --data-urlencode "grant_type=refresh_token" --data-urlencode "refresh_token=$refresh_token" --data-urlencode "client_id=$client_id" --header "Authorization: Basic $authString" --header "Content-Type: application/x-www-form-urlencoded")"
+	else
+		echo "invalid get_tokens type: $typey"
+		exit 1
+	fi
+
+	# validate response to avoid writing bad token data
+	if [[ -z "$json" ]] || ! echo "$json" | jq -reM '""' 1>/dev/null
+	then
+		echo "unable to authenticate"
+		exit 1
+	fi
+
+	# check for error messages
+	# several of these indicate the wrong problem, but it's best to communicate it anyway
+	error="$(echo "$json" | jq -r ".error")"
+	if [[ -n "$error" && "$error" != "null" ]]
+	then
+		echo "error: $error"
+		exit 1
+	fi
+
+	timestampJson="{\"timestamp\": \"$timestamp\"}"
+
+	# merge the json data that we care about storing so that...
+	# ...the refresh token from the initial auth isn't overwritten by refreshing (which does not provide a new refresh token)
+	# ...the timestamp is stored so we know when to refresh again
+	echo "$tokenJson $json $timestampJson" | jq -s '.[0] * .[1] * .[2]' > "$tokenPath"
+}
+
+readTokens(){
+	if [[ -f "$configPath" ]]
+	then
+		configJson="$(cat "$configPath")"
+		client_id="$(echo "$configJson"		| jq -r ".client_id")"
+		client_secret="$(echo "$configJson"	| jq -r ".client_secret")"
+		country="$(echo "$configJson"		| jq -r ".country")"
+	else
+		configJson="{}"
+	fi
+	
+	if [[ -f "$tokenPath" ]]
+	then
+		tokenJson="$(cat "$tokenPath")"
+		access_token="$(echo "$tokenJson"	| jq -r ".access_token")"
+		refresh_token="$(echo "$tokenJson"	| jq -r ".refresh_token")"
+		token_scope="$(echo "$tokenJson"	| jq -r ".scope")"
+		token_time="$(echo "$tokenJson"		| jq -r ".timestamp")"
+	else
+		tokenJson="{}"
+	fi
+}
+
+# Configure the access_token in cfg
+if [[ ! -f "$configPath" ]]
+then
+	echo '{"client_id":"","client_secret":"","country":"US"}' | jq . > "$configPath"
+fi
+
+readTokens
+
+optLike=0
+optLikeQuick=0
+optPlay=0
+optGetCurrent=0
+optGetCurrentId=0
+optNextMightBeLikeTrack=''
+optSkipNext=0
+optSkipPrevious=0
+likeTrack=''
+optAuth=0
+optRefresh=0
+
+for arg in "$@"
+do
+	if [[ "$optNextMightBeLikeTrack" == 1 && "$arg" == "-"* ]]
+	then
+		optNextMightBeLikeTrack=0
+	fi
+
+	if [[ "$arg" == "--like" || "$arg" == "-l" ]]
+	then
+		optLike=1
+		optNextMightBeLikeTrack=1
+	elif [[ "$arg" == "--like-quick" ]]
+	then
+		optLikeQuick=1
+		optNextMightBeLikeTrack=1
+	elif [[ "$arg" == "--what" ]]
+	then
+		optGetCurrent=1
+	elif [[ "$arg" == "--play" ]]
+	then
+		optPlay=1
+	elif [[ "$arg" == "--skip-next" || "$arg" == "--next" || "$arg" == "--skip" ]]
+	then
+		optSkipNext=1
+	elif [[ "$arg" == "--skip-previous" || "$arg" == "--previous" || "$arg" == "--last" ]]
+	then
+		optSkipPrevious=1
+	elif [[ "$arg" == "--what-id" ]]
+	then
+		optGetCurrentId=1
+	elif [[ "$optNextMightBeLikeTrack" == 1 ]]
+	then
+		likeTrack="$arg"
+		optNextMightBeLikeTrack=0
+	elif [[ "$arg" == "--auth" || "$arg" == "--authenticate" || "$arg" == "--reauth" || "$arg" == "--reauthenticate" ]]
+	then
+		optAuth=1
+	elif [[ "$arg" == "--refresh" ]]
+	then
+		optRefresh=1
+	fi	
+done
+
+if [[ -z "$client_id" || -z "$client_secret" || -z "$country" ]]
+then
+	echo "please fill out config file at"
+	echo "$configPath"
+	exit 1
+elif [[ -z "$access_token" || -z "$refresh_token" || ${#perms} -ne ${#token_scope} || "$optAuth" == 1 ]]
+then
+	get_tokens --initial
+	readTokens
+# if token was refreshed more than x ago, refresh it
+elif [[ "$token_time" -le "$(date --date="55 minutes ago" "+%s")" || "$optRefresh" == 1 ]]
+then
+	get_tokens --refresh
+	readTokens
+fi
+
+# Internal settings
+headers=(-H "Accept application/json" -H "Authorization: Bearer ${access_token}" )
+# user_id=$(curl -s -X GET "https://api.spotify.com/v1/me" "${headers[@]}" | jq -r ".id")
+
+if [[ "$optPlay" == 1 ]]
+then
+	play_toggle
+fi
+
+if [[ "$optLike" == 1 || "$optLikeQuick" == 1 ]] && [[ -z "$likeTrack" ]]
+then
+	# grab current track id and name in one fell swoop unless one has been provided
+	likeTrack="$(get_current "both")"
+fi
+
+if [[ "$optLike" == 1 ]]
+then
+	like_track "$likeTrack"
+elif [[ "$optLikeQuick" == 1 ]]
+then
+	like_track "$likeTrack" --quick
+elif [[ "$optGetCurrentId" == 1 ]]
+then
+	get_current "id"
+elif [[ "$optGetCurrent" == 1 || $# -eq 0 ]]
+then
+	get_current "name"
+fi
+
+if [[ "$optSkipNext" == 1 ]]
+then
+	skip_next
+fi
+
+if [[ "$optSkipPrevious" == 1 ]]
+then
+	skip_previous
+fi

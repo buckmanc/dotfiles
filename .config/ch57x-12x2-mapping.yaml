@@ -55,8 +55,8 @@ knobs: 2
 layers:
   - buttons:
       - ["play", "prev", "next", "win-alt-k"]
-      - ["printscreen,win-shift-s", "escape", "escape", "win-l"]
-      - ["escape", "escape", "shift-home,delete", "enter"]
+      - ["win-l", "escape", "escape", "enter"]
+      - ["F21", "F22", "F23", "F24"]
     knobs:
       - ccw: "volumedown"
         press: "mute"
@@ -79,8 +79,8 @@ layers:
 
   - buttons:
       - ["play", "prev", "next", "win-alt-k"]
-      # - ["printscreen,win-shift-s", "escape", "escape", "win-l"]
-      # - ["escape", "escape", "shift-home,delete", "enter"]
+      - ["win-l", "escape", "escape", "enter"]
+      - ["F21", "F22", "F23", "F24"]
     knobs:
       - ccw: "wheeldown"
         press: "escape"
