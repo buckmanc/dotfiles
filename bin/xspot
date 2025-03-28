@@ -64,13 +64,28 @@ get_current(){
 }
 
 play_toggle(){
+	optPtPlay=0
+	optPtPause=0
 	json="$(curl -s -X GET "https://api.spotify.com/v1/me/player" "${headers[@]}")"
 	echo "$json" | jq . > test.json
 
 	isPlaying="$(echo "$json" | jq -r ".is_playing")"
 	deviceName="$(echo "$json" | jq -r ".device.name")"
 
-	if [[ "${isPlaying,,}" == "true" ]]
+	if [[ "$1" == "--play" ]]
+	then
+		optPtPlay=1
+	elif [[ "$1" == "--pause" ]]
+	then
+		optPtPause=1
+	elif [[ "${isPlaying,,}" == "true" ]]
+	then
+		optPtPause=1
+	else
+		optPtPlay=1
+	fi
+
+	if [[ "$optPtPause" == 1 ]]
 	then
 		# pause
 		url="https://api.spotify.com/v1/me/player/pause"
@@ -225,7 +240,9 @@ readTokens
 
 optLike=0
 optLikeQuick=0
+optPlayToggle=0
 optPlay=0
+optPause=0
 optGetCurrent=0
 optGetCurrentId=0
 optNextMightBeLikeTrack=''
@@ -253,9 +270,15 @@ do
 	elif [[ "$arg" == "--what" ]]
 	then
 		optGetCurrent=1
+	elif [[ "$arg" == "--play-toggle" ]]
+	then
+		optPlayToggle=1
 	elif [[ "$arg" == "--play" ]]
 	then
 		optPlay=1
+	elif [[ "$arg" == "--pause" || "$arg" == "--stop" ]]
+	then
+		optPause=1
 	elif [[ "$arg" == "--skip-next" || "$arg" == "--next" || "$arg" == "--skip" ]]
 	then
 		optSkipNext=1
@@ -298,9 +321,15 @@ fi
 headers=(-H "Accept application/json" -H "Authorization: Bearer ${access_token}" )
 # user_id=$(curl -s -X GET "https://api.spotify.com/v1/me" "${headers[@]}" | jq -r ".id")
 
-if [[ "$optPlay" == 1 ]]
+if [[ "$optPlayToggle" == 1 ]]
 then
 	play_toggle
+elif [[ "$optPlay" == 1 ]]
+then
+	play_toggle --play
+elif [[ "$optPause" == 1 ]]
+then
+	play_toggle --pause
 fi
 
 if [[ "$optLike" == 1 || "$optLikeQuick" == 1 ]] && [[ -z "$likeTrack" ]]
