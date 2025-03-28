@@ -67,7 +67,6 @@ play_toggle(){
 	optPtPlay=0
 	optPtPause=0
 	json="$(curl -s -X GET "https://api.spotify.com/v1/me/player" "${headers[@]}")"
-	echo "$json" | jq . > test.json
 
 	isPlaying="$(echo "$json" | jq -r ".is_playing")"
 	deviceName="$(echo "$json" | jq -r ".device.name")"
