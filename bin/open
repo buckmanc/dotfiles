@@ -125,13 +125,28 @@ do
 		# support for directly opening streaming urls in a media player if possible
 		if echo "$url" | grep -Piq "$mediaUrlRegex"
 		then
+			if [[ "$optVerbose" == 1 ]]
+			then
+				echo "opening media url"
+			fi
+
 			($mediaOpeny "$url")
 		else
+			if [[ "$optVerbose" == 1 ]]
+			then
+				echo "opening regular url"
+			fi
+
 			($openy "$url")
 		fi
 
 		log+=("$url")
 	else
+		if [[ "$optVerbose" == 1 ]]
+		then
+			echo "opening path"
+		fi
+
 		# cd so that the file opens with the right relative path
 		# subshell so that directory for the above logic remains standard
 		(cd "$foldername" && $openy "$filename")

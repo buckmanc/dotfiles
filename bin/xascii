@@ -3,6 +3,12 @@
 widthDefault=80
 width="$widthDefault"
 
+if ( ! type ascii-image-converter > /dev/null 2>&1 )
+then
+	echo "ascii-image-converter not installed"
+	exit 1
+fi
+
 if [[ "$COLUMNS" -lt "$widthDefault" && "$COLUMNS" -gt "0" ]]
 then
 	width="$COLUMNS"

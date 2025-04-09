@@ -13,6 +13,7 @@
 	# statl
 	pul=pull
 	comit=commit
+	sash=stash
 	# diff check and dotnet test before committing
 	comm=!"~/bin/git-commit-check && git commit"
 	undo-commit=reset HEAD~

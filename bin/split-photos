@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+optVerbose=0
+
+
+if [[ "$#" -lt 2 ]]
+then
+	echo "need crop arg and file paths"
+	exit 1
+fi
+
+for arg in "$@"
+do
+	if [[ "$optVerbose" == 1 ]]
+	then
+		echo "arg: $arg"
+	fi
+
+	if [[ "$arg" =~ ^[0-9]+@?x[0-9]+@?$ ]]
+	then
+		cropArg="$arg"
+	elif [[ "$arg" =~ ^[0-9]{1,2}%$ ]]
+	then
+		fuzzArg="$arg"
+	else
+		if [[ "$optVerbose" == 1 ]]
+		then
+			echo "misc arg: $arg"
+		fi
+	fi
+done
+
+if [[ -z "$cropArg" ]]
+then
+	echo "could not find crop arg: need something like 1x2@"
+	exit 1
+fi
+
+if [[ -z "$fuzzArg" ]]
+then
+	fuzzArg="50%"
+fi
+
+if [[ "$optVerbose" == 1 ]]
+then
+	echo "cropArg: $cropArg"
+	echo "fuzzArg: $fuzzArg"
+fi
+
+safeXargs(){
+	xargs -d '\n' "$@"
+}
+
+for path in "$@"
+do
+
+	if [[ "$path" == "$cropArg" || "$path" == "$fuzzArg" ]]
+	then
+		continue
+	elif [[ ! -f "$path" ]]
+	then
+		echo "bad path arg: $path"
+		continue
+	fi
+
+	# do work
+	fileName="$(basename "$path" | perl -pe 's/^bob(?=\d+)//g')"
+	fileNameNoExt="${fileName%.*}"
+	ext="${fileName##*.}"
+	dir="$(dirname "$path")"
+	dirName="$(realpath "$path" | safeXargs dirname | safeXargs basename | perl -pe 's/[\s\(\)]+$//g;' -pe 's/[\s\(\)]+/_/g;')"
+
+	destName="split_${dirName}_${fileNameNoExt}_%02d.${ext}"
+	destPath="$dir/$destName"
+
+	echo "$destName"
+
+	# allow for no crop
+	if [[ "$cropArg" == "1x1" ]]
+	then
+		cropy=""
+	else
+		cropy="-crop $cropArg"
+	fi
+	
+	convert "$path" -fuzz "$fuzzArg" -trim +repage $cropy +repage -fuzz "$fuzzArg" -trim "$destPath"
+done
+

@@ -148,6 +148,32 @@ like_track(){
 	echo "${alreadyLikedString}liked $trackTitle"
 }
 
+device_toggle(){
+	json="$(curl -s -X GET "https://api.spotify.com/v1/me/player/devices" "${headers[@]}" | jq '.devices[] | select(.is_active==false)')"
+
+	if [[ -z "$json" ]]
+	then
+		echo "no other devices found"
+		exit 0
+	fi
+
+	# echo "json: $json"
+
+	deviceId="$(echo "$json" | jq -r ".id" | head -n 1)"
+	deviceName="$(echo "$json" | jq -r ".name" | head -n 1)"
+
+	# echo "deviceId: $deviceId"
+
+	symbol="-> "
+	echo "$symbol $deviceName"
+
+	curl -s -X PUT "https://api.spotify.com/v1/me/player" "${headers[@]}" --data "{\"device_ids\":[\"$deviceId\"]}" #> /dev/null &
+}
+
+skip_next(){
+	curl -s -X POST "https://api.spotify.com/v1/me/player/next" "${headers[@]}" --header "Content-Length:0" > /dev/null &
+}
+
 get_tokens(){
 	typey="$1"
 	timestamp="$(date "+%s")"
@@ -242,6 +268,7 @@ optLikeQuick=0
 optPlayToggle=0
 optPlay=0
 optPause=0
+optDeviceToggle=0
 optGetCurrent=0
 optGetCurrentId=0
 optNextMightBeLikeTrack=''
@@ -258,7 +285,10 @@ do
 		optNextMightBeLikeTrack=0
 	fi
 
-	if [[ "$arg" == "--like" || "$arg" == "-l" ]]
+	if [[ "$arg" == "--device-toggle" || "$arg" == "--toggle-device" || "$arg" == "--device" ]]
+	then
+		optDeviceToggle=1
+	elif [[ "$arg" == "--like" || "$arg" == "-l" ]]
 	then
 		optLike=1
 		optNextMightBeLikeTrack=1
@@ -335,6 +365,11 @@ if [[ "$optLike" == 1 || "$optLikeQuick" == 1 ]] && [[ -z "$likeTrack" ]]
 then
 	# grab current track id and name in one fell swoop unless one has been provided
 	likeTrack="$(get_current "both")"
+fi
+
+if [[ "$optDeviceToggle" == 1 ]]
+then
+	device_toggle
 fi
 
 if [[ "$optLike" == 1 ]]

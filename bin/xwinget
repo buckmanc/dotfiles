@@ -16,13 +16,29 @@ fi
 verb="$1"
 # echo "verb: $verb"
 
-if [[ "$verb" == "upgrade" ]]
+if [[ "$verb" == "upgrade" || "$verb" == "uninstall" || "$verb" == "install" ]]
 then
 	shift 1
 	for arg in "$@"
 	do
-		echo "attempting to upgrade $arg"
-		winget.exe upgrade "$arg"
+		if [[ "$arg" != *.* ]]
+		then
+			arg="$arg.$arg"
+		fi
+
+		if [[ "${arg,,}" == "vlc.vlc" ]]
+		then
+			arg="videolan.vlc"
+		elif [[ "${arg,,}" == "pandoc.pandoc" ]]
+		then
+			arg="JohnMacFarlane.Pandoc"
+		elif [[ "${arg,,}" == "bluestacks.bluestacks" ]]
+		then
+			arg="bluestack.bluestacks"
+		fi
+
+		echo "attempting to $verb $arg"
+		winget.exe $verb "$arg"
 		echo "----------"
 	done
 else

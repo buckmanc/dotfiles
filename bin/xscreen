@@ -21,6 +21,10 @@ then
 		cmd="$(echo "$configJson" | jq -r '.value')"
 		optUsingConfig=1
 	fi
+#
+# 	echo "configJson: $configJson"
+# else
+# 	echo "nopers"
 fi
 
 if [[ -z "$cmd" ]]

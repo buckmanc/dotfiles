@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-"$HOME/bin/_play_youtube" --url youtube.com/playlist?list=PLGPnvYCC8I1Wlpx11Nr3LsmW9sjBH7Jew --name "keygen-castlevania" --all --chronological --ignore-date "$@"
+"$HOME/bin/_play_youtube" --url https://youtube.com/playlist?list=PLGPnvYCC8I1Wlpx11Nr3LsmW9sjBH7Jew --name "keygen-castlevania" --all --chronological --ignore-date "$@"

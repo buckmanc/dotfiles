@@ -11,6 +11,7 @@ optTerminal=0
 optReadArgsFromCache=0
 optOutPath=''
 optNextIsOutPath=0
+optUnrecent=0
 
 helpDeets="
 
@@ -26,6 +27,7 @@ paths: any list of files and directories. if called with no arguments, pulls cac
   --floater		center the design on black first
   --no-notify		don't notify (android only)
   --output		copy the wallpaper somewhere; primarily for internal use
+  --unrecent		do nothing if shuffled in the last 6 hours
   --help		display this help dialogue
 "
 
@@ -75,6 +77,9 @@ do
 	then
 		optOutPath="$arg"
 		optNextIsOutPath=0
+	elif [[ "$arg" == "--unrecent" ]]
+	then
+		optUnrecent=1
 	else
 		# add to our arg array, thus filtering out valid options from paths
 		args+=("$arg")
@@ -112,6 +117,30 @@ mkdir -p "$cacheDir"
 
 argCachePath="$cacheDir/args-${targetName}.log"
 historyCachePath="$cacheDir/history-${targetName}.log"
+
+# if unrecent arg is given
+if [[ "$optUnrecent" == 1 ]]
+then
+	# then back out if the log was updated recently
+	pastDate="$(date --date "8 hours ago" "+%s")"
+	if [[ -f "$historyCachePath" ]]
+	then
+		logDate="$(stat -c "%Y" "$historyCachePath")"
+	else
+		logDate=0
+	fi
+
+	if [[ "$logDate" -gt "$pastDate" ]]
+	then
+		echo "wallpaper was updated recently. skipping"
+		exit 0
+	# else
+	# 	echo "nah"
+	# 	echo "historyCachePath: $historyCachePath"
+	# 	echo "logDate: $logDate"
+	# 	echo "pastDate: $pastDate"
+	fi
+fi
 
 # TODO preserve the input args for caching
 # otherwise file paths are getting cached instead of dir paths
@@ -153,6 +182,8 @@ baseFilesCount="$(echo "$files" | wc -l)"
 # burn the history file if input paths have changed since last run
 if [[ -f "$historyCachePath" && "$args" != "$(cat "$argCachePath")" ]]
 then
+	echo "burning history cache opt 1"
+	echo "diff args: $args"
 	rm "$historyCachePath"
 # remove files from the list that have already been used
 elif [[ -f "$historyCachePath" ]]
@@ -160,7 +191,6 @@ then
 	historyFiles="$(cat "$historyCachePath")"
 	filesMinusHistory="${files}"$'\n'"${historyFiles}"
 	
-		echo "$filesMinusHistory" > "$cacheDir/test0.log"
 	filesMinusHistory="$(echo "$filesMinusHistory" | sort | uniq -u)"
 	newFilesCount="$(echo "$filesMinusHistory" | wc -l)"
 
@@ -169,10 +199,10 @@ then
 	# if [[ "$newFilesCount" -gt 0 ]]
 	if [[ "$newFilesCount" -eq 1 && -z "$filesMinusHistory" ]]
 	then
+		echo "burning history cache opt 2"
 		rm "$historyCachePath"
 	else
 		files="$filesMinusHistory"
-		echo "$filesMinusHistory" > "$cacheDir/test.log"
 	fi
 fi
 

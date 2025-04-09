@@ -78,6 +78,13 @@ then
 	exit 1
 fi
 
+if ( ! type yt-dlp > /dev/null 2>&1 )
+then
+	echo "yt-dlp not installed, opening URL instead"
+	"$HOME/bin/open" "$optUrl"
+	exit 0
+fi
+
 if [[ "$OSTYPE" = "linux-android" ]]
 then
 	# android apps need these files to be in a public, non . directory
