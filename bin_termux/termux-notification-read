@@ -1,18 +1,31 @@
 #!/usr/bin/env bash
 
 lastHeader=''
+optAll=0
+if [[ "$1" == "--all" ]]
+then
+	optAll=1
+fi
 
 while read -r json
 do
 	packageName="$(echo "$json" | jq -r '.packageName')"
 	packageName="$(echo "$packageName" | perl -pe 's/^((com|android|samsung|google|apps)\.)+//g')"
 	packageName="$(echo "$packageName" | perl -pe 's/^(facebook.orca)$/messenger/g')"
+	packageName="$(echo "$packageName" | perl -pe 's/^(zhiliaoapp.musically)$/tiktok/g')"
+
 	packageName="$(echo "$packageName" | perl -pe 's/(\.(orca|android|frontpage|application|mShop|shopping|katana|music))+$//g')"
 
 	title="$(echo "$json" | jq -r '.title')"
 	content="$(echo "$json" | jq -r '.content')"
 
-	if [[ "$packageName" == "termux" || "$packageName" == "reddit" || "$packageName" == "spotify" || "$packageName" == "aimp.player" ]]
+	# skip these no matter what
+	if [[ "$packageName" == "termux" || "$packageName" == "spotify" || "$packageName" == "aimp.player" ]]
+	then
+		continue
+	# skip these unless passed --all
+	# things you might want to check once
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "termux.api" || "$packageName" == "reddit" || "$packageName" == "patreon" || "$packageName" == "facebook" ]]
 	then
 		continue
 	elif [[ -z "$title" && -z "$content" ]]

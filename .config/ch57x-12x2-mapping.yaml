@@ -61,9 +61,9 @@ layers:
       - ccw: "volumedown"
         press: "mute"
         cw: "volumeup"
-      - ccw: "left"
-        press: "win-tab"
-        cw: "right"
+      - ccw: "wheeldown"
+        press: "escape"
+        cw: "wheelup"
 
   - buttons:
       - ["a", "b", "c", "d"]
@@ -82,9 +82,9 @@ layers:
       - ["win-l", "escape", "escape", "enter"]
       - ["F21", "F22", "F23", "F24"]
     knobs:
-      - ccw: "wheeldown"
-        press: "escape"
-        cw: "wheelup"
       - ccw: "ctrl-shift-tab"
         press: "escape"
         cw: "ctrl-tab"
+      - ccw: "wheeldown"
+        press: "escape"
+        cw: "wheelup"

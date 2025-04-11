@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# try to use compression if rsyncing over ssh
+if [[ "$@" == *:* ]]
+then
+	compressArg="--compress"
+else
+	compressArg=""
+fi
+
+rsync -hau --delete "$compressArg" \
+	--partial --modify-window=1 --info=progress2 \
+	"$@"
