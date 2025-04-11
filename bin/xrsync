@@ -8,6 +8,9 @@ else
 	compressArg=""
 fi
 
-rsync -hau --delete "$compressArg" \
+rsync -hau --delete $compressArg \
 	--partial --modify-window=1 --info=progress2 \
-	"$@"
+	$@
+# echo "rsync -hau --delete \"$compressArg\" \
+# 	--partial --modify-window=1 --info=progress2 \
+# 	$@"
