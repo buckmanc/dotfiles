@@ -200,7 +200,7 @@ get_tokens(){
 
 	elif [[ "${typey,,}" == "--refresh" ]]
 	then
-		echo "refreshing access token..."
+		# echo "refreshing access token..."
 
 		json="$(curl -s -X POST "https://accounts.spotify.com/api/token" --data-urlencode "grant_type=refresh_token" --data-urlencode "refresh_token=$refresh_token" --data-urlencode "client_id=$client_id" --header "Authorization: Basic $authString" --header "Content-Type: application/x-www-form-urlencoded")"
 	else
