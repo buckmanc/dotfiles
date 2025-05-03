@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ "$#" -lt 1 ]]
+then
+	echo "need at least one file path"
+	exit 1
+fi
+
+# use a package to parse the output if available
+if type ffmpeg-progress-yield > /dev/null 2>&1
+then
+	progress="ffmpeg-progress-yield"
+else
+	progress=""
+fi
+
+for arg in "$@"
+do
+	noExtPath="${arg%.*}"
+	destPath="${noExtPath} - H265.mp4"
+
+	"$progress" ffmpeg -hide_banner -i "$arg" -vcodec libx265 -crf 18 -tag:v hvc1 -vf yadif=1 -preset slower "$destPath"
+done
+

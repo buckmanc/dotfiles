@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ "$#" -lt 2 ]]
+then
+	echo "need at least two file paths"
+	exit 1
+fi
+
+exPath="$1"
+ext="${exPath##*.}"
+dir="$(dirname "$exPath")"
+fileLog="$dir/files.log"
+
+rm -f "$fileLog"
+
+for arg in "$@"
+do
+	echo "file '$(realpath "$arg")'" >> "$fileLog"
+done
+
+ffmpeg -hide_banner -f concat -safe 0 -i "$fileLog" -c copy "$dir/merged.$ext"
+
+rm -f "$fileLog"

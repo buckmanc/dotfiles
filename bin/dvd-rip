@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+set -e
+
+destDir="$1"
+if [[ -z "$destDir" ]]
+then
+	# destDir="."
+	echo "please provide dest dir"
+	exit 1
+fi
+
+if [[ ! -d "$destDir" ]]
+then
+	echo "bad destDir: $destDir"
+	exit 1
+fi
+
+thisRipDir="$destDir/$(date '+%Y%m%d-%H%M%S')"
+
+makemkvDir="/c/Program Files (x86)/MakeMKV/"
+if type makemkvcon64 > /dev/null 2>&1
+then
+	makemkvPath="makemkvcon64"
+elif type makemkvcon > /dev/null 2>&1
+then
+	makemkvPath="makemkvcon"
+else
+	makemkvPath="$makemkvDir/makemkvcon64.exe"
+
+	if [[ ! -x "$makemkvPath" ]]
+	then
+		makemkvPath="$makemkvDir/makemkvcon.exe"
+	fi
+
+	if [[ ! -x "$makemkvPath" ]]
+	then
+		echo "cannot find makemkvcon"
+		exit 1
+	fi
+
+fi
+
+makemkv() {
+	"$makemkvPath" "$@"
+}
+
+mkdir -p "$thisRipDir"
+
+# initial lossless rip, produces very large files
+makemkv --decrypt --minlength 0 mkv disc:0 all "$thisRipDir"
+
