@@ -4,9 +4,13 @@ if &compatible
 	set nocompatible
 endif
 
+" not for vim.tiny
+if has("eval")
+	syntax on		" syntax highlighting
+endif
+
 " presentation
 set background=dark	" better colors for dark themes
-syntax on		" syntax highilghting
 set ruler		" show cursor position
 set number		" show line numbers
 set showmatch		" bracket matching
@@ -33,17 +37,20 @@ set clipboard=		" unjoin from system clipboard on windows for consistent cross-p
 set viminfo+=!		" make sure it can save viminfo
 set viminfo-=<50	" unlimited saved register size
 
-" problematic behaviour
-" these setting vars are comma delineated
-" which means any paths assigned to them need to have the commas escaped
-" you're right, commas should *never* be in your home dir
-" but some things cannot be controlled
-let vimDirCommaless=escape(expand("~/.vim/"), ',')
-let &undodir=vimDirCommaless . 'undodir'	" where to save undo history
-set undofile			" enable persistent undo
-let &backupdir=vimDirCommaless . 'backupdir'  " backups
-set backup
-let &directory=vimDirCommaless . 'swap'
+" not for vim.tiny
+if has("eval")
+	" problematic behaviour
+	" these setting vars are comma delineated
+	" which means any paths assigned to them need to have the commas escaped
+	" you're right, commas should *never* be in your home dir
+	" but some things cannot be controlled
+	let vimDirCommaless=escape(expand("~/.vim/"), ',')
+	let &undodir=vimDirCommaless . 'undodir'	" where to save undo history
+	set undofile			" enable persistent undo
+	let &backupdir=vimDirCommaless . 'backupdir'  " backups
+	set backup
+	let &directory=vimDirCommaless . 'swap'
+endif
 
 " filenames can have space, comma, ampersand... sigh
 set isfname+=32
@@ -85,89 +92,92 @@ hi! link ErrorMsg Error
 set spellcapcheck=	" turn off capitalization check. too bad this doesn't exist for SpellLocal
 set spellsuggest+=10	" limit spell suggest for small screens
 
-" iterate over custom spellfiles
-let spellPaths = ''
-for d in glob('~/.vim/spell/*.add', 1, 1)
-	if (filereadable(d))
+" not for vim.tiny
+if has("eval")
+	" iterate over custom spellfiles
+	let spellPaths = ''
+	for d in glob('~/.vim/spell/*.add', 1, 1)
+		if (filereadable(d))
 
-		" compile the file if needed
-		if (!filereadable(d . '.spl') || getftime(d) > getftime(d . '.spl'))
-			echo 'compiling spell file updates: ' . d
-			silent exec 'mkspell! ' . fnameescape(d)
+			" compile the file if needed
+			if (!filereadable(d . '.spl') || getftime(d) > getftime(d . '.spl'))
+				echo 'compiling spell file updates: ' . d
+				silent exec 'mkspell! ' . fnameescape(d)
+			endif
+
+			" append the file path to the list
+
+			" spellfile is comma delineated
+			" so commas in the paths must be escaped
+			" can't escape earlier as it breaks file system functions
+			let d = escape(d, ',')
+
+			if (len(spellPaths) == 0)
+				let spellPaths=fnameescape(d)
+			else
+				let spellPaths=spellPaths . "," . fnameescape(d)
+			endif
+
+			" echo d
+			" echo spellPaths
 		endif
 
-		" append the file path to the list
+		" update the spell file setting
+		exec 'set spellfile=' . spellPaths
+	endfor
 
-		" spellfile is comma delineated
-		" so commas in the paths must be escaped
-		" can't escape earlier as it breaks file system functions
-		let d = escape(d, ',')
+	" custom date insert command
+	" accepts an integer date offset
+	function DateStampFunc(...)
+		let days = get(a:, 1, 0)
+		let daySeconds = days * 24 * 60 * 60
+		return strftime('%Y-%m-%d', ( localtime() + daySeconds ))
+	endfunction
 
-		if (len(spellPaths) == 0)
-			let spellPaths=fnameescape(d)
+	function! GitAddMeFunc(bang)
+		" write if changed
+		:update
+
+		if a:bang == 0
+			" echo "regular add"
+			Git add %:p
 		else
-			let spellPaths=spellPaths . "," . fnameescape(d)
+			" echo "force add"
+			Git add --force %:p
 		endif
+		" echo a:bang
+	endfunction
 
-		" echo d
-		" echo spellPaths
-	endif
+	function BaShebang()
+		" don't add a shebang to 
+		" .bashrc, .bash_alias, etc
+		if expand("%:t") =~ '^\.bash'
+			return
+		endif
+		silent! ShebangInsert bash
+	endfunction
 
-	" update the spell file setting
-	exec 'set spellfile=' . spellPaths
-endfor
+	command -bar -nargs=? Date put =DateStampFunc(<args>)
+	command RunMe update | !"%:p"
+	" TODO: throws "too many args" when called more than once after writing changes on the first run
+	command -bang GitAddMe :call GitAddMeFunc(<bang>0)
 
-" custom date insert command
-" accepts an integer date offset
-function DateStampFunc(...)
-	let days = get(a:, 1, 0)
-	let daySeconds = days * 24 * 60 * 60
-	return strftime('%Y-%m-%d', ( localtime() + daySeconds ))
-endfunction
+	" create some internal dirs if they don't exist
+	" with support for multiple values
+	" and escaped commas
+	let dirsToMake=&undodir . ',' . &backupdir . ',' . &directory
 
-function! GitAddMeFunc(bang)
-	" write if changed
-	:update
+	" split on comma not preceded by backslash
+	for dir in split(dirsToMake, '\(\\\)\@<!,')
+		" unescape the path
+		let dir = substitute(dir, '\\,', ',', 'g')
 
-	if a:bang == 0
-		" echo "regular add"
-		Git add %:p
-	else
-		" echo "force add"
-		Git add --force %:p
-	endif
-	" echo a:bang
-endfunction
-
-function BaShebang()
-	" don't add a shebang to 
-	" .bashrc, .bash_alias, etc
-	if expand("%:t") =~ '^\.bash'
-		return
-	endif
-	silent! ShebangInsert bash
-endfunction
-
-command -bar -nargs=? Date put =DateStampFunc(<args>)
-command RunMe update | !"%:p"
-" TODO: throws "too many args" when called more than once after writing changes on the first run
-command -bang GitAddMe :call GitAddMeFunc(<bang>0)
-
-" create some internal dirs if they don't exist
-" with support for multiple values
-" and escaped commas
-let dirsToMake=&undodir . ',' . &backupdir . ',' . &directory
-
-" split on comma not preceded by backslash
-for dir in split(dirsToMake, '\(\\\)\@<!,')
-	" unescape the path
-	let dir = substitute(dir, '\\,', ',', 'g')
-
-	" mkdir if it doesn't exist
-	if !isdirectory(dir)
-		call mkdir(dir, "p")
-	endif
-endfor
+		" mkdir if it doesn't exist
+		if !isdirectory(dir)
+			call mkdir(dir, "p")
+		endif
+	endfor
+endif
 
 if has('autocmd')
 augroup FileTypeSpecificAutocommands
