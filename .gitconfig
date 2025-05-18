@@ -12,6 +12,7 @@
 	sat=stat
 	# statl
 	pul=pull
+	pll=pull
 	comit=commit
 	sash=stash
 	# diff check and dotnet test before committing
@@ -42,6 +43,7 @@
 [core]
 	editor = vim
 	autocrlf = input # only check in lf, check out whatever's in the index
+	safecrlf = true
 	pager = tr -d '\\r' | less -REX # visually strip CR's
 	attributesfile = ~/.gitattributes # todo: fix the slowdown this causes in some environments
 	excludesfile = ~/.gitignore_global
@@ -90,3 +92,5 @@
 	path = ~/.gitconfig_local
 [mailmap]
 	file = ~/.mailmap
+[protocol "file"]
+	allow = always

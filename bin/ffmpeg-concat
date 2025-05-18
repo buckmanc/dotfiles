@@ -8,6 +8,8 @@ then
 	exit 1
 fi
 
+
+
 exPath="$1"
 ext="${exPath##*.}"
 dir="$(dirname "$exPath")"
@@ -20,6 +22,10 @@ do
 	echo "file '$(realpath "$arg")'" >> "$fileLog"
 done
 
-ffmpeg -hide_banner -f concat -safe 0 -i "$fileLog" -c copy "$dir/merged.$ext"
+crf=18
+present=slower
+
+# ffmpeg -hide_banner -f concat -safe 0 -i "$fileLog" -c copy "$dir/merged.$ext"
+ffmpeg -hide_banner -f concat -safe 0 -i "$fileLog" -vcodec libx264 -crf "$crf" -vf yadif=1 -c:a aac -preset "$preset" "$dir/merged.mp4"
 
 rm -f "$fileLog"

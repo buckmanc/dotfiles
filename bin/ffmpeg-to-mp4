@@ -16,11 +16,49 @@ else
 	progress=""
 fi
 
-for arg in "$@"
-do
-	noExtPath="${arg%.*}"
-	destPath="${noExtPath} - H265.mp4"
+# lower crf number is high quality
+# requires experimentation to find "visual losslessnes"
+crf=25
+codec=H264
+preset=slower
+testTimeStamp="0:07"
 
-	"$progress" ffmpeg -hide_banner -i "$arg" -vcodec libx265 -crf 18 -tag:v hvc1 -vf yadif=1 -preset slower "$destPath"
+makeTestImage(){
+	testSource="$1"
+	testDest="$2"
+
+	ffmpeg -i "$testSource" -ss "$testTimeStamp" -vframes 1 -y -loglevel error "$testDest"
+}
+
+for src in "$@"
+do
+	pathNoExt="${src%.*}"
+	pathNoExtTrim="${pathNoExt% - Raw}"
+	destPathNoExt="$pathNoExtTrim - $codec CRF $crf"
+	destPath="$destPathNoExt.mp4"
+
+	testPathSource="$pathNoExt.png"
+	testPathDest="$destPathNoExt.png"
+
+	if [[ "${codec^^}" == "H264" ]]
+	then
+		"$progress" ffmpeg -hide_banner -i "$src" -vcodec libx264 -crf "$crf" -vf yadif=1 -c:a aac -preset "$preset" "$destPath"
+	elif [[ "${codec^^}" == "H265" ]]
+	then
+		"$progress" ffmpeg -hide_banner -i "$src" -vcodec libx265 -crf "$crf"-tag:v hvc1 -vf yadif=1 -c:a aac -preset "$preset" "$destPath"
+	else
+		echo "unknown codec"
+		exit 1
+	fi
+
+	# write a couple test images to compare quality
+	if [[ ! -f "$testPathSource" ]]
+	then
+		makeTestImage "$src" "$testPathSource"
+	fi
+
+	rm -rf "$testPathDest"
+	makeTestImage "$destPath" "$testPathDest"
+
 done
 

@@ -66,7 +66,9 @@ do
 			absolutepath="$(echo "$i" | grep -iPo '^.{2}[^:]+')"
 		# git short status results
 		else
-			absolutepath="$(echo "$i" | perl -pe 's/^[ A-Z]{2} "?(.+?)"?$/$1/g')"
+			# strip bash color codes
+			# then strip git status indicators and quotes
+			absolutepath="$(echo "$i" | perl -p -e 's/\e\[\d{0,2}m//g;' -e 's/^[ MTADRCU\?\!]{2} "?(.+?)"?$/$1/g;')"
 		fi
 
 		absolutepath="$(realpath --no-symlinks --quiet "$absolutepath")"

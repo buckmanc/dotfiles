@@ -52,8 +52,11 @@ do
 	elif [[ ! -f "$path" ]]
 	then
 		echo "bad path arg: $path"
-		continue
+		exit 1
+		# continue
 	fi
+
+	echo "$path"
 
 	jpegtran -rotate "$rotateArg" -outfile "$path" "$path"
 

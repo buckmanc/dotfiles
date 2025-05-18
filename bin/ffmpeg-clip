@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+
+set -e
+
+args=()
+
+for arg in "$@"
+do
+	if [[ -f "$arg" ]]
+	then
+		inputFile="$arg"
+	else
+		args+=("$arg")
+	fi
+done
+
+if [[ -z "$inputFile" ]]
+then
+	echo "need input path"
+	exit 1
+fi
+
+echo "got ${#args[@]} timestamps"
+
+inputExt="${inputFile##*.}"
+inputFileDir="$(dirname "$inputFile")"
+tempDir="/tmp/$inputFile"
+clipSnapsDir="$inputFileDir/clip snaps"
+
+mkdir -p "$tempDir"
+mkdir -p "$clipSnapsDir"
+i=0
+
+clip(){
+	i=$((i+1))
+	id="$(printf "%03d" "$i")"
+	start="$1"
+	fin="$2"
+
+	outPath="$inputFileDir/$id.$inputExt"
+	snapPath="$clipSnapsDir/${id}_$(echo "$start" | perl -pe 's/[:\.]/_/g')_to_$(echo "$fin" | perl -pe 's/[:\.]/_/g').png"
+
+	echo -n "clip $id"
+
+	if [[ -f "$outPath" ]]
+	then
+		echo -n " already exists"
+	else
+		# clip
+		ffmpeg -loglevel warning -n -i "$inputFile" -ss "$start" -to "$fin" -c:v copy -c:a copy "$outPath"
+
+		# calc frames
+		totalFrames="$(ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=nb_read_frames -of csv=p=0 "$outPath" | perl -pe 's/,$//g')"
+		midFrame=$((totalFrames/2))
+
+		# snap start, middle, end
+		ffmpeg -y -loglevel error -i "$outPath" -ss "0" -vframes 1 -y -loglevel error "$tempDir/first.png" -y
+		ffmpeg -y -loglevel error -i "$outPath" -vf select=\'eq\(n,"$midFrame"\) -vframes 1 "$tempDir/mid.png"
+		ffmpeg -y -loglevel error -sseof -3 -i "$outPath" -update true "$tempDir/last.png" -y
+
+		# produces a very cool effect but it's as useful
+		# # crop snaps
+		# width="$(identify -format '%w' "$tempDir/first.png")"
+		# widthThird="$((width/3))"
+		# height="$(identify -format '%h')"
+        #
+		# convert "$tempDir/first.png" -gravity west -extent "${widthThird}x${height}" "$tempDir/first.png"
+		# convert "$tempDir/mid.png" -gravity center -extent "${widthThird}x${height}" "$tempDir/mid.png"
+		# convert "$tempDir/last.png" -gravity east  -extent "${widthThird}x${height}" "$tempDir/last.png"
+        #
+		# # combine to one final snap
+		# convert "$tempDir/first.png" "$tempDir/mid.png" "$tempDir/last.png" +append "$snapPath"
+		
+		convert "$tempDir/first.png" -resize 50% "$tempDir/first.png"
+		convert "$tempDir/mid.png"   -resize 50% "$tempDir/mid.png"
+		convert "$tempDir/last.png"  -resize 50% "$tempDir/last.png"
+
+		# combine to one final snap
+		convert "$tempDir/first.png" "$tempDir/mid.png" "$tempDir/last.png" -append "$snapPath"
+	fi
+	
+	echo
+}
+
+lastArg=0
+for arg in "${args[@]}"
+do
+	# do work
+	clip "$lastArg" "$arg"
+
+	lastArg="$arg"
+done
+
+clip "$lastArg" 9999.99

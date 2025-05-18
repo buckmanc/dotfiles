@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
 
-shellcheck --severity=error --format=gcc "$@"
+output="$(shellcheck --severity=warning --format=gcc "$@" | perl -pe 's/(?<=:\d{1,10}):\d{1,10}:(?= )//g')"
+
+if [[ -n "$output" ]]
+then
+	echo "$output" | grep -iP '(warning|error|^$)'
+fi

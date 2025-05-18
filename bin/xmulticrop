@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+# thanks, Fred
+
+paths=()
+
+
+if [[ "$#" -lt 1 ]]
+then
+	echo "need file paths"
+	exit 1
+fi
+
+for arg in "$@"
+do
+	if [[ "$arg" == "just a filler for future args" ]]
+	then
+		:
+	else
+		paths+=("$arg")
+	fi
+done
+
+safeXargs(){
+	xargs -d '\n' "$@"
+}
+
+i=0
+
+for path in "${paths[@]}"
+do
+	i=$((i+1))
+
+	if [[ ! -f "$path" ]]
+	then
+		echo "bad path arg: $path"
+		continue
+	fi
+
+	# do work
+	fileName="$(basename "$path" | perl -pe 's/^bob(?=\d+)//g')"
+	fileNameNoExt="${fileName%.*}"
+	ext="${fileName##*.}"
+	ext="${ext,,}"
+	dir="$(dirname "$path")"
+	dirName="$(realpath "$path" | safeXargs dirname | safeXargs basename | perl -pe 's/[\s\(\)]+$//g;' -pe 's/[\s\(\)]+/_/g;')"
+
+	# if the file has a meaningless scan date, replace it with a sequence
+	# if [[ "$fileNameNoExt" =~ ^2025\d{10}_\d{3}$ ]]
+	if echo "$fileNameNoExt" | grep -iPq '^2025\d{10}_\d{3}$'
+	then
+		fileNameNoExt="$(printf "%03d0" "$i")"
+	fi
+
+	destName="split_${dirName}_${fileNameNoExt}.${ext}"
+	destPath="$dir/$destName"
+
+	echo "$destName"
+
+	"$HOME/bin/multicrop" -b white -d 75 -u 1 -f 10 "$path" "$destPath" > /dev/null
+	
+done
+

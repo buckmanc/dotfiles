@@ -175,6 +175,9 @@ use_os_path_sep = false
 "Movies"	= "󰿎"
 "movies"	= "󰿎"
 "dcim"		= "󰄀"
+"DCIM"		= "󰄀"
+"Camera"	= "󰄀"
+"camera"	= "󰄀"
 "Shared"	= "󰒗"
 "shared"	= "󰒗"
 "Downloads"	= ""
@@ -203,6 +206,7 @@ use_os_path_sep = false
 "Books"		= ""
 "Windows"	= ""
 "Terminal"	= ""
+"terminal"	= ""
 "Powershell"	= ""
 "powershell"	= ""
 "Program Files"	= ""
@@ -298,6 +302,7 @@ vlc			= "󰕼"
 "NSFW"		= ""
 "shuffle"	= "󰒟"
 "cache"		= "$$$"
+"email"		= "󰇮"
 
 
 [dotnet]
