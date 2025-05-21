@@ -21,26 +21,88 @@ then
 	shift 1
 	for arg in "$@"
 	do
+		# expand some common package names to full ids
+		if [[ "${arg,,}" == "vlc" ]]
+		then
+			arg="videolan.vlc"
+		elif [[ "${arg,,}" == "pandoc" ]]
+		then
+			arg="JohnMacFarlane.Pandoc"
+		elif [[ "${arg,,}" == "nvmforwindows" || "${arg,,}" == "nvm" ]]
+		then
+			arg="CoreyButler.NVMforWindows"
+		elif [[ "${arg,,}" == "bluestacks" ]]
+		then
+			arg="Bluestack.Bluestacks"
+		elif [[ "${arg,,}" == "visualstudiocode" || "${arg,,}" == "vscode" ]]
+		then
+			arg="Microsoft.VisualStudioCode"
+		elif [[ "${arg,,}" == "powershell" ]]
+		then
+			arg="Microsoft.$arg"
+		elif [[ "${arg,,}" == "go" ]]
+		then
+			arg="golang.go"
+		elif [[ "${arg,,}" == "beekeeper" ]]
+		then
+			arg="beekeeper-studio"
+		elif [[ "${arg,,}" == "openvpnconnect" ]]
+		then
+			arg="OpenVPNTechnologies.OpenVPNConnect"
+		elif [[ "${arg,,}" == "psremoteplay" ]]
+		then
+			arg="Playstation.PsRemotePlay"
+		elif [[ "${arg,,}" == "veracrypt" ]]
+		then
+			arg="IDRIX.Veracrypt"
+		elif [[ "${arg,,}" == "fastfetch" ]]
+		then
+			arg="Fastfetch-cli.Fastfetch"
+		elif [[ "${arg,,}" == "deluge" ]]
+		then
+			arg="DelugeTeam.Deluge"
+		fi
+
+		# if a full id isn't specified, use the most common syntax of package.package
 		if [[ "$arg" != *.* ]]
 		then
 			arg="$arg.$arg"
 		fi
 
-		if [[ "${arg,,}" == "vlc.vlc" ]]
+		echo "${verb}ing $arg" | perl -pe 's/upgradeing/upgrading/g'
+
+		if [[ "$verb" == "uninstall" ]]
 		then
-			arg="videolan.vlc"
-		elif [[ "${arg,,}" == "pandoc.pandoc" ]]
-		then
-			arg="JohnMacFarlane.Pandoc"
-		elif [[ "${arg,,}" == "bluestacks.bluestacks" ]]
-		then
-			arg="bluestack.bluestacks"
+			winget.exe $verb "$arg"
+		else
+			winget.exe $verb "$arg" --accept-package-agreements --accept-source-agreements --include-unknown
 		fi
 
-		echo "attempting to $verb $arg"
-		winget.exe $verb "$arg"
 		echo "----------"
 	done
+elif [[ "$verb" == "update" ]]
+then
+	# a ton of work just to sort the gorram list
+	# and remove a rare dupe table
+
+	headerRegex='(^Name\s+?Id|^\-+$)'
+	footerRegex='^\d{1,3} (package|upgrade)'
+	shitRegex='(but require explicit targeting for upgrade:)'
+
+	rawOutput="$(winget.exe "$@" --include-unknown | perl -p -e 's@ [\\/\-\|] @@g;' -e 's/^[ \t]*$//g;' -e 's/^\s+//g;' -e 's/█▒//g;')"
+	header="$(echo "$rawOutput"	| grep -iP  "$headerRegex" | head -n 2)"
+	footer="$(echo "$rawOutput"	| grep -iP  "$footerRegex")"
+	rows="$(echo "$rawOutput"	| grep -Piv "$headerRegex" | grep -Piv "$footerRegex" | grep -Piv "$shitRegex" | sort)"
+
+	echo
+	# echo "header:"
+	echo "$header"
+	# echo
+	# echo "rows:"
+	echo "$rows" | sort
+	echo
+	# echo "footer:"
+	echo "$footer"
 else
 	winget.exe "$@"
 fi
