@@ -111,11 +111,6 @@ skip_previous(){
 like_track(){
 	alreadyLiked=0
 	alreadyLikedString=""
-	optQuick=0
-	if [[ "$2" == "--quick" ]]
-	then
-		optQuick=1
-	fi
 
 	trackUris="$(echo "$1" | cut -d "|" -f 1)"
 	trackTitle="$(echo "$1" | cut -d "|" -f 2)"
@@ -127,16 +122,13 @@ like_track(){
 		trackTitle="track"
 	fi
 
-	# unless using --like-quick, do an additional check to see if the track is already liked
-	# --like-quick skips this check for non- or semi-interactive uses
-	if [[ "$optQuick" == 0 ]]
+	# can't skip this check
+	# otherwise it will scoot likes to the top if already liked
+	json="$(curl -s -X GET "https://api.spotify.com/v1/me/tracks/contains?ids=$trackUris" "${headers[@]}")"
+	if [[ "$(echo "$json" | jq 'all(.[]; . == true) and .[0] == true')" == "true" ]]
 	then
-		json="$(curl -s -X GET "https://api.spotify.com/v1/me/tracks/contains?ids=$trackUris" "${headers[@]}")"
-		if [[ "$(echo "$json" | jq 'all(.[]; . == true) and .[0] == true')" == "true" ]]
-		then
-			alreadyLiked=1
-			alreadyLikedString="already "
-		fi
+		alreadyLiked=1
+		alreadyLikedString="already "
 	fi
 
 	# like the track
@@ -264,7 +256,6 @@ fi
 readTokens
 
 optLike=0
-optLikeQuick=0
 optPlayToggle=0
 optPlay=0
 optPause=0
@@ -288,13 +279,11 @@ do
 	if [[ "$arg" == "--device-toggle" || "$arg" == "--toggle-device" || "$arg" == "--device" ]]
 	then
 		optDeviceToggle=1
-	elif [[ "$arg" == "--like" || "$arg" == "-l" ]]
+	elif [[ "$arg" == "--like" || "$arg" == "-l" || "$arg" == "--like-quick" ]]
 	then
+		# keeping --like-quick arg for backwards compatibility
+		# even though we're not using it anymore
 		optLike=1
-		optNextMightBeLikeTrack=1
-	elif [[ "$arg" == "--like-quick" ]]
-	then
-		optLikeQuick=1
 		optNextMightBeLikeTrack=1
 	elif [[ "$arg" == "--what" ]]
 	then
@@ -361,7 +350,7 @@ then
 	play_toggle --pause
 fi
 
-if [[ "$optLike" == 1 || "$optLikeQuick" == 1 ]] && [[ -z "$likeTrack" ]]
+if [[ "$optLike" == 1 ]] && [[ -z "$likeTrack" ]]
 then
 	# grab current track id and name in one fell swoop unless one has been provided
 	likeTrack="$(get_current "both")"
@@ -375,9 +364,6 @@ fi
 if [[ "$optLike" == 1 ]]
 then
 	like_track "$likeTrack"
-elif [[ "$optLikeQuick" == 1 ]]
-then
-	like_track "$likeTrack" --quick
 elif [[ "$optGetCurrentId" == 1 ]]
 then
 	get_current "id"
