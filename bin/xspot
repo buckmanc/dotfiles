@@ -141,18 +141,48 @@ like_track(){
 }
 
 device_toggle(){
-	json="$(curl -s -X GET "https://api.spotify.com/v1/me/player/devices" "${headers[@]}" | jq '.devices[] | select(.is_active==false)')"
+	deviceNames="$1"
+	allDevicesJson="$(curl -s -X GET "https://api.spotify.com/v1/me/player/devices" "${headers[@]}" | jq '.devices[]')"
+	inactiveDevicesJson="$(echo "$allDevicesJson" | jq 'select(.is_active==false)')"
 
-	if [[ -z "$json" ]]
+	if [[ -z "$allDevicesJson" ]]
+	then
+		echo "no devices found"
+		exit 0
+	elif [[ -z "$deviceNames" ]]
+	then
+		# list devices and jet
+		# echo "$allDevicesJson" | jq '.'
+		echo "$allDevicesJson" | jq -r '(if .is_active == true then "|> " else "   " end) + .name '
+		exit 0
+	elif [[ -z "$inactiveDevicesJson" ]]
 	then
 		echo "no other devices found"
 		exit 0
 	fi
 
-	# echo "json: $json"
+	while read -r name
+	do
+		deviceJson="$(echo "$inactiveDevicesJson" | jq -c 'select( .name | ascii_downcase | contains("'"${name,,}"'"))')"
+		if [[ "$deviceJson" =~ .?null.? ]]
+		then
+			deviceJson=''
+		fi
 
-	deviceId="$(echo "$json" | jq -r ".id" | head -n 1)"
-	deviceName="$(echo "$json" | jq -r ".name" | head -n 1)"
+		if [[ -n "$deviceJson" ]]
+		then
+			break
+		fi
+	done < <( echo "$deviceNames" | grep -iPo '[^,]+' )
+
+	if [[ -z "$deviceJson" ]]
+	then
+		echo "no matching devices found"
+		exit 0
+	fi
+
+	deviceId="$(echo "$deviceJson" | jq -r ".id" | head -n 1)"
+	deviceName="$(echo "$deviceJson" | jq -r ".name" | head -n 1)"
 
 	# echo "deviceId: $deviceId"
 
@@ -262,10 +292,12 @@ optPause=0
 optDeviceToggle=0
 optGetCurrent=0
 optGetCurrentId=0
-optNextMightBeLikeTrack=''
+optNextMightBeLikeTrack=0
+optNextMightBeDeviceNames=0
 optSkipNext=0
 optSkipPrevious=0
 likeTrack=''
+deviceNames=''
 optAuth=0
 optRefresh=0
 
@@ -275,10 +307,15 @@ do
 	then
 		optNextMightBeLikeTrack=0
 	fi
+	if [[ "$optNextMightBeDeviceNames" == 1 && "$arg" == "-"* ]]
+	then
+		optNextMightBeDeviceNames=0
+	fi
 
-	if [[ "$arg" == "--device-toggle" || "$arg" == "--toggle-device" || "$arg" == "--device" ]]
+	if [[ "$arg" == "--device" || "$arg" == "--devices" ]]
 	then
 		optDeviceToggle=1
+		optNextMightBeDeviceNames=1
 	elif [[ "$arg" == "--like" || "$arg" == "-l" || "$arg" == "--like-quick" ]]
 	then
 		# keeping --like-quick arg for backwards compatibility
@@ -310,12 +347,18 @@ do
 	then
 		likeTrack="$arg"
 		optNextMightBeLikeTrack=0
+	elif [[ "$optNextMightBeDeviceNames" == 1 ]]
+	then
+		deviceNames="$arg"
+		optNextMightBeDeviceNames=0
 	elif [[ "$arg" == "--auth" || "$arg" == "--authenticate" || "$arg" == "--reauth" || "$arg" == "--reauthenticate" ]]
 	then
 		optAuth=1
 	elif [[ "$arg" == "--refresh" ]]
 	then
 		optRefresh=1
+	else
+		echo "no clue what $arg means"
 	fi	
 done
 
@@ -358,7 +401,7 @@ fi
 
 if [[ "$optDeviceToggle" == 1 ]]
 then
-	device_toggle
+	device_toggle "$deviceNames"
 fi
 
 if [[ "$optLike" == 1 ]]
