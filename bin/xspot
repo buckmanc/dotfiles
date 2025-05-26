@@ -153,7 +153,7 @@ device_toggle(){
 	then
 		# list devices and jet
 		# echo "$allDevicesJson" | jq '.'
-		echo "$allDevicesJson" | jq -r '(if .is_active == true then "|> " else "   " end) + .name '
+		echo "$allDevicesJson" | jq -r '(if .is_active == true then "|> " else "   " end) + .name + " - " + .type'
 		exit 0
 	elif [[ -z "$inactiveDevicesJson" ]]
 	then
@@ -161,9 +161,15 @@ device_toggle(){
 		exit 0
 	fi
 
+	if [[ "${deviceNames,,}" == "auto" ]]
+	then
+		deviceNames="computer,web player,smartphone"
+	fi
+		
+
 	while read -r name
 	do
-		deviceJson="$(echo "$inactiveDevicesJson" | jq -c 'select( .name | ascii_downcase | contains("'"${name,,}"'"))')"
+		deviceJson="$(echo "$inactiveDevicesJson" | jq -c 'select( (.name | ascii_downcase | contains("'"${name,,}"'")) or (.type | ascii_downcase | contains("'"${name,,}"'")) )')"
 		if [[ "$deviceJson" =~ .?null.? ]]
 		then
 			deviceJson=''

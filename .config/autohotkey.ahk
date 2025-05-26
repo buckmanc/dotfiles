@@ -9,9 +9,10 @@ RunBash(cmd)
 SetNumLockState "AlwaysOn"
 SetScrollLockState "AlwaysOff"
 Insert::return
-F20::Reload
+F19::Reload
 ; some spotify controls for macropads
-F21::RunBash '"$HOME/bin/xspot" --play'
+F20::RunBash '"$HOME/bin/xspot" --device auto'
+F21::RunBash '"$HOME/bin/xspot" --play-toggle'
 F22::RunBash '"$HOME/bin/xspot" --skip-next'
 F23::RunBash '"$HOME/bin/xspot" --skip-previous'
-F24::RunBash '"$HOME/bin/xspot" --like-quick'
+F24::RunBash '"$HOME/bin/xspot" --like'
