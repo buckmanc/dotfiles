@@ -10,7 +10,7 @@ fi
 while read -r json
 do
 	packageName="$(echo "$json" | jq -r '.packageName')"
-	packageName="$(echo "$packageName" | perl -pe 's/^((com|android|samsung|google|apps)\.)+//g')"
+	packageName="$(echo "$packageName" | perl -pe 's/^((org|com|android|samsung|google|apps|schabi|app|mobi)\.)+//g')"
 	packageName="$(echo "$packageName" | perl -pe 's/^(facebook.orca)$/messenger/g')"
 	packageName="$(echo "$packageName" | perl -pe 's/^(zhiliaoapp.musically)$/tiktok/g')"
 
@@ -20,12 +20,12 @@ do
 	content="$(echo "$json" | jq -r '.content')"
 
 	# skip these no matter what
-	if [[ "$packageName" == "termux" || "$packageName" == "spotify" || "$packageName" == "aimp.player" ]]
+	if [[ "$packageName" =~ ^(termux|spotify|aimp.player|newpipe|smartcapture)$ ]]
 	then
 		continue
 	# skip these unless passed --all
 	# things you might want to check once
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "termux.api" || "$packageName" == "reddit" || "$packageName" == "patreon" || "$packageName" == "facebook" ]]
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook)$ ]]
 	then
 		continue
 	elif [[ -z "$title" && -z "$content" ]]

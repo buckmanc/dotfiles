@@ -31,7 +31,7 @@ do
 	echo "backing up dir:"
 	echo "$sourceDir"
 
-	rsync -auz --max-delete=-1 "$sourceDir/" "$sshHost:$destDir"
+	rsync --ignore-missing-args -auz --max-delete=-1 "$sourceDir/" "$sshHost:$destDir"
 
 done < <( echo "$sourceDirs" )
 
