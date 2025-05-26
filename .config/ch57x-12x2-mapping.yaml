@@ -55,7 +55,7 @@ knobs: 2
 layers:
   - buttons:
       - ["play", "prev", "next", "win-alt-k"]
-      - ["win-l", "F20", "escape", "enter"]
+      - ["win-l", "F20", "escape", "mute"]
       - ["F21", "F22", "F23", "F24"]
     knobs:
       - ccw: "volumedown"
@@ -79,7 +79,7 @@ layers:
 
   - buttons:
       - ["play", "prev", "next", "win-alt-k"]
-      - ["win-l", "F20", "escape", "enter"]
+      - ["win-l", "F20", "escape", "mute"]
       - ["F21", "F22", "F23", "F24"]
     knobs:
       - ccw: "ctrl-shift-tab"
