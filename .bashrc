@@ -54,8 +54,9 @@ shopt -s nocaseglob # case insensitive globbing
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # less options
-# case insensitive, interpret color codes
-export LESS="IR"
+# case insensitive, interpret color codes, exit if all fits on one screen
+# removing "all on one screen" as it doesn't calculate the height of the prompt, thus hiding the top row sometimes
+export LESS="iR"
 
 # standardize termux and non termux temp dir vars
 if [[ -z "$TMPDIR" && -z "$TEMP" && -d "/tmp" ]]
@@ -260,3 +261,6 @@ function _complete_xscreen() {
 export -f _complete_xscreen
 complete -F _complete_xscreen -o default xscreen
 complete -F _complete_xscreen -o default xscrn
+
+# bug fix for grep on Windows
+export LC_ALL="en_US.UTF-8"
