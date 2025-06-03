@@ -51,11 +51,13 @@ knobs: 2
 ## and pressed down.
 
 # win-alt-k is a windows mic mute shortcut
+# unfort only msteams is supported by default
+# TODO see if you can map this in discord
 
 layers:
   - buttons:
       - ["play", "prev", "next", "win-alt-k"]
-      - ["win-l", "F20", "escape", "mute"]
+      - ["win-l", "F19", "F20", "mute"]
       - ["F21", "F22", "F23", "F24"]
     knobs:
       - ccw: "volumedown"
@@ -79,7 +81,7 @@ layers:
 
   - buttons:
       - ["play", "prev", "next", "win-alt-k"]
-      - ["win-l", "F20", "escape", "mute"]
+      - ["win-l", "F19", "F20", "mute"]
       - ["F21", "F22", "F23", "F24"]
     knobs:
       - ccw: "ctrl-shift-tab"

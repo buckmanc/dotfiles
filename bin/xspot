@@ -142,7 +142,8 @@ like_track(){
 
 device_toggle(){
 	deviceNames="$1"
-	allDevicesJson="$(curl -s -X GET "https://api.spotify.com/v1/me/player/devices" "${headers[@]}" | jq '.devices[]')"
+	# excluding nowplay.ng as it doesn't actually play the audio
+	allDevicesJson="$(curl -s -X GET "https://api.spotify.com/v1/me/player/devices" "${headers[@]}" | jq '.devices[] | select(.name | startswith("NowPlaying #") == false)')"
 	inactiveDevicesJson="$(echo "$allDevicesJson" | jq 'select(.is_active==false)')"
 
 	if [[ -z "$allDevicesJson" ]]
