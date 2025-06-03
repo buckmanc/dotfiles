@@ -24,10 +24,11 @@ F19::
 		Send "{Alt}wfr"
 		Send "{Alt}at"
 	}
-	; else if WinActive("ahk_exe EXCEL.EXE")
-	; {
-    ;
-	; }
+	else if WinActive("ahk_exe webfishing.exe")
+	{
+		; fish faster
+		click 50 
+	}
 	else
 	{
 		; otherwise, reload this file
