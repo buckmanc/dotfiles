@@ -32,7 +32,7 @@ $character\
 $status\
 """
 
-command_timeout = 1500
+# command_timeout = 1500
 continuation_prompt = '[❯ ](git)' # not working; what's wrong here?
 
 palette = "primary"

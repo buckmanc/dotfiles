@@ -129,6 +129,7 @@ addtopath "${ANDROID_HOME}/platform-tools"
 addtopath "${LOCALAPPDATA}/Pandoc"
 addtopath "$PROGRAMFILES/AutoHotkey/"
 addtopath "$PROGRAMFILES/VideoLAN/VLC/"
+addtopath "/c/Program Files (x86)/Google/Cloud SDK/google-cloud-sdk/bin"
 
 if [ -d "${ANDROID_HOME}" ]
 then
