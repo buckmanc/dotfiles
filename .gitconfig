@@ -43,7 +43,7 @@
 [core]
 	editor = vim
 	autocrlf = input # only check in lf, check out whatever's in the index
-	safecrlf = true
+	safecrlf = false
 	pager = tr -d '\\r' | less -REX # visually strip CR's
 	attributesfile = ~/.gitattributes # todo: fix the slowdown this causes in some environments
 	excludesfile = ~/.gitignore_global
@@ -94,3 +94,8 @@
 	file = ~/.mailmap
 [protocol "file"]
 	allow = always
+# [filter "lfs"]
+# 	clean = git-lfs clean -- %f
+# 	smudge = git-lfs smudge -- %f
+# 	process = git-lfs filter-process
+# 	required = true

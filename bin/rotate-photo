@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 
+
 if ( ! type jpegtran >/dev/null 2>&1)
 then
 	echo "jpegtran not installed"
@@ -56,9 +57,17 @@ do
 		# continue
 	fi
 
+	ext="${path##*.}"
+	ext="${ext,,}"
+
 	echo "$path"
 
-	jpegtran -rotate "$rotateArg" -outfile "$path" "$path"
+	if [[ "$ext" =~ jpe?g ]]
+	then
+		jpegtran -rotate "$rotateArg" -outfile "$path" "$path"
+	else
+		mogrify -rotate "$rotateArg" "$path"
+	fi
 
 	if [[ "$optQuiet" == 0 ]]
 	then

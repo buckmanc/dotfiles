@@ -6,3 +6,5 @@ logfile $HOME/.logs/screen/%Y-%m-%d_%c:%s.log
 # shell -bash
 # shell -/bin/bash
 # shell /bin/bash
+# shell -$SHELL
+# attrcolor b ".I"

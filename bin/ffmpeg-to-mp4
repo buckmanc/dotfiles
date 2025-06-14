@@ -22,12 +22,16 @@ crf=25
 codec=H264
 preset=slower
 testTimeStamp="0:07"
+optTest=0
 
 makeTestImage(){
 	testSource="$1"
 	testDest="$2"
 
-	ffmpeg -i "$testSource" -ss "$testTimeStamp" -vframes 1 -y -loglevel error "$testDest"
+	if [[ "$optTest" == 1 ]]
+	then
+		ffmpeg -i "$testSource" -ss "$testTimeStamp" -vframes 1 -y -loglevel error "$testDest"
+	fi
 }
 
 for src in "$@"
@@ -39,6 +43,11 @@ do
 
 	testPathSource="$pathNoExt.png"
 	testPathDest="$destPathNoExt.png"
+
+	if [[ -f "$destPath" ]]
+	then
+		continue
+	fi
 
 	if [[ "${codec^^}" == "H264" ]]
 	then
