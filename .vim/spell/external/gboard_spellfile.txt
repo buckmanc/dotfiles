@@ -142,6 +142,7 @@
 	coupley	en-US
 	COVID	en-US
 	covid	en-US
+	cowabunga	en-US
 	coz	en-US
 	CPTSD	en-US
 	crashdown	en-US
@@ -245,6 +246,7 @@
 	Gemma	en-US
 	glyphs	en-US
 	gma	en-US
+	gobless	en-US
 	Godfrey	en-US
 	gonna	en-US
 	Goodreads	en-US
@@ -424,6 +426,7 @@
 	nopers	en-US
 	NPC	en-US
 	numbingly	en-US
+	nunchuck	en-US
 	Odwalla	en-US
 	offput	en-US
 	ok	en-US
@@ -449,6 +452,7 @@
 	Panera	en-US
 	panky	en-US
 	paracord	en-US
+	parmesan	en-US
 	parter	en-US
 	pathing	en-US
 	Pattinson	en-US
@@ -570,6 +574,7 @@
 	smithing	en-US
 	sms	en-US
 	snapple	en-US
+	snuck	en-US
 	societally	en-US
 	sockies	en-US
 	sp	en-US
@@ -686,6 +691,7 @@
 	xfer	en-US
 	xfered	en-US
 	xferring	en-US
+	Xianity	en-US
 	xmas	en-US
 	xyz	en-US
 	Y2K	en-US
@@ -708,7 +714,6 @@
 	Zenni	en-US
 	zonked	en-US
 	zonking	en-US
-	Kaladin Stormblessed	en-US
 	Adolin	en-US
 	Adolin's	en-US
 	Adonalsium	en-US
@@ -722,6 +727,7 @@
 	AMatWQ	en-US
 	Amphibia	en-US
 	Anu	en-US
+	Aon	en-US
 	Arishem	en-US
 	Arkay	en-US
 	Arkay's	en-US
@@ -1021,10 +1027,12 @@
 	SP	en-US
 	VTech	en-US
 	Wii	en-US
+	Wiimote	en-US
 	XBLA	en-US
 	Xbox	en-US
 	404'd	en-US
 	AngelCities	en-US
+	appropro	en-US
 	arrowed	en-US
 	baleeted	en-US
 	barbzerdry	en-US
@@ -1062,6 +1070,7 @@
 	ibu-pro-pro	en-US
 	ibupropro	en-US
 	ina-pro-pro	en-US
+	inappropro	en-US
 	inapropro	en-US
 	jibblies	en-US
 	lappy	en-US
@@ -2279,11 +2288,13 @@
 	api	en-US
 	ascii	en-US
 	async	en-US
+	AutoHotKey	en-US
 	backend	en-US
 	backends	en-US
 	Blazor	en-US
 	CC's	en-US
 	cli	en-US
+	concat	en-US
 	config	en-US
 	deserialize	en-US
 	dir	en-US
@@ -2311,11 +2322,13 @@
 	jpg	en-US
 	json	en-US
 	M2	en-US
+	macropad	en-US
 	mssql	en-US
 	MSSQL	en-US
 	mvp	en-US
 	Pandoc	en-US
 	PCIe	en-US
+	performant	en-US
 	png	en-US
 	PowerShell	en-US
 	powershell	en-US

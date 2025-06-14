@@ -141,6 +141,7 @@ Counterstrike
 coupley
 COVID
 covid
+cowabunga
 coz
 CPTSD
 crashdown
@@ -244,6 +245,7 @@ geez
 Gemma
 glyphs
 gma
+gobless
 Godfrey
 gonna
 Goodreads
@@ -423,6 +425,7 @@ noob
 nopers
 NPC
 numbingly
+nunchuck
 Odwalla
 offput
 ok
@@ -448,6 +451,7 @@ Paevey
 Panera
 panky
 paracord
+parmesan
 parter
 pathing
 Pattinson
@@ -569,6 +573,7 @@ Slurpees
 smithing
 sms
 snapple
+snuck
 societally
 sockies
 sp
@@ -685,6 +690,7 @@ x9
 xfer
 xfered
 xferring
+Xianity
 xmas
 xyz
 Y2K
@@ -707,7 +713,6 @@ ZeldaSymphony
 Zenni
 zonked
 zonking
-Kaladin Stormblessed
 Adolin
 Adolin's
 Adonalsium
@@ -721,6 +726,7 @@ Amaram
 AMatWQ
 Amphibia
 Anu
+Aon
 Arishem
 Arkay
 Arkay's
@@ -1020,10 +1026,12 @@ SNES
 SP
 VTech
 Wii
+Wiimote
 XBLA
 Xbox
 404'd
 AngelCities
+appropro
 arrowed
 baleeted
 barbzerdry
@@ -1061,6 +1069,7 @@ grumblecakes
 ibu-pro-pro
 ibupropro
 ina-pro-pro
+inappropro
 inapropro
 jibblies
 lappy
@@ -2278,11 +2287,13 @@ Tiglath
 api
 ascii
 async
+AutoHotKey
 backend
 backends
 Blazor
 CC's
 cli
+concat
 config
 deserialize
 dir
@@ -2310,11 +2321,13 @@ jpeg
 jpg
 json
 M2
+macropad
 mssql
 MSSQL
 mvp
 Pandoc
 PCIe
+performant
 png
 PowerShell
 powershell

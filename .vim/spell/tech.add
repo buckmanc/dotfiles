@@ -1,11 +1,13 @@
 api
 ascii
 async
+AutoHotKey
 backend
 backends
 Blazor
 CC's
 cli
+concat
 config
 deserialize
 dir
@@ -33,11 +35,13 @@ jpeg
 jpg
 json
 M2
+macropad
 mssql
 MSSQL
 mvp
 Pandoc
 PCIe
+performant
 png
 PowerShell
 powershell
