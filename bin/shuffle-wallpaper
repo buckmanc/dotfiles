@@ -12,6 +12,7 @@ optReadArgsFromCache=0
 optOutPath=''
 optNextIsOutPath=0
 optUnrecent=0
+optVerbose=0
 
 helpDeets="
 
@@ -80,6 +81,9 @@ do
 	elif [[ "$arg" == "--unrecent" ]]
 	then
 		optUnrecent=1
+	elif [[ "$arg" == "--verbose" || "$arg" == "-v" ]]
+	then
+		optVerbose=1
 	else
 		# add to our arg array, thus filtering out valid options from paths
 		args+=("$arg")
@@ -182,8 +186,12 @@ baseFilesCount="$(echo "$files" | wc -l)"
 # burn the history file if input paths have changed since last run
 if [[ -f "$historyCachePath" && "$args" != "$(cat "$argCachePath")" ]]
 then
-	echo "burning history cache opt 1"
-	echo "diff args: $args"
+	if [[ "$optVerbose" == 1 ]]
+	then
+		echo "burning history cache opt 1"
+		echo "diff args: $args"
+	fi
+
 	rm "$historyCachePath"
 # remove files from the list that have already been used
 elif [[ -f "$historyCachePath" ]]
@@ -199,7 +207,11 @@ then
 	# if [[ "$newFilesCount" -gt 0 ]]
 	if [[ "$newFilesCount" -eq 1 && -z "$filesMinusHistory" ]]
 	then
-		echo "burning history cache opt 2"
+		if [[ "$optVerbose" == 1 ]]
+		then
+			echo "burning history cache opt 2"
+		fi
+
 		rm "$historyCachePath"
 	else
 		files="$filesMinusHistory"

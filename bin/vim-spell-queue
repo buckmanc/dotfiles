@@ -6,21 +6,38 @@ spellDir="$HOME/.vim/spell"
 defaultFile="en.utf-8"
 
 defaultPath="$spellDir/$defaultFile.add"
-newWords="$(git diff --no-ext-diff --unified=0 --no-prefix -a "$defaultPath" | grep -iPo '(?<=^\+)[^\+].+')"
+newWords="$(git -C "$HOME" diff --no-ext-diff --unified=0 --no-prefix -a "$defaultPath" | grep -iPo '(?<=^\+)[^\+].+')"
 fileOptions="$("$HOME/bin/vim-spell")"
 filePaths="$(find "$HOME/.vim/spell" -type f -iname '*.add' | sort)"
 readarray -t filePathsArray <<< "$filePaths"
 
 while read -r newWord
 do
+	optDelete=0
 	prompt=$'\n'
-	prompt+="move word"$'\n'
-	prompt+="---------"$'\n'
-	prompt+="$newWord"$'\n'
-	prompt+="---------"$'\n'
-	prompt+="to file:"$'\n'
-	prompt+=$'\n'
-	prompt+="$fileOptions"$'\n'
+
+	promptWord=''
+	promptWord+="move word"$'\n'
+	promptWord+="---------"$'\n'
+	promptWord+="$newWord"$'\n'
+	promptWord+="---------"$'\n'
+	promptWord+="to file:"$'\n'
+
+	promptVert=$'\n'
+	promptVert+="$promptWord"
+	promptVert+=$'\n'
+	promptVert+="$fileOptions"$'\n'
+
+	promptHori=$'\n'
+	promptHori+="$(paste -d $'\t' <(echo "$fileOptions" | tac) <(echo "$promptWord" | tac) | tac | column --table -s $'\t')"
+	promptHori+=$'\n'
+
+	if [[ "$LINES" -ge "$(echo "$promptVert" | wc -l)" ]]
+	then
+		prompt="$promptVert"
+	else
+		prompt="$promptHori"
+	fi
 
 	read -p "$prompt" -r </dev/tty
 	
@@ -31,6 +48,10 @@ do
 	elif [[ "${REPLY,,}" == "s" ]]
 	then
 		continue
+	elif [[ "${REPLY,,}" == "d" ]]
+	then
+		# queue word for deletion below
+		optDelete=1
 	elif [[ "$REPLY" =~ ^[0-9]+$ ]]
 	then
 		index=$((REPLY-1))
@@ -52,12 +73,18 @@ do
 
 		# add word to $filePath
 		echo "$newWord" >> "$filePath"
-		# remove word from $defaultPath
-		defaultText="$(cat "$defaultPath")"
-		echo "$defaultText" | grep -vFx "$newWord" > "$defaultPath"
+		# queue word for deletion below
+		optDelete=1
 	else
 		echo "what"
 		break
+	fi
+
+	if [[ "$optDelete" == 1 ]]
+	then
+		# remove word from $defaultPath
+		defaultText="$(cat "$defaultPath")"
+		echo "$defaultText" | grep -vFx "$newWord" > "$defaultPath"
 	fi
 
 done < <(echo "$newWords")
