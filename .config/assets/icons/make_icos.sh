@@ -3,10 +3,10 @@
 pngDir="$HOME/.config/assets/icons/png"
 icoDir="$HOME/.config/assets/icons/ico"
 
-if [[ -d "$icoDir" ]]
-then
-	rm -r "$icoDir"
-fi
+# if [[ -d "$icoDir" ]]
+# then
+# 	rm -r "$icoDir"
+# fi
 
 mkdir -p "$icoDir"
 
@@ -15,6 +15,11 @@ do
 	filename="$(basename "$inPath")"
 	filename="${filename%.*}"
 	outPath="${icoDir}/${filename}.ico"
+
+	if [[ -f "$outPath" ]]
+	then
+		continue
+	fi
 
 	# echo "inPath: $inPath"
 	# echo "outPath: $outPath"
