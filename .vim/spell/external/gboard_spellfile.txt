@@ -26,9 +26,12 @@
 	Alastair	en-US
 	aleck	en-US
 	Alexa	en-US
+	all-nighter	en-US
+	all-nighters	en-US
 	alopecia	en-US
 	AMA's	en-US
 	amened	en-US
+	amidst	en-US
 	Anji	en-US
 	apnea	en-US
 	appt	en-US
@@ -65,6 +68,7 @@
 	Blackcraft	en-US
 	blankie	en-US
 	blegh	en-US
+	Blippi	en-US
 	BLM	en-US
 	blotchiness	en-US
 	bluetooth	en-US
@@ -264,6 +268,8 @@
 	hander	en-US
 	hanky	en-US
 	hardstyle	en-US
+	harumph	en-US
+	harumphed	en-US
 	hatewatch	en-US
 	hatewatched	en-US
 	Havisham	en-US
@@ -275,6 +281,7 @@
 	HIPAA	en-US
 	hissy	en-US
 	hm	en-US
+	hocus-pocus	en-US
 	hodge	en-US
 	HomeChef	en-US
 	homeschool	en-US
@@ -376,6 +383,7 @@
 	me's	en-US
 	mech	en-US
 	meds	en-US
+	Meeka	en-US
 	meme'd	en-US
 	Menards	en-US
 	merch	en-US
@@ -441,6 +449,7 @@
 	OST	en-US
 	other's	en-US
 	ouija	en-US
+	out-of-towner	en-US
 	outro	en-US
 	overprotection	en-US
 	oversized	en-US
@@ -461,6 +470,7 @@
 	personhood	en-US
 	phonk	en-US
 	pickleball	en-US
+	pickpocketed	en-US
 	pincher	en-US
 	pinky	en-US
 	PJ	en-US
@@ -479,6 +489,8 @@
 	positivity	en-US
 	potate	en-US
 	ppl	en-US
+	pranked	en-US
+	pranking	en-US
 	pre	en-US
 	prep'd	en-US
 	prep'ing	en-US
@@ -616,6 +628,7 @@
 	timelines	en-US
 	timestamped	en-US
 	timestamps	en-US
+	tippy	en-US
 	todo	en-US
 	Tollywood	en-US
 	toml	en-US
@@ -640,6 +653,8 @@
 	unfort	en-US
 	ungrounded	en-US
 	unintuitive	en-US
+	unjam	en-US
+	unjamming	en-US
 	unkillable	en-US
 	Uno	en-US
 	unremodeled	en-US
@@ -1163,6 +1178,7 @@
 	Cass	en-US
 	ConAgra	en-US
 	Concordia	en-US
+	Cornhusker	en-US
 	Cunningham	en-US
 	Desoto	en-US
 	Doorly	en-US
@@ -1178,6 +1194,7 @@
 	Gavilon	en-US
 	Gretna	en-US
 	Hathaway	en-US
+	Hillcrest	en-US
 	Inacom	en-US
 	infoUSA	en-US
 	Joslyn	en-US
@@ -2285,6 +2302,12 @@
 	Seir	en-US
 	Sisera	en-US
 	Tiglath	en-US
+	Zerubbabel	en-US
+	abuela	en-US
+	abuelita	en-US
+	estufa	en-US
+	estufar	en-US
+	mañana	en-US
 	api	en-US
 	ascii	en-US
 	async	en-US
@@ -2329,6 +2352,9 @@
 	Pandoc	en-US
 	PCIe	en-US
 	performant	en-US
+	phreak	en-US
+	phreaker	en-US
+	phreaking	en-US
 	png	en-US
 	PowerShell	en-US
 	powershell	en-US
@@ -2417,6 +2443,7 @@
 	Kriskeys	en-US
 	Lennertz	en-US
 	livingroom	en-US
+	Lundgren	en-US
 	M'Nal	en-US
 	M'Nal's	en-US
 	Matisyahu	en-US
@@ -2437,6 +2464,7 @@
 	synthroid	en-US
 	Ta-Da	en-US
 	TabTeam	en-US
+	Tarkio	en-US
 	Timm	en-US
 	Tobycloth	en-US
 	Wal-Mart	en-US
