@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -e
+
+# a simple vim wrapper script that tells you your wpm afterward
+
+path="$1"
+if [[ -f "$path" ]]
+then
+	wordCountInitial="$(cat "$path" | wc -w)"
+else
+	wordCountInitial=0
+fi
+
+startTime="$(date '+%s')"
+
+vim "$@"
+
+endTime="$(date '+%s')"
+
+if [[ -f "$path" ]]
+then
+	wordCountFinal="$(cat "$path" | wc -w)"
+	newWords="$((wordCountFinal-wordCountInitial))"
+	mins="$(echo "(${endTime} - ${startTime}) / 60" | bc -l)"
+	wpm="$(echo "scale=2;$newWords / $mins" | bc -l)"
+	# echo "startTime: $startTime"
+	# echo "endTime: $endTime"
+	# echo "mins: $mins"
+	echo "words: $newWords"
+	echo "wpm: $wpm"
+fi

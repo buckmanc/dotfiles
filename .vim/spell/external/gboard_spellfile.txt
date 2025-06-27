@@ -49,6 +49,7 @@
 	Baahubali	en-US
 	bam	en-US
 	bandana	en-US
+	bariatric	en-US
 	baselard	en-US
 	Baskin	en-US
 	Bathory	en-US
@@ -100,6 +101,7 @@
 	calcs	en-US
 	cancelled	en-US
 	cancelling	en-US
+	Canfield's	en-US
 	canopic	en-US
 	carabiner	en-US
 	Carcassonne	en-US
@@ -646,6 +648,7 @@
 	umami	en-US
 	unanswering	en-US
 	unboxed	en-US
+	unboxing	en-US
 	uncancelled	en-US
 	uncomplicatedly	en-US
 	underpowered	en-US
@@ -1191,6 +1194,7 @@
 	Fontenelle	en-US
 	Gallup	en-US
 	Gamer	en-US
+	Gamer's	en-US
 	Gavilon	en-US
 	Gretna	en-US
 	Hathaway	en-US
@@ -2283,11 +2287,13 @@
 	Bartimaeus	en-US
 	Bethel	en-US
 	Christianese	en-US
+	Creflo	en-US
 	Edom	en-US
 	Edomites	en-US
 	Gilgal	en-US
 	Heber	en-US
 	Hebron	en-US
+	Jabez	en-US
 	Jael	en-US
 	Jael's	en-US
 	Kadesh	en-US
@@ -2415,6 +2421,9 @@
 	BPQ's	en-US
 	Bravadas	en-US
 	BVOV	en-US
+	candlenewsletter@qWest.com	en-US
+	candlenewsletter@qwest.net	en-US
+	candlenewsletter@uswest.net	en-US
 	carseat	en-US
 	carseats	en-US
 	Chas	en-US
@@ -2425,6 +2434,7 @@
 	dustmopped	en-US
 	Elsbernd	en-US
 	enquire	en-US
+	fibromyalgic	en-US
 	fleecie	en-US
 	fleecies	en-US
 	fleecy	en-US
@@ -2436,6 +2446,7 @@
 	Hallowe'en	en-US
 	I'd've	en-US
 	Jin	en-US
+	JMW	en-US
 	JoAnne's	en-US
 	Joanne's	en-US
 	Judi	en-US
@@ -2443,6 +2454,7 @@
 	Kriskeys	en-US
 	Lennertz	en-US
 	livingroom	en-US
+	Lockwood	en-US
 	Lundgren	en-US
 	M'Nal	en-US
 	M'Nal's	en-US
@@ -2450,6 +2462,7 @@
 	Meghann	en-US
 	Meghann's	en-US
 	Millroy	en-US
+	Mozner	en-US
 	N'Mal	en-US
 	N'Mal's	en-US
 	Nikumen	en-US
@@ -2460,6 +2473,7 @@
 	Rhineheart	en-US
 	Robarge	en-US
 	Robarges	en-US
+	Rootes	en-US
 	Slobodnik	en-US
 	synthroid	en-US
 	Ta-Da	en-US
@@ -2467,6 +2481,9 @@
 	Tarkio	en-US
 	Timm	en-US
 	Tobycloth	en-US
+	VesRehab	en-US
+	Volquartsen	en-US
 	Wal-Mart	en-US
+	Waterman's	en-US
 	whammo	en-US
 	whitework	en-US

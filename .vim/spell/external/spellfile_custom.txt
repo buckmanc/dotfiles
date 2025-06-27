@@ -48,6 +48,7 @@ B2B
 Baahubali
 bam
 bandana
+bariatric
 baselard
 Baskin
 Bathory
@@ -99,6 +100,7 @@ calcifications
 calcs
 cancelled
 cancelling
+Canfield's
 canopic
 carabiner
 Carcassonne
@@ -645,6 +647,7 @@ Uber
 umami
 unanswering
 unboxed
+unboxing
 uncancelled
 uncomplicatedly
 underpowered
@@ -1190,6 +1193,7 @@ Florence
 Fontenelle
 Gallup
 Gamer
+Gamer's
 Gavilon
 Gretna
 Hathaway
@@ -2282,11 +2286,13 @@ Barnea
 Bartimaeus
 Bethel
 Christianese
+Creflo
 Edom
 Edomites
 Gilgal
 Heber
 Hebron
+Jabez
 Jael
 Jael's
 Kadesh
@@ -2414,6 +2420,9 @@ BPQ
 BPQ's
 Bravadas
 BVOV
+candlenewsletter@qWest.com
+candlenewsletter@qwest.net
+candlenewsletter@uswest.net
 carseat
 carseats
 Chas
@@ -2424,6 +2433,7 @@ diningroom
 dustmopped
 Elsbernd
 enquire
+fibromyalgic
 fleecie
 fleecies
 fleecy
@@ -2435,6 +2445,7 @@ Hallo'een
 Hallowe'en
 I'd've
 Jin
+JMW
 JoAnne's
 Joanne's
 Judi
@@ -2442,6 +2453,7 @@ KCM
 Kriskeys
 Lennertz
 livingroom
+Lockwood
 Lundgren
 M'Nal
 M'Nal's
@@ -2449,6 +2461,7 @@ Matisyahu
 Meghann
 Meghann's
 Millroy
+Mozner
 N'Mal
 N'Mal's
 Nikumen
@@ -2459,6 +2472,7 @@ RenFair
 Rhineheart
 Robarge
 Robarges
+Rootes
 Slobodnik
 synthroid
 Ta-Da
@@ -2466,6 +2480,9 @@ TabTeam
 Tarkio
 Timm
 Tobycloth
+VesRehab
+Volquartsen
 Wal-Mart
+Waterman's
 whammo
 whitework
