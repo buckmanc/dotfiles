@@ -263,5 +263,8 @@ export -f _complete_xscreen
 complete -F _complete_xscreen -o default xscreen
 complete -F _complete_xscreen -o default xscrn
 
-# bug fix for grep on Windows
-export LC_ALL="en_US.UTF-8"
+if [[ "$OSTYPE" == "msys" ]]
+then
+	# bug fix for grep on Windows
+	export LC_ALL="en_US.UTF-8"
+fi
