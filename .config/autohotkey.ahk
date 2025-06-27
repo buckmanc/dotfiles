@@ -12,18 +12,21 @@ RunBash(cmd)
 }
 
 ; window-dependant magic hotkey
+; this DOES EAT ctrl+shift+g!
 ^+G::
 F19::
 {
+	; unpress ctrl and shift from the hotkey
+	; "blind" mode ensures that the keys are not restored
+	Send "{Blind}{Ctrl Up}{Shift Up}
+
 	if WinActive("ahk_exe EXCEL.EXE")
 	{
-		KeyWait "Control"
-		KeyWait "Shift"
-
 		; format Excel spreadsheets
 
 		Send "{Alt}at{Alt}at"					; reset filters
 		Send "{Ctrl Down}a{Ctrl Up}"			; select all
+		Send "{Ctrl Down}a{Ctrl Up}"			; select *all*
 		Send "{Alt}hh{Right}{Enter}"			; black background
 		Send "{Alt}hfc{Down 4}{Right 3}{Enter}"	; blue text
 		Send "{Ctrl Down}{Home}{Ctrl Up}"		; select first cell
@@ -35,9 +38,6 @@ F19::
 	}
 	else if WinActive("ahk_exe ssms.exe")
 	{
-		KeyWait "Control"
-		KeyWait "Shift"
-
 		Send "^d"		; results to grid (fixes accidental ctrl+t)
 		Send "^+r"		; refresh auto complete cache
 		Send "^r"		; hide results window
@@ -50,9 +50,6 @@ F19::
 	}
 	else if WinActive("ahk_exe discord.exe") or WinActive("ahk_exe msteams.exe")
 	{
-		KeyWait "Control"
-		KeyWait "Shift"
-
 		; local mute shortcut, instead of the global but barely supported shortcut
 		Send "{Ctrl Down}{Shift Down}m{Ctrl Up}{Shift Up}"
 	}
@@ -63,9 +60,6 @@ F19::
 	}
 	else if WinActive("ahk_exe chrome.exe")
 	{
-		KeyWait "Control"
-		KeyWait "Shift"
-
 		; move tabs between windows
 		Send "+!t"				; focus the first item on the toolbar
 		Send "{F6}"				; select the current tab
@@ -88,9 +82,6 @@ F19::
 	}
 	else if WinActive("ahk_exe spotify.exe")
 	{
-		KeyWait "Control"
-		KeyWait "Shift"
-
 		; Send "!+b"		; like the current song DO NOT USE as it unlikes liked songs too
 		Send "!+j"		; go to now playing
 	}
@@ -106,16 +97,25 @@ F19::
 ; coz ctrl+shift+p *should* be new private tab
 ; not print
 ; especially when ctrl+p, the universal print shortcut, is already in effect
+#HotIf WinActive("ahk_exe chrome.exe")
 ^+P::
 {
-	if WinActive("ahk_exe chrome.exe")
-	{
-		KeyWait "Control"
-		KeyWait "Shift"
+	; unpress ctrl and shift from the hotkey
+	; "blind" mode ensures that the keys are not restored
+	Send "{Blind}{Ctrl Up}{Shift Up}
 
-		Send "^+n"
-	}
+	Send "^+n"
 }
+#HotIf
+
+#HotIf WinActive("ahk_exe devenv.exe") or WinActive("ahk_exe ssms.exe")
+F1::
+Browser_Home::
+Browser_Search::
+{
+	return
+}
+#HotIf
 
 ; some spotify controls for macropads
 F20::RunBash '\"$HOME/bin/xspot\" --device auto'
