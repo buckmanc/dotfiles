@@ -8,7 +8,7 @@ Insert::return
 
 RunBash(cmd)
 {
-	Run '"' . A_ProgramFiles . '\Git\usr\bin\bash.exe" --noprofile --norc -c "export PATH=\"/usr/bin:$PATH\" && ' . cmd . '"', , "Min"
+	Run '"' . A_ProgramFiles . '\Git\usr\bin\bash.exe" --noprofile --norc -c "export PATH=\"/usr/bin:$PATH\" && ' . cmd . ' || read -rs -n1 -p \"press any key to continue\""', , "Min"
 }
 
 ; window-dependant magic hotkey
@@ -118,8 +118,8 @@ F19::
 }
 
 ; some spotify controls for macropads
-F20::RunBash '"$HOME/bin/xspot" --device auto'
-F21::RunBash '"$HOME/bin/xspot" --play-toggle'
-F22::RunBash '"$HOME/bin/xspot" --skip-next'
-F23::RunBash '"$HOME/bin/xspot" --skip-previous'
-F24::RunBash '"$HOME/bin/xspot" --like'
+F20::RunBash '\"$HOME/bin/xspot\" --device auto'
+F21::RunBash '\"$HOME/bin/xspot\" --play-toggle'
+F22::RunBash '\"$HOME/bin/xspot\" --skip-next'
+F23::RunBash '\"$HOME/bin/xspot\" --skip-previous'
+F24::RunBash '\"$HOME/bin/xspot\" --like'
