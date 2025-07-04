@@ -56,6 +56,7 @@
 	batshit	en-US
 	bb	en-US
 	bbq	en-US
+	BCE	en-US
 	BCP	en-US
 	beflued	en-US
 	Benadryl	en-US
@@ -117,6 +118,7 @@
 	cheebo	en-US
 	cheerleading	en-US
 	chicky	en-US
+	Chicxulub	en-US
 	childers	en-US
 	children's	en-US
 	chiropathy	en-US
@@ -180,6 +182,7 @@
 	diem	en-US
 	dimmable	en-US
 	dinked	en-US
+	Dinotopia	en-US
 	Dios	en-US
 	direness	en-US
 	discog	en-US
@@ -204,6 +207,7 @@
 	Duplos	en-US
 	durian	en-US
 	dystopia	en-US
+	Ea-nāṣir	en-US
 	earlyish	en-US
 	easter	en-US
 	ectoplasmic	en-US
@@ -365,9 +369,11 @@
 	Logitech	en-US
 	Longaberger	en-US
 	lovey-dovey	en-US
+	LUCA	en-US
 	lumen	en-US
 	lunner	en-US
 	Machina	en-US
+	Machu Picchu	en-US
 	magick	en-US
 	Magnavox	en-US
 	mahjong	en-US
@@ -386,10 +392,12 @@
 	mech	en-US
 	meds	en-US
 	Meeka	en-US
+	megalodon	en-US
 	meme'd	en-US
 	Menards	en-US
 	merch	en-US
 	metroidvania	en-US
+	Midol	en-US
 	midwest	en-US
 	Mina	en-US
 	Mina's	en-US
@@ -516,6 +524,7 @@
 	ramen	en-US
 	ramped	en-US
 	rando	en-US
+	rangoon	en-US
 	realtor	en-US
 	reconvince	en-US
 	recraft	en-US
@@ -603,6 +612,8 @@
 	staycation	en-US
 	strategizing	en-US
 	stressors	en-US
+	strikethrough	en-US
+	strikethroughs	en-US
 	stuffie	en-US
 	styleless	en-US
 	supportively	en-US
@@ -675,6 +686,7 @@
 	vibing	en-US
 	vids	en-US
 	Vischer	en-US
+	Vredefort	en-US
 	Wachovia	en-US
 	waifu	en-US
 	Walgreens	en-US
@@ -795,6 +807,7 @@
 	Drakon	en-US
 	draugr	en-US
 	Drominad	en-US
+	DS9	en-US
 	Ecclesia	en-US
 	Edgedancer	en-US
 	Eggman	en-US
@@ -1206,12 +1219,16 @@
 	Kearney	en-US
 	KGBI	en-US
 	Kiewit	en-US
+	Koterba	en-US
+	Koterba's	en-US
 	Lauritzen	en-US
 	Leahy	en-US
+	Leewood Oaks	en-US
 	Logan	en-US
 	Mahoney	en-US
 	Midtown	en-US
 	Millard	en-US
+	Oakview	en-US
 	Offutt	en-US
 	OPPD	en-US
 	Oreapolis	en-US
@@ -2444,7 +2461,9 @@
 	gauché	en-US
 	Hallo'een	en-US
 	Hallowe'en	en-US
+	Homebuilders	en-US
 	I'd've	en-US
+	Indocin	en-US
 	Jin	en-US
 	JMW	en-US
 	JoAnne's	en-US

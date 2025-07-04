@@ -55,6 +55,7 @@ Bathory
 batshit
 bb
 bbq
+BCE
 BCP
 beflued
 Benadryl
@@ -116,6 +117,7 @@ charcuterie
 cheebo
 cheerleading
 chicky
+Chicxulub
 childers
 children's
 chiropathy
@@ -179,6 +181,7 @@ diarrheal
 diem
 dimmable
 dinked
+Dinotopia
 Dios
 direness
 discog
@@ -203,6 +206,7 @@ Duplo
 Duplos
 durian
 dystopia
+Ea-nāṣir
 earlyish
 easter
 ectoplasmic
@@ -364,9 +368,11 @@ lofi
 Logitech
 Longaberger
 lovey-dovey
+LUCA
 lumen
 lunner
 Machina
+Machu Picchu
 magick
 Magnavox
 mahjong
@@ -385,10 +391,12 @@ me's
 mech
 meds
 Meeka
+megalodon
 meme'd
 Menards
 merch
 metroidvania
+Midol
 midwest
 Mina
 Mina's
@@ -515,6 +523,7 @@ Rahab's
 ramen
 ramped
 rando
+rangoon
 realtor
 reconvince
 recraft
@@ -602,6 +611,8 @@ starship
 staycation
 strategizing
 stressors
+strikethrough
+strikethroughs
 stuffie
 styleless
 supportively
@@ -674,6 +685,7 @@ VGM
 vibing
 vids
 Vischer
+Vredefort
 Wachovia
 waifu
 Walgreens
@@ -794,6 +806,7 @@ Domi
 Drakon
 draugr
 Drominad
+DS9
 Ecclesia
 Edgedancer
 Eggman
@@ -1205,12 +1218,16 @@ Kanesville
 Kearney
 KGBI
 Kiewit
+Koterba
+Koterba's
 Lauritzen
 Leahy
+Leewood Oaks
 Logan
 Mahoney
 Midtown
 Millard
+Oakview
 Offutt
 OPPD
 Oreapolis
@@ -2443,7 +2460,9 @@ Gaspard
 gauché
 Hallo'een
 Hallowe'en
+Homebuilders
 I'd've
+Indocin
 Jin
 JMW
 JoAnne's
