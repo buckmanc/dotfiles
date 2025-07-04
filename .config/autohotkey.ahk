@@ -8,17 +8,18 @@ Insert::return
 
 RunBash(cmd)
 {
+	; vim syntax highlighting breaks down on the single/double quotes here
+	; keep the window open if errors occur
 	Run '"' . A_ProgramFiles . '\Git\usr\bin\bash.exe" --noprofile --norc -c "export PATH=\"/usr/bin:$PATH\" && ' . cmd . ' || read -rs -n1 -p \"press any key to continue\""', , "Min"
 }
 
 ; window-dependant magic hotkey
 ; this DOES EAT ctrl+shift+g!
 ^+G::
-F19::
 {
 	; unpress ctrl and shift from the hotkey
 	; "blind" mode ensures that the keys are not restored
-	Send "{Blind}{Ctrl Up}{Shift Up}
+	Send "{Blind}{Ctrl Up}{Shift Up}"
 
 	if WinActive("ahk_exe EXCEL.EXE")
 	{
@@ -102,7 +103,7 @@ F19::
 {
 	; unpress ctrl and shift from the hotkey
 	; "blind" mode ensures that the keys are not restored
-	Send "{Blind}{Ctrl Up}{Shift Up}
+	Send "{Blind}{Ctrl Up}{Shift Up}"
 
 	Send "^+n"
 }
@@ -118,8 +119,8 @@ Browser_Search::
 #HotIf
 
 ; some spotify controls for macropads
-F20::RunBash '\"$HOME/bin/xspot\" --device auto'
-F21::RunBash '\"$HOME/bin/xspot\" --play-toggle'
-F22::RunBash '\"$HOME/bin/xspot\" --skip-next'
-F23::RunBash '\"$HOME/bin/xspot\" --skip-previous'
-F24::RunBash '\"$HOME/bin/xspot\" --like'
+!#F1::RunBash '\"$HOME/bin/xspot\" --play-toggle'
+!#F2::RunBash '\"$HOME/bin/xspot\" --skip-next'
+!#F3::RunBash '\"$HOME/bin/xspot\" --skip-previous'
+!#F4::RunBash '\"$HOME/bin/xspot\" --like'
+!#F5::RunBash '\"$HOME/bin/xspot\" --device auto'

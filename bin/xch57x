@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
+set -e
+
 configPath="$HOME/.config/ch57x-12x2-mapping.yaml"
 
 vim "$configPath"
+
 if ch57x-keyboard-tool validate "$configPath"
 then
-	output="$(ch57x-keyboard-tool upload "$configPath" 2>&1)"
+	output="$(ch57x-keyboard-tool upload "$configPath" 2>&1 || echo "unknown error")"
 
 	if echo "$output" | grep -iq 'error: find usb device'
 	then

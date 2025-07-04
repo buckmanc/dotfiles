@@ -2,6 +2,12 @@
 # config for this model:
 # https://www.amazon.com/dp/B0C6PHV9HF/
 
+# bluetooth
+# toggle switch on top controls bluetooth
+# left is off, right is on
+# if not paired it automatically goes to pairing mode
+# high function keys (F13-F24) work via usb but not via bluetooth
+
 ## Normal keyboard orientation is when
 ## buttons are on the left side and knobs are on the right.
 ## However, you may want to use the keyboard in another orientation.
@@ -57,8 +63,8 @@ knobs: 2
 layers:
   - buttons:
       - ["play", "prev", "next", "win-alt-k"]
-      - ["win-l", "F19", "F20", "mute"]
-      - ["F21", "F22", "F23", "F24"]
+      - ["win-l", "ctrl-shift-g", "win-alt-F5", "mute"]
+      - ["win-alt-F1", "win-alt-F2", "win-alt-F3", "win-alt-F4"]
     knobs:
       - ccw: "volumedown"
         press: "mute"
@@ -81,8 +87,8 @@ layers:
 
   - buttons:
       - ["play", "prev", "next", "win-alt-k"]
-      - ["win-l", "F19", "F20", "mute"]
-      - ["F21", "F22", "F23", "F24"]
+      - ["win-l", "ctrl-shift-g", "win-alt-F5", "mute"]
+      - ["win-alt-F1", "win-alt-F2", "win-alt-F3", "win-alt-F4"]
     knobs:
       - ccw: "ctrl-shift-tab"
         press: "escape"
