@@ -61,6 +61,7 @@ knobs: 2
 # TODO see if you can map this in discord
 
 layers:
+  # layer 1: macros and play controls
   - buttons:
       - ["play", "prev", "next", "win-alt-k"]
       - ["win-l", "ctrl-shift-g", "win-alt-F5", "mute"]
@@ -73,18 +74,7 @@ layers:
         press: "escape"
         cw: "wheelup"
 
-  - buttons:
-      - ["a", "b", "c", "d"]
-      - ["e", "f", "g", "h"]
-      - ["i", "j", "k", "l"]
-    knobs:
-      - ccw: "volumedown"
-        press: "mute"
-        cw: "volumeup"
-      - ccw: "wheeldown"
-        press: "z"
-        cw: "wheelup"
-
+  # layer 2: same but with different knobs
   - buttons:
       - ["play", "prev", "next", "win-alt-k"]
       - ["win-l", "ctrl-shift-g", "win-alt-F5", "mute"]
@@ -95,4 +85,19 @@ layers:
         cw: "ctrl-tab"
       - ccw: "wheeldown"
         press: "escape"
+        cw: "wheelup"
+
+  # vim
+  # row 1: yank/paste with register a, undo/redo
+  # row 3: spell check
+  - buttons:
+      - ["shift-quote,a,p", "escape,u", "escape,ctrl-r", "shift-quote,a,y"]
+      - ["escape", "escape", "escape", "escape"]
+      - ["escape,1,z,equal", "escape,leftbracket,s", "escape,rightbracket,s", "escape,z,g"]
+    knobs:
+      - ccw: "volumedown"
+        press: "mute"
+        cw: "volumeup"
+      - ccw: "wheeldown"
+        press: "z"
         cw: "wheelup"
