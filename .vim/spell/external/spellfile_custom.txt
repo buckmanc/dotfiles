@@ -566,6 +566,7 @@ screaminess
 screamy
 scritches
 se
+seafoam
 secondaries
 secrеting
 selah
@@ -738,6 +739,7 @@ Yoshi
 Younkers
 youtube
 YTD
+Zach
 Zelda
 ZeldaSymphony
 Zenni
@@ -768,6 +770,7 @@ Bat'leth
 Battar
 batton
 Beckman
+Ben Hur
 Ben-Hur
 Bioshock
 Bjendal
@@ -1180,6 +1183,8 @@ ymmv
 yolo
 yw
 zzz
+in aere piscari
+in mare venari
 Aksarben
 Ameritrade
 Bellevue
@@ -1224,7 +1229,9 @@ Lauritzen
 Leahy
 Leewood Oaks
 Logan
+Lum's
 Mahoney
+Manawa
 Midtown
 Millard
 Oakview
@@ -2427,6 +2434,7 @@ xls
 xlsm
 xlsx
 Xubuntu
+Baladia
 Baladian
 Berglund
 Bev
@@ -2447,6 +2455,7 @@ cliché
 Crissie
 Delahanty
 diningroom
+Dunston
 dustmopped
 Elsbernd
 enquire
@@ -2493,6 +2502,7 @@ Robarge
 Robarges
 Rootes
 Slobodnik
+Stargil
 synthroid
 Ta-Da
 TabTeam
