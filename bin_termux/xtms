@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+dir="$1"
+
+if [[ -z "$dir" ]]
+then
+	termux-media-scan .
+else
+	termux-media-scan "$@"
+fi

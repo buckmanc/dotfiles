@@ -10,7 +10,7 @@ fi
 while read -r json
 do
 	packageName="$(echo "$json" | jq -r '.packageName')"
-	packageName="$(echo "$packageName" | perl -pe 's/^((org|com|android|samsung|google|apps|schabi|app|mobi)\.)+//g')"
+	packageName="$(echo "$packageName" | perl -pe 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec)\.)+//g')"
 	packageName="$(echo "$packageName" | perl -pe 's/^(facebook.orca)$/messenger/g')"
 	packageName="$(echo "$packageName" | perl -pe 's/^(zhiliaoapp.musically)$/tiktok/g')"
 
@@ -19,13 +19,33 @@ do
 	title="$(echo "$json" | jq -r '.title')"
 	content="$(echo "$json" | jq -r '.content')"
 
+	if [[ "${packageName,,}" == "${title,,}" ]]
+	then
+		title=''
+	fi
+
 	# skip these no matter what
-	if [[ "$packageName" =~ ^(termux|spotify|aimp.player|newpipe|smartcapture)$ ]]
+	if [[ "$packageName" =~ ^(termux|spotify|aimp.player|newpipe|smartcapture|antennapod|systemui|samsungapps)$ ]]
 	then
 		continue
 	# skip these unless passed --all
 	# things you might want to check once
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook)$ ]]
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok)$ ]]
+	then
+		continue
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* ]]
+	then
+		continue
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "snapchat" ]] && [[ "${title,,}" == 'video for'* ]] && [[ "${content,,}" == *'added a video to spotlight!' ]]
+	then
+		continue
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "instagram" ]] && [[ "${content,,}" == *'who you might know, is on instagram'* ]]
+	then
+		continue
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "youtube" ]] && [[ "${content,,}" == 'for you:'* ]]
+	then
+		continue
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "nextdoor" ]] && [[ "${title,,}" == *'reposted'* ]]
 	then
 		continue
 	elif [[ -z "$title" && -z "$content" ]]
@@ -42,6 +62,11 @@ do
 		then
 			content="$acct: $content"
 		fi
+	elif [[ "${packageName,,}" == "messaging" ]] && [[ "$title" == *,* ]]
+	then
+		mostCommonWord="$(echo "$title" | grep -iPo '\b\w+\b' | sort | uniq -ci | sort -h | tail -n1 | sed 's/^ *[0-9]* //g')"
+		
+		title="$mostCommonWord group"
 	fi
 	
 	header="$packageName: $title"
