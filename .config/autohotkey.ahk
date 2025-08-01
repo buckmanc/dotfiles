@@ -5,12 +5,39 @@
 SetNumLockState "AlwaysOn"
 SetScrollLockState "AlwaysOff"
 Insert::return
+TraySetIcon(EnvGet("UserProfile") . '/.config/assets/icons/ico/autohotkey.ico')
 
 RunBash(cmd)
 {
 	; vim syntax highlighting breaks down on the single/double quotes here
 	; keep the window open if errors occur
-	Run '"' . A_ProgramFiles . '\Git\usr\bin\bash.exe" --noprofile --norc -c "export PATH=\"/usr/bin:$PATH\" && ' . cmd . ' || read -rs -n1 -p \"press any key to continue\""', , "Min"
+	; Run '"' . A_ProgramFiles . '\Git\usr\bin\bash.exe" --noprofile --norc -c "export PATH=\"/usr/bin:$PATH\" && ' . cmd . ' || read -rs -n1 -p \"press any key to continue\""', , "Min"
+	Run '"' . A_ProgramFiles . '\Git\usr\bin\bash.exe" --noprofile --norc -c "export PATH=\"/usr/bin:$PATH\" && ' . cmd . ' &> \"/tmp/ahk_toast\""', , "Hide"
+
+	; check for a toast temp file written by the above command
+	SetTimer ToastTimerFunc, 500
+
+	ToastTimerFunc()
+	{
+		ToastPath := EnvGet("TEMP") . '/1/ahk_toast'
+		ToastPathAlt := EnvGet("TEMP") . '/ahk_toast'
+
+		; crappy yet concise fringe case coverage
+		if FileExist(ToastPathAlt)
+		{
+			ToastPath := ToastPathAlt
+		}
+
+		if FileExist(ToastPath)
+		{
+			; disable this check
+			SetTimer ToastTimerFunc, 0
+			ToastText := FileRead(ToastPath)
+			FileDelete(ToastPath)
+			; toast
+			TrayTip ToastText, "", "Mute"
+		}
+	}
 }
 
 ; window-dependant magic hotkey
@@ -86,11 +113,15 @@ RunBash(cmd)
 		; Send "!+b"		; like the current song DO NOT USE as it unlikes liked songs too
 		Send "!+j"		; go to now playing
 	}
+	else if WinActive("ahk_exe msteams.exe")
+	{
+		Send "^+H"		; hang up
+	}
 	else
 	{
 		; otherwise, reload this file
 		Reload
-		TrayTip "reloaded ahk file", "ahk", "Iconi Mute"
+		TrayTip "reloaded ahk file", "", "Mute"
 	}
 }
 
@@ -111,6 +142,7 @@ RunBash(cmd)
 
 #HotIf WinActive("ahk_exe devenv.exe") or WinActive("ahk_exe ssms.exe")
 F1::
+F4::
 Browser_Home::
 Browser_Search::
 {

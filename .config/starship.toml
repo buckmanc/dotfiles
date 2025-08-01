@@ -303,6 +303,7 @@ vlc			= "󰕼"
 "shuffle"	= "󰒟"
 "cache"		= "$$$"
 "email"		= "󰇮"
+"autohotkey"= ""
 
 
 [dotnet]
