@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+
+set -e
+
+optDir=""
+optDelete=0
+optDryRun=0
+optVerbose=0
+line="-----------------------"
+
+maybeDir="$1"
+
+if [[ -n "$maybeDir" && "$maybeDir" != "--"* && -d "$maybeDir" ]]
+then
+	optDir="$maybeDir"
+	shift
+else
+	optDir="."
+fi
+
+for arg in "$@"
+do
+	if [[ "$arg" == "--delete" ]]
+	then
+		optDelete=1
+	elif [[ "$arg" == "--dry-run" ]]
+	then
+		optDryRun=1
+	else
+		echo "I don't know what $arg means"
+		exit 1
+	fi
+done
+
+if [[ "$optDryRun" == 0 && "$optDelete" == 0 ]]
+then
+	echo "must specify --dry-run or --delete"
+	exit 1
+fi
+
+# note that we can't use a null byte separator because bash variables can't contain null bytes
+filesRaw="$(find "$optDir" -type f -size +1 | sort)"
+
+if [[ "$optVerbose" == 1 ]]
+then
+	echo "filesRaw: $(echo "$filesRaw" | wc -l)"
+fi
+
+# sort files that do *not* end in -1 first
+# this de-prioritizes dupes
+filesSorting="$(echo "$filesRaw" | grep -viP '\-\d\.\w{3,4}$' || true)"
+filesLeft=$(grep -xvFf <(echo "$filesSorting") <(echo "$filesRaw") || true)
+filesRaw="$filesSorting"$'\n'"$filesLeft"
+
+if [[ "$optVerbose" == 1 ]]
+then
+	echo "$line"
+	echo "filesSorting: $(echo "$filesSorting" | wc -l)"
+	echo "filesLeft: $(echo "$filesLeft" | wc -l)"
+	echo "filesRaw: $(echo "$filesRaw" | wc -l)"
+fi
+
+# sort files matching a known android camera name format first
+# this de-prioritizes duplicates from Dropbox which have dates based on upload time, not photo time
+# then remove those items from the raw list
+filesSorting="$(echo "$filesRaw" | grep -iP '/(IMG_)?(20|19)\d{6}_\d{6}[^/]*.\w{3,4}$' || true)"
+filesLeft=$(grep -xvFf <(echo "$filesSorting") <(echo "$filesRaw") || true)
+filesRaw="$filesSorting"$'\n'"$filesLeft"
+
+if [[ "$optVerbose" == 1 ]]
+then
+	echo "$line"
+	echo "filesSorting: $(echo "$filesSorting" | wc -l)"
+	echo "filesLeft: $(echo "$filesLeft" | wc -l)"
+	echo "filesRaw: $(echo "$filesRaw" | wc -l)"
+fi
+
+files="$(echo "$filesRaw" | grep -Pv '^$' | xargs --no-run-if-empty -d '\n' md5sum)"
+dupeChecksum="$(echo "$files" | cut -f1 -d ' ' | sort | uniq --repeated)"
+totalDupes=0
+
+if [[ "$optVerbose" == 1 ]]
+then
+	echo "$line"
+	echo "files: $(echo "$files" | wc -l)"
+	echo "dupeChecksum: $(echo "$dupeChecksum" | wc -l)"
+fi
+
+if [[ -n "$dupeChecksum" ]]
+then
+	totalChecksumDupes="$(echo "$dupeChecksum" | wc -l)"
+else
+	totalChecksumDupes=0
+fi
+
+while read -r chk
+do
+	if [[ -z "$chk" ]]
+	then
+		continue
+	fi
+
+	# get only files matching the checksum
+	# and remove everything but the file path
+	theseFiles="$(echo "$files" | grep -F "$chk" | cut -d ' ' -f2- | sed 's/^ \+//g')"
+	echo "$line"
+	i=0
+
+	firstFile="$(echo "$theseFiles" | head -n1)"
+
+	while read -r file
+	do
+		i=$((i+1))
+		echo -n "$file"
+		if [[ "$i" -gt 1 ]] && cmp "$firstFile" "$file" --silent
+		then
+			totalDupes=$((totalDupes+1))
+			if [[ "$optDelete" == 1 ]]
+			then
+				rm "$file"
+			fi
+			echo -n " x"
+		fi
+
+		echo
+	done < <( echo "$theseFiles" )
+done < <( echo "$dupeChecksum" )
+
+echo "$line"
+echo
+
+echo "total files: $(echo "$files" | wc -l)"
+echo "total checksum matches: $totalChecksumDupes"
+echo "total dupes identified: $totalDupes"

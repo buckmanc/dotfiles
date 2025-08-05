@@ -127,6 +127,7 @@ addtopath "${jqPath}"
 addtopath "${ANDROID_HOME}/cmdline-tools/latest/bin"
 addtopath "${ANDROID_HOME}/platform-tools"
 addtopath "${LOCALAPPDATA}/Pandoc"
+addtopath "/c/Program Files (x86)/MakeMKV"
 addtopath "$PROGRAMFILES/AutoHotkey/"
 addtopath "$PROGRAMFILES/VideoLAN/VLC/"
 addtopath "/c/Program Files (x86)/Google/Cloud SDK/google-cloud-sdk/bin"
@@ -237,7 +238,7 @@ fi
 # thefuck is dead, long live pay-respects
 # github.com/nvbn/thefuck/issues/1466
 if type pay-respects >/dev/null 2>&1; then
-	eval "$(pay-respects bash --alias)"
+	eval "$(pay-respects bash --alias --nocnf)"
 	alias fuck=f
 fi
 

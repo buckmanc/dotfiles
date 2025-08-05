@@ -190,6 +190,7 @@ augroup FileTypeSpecificAutocommands
 	autocmd BufNewFile,BufRead *.add set filetype=text
 	autocmd BufNewFile,BufRead *.vssettings set filetype=xml
 	autocmd BufNewFile,BufRead *.gui set filetype=xml
+	autocmd BufNewFile,BufRead *.bqsql set filetype=sql
 	autocmd BufNewFile,BufRead *.hlsl set filetype=c
 	autocmd BufNewFile,BufRead *.MD set filetype=markdown " uppercase markdown is still markdown
 

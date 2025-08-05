@@ -15,6 +15,7 @@ don't take any wooden nickels
 You don't have to go home but you can't stay here.
 TTFN
 may Cthulhu devour this house last
+Are you not entertained?
 #nanowar of steel
 May you be hired first in the mighty call center of Cthulhu.
 # wicca
@@ -30,7 +31,7 @@ Curse well!
 Fond farewell.
 We have no time for lengthy farewells. Good luck.
 May the deities bless you.
-May this day find you at peace and leave you with hope. 
+May this day find you at peace and leave you with hope
 Dream not of today
 May your enemies run with fear
 May you roar over the fallen bodies of your enemies.
@@ -483,3 +484,7 @@ You're worth your weight in fish.
 You really are the something
 # tmnt
 Cowabunga!
+# p&p
+are you diverted?
+I am exceedingly diverted!
+

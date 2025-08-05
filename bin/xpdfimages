@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+for arg in "$@"
+do
+	filename="$(basename "$arg")"
+	filename="${filename%%.pdf}"
+
+	pdfimages -all "$arg" "$filename"
+	# pdfimages -png "$arg" "$filename"
+done

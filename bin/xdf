@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if [[ -z "$1" ]]
+then
+	args="."
+else
+	args="$@"
+fi
+
+df -h "$args" | perl -pe 's/^.+? +([\d\.]+\w+ +){2}//g' | grep -iPo '^[\d\.]+[^ ]+'

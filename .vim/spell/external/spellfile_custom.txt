@@ -39,6 +39,10 @@ arcana
 args
 ASMR
 assholery
+attaboy
+attaboys
+attagirl
+attagirls
 audiobook
 audiobooks
 autocatching
@@ -133,11 +137,13 @@ cishet
 CJ
 clergical
 clipart
+CLR
 cockatiel
 cocklebur
 Cocomelon
 Columbkille
 Columbkille's
+Conoco
 Contra
 convo
 cooldown
@@ -234,12 +240,14 @@ feets
 Fibbage
 fingie
 Fitbit
+flippin'
 floaty
 FMLA
 followable
 foregoed
 frans
 freakout
+friendos
 frutti
 fuddy
 Fukushima
@@ -261,6 +269,8 @@ gonna
 Goodreads
 gotta
 grammaflage
+grandboss
+grandboss's
 greataxe
 greaves
 grifter
@@ -270,6 +280,7 @@ grody
 gummies
 Gymboree
 hacky
+Hale-Bopp
 hander
 hanky
 hardstyle
@@ -395,6 +406,7 @@ megalodon
 meme'd
 Menards
 merch
+metalcore
 metroidvania
 Midol
 midwest
@@ -450,6 +462,7 @@ ok
 ol'
 olde
 omelette
+OneChart
 onesie
 oof
 oogle
@@ -477,6 +490,7 @@ Pattinson
 Pazuzu
 peridot
 personhood
+philtrum
 phonk
 pickleball
 pickpocketed
@@ -559,6 +573,7 @@ rsync
 Runza
 Runzas
 Röntgen
+scamvangelist
 scanline
 SCOTUS
 screamies
@@ -610,6 +625,7 @@ stabby
 stardrive
 starship
 staycation
+stimming
 strategizing
 stressors
 strikethrough
@@ -679,6 +695,7 @@ unstyled
 unvaccinated
 unvaxxed
 Urfaust
+UTI
 vampiric
 vax
 vaxxed
@@ -704,11 +721,13 @@ wfh
 what'd
 whatevs
 whoever's
+wifey
 wifi
 wii
 Willem
 woohoo
 worldbuilding
+wowie zowie
 WWIII
 x2
 x3
@@ -839,6 +858,7 @@ fulings
 Fullmetal
 GameChops
 gancho
+Ganon
 Ghibli
 Godrick
 Gollum
@@ -1186,6 +1206,7 @@ zzz
 in aere piscari
 in mare venari
 Aksarben
+Ameristar
 Ameritrade
 Bellevue
 Benson
@@ -1246,6 +1267,7 @@ Ralston
 Rockbrook
 Rosenblatt
 Sarpy
+Schlotzsky's
 Schwab
 Scoular
 Southroads
@@ -2329,6 +2351,9 @@ Missionettes
 NIV
 Pileser
 Seir
+shevarim
+shofar
+shofars
 Sisera
 Tiglath
 Zerubbabel
@@ -2453,9 +2478,12 @@ carseats
 Chas
 cliché
 Crissie
+Crissy
 Delahanty
 diningroom
 Dunston
+durn
+durned
 dustmopped
 Elsbernd
 enquire
@@ -2467,24 +2495,34 @@ flyer
 flyers
 Gaspard
 gauché
+glucosamine
+gooney
 Hallo'een
 Hallowe'en
 Homebuilders
 I'd've
 Indocin
+Jerilyn
+Jerilyn's
 Jin
 JMW
+JMW's
 JoAnne's
 Joanne's
 Judi
 KCM
 Kriskeys
+Kutler
 Lennertz
 livingroom
 Lockwood
 Lundgren
 M'Nal
 M'Nal's
+mallwalk
+mallwalking
+Marialy
+Marialy's
 Matisyahu
 Meghann
 Meghann's
@@ -2493,15 +2531,23 @@ Mozner
 N'Mal
 N'Mal's
 Nikumen
+PartyLite
+PMDD
+PMDD'd
+PraiseArt
 QWest
 Rabon
+Rabon's
 Randa
 RenFair
 Rhineheart
 Robarge
 Robarges
 Rootes
+Sartéris
+Shmele
 Slobodnik
+Stargell
 Stargil
 synthroid
 Ta-Da
@@ -2510,8 +2556,12 @@ Tarkio
 Timm
 Tobycloth
 VesRehab
+Vinny
+Vinny's
 Volquartsen
 Wal-Mart
 Waterman's
 whammo
 whitework
+Zaluda
+Zaluda's

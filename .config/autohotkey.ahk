@@ -146,6 +146,7 @@ F4::
 Browser_Home::
 Browser_Search::
 {
+	TrayTip "blocked", "", "Mute"
 	return
 }
 #HotIf

@@ -40,6 +40,10 @@
 	args	en-US
 	ASMR	en-US
 	assholery	en-US
+	attaboy	en-US
+	attaboys	en-US
+	attagirl	en-US
+	attagirls	en-US
 	audiobook	en-US
 	audiobooks	en-US
 	autocatching	en-US
@@ -134,11 +138,13 @@
 	CJ	en-US
 	clergical	en-US
 	clipart	en-US
+	CLR	en-US
 	cockatiel	en-US
 	cocklebur	en-US
 	Cocomelon	en-US
 	Columbkille	en-US
 	Columbkille's	en-US
+	Conoco	en-US
 	Contra	en-US
 	convo	en-US
 	cooldown	en-US
@@ -235,12 +241,14 @@
 	Fibbage	en-US
 	fingie	en-US
 	Fitbit	en-US
+	flippin'	en-US
 	floaty	en-US
 	FMLA	en-US
 	followable	en-US
 	foregoed	en-US
 	frans	en-US
 	freakout	en-US
+	friendos	en-US
 	frutti	en-US
 	fuddy	en-US
 	Fukushima	en-US
@@ -262,6 +270,8 @@
 	Goodreads	en-US
 	gotta	en-US
 	grammaflage	en-US
+	grandboss	en-US
+	grandboss's	en-US
 	greataxe	en-US
 	greaves	en-US
 	grifter	en-US
@@ -271,6 +281,7 @@
 	gummies	en-US
 	Gymboree	en-US
 	hacky	en-US
+	Hale-Bopp	en-US
 	hander	en-US
 	hanky	en-US
 	hardstyle	en-US
@@ -396,6 +407,7 @@
 	meme'd	en-US
 	Menards	en-US
 	merch	en-US
+	metalcore	en-US
 	metroidvania	en-US
 	Midol	en-US
 	midwest	en-US
@@ -451,6 +463,7 @@
 	ol'	en-US
 	olde	en-US
 	omelette	en-US
+	OneChart	en-US
 	onesie	en-US
 	oof	en-US
 	oogle	en-US
@@ -478,6 +491,7 @@
 	Pazuzu	en-US
 	peridot	en-US
 	personhood	en-US
+	philtrum	en-US
 	phonk	en-US
 	pickleball	en-US
 	pickpocketed	en-US
@@ -560,6 +574,7 @@
 	Runza	en-US
 	Runzas	en-US
 	Röntgen	en-US
+	scamvangelist	en-US
 	scanline	en-US
 	SCOTUS	en-US
 	screamies	en-US
@@ -611,6 +626,7 @@
 	stardrive	en-US
 	starship	en-US
 	staycation	en-US
+	stimming	en-US
 	strategizing	en-US
 	stressors	en-US
 	strikethrough	en-US
@@ -680,6 +696,7 @@
 	unvaccinated	en-US
 	unvaxxed	en-US
 	Urfaust	en-US
+	UTI	en-US
 	vampiric	en-US
 	vax	en-US
 	vaxxed	en-US
@@ -705,11 +722,13 @@
 	what'd	en-US
 	whatevs	en-US
 	whoever's	en-US
+	wifey	en-US
 	wifi	en-US
 	wii	en-US
 	Willem	en-US
 	woohoo	en-US
 	worldbuilding	en-US
+	wowie zowie	en-US
 	WWIII	en-US
 	x2	en-US
 	x3	en-US
@@ -840,6 +859,7 @@
 	Fullmetal	en-US
 	GameChops	en-US
 	gancho	en-US
+	Ganon	en-US
 	Ghibli	en-US
 	Godrick	en-US
 	Gollum	en-US
@@ -1187,6 +1207,7 @@
 	in aere piscari	en-US
 	in mare venari	en-US
 	Aksarben	en-US
+	Ameristar	en-US
 	Ameritrade	en-US
 	Bellevue	en-US
 	Benson	en-US
@@ -1247,6 +1268,7 @@
 	Rockbrook	en-US
 	Rosenblatt	en-US
 	Sarpy	en-US
+	Schlotzsky's	en-US
 	Schwab	en-US
 	Scoular	en-US
 	Southroads	en-US
@@ -2330,6 +2352,9 @@
 	NIV	en-US
 	Pileser	en-US
 	Seir	en-US
+	shevarim	en-US
+	shofar	en-US
+	shofars	en-US
 	Sisera	en-US
 	Tiglath	en-US
 	Zerubbabel	en-US
@@ -2454,9 +2479,12 @@
 	Chas	en-US
 	cliché	en-US
 	Crissie	en-US
+	Crissy	en-US
 	Delahanty	en-US
 	diningroom	en-US
 	Dunston	en-US
+	durn	en-US
+	durned	en-US
 	dustmopped	en-US
 	Elsbernd	en-US
 	enquire	en-US
@@ -2468,24 +2496,34 @@
 	flyers	en-US
 	Gaspard	en-US
 	gauché	en-US
+	glucosamine	en-US
+	gooney	en-US
 	Hallo'een	en-US
 	Hallowe'en	en-US
 	Homebuilders	en-US
 	I'd've	en-US
 	Indocin	en-US
+	Jerilyn	en-US
+	Jerilyn's	en-US
 	Jin	en-US
 	JMW	en-US
+	JMW's	en-US
 	JoAnne's	en-US
 	Joanne's	en-US
 	Judi	en-US
 	KCM	en-US
 	Kriskeys	en-US
+	Kutler	en-US
 	Lennertz	en-US
 	livingroom	en-US
 	Lockwood	en-US
 	Lundgren	en-US
 	M'Nal	en-US
 	M'Nal's	en-US
+	mallwalk	en-US
+	mallwalking	en-US
+	Marialy	en-US
+	Marialy's	en-US
 	Matisyahu	en-US
 	Meghann	en-US
 	Meghann's	en-US
@@ -2494,15 +2532,23 @@
 	N'Mal	en-US
 	N'Mal's	en-US
 	Nikumen	en-US
+	PartyLite	en-US
+	PMDD	en-US
+	PMDD'd	en-US
+	PraiseArt	en-US
 	QWest	en-US
 	Rabon	en-US
+	Rabon's	en-US
 	Randa	en-US
 	RenFair	en-US
 	Rhineheart	en-US
 	Robarge	en-US
 	Robarges	en-US
 	Rootes	en-US
+	Sartéris	en-US
+	Shmele	en-US
 	Slobodnik	en-US
+	Stargell	en-US
 	Stargil	en-US
 	synthroid	en-US
 	Ta-Da	en-US
@@ -2511,8 +2557,12 @@
 	Timm	en-US
 	Tobycloth	en-US
 	VesRehab	en-US
+	Vinny	en-US
+	Vinny's	en-US
 	Volquartsen	en-US
 	Wal-Mart	en-US
 	Waterman's	en-US
 	whammo	en-US
 	whitework	en-US
+	Zaluda	en-US
+	Zaluda's	en-US

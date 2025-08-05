@@ -38,21 +38,26 @@ do
 	fi
 
 	# do work
-	fileName="$(basename "$path" | perl -pe 's/^bob(?=\d+)//g')"
+	fileName="$(basename "$path" | perl -pe 's/^bob(?=\d+)//g' | perl -pe 's/[\s\(\)\-_]+$//g;' -pe 's/[\s\(\)\-_]+/_/g;')"
 	fileNameNoExt="${fileName%.*}"
 	ext="${fileName##*.}"
 	ext="${ext,,}"
 	dir="$(dirname "$path")"
-	dirName="$(realpath "$path" | safeXargs dirname | safeXargs basename | perl -pe 's/[\s\(\)]+$//g;' -pe 's/[\s\(\)]+/_/g;')"
+	dirName="$(realpath "$path" | safeXargs dirname | safeXargs basename | perl -pe 's/[\s\(\)\-_]+$//g;' -pe 's/[\s\(\)\-_]+/_/g;')"
 
-	# if the file has a meaningless scan date, replace it with a sequence
-	# if [[ "$fileNameNoExt" =~ ^2025\d{10}_\d{3}$ ]]
-	if echo "$fileNameNoExt" | grep -iPq '^2025\d{10}_\d{3}$'
+	# # if the file has a meaningless scan date, replace it with a sequence
+	# # if [[ "$fileNameNoExt" =~ ^2025\d{10}_\d{3}$ ]]
+	# if echo "$fileNameNoExt" | grep -iPq '^2025\d{10}_\d{3}$'
+	# then
+	# 	fileNameNoExt="$(printf "%03d0" "$i")"
+	# fi
+
+	if [[ "$fileNameNoExt" != "$dirName"* ]]
 	then
-		fileNameNoExt="$(printf "%03d0" "$i")"
+		destName="split_${dirName}_${fileNameNoExt}.${ext}"
+	else
+		destName="split_${fileNameNoExt}.${ext}"
 	fi
-
-	destName="split_${dirName}_${fileNameNoExt}.${ext}"
 	destPath="$dir/$destName"
 
 	echo "$destName"

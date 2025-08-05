@@ -33,7 +33,7 @@ do
 	elif [[ "$arg" == "right" ]]
 	then
 		rotateArg="90"
-	elif [[ "$arg" == "-q" ]]
+	elif [[ "$arg" == "-q" || "$arg" == "--quiet" ]]
 	then
 		optQuiet=1
 	fi
@@ -47,7 +47,7 @@ fi
 
 for path in "$@"
 do
-	if [[ "$path" == "left" || "$path" == "right" || "$path" == "$rotateArg" || "$path" == "-q" ]]
+	if [[ "$path" == "left" || "$path" == "right" || "$path" == "$rotateArg" || "$path" == "-q" || "$path" == "--quiet" ]]
 	then
 		continue
 	elif [[ ! -f "$path" ]]

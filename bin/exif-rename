@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+set -e
+dateRegex='\d{4}[\-:]\d{2}[\-:]\d{2}'
+
+for arg in "$@"
+do
+	if [[ ! -f "$arg" ]]
+	then
+		continue
+	fi
+
+	fileName="$(basename "$arg")"
+	dir="$(dirname "$arg")"
+
+	# echo "arg: $arg"
+
+	# get ^yyyy-mm-dd
+	fileDate="$(echo "$fileName" | grep -iPo "^$dateRegex" || true)"
+	# get exif date
+	exifDate="$(file "$arg" | grep -iPo '(?<=datetime=)'"$dateRegex" | perl -pe 's/:/\-/g')"
+	
+	if [[ -z "$exifDate" ]] || [[ "$exifDate" == "$fileDate" ]]
+	then
+		continue
+	fi
+
+	echo "$exifDate"
+
+	if [[ -n "$fileDate" ]]
+	then
+		# burn the filedate first
+		fileName="${fileName#$fileDate}"
+	fi
+
+	dest="$dir/${exifDate}_$fileName"
+
+	# rename file with the exif date on the front
+	mv --no-clobber "$arg" "$dest"
+done
