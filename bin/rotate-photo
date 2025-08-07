@@ -64,7 +64,7 @@ do
 
 	if [[ "$ext" =~ jpe?g ]]
 	then
-		jpegtran -rotate "$rotateArg" -outfile "$path" "$path"
+		jpegtran -perfect -rotate "$rotateArg" -outfile "$path" "$path" || mogrify -rotate "$rotateArg" "$path"
 	else
 		mogrify -rotate "$rotateArg" "$path"
 	fi
