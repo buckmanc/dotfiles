@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+for arg in "$@"
+do
+	if [[ -z "$arg" || ! -d "$arg" ]]
+	then
+		echo "invalid dir: $arg"
+		exit 1
+	fi
+
+	dir="$(realpath "$arg")"
+	parentDir="$(dirname "$dir")"
+
+	mv --no-clobber "$dir/"* "$parentDir/"
+	find "$dir" -type d -empty -delete
+done

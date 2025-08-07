@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ "$#" -eq 0 ]]
+then
+    echo "no args provided"
+fi
+
+dateRegex='^(19|20)\d\d\-?\d\d\-?\d\d'
+minFile="$(printf '%s\n' "$@" | sort | head -n1)"
+maxFile="$(printf '%s\n' "$@" | sort | tail -n1)"
+
+getCleanName(){
+    if [[ "$2" == "--simple" ]]
+    then
+	optSimple=1
+    else
+	optSimple=0
+    fi
+
+    filename="$(basename "$1")"
+    filenameNoExt="${filename%.*}"
+    date="$(echo "$filenameNoExt" | grep -iPo "$dateRegex")"
+    if [[ -n "$date" && "$optSimple" == 0 ]]
+    then
+	echo "$date"
+    else
+	echo "$filenameNoExt"
+    fi
+}
+
+if [[ ! -f "$minFile" ]]
+then
+    echo "file does not exist: $minFile"
+    exit 1
+elif [[ ! -f "$maxFile" ]]
+then
+    echo "file does not exist: $maxFile"
+    exit 1
+fi
+
+if [[ "$minFile" == "$maxFile" ]]
+then
+    outDirName="$(getCleanName "$minFile" --simple)"
+else
+    outDirNamePart1="$(getCleanName "$minFile")"
+    outDirNamePart2="$(getCleanName "$maxFile")"
+
+    outDirName="$outDirNamePart1 to $outDirNamePart2"
+
+    if echo "$outDirNamePart2" | grep -Piq "$dateRegex"
+    then
+	outDirName="${outDirName} misc"
+    fi
+fi
+
+
+dir="$(dirname "$1")"
+outdir="$dir/$outDirName"
+
+mkdir -p "$outdir"
+
+
+for arg in "$@"
+do
+    filename="$(basename "$arg")"
+    outPath="$outdir/$filename"
+    mv --no-clobber "$arg" "$outPath"
+done

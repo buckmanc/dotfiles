@@ -7,4 +7,5 @@ else
 	args="$@"
 fi
 
-df -h "$args" | perl -pe 's/^.+? +([\d\.]+\w+ +){2}//g' | grep -iPo '^[\d\.]+[^ ]+'
+# df -h "$args" | perl -pe 's/^.+? +([\d\.]+\w+ +){2}//g' | grep -iPo '^[\d\.]+[^ ]+'
+df -h "$args" | column --table --output-separator $'\t' | cut -f4 | tail -1
