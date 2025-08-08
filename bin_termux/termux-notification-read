@@ -33,7 +33,7 @@ do
 	elif [[ "$optAll" == 0 ]] && [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok)$ ]]
 	then
 		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* ]]
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* && "${content}" =~ \.(jpe?g|png)$ ]]
 	then
 		continue
 	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "snapchat" ]] && [[ "${title,,}" == 'video for'* ]] && [[ "${content,,}" == *'added a video to spotlight!' ]]

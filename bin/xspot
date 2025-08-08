@@ -10,40 +10,41 @@ configPath="$HOME/.config/xspot.json"
 tokenPath="$HOME/.cache/xspot_tokens.json"
 
 # Funcs
-create_playlist() {
-	# Creates a new private playlist
-	name=$1
-	curl -s -X POST "https://api.spotify.com/v1/users/${user_id}/playlists" --data "{\"name\":\"$name\", \"public\":false}" "${headers[@]}" | jq -r ".id"
-}
-
-add_tracks_to_playlist() {
-	# Add track_ids from a file to a playlist_id
-	filename=$1
-	playlist=$2
-	count=1
-	trackuris=""
-
-	for track in $(cat $filename-tracks); do
-		if [ $count -lt 10 ]; then
-			trackuris="${trackuris}spotify:track:$track,"
-			count=$(expr $count + 1)
-		else
-			trackuris="${trackuris}spotify:track:$track"
-			echo $trackuris
-			curl -s -X POST "https://api.spotify.com/v1/users/${user_id}/playlists/${playlist}/tracks?uris=$trackuris" "${headers[@]}"
-			trackuris=""
-			count=1
-			sleep 1
-		fi
-	done
-	if [ -n "$trackuris" ]; then
-		curl -s -X POST "https://api.spotify.com/v1/users/${user_id}/playlists/${playlist}/tracks?uris=$trackuris" "${headers[@]}"
-	fi
-}
+# create_playlist() {
+# 	# Creates a new private playlist
+# 	name=$1
+# 	curl -s -X POST "https://api.spotify.com/v1/users/${user_id}/playlists" --data "{\"name\":\"$name\", \"public\":false}" "${headers[@]}" | jq -r ".id"
+# }
+#
+# add_tracks_to_playlist() {
+# 	# Add track_ids from a file to a playlist_id
+# 	filename=$1
+# 	playlist=$2
+# 	count=1
+# 	trackuris=""
+#
+# 	for track in $(cat $filename-tracks); do
+# 		if [ $count -lt 10 ]; then
+# 			trackuris="${trackuris}spotify:track:$track,"
+# 			count=$(expr $count + 1)
+# 		else
+# 			trackuris="${trackuris}spotify:track:$track"
+# 			echo $trackuris
+# 			curl -s -X POST "https://api.spotify.com/v1/users/${user_id}/playlists/${playlist}/tracks?uris=$trackuris" "${headers[@]}"
+# 			trackuris=""
+# 			count=1
+# 			sleep 1
+# 		fi
+# 	done
+# 	if [ -n "$trackuris" ]; then
+# 		curl -s -X POST "https://api.spotify.com/v1/users/${user_id}/playlists/${playlist}/tracks?uris=$trackuris" "${headers[@]}"
+# 	fi
+# }
 
 currentNameExp='([.item.artists[].name] | join(", ")) + " - " + .item.name + " (" + .item.album.release_date[0:4] + ")"'
 currentIdExp=".item.id"
 currentBothExp="$currentIdExp + \"|\" + $currentNameExp"
+currentUrlExp=".item.external_urls.spotify"
 get_current(){
 	typey="$1"
 	if [[ "${typey,,}" == "name" ]]
@@ -55,6 +56,9 @@ get_current(){
 	elif [[ "${typey,,}" == "both" ]]
 	then
 		jqExp="$currentBothExp"
+	elif [[ "${typey,,}" == "url" ]]
+	then
+		jqExp="$currentUrlExp"
 	else
 		echo "invalid get_current type"
 		exit 1
@@ -299,6 +303,8 @@ optPause=0
 optDeviceToggle=0
 optGetCurrent=0
 optGetCurrentId=0
+optGetCurrentUrl=0
+optShare=0
 optNextMightBeLikeTrack=0
 optNextMightBeDeviceNames=0
 optSkipNext=0
@@ -350,6 +356,12 @@ do
 	elif [[ "$arg" == "--what-id" ]]
 	then
 		optGetCurrentId=1
+	elif [[ "$arg" == "--what-url" || "$arg" == "--url" ]]
+	then
+		optGetCurrentUrl=1
+	elif [[ "$arg" == "--share" ]]
+	then
+		optShare=1
 	elif [[ "$optNextMightBeLikeTrack" == 1 ]]
 	then
 		likeTrack="$arg"
@@ -417,6 +429,17 @@ then
 elif [[ "$optGetCurrentId" == 1 ]]
 then
 	get_current "id"
+elif [[ "$optGetCurrentUrl" == 1 ]]
+then
+	get_current "url"
+elif [[ "$optShare" == 1 ]]
+then
+	if (type termux-share > /dev/null 2>&1)
+	then
+		get_current "url" | termux-share -a send -c 'text/x-uri'
+	else
+		get_current "url"
+	fi
 elif [[ "$optGetCurrent" == 1 || $# -eq 0 ]]
 then
 	get_current "name"
