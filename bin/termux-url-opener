@@ -15,6 +15,10 @@ input="$*"
 
 if [[ "$domain" == "herschel.local" || "$domain" == *"buckman.cc" ]]
 then
+	fileName="$(basename "$input")"
+	echo "$fileName"
+	echo
+
 	read -p "$msg" -n 1 -r
 	mkdir -p "$outDir"
 	if [[ $REPLY =~ ^[\-1]$ ]]
@@ -31,9 +35,13 @@ then
 		elif [[ $REPLY =~ ^[3]$ ]]
 		then
 			echo "$input" >> "$rotate180Log"
+		elif [[ $REPLY =~ ^[q]$ ]]
+		then
+			exit
 		else
 			echo "i don't know what $REPLY means"
 			sleep 5s
+			exit 1
 		fi
 	elif [[ $REPLY =~ ^[\|2]$ ]]
 	then
@@ -41,9 +49,13 @@ then
 	elif [[ $REPLY =~ ^[3]$ ]]
 	then
 		echo "$input" >> "$screenshotLog"
+	elif [[ $REPLY =~ ^[q]$ ]]
+	then
+		exit
 	else
 		echo "i don't know what $REPLY means"
 		sleep 5s
+		exit 1
 	fi
 # if you provided a url
 elif [[ -n "$domain" ]]
