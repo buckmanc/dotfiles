@@ -24,7 +24,7 @@ echo "got ${#args[@]} timestamps"
 
 inputExt="${inputFile##*.}"
 inputFileDir="$(dirname "$inputFile")"
-tempDir="/tmp/$inputFile"
+tempDir="$TEMP/$inputFile"
 clipSnapsDir="$inputFileDir/clip snaps"
 
 mkdir -p "$tempDir"

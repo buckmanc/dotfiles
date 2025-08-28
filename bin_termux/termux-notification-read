@@ -2,19 +2,67 @@
 
 lastHeader=''
 optAll=0
-if [[ "$1" == "--all" ]]
+# reverseJqArg=''
+reverseJqArg=" | reverse"
+for arg in "$@"
+do
+	if [[ "$arg" == "--all" || "$arg" == "-a" ]]
+	then
+		optAll=1
+	elif [[ "$arg" == "-r" || "$arg" == "--reverse" ]]
+	then
+		# reverseJqArg=" | reverse"
+		reverseJqArg=''
+	fi
+done
+
+# use regex replace to support sleep syntax
+# 1s, 1h, 1m, 1d etc
+# final line formats unknown parameters
+# allowing for month, year, etc
+dateInput=$(echo "$*" \
+	| grep -iPo '\b\d+ ?[a-zA-Z]+(?=\d| |$)' \
+	| perl -p \
+	-e 's/(\d+)s(?=\d| |$)/\1second /g;' \
+	-e 's/(\d+)m(?=\d| |$)/\1minute /g;' \
+	-e 's/(\d+)h(?=\d| |$)/\1hour /g;' \
+	-e 's/(\d+)d(?=\d| |$)/\1day /g;' \
+	-e 's/(\d+)w(?=\d| |$)/\1week /g;' \
+	-e 's/(\d+[a-zA-Z]+)(?=\d| |$)/\1 /g;'
+)
+
+if [[ -n "$dateInput" ]]
 then
-	optAll=1
+	startEpochSec=$(date +"%s")
+	futureEpochSec=$(date --date="$dateInput" +"%s")
+	secInPast="$((futureEpochSec-startEpochSec))"
+	targetEpochSec="$((startEpochSec-secInPast))"
+else
+	# secInPast=$((365*24*60*60))
+	targetEpochSec=0
 fi
+
+# echo "dateInput: $dateInput"
+# echo "secInPast: $secInPast"
+# echo "targetEpochSec: $targetEpochSec"
+
+# right now this doesn't work
+# seems like jq is introducing a timezone problem, despite both times being local
+
+# selecting only the fields we want and piping to uniq
+# to remove sequential logical dupes
+jsonList="$(termux-notification-list | jq "sort_by(.when) $reverseJqArg" | jq -rc ".[] | select((.when | strptime(\"%Y-%m-%d %H:%M:%S\") | mktime) > $targetEpochSec) | {packageName, title, content}" | uniq)"
 
 while read -r json
 do
 	packageName="$(echo "$json" | jq -r '.packageName')"
-	packageName="$(echo "$packageName" | perl -pe 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec)\.)+//g')"
-	packageName="$(echo "$packageName" | perl -pe 's/^(facebook.orca)$/messenger/g')"
-	packageName="$(echo "$packageName" | perl -pe 's/^(zhiliaoapp.musically)$/tiktok/g')"
-
-	packageName="$(echo "$packageName" | perl -pe 's/(\.(orca|android|frontpage|application|mShop|shopping|katana|music))+$//g')"
+	packageName="$(echo "$packageName" | perl -p \
+		-e 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec|cliffweitzman|jrtstudio)\.)+//g;' \
+		-e 's/^(facebook.orca)$/messenger/g;' \
+		-e 's/^(zhiliaoapp.musically)$/tiktok/g;' \
+		-e 's/^(gm)$/gmail/g;' \
+		-e 's/(\.(orca|android|frontpage|application|mShop|shopping|katana|music))+$//g;' \
+		| cat)"
 
 	title="$(echo "$json" | jq -r '.title')"
 	content="$(echo "$json" | jq -r '.content')"
@@ -25,7 +73,7 @@ do
 	fi
 
 	# skip these no matter what
-	if [[ "$packageName" =~ ^(termux|spotify|aimp.player|newpipe|smartcapture|antennapod|systemui|samsungapps)$ ]]
+	if [[ "${packageName,,}" =~ ^(termux|spotify|aimp.player|newpipe|smartcapture|antennapod|systemui|samsungapps|speechify2?|anothermusicplayer)$ ]]
 	then
 		continue
 	# skip these unless passed --all
@@ -36,16 +84,25 @@ do
 	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* && "${content}" =~ \.(jpe?g|png)$ ]]
 	then
 		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "snapchat" ]] && [[ "${title,,}" == 'video for'* ]] && [[ "${content,,}" == *'added a video to spotlight!' ]]
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "snapchat" ]] && [[ "${content,,}" == *'added a video to spotlight!' || "${content,,}" == *"is on snapchat!" || "${content,,}" == *"added to their story"* ]]
 	then
 		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "instagram" ]] && [[ "${content,,}" == *'who you might know, is on instagram'* ]]
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "photos" ]] && [[ "${title,,}" == 'we made a collage'* ]]
+	then
+		continue
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "dropbox" ]] && [[ "${title,,}" == 'changes saved' ]]
+	then
+		continue
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "messaging" ]] && [[ "${content,,}" =~ (text|reply)(\ help\ for\ help\ and)?\ (stop|cancel)\ to\ (cancel|stop|opt[\ \-]out|unsubscribe|unsub) ]]
+	then
+		continue
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "instagram" ]] && [[ "${content,,}" == *'who you might know, is on instagram'* || "${content,,}" == *"reposted"* ]]
 	then
 		continue
 	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "youtube" ]] && [[ "${content,,}" == 'for you:'* ]]
 	then
 		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "nextdoor" ]] && [[ "${title,,}" == *'reposted'* ]]
+	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "nextdoor" ]] && [[ "${content,,}" == *'reposted'* ]]
 	then
 		continue
 	elif [[ -z "$title" && -z "$content" ]]
@@ -80,9 +137,32 @@ do
 		lastHeader="$header"
 	fi
 
-	output+="$content"$'\n'
+	if [[ -n "$content" ]]
+	then
+		output+="$content"$'\n'
+	fi
 	
-done < <( termux-notification-list | jq 'sort_by(.when)' | jq -rc '.[]' ) 
+done < <( echo "$jsonList" ) 
 
-echo "$output" | perl -0777pe 's/(^[\s-]+|[\s-]+$)//g' | less --quit-if-one-screen
+output="$(echo "$output" | perl -0777pe 's/(^[\s-]+|[\s-]+$)//g')"
 
+screenHeight=$(($(tput lines)-3))
+outputHeight="$(echo "$output" | wc -l)"
+
+# echo "screenHeight: $screenHeight"
+# echo "outputHeight: $outputHeight"
+
+# do our own --quit-if-one-screen calc
+# to allow for prompt height
+if [[ -n "$output" ]]
+then
+	if [[ "$outputHeight" -gt "$screenHeight" ]]
+	then
+		echo "$output" | less
+	# elif [[ "$outputHeight" -eq "$screenHeight" ]]
+	# then
+	# 	echo -n "$output"
+	else
+		echo "$output"
+	fi
+fi

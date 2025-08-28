@@ -36,6 +36,6 @@ do
 	# 1) we knew if a bluetooth device was connected or
 	# 2) we knew the name of connected bluetooth devices
 	
-	sleep 0.5s
+	sleep 1m
 done
 

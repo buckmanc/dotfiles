@@ -3,29 +3,54 @@
 message="$(cat -)"
 
 optNoCow=0
-if [ "$1" = "--no-cow" ]
+if [[ "$1" = "--no-cow" ]]
 then
 	optNoCow=1
 fi
 
+if (type tput > /dev/null 2>&1 )
+then
+	cols="$(tput cols)"
+else
+	cols="$COLUMNS"
+fi
+
+if [[ -z "$cols" ]]
+then
+	cols=0
+fi
+
 # wrap based on screen width
-targetWidth=$(($(tput cols) - 4))
-if [ "$targetWidth" -gt "0" ]
+targetWidth="$((cols - 4))"
+if [[ "$targetWidth" -gt "0" ]]
 then
-	message=$(echo "${message}" | fmt -w "$targetWidth")
+	message="$(echo "$message" | fmt -w "$targetWidth")"
 fi
 
-if [ "$optNoCow" = "0" ] && type cowsay >/dev/null 2>&1
+if [[ "$optNoCow" = "0" ]] && type cowsay >/dev/null 2>&1
 then
-	message=$(echo "${message}" | cowsay -n)
+	message="$(echo "$message" | cowsay -n)"
+	if [[ "$cols" -gt 0 ]]
+	then
+		message="$(echo "$message" | cut -c -"$cols")"
+	fi
 fi
 
-message=$(echo "${message}" | "$HOME/bin/center")
+message="$(echo "$message" | "$HOME/bin/center")"
 
 if type lolcat >/dev/null 2>&1; then
-	message=$(echo "${message}" | lolcat --force)
+	message="$(echo "$message" | lolcat --force)"
+fi
+
+if ( type perl > /dev/null 2>&1 )
+then
+	message="$(echo "$message" | perl -0777pe 's/[\r\n]+$//g')"
 fi
 
 echo
-echo "${message}"
-echo
+echo -n "$message"
+# wrap in blank lines... unless the screen is too small
+if [[ "$LINES" -ge 10 ]]
+then
+	echo
+fi
