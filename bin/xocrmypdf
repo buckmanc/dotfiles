@@ -6,11 +6,14 @@ do
 	filename="${filename%%.pdf}"
 	outDir="$(dirname "$arg")"
 	pdfOutPath="$outDir/${filename}_ocr.pdf"
+	lossyOutPath="$outDir/${filename}_lossy.pdf"
 	txtOutPath="$outDir/${filename}.txt"
 
 	# ocrmypdf --clean --rotate-pages --rotate-pages-threshold 10 --sidecar "$txtOutPath" "$arg" "$pdfOutPath"
 	# ocrmypdf --clean --sidecar "$txtOutPath" "$arg" "$pdfOutPath"
 	
 	# in place
-	ocrmypdf --clean "$arg" "$arg"
+	# ocrmypdf --clean "$arg" "$arg"
+	ocrmypdf --clean "$arg" "$pdfOutPath"
+	ocrmypdf --skip-text --optimize 2 "$pdfOutPath" "$lossyOutPath"
 done

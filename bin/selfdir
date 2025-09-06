@@ -30,24 +30,29 @@ getCleanName(){
     fi
 }
 
-if [[ ! -f "$minFile" ]]
+if [[ ! -e "$minFile" ]]
 then
     echo "file does not exist: $minFile"
     exit 1
-elif [[ ! -f "$maxFile" ]]
+elif [[ ! -e "$maxFile" ]]
 then
     echo "file does not exist: $maxFile"
     exit 1
 fi
 
+outDirNamePart1="$(getCleanName "$minFile")"
+outDirNamePart2="$(getCleanName "$maxFile")"
+
 if [[ "$minFile" == "$maxFile" ]]
 then
     outDirName="$(getCleanName "$minFile" --simple)"
 else
-    outDirNamePart1="$(getCleanName "$minFile")"
-    outDirNamePart2="$(getCleanName "$maxFile")"
-
-    outDirName="$outDirNamePart1 to $outDirNamePart2"
+    if [[ "$outDirNamePart1" == "$outDirNamePart2" ]]
+    then
+	outDirName="$outDirNamePart1"
+    else
+	outDirName="$outDirNamePart1 to $outDirNamePart2"
+    fi
 
     if echo "$outDirNamePart2" | grep -Piq "$dateRegex"
     then
@@ -55,12 +60,10 @@ else
     fi
 fi
 
-
 dir="$(dirname "$1")"
 outdir="$dir/$outDirName"
 
 mkdir -p "$outdir"
-
 
 for arg in "$@"
 do

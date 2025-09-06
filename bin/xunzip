@@ -32,15 +32,15 @@ do
 	dirName="$(echo "${filename%.*}" | perl -pe 's/(\.pkg|\.tar|\.gz){1,3}$//g' | perl -pe 's/\.//g')"
 	dirOut="$dirIn/$dirName"
 
-	# 7zip doesn't have zstd support
-	if [[ "${ext,,}" == "zst" ]]
-	then
-		if zstd -d "$archivePath"
-		then
-			rm "$archivePath"
-			archivePath="${archivePath%.*}"
-		fi
-	fi
+	# # 7zip doesn't have zstd support
+	# if [[ "${ext,,}" == "zst" ]]
+	# then
+	# 	if zstd -d "$archivePath"
+	# 	then
+	# 		rm "$archivePath"
+	# 		archivePath="${archivePath%.*}"
+	# 	fi
+	# fi
 
 	# unzip
 	if 7z x -spe "-o$dirOut" -aos -- "$archivePath" | grep -i "extracting"
@@ -49,8 +49,9 @@ do
 		rm "$archivePath"
 	fi
 
-	# double unzip .tar.gz files
-	if [[ "${ext,,}" == "tar.gz" ]]
+	# double unzip tar.* files
+	# allow for leading doc for files like blah-x86_64.pkg.tar.zst
+	if [[ "${ext,,}" =~ \.?tar\.[^\.]+$ ]]
 	then
 		tarPath="$(find "$dirOut" -type f -iname '*.tar' -print -quit)"
 

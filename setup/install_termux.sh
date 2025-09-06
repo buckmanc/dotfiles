@@ -8,10 +8,18 @@ export LDFLAGS="-landroid-spawn -lm -lpython3.11"
 pip install git+https://github.com/numpy/numpy
 pip install git+https://github.com/TotallyNotChase/glitch-this
 
+pkg install cowsay
 pkg install ruby
 gem install lolcat
 
 termux-setup-storage
+
+pkg install jq
+pkg install python
+pkg install openssh
+pkg install ncurses-utils
+pkg install vim
+pkg install git
 
 
 # installed apps as of 2023-11-22

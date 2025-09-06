@@ -3,18 +3,33 @@
 from PIL import Image
 import imagehash
 import sys
+import argparse
+
+parser = argparse.ArgumentParser(
+        prog='pyphash',
+        description='A wrapper for the imagehash python library',
+        epilog='all hail Rosalina')
+parser.add_argument('--hash-size', default=8, type=int)
+parser.add_argument('paths', nargs='+', action='extend')
+
+args = parser.parse_args()
 
 # possibly unwise, but large nasa images hit this warning easily
 Image.MAX_IMAGE_PIXELS = None
-# path = sys.stdin.read().strip()
-path = sys.argv[1].strip()
 
-# hash = imagehash.average_hash(Image.open(path))
-hash = imagehash.phash(Image.open(path))
-# hash = imagehash.dhash(Image.open(path))
-# hash = imagehash.colorhash(Image.open(path)) # breaks, idk why
-# hash = imagehash.whash(Image.open(path))
+for path in args.paths:
+    path = path.strip()
 
-print(hash, file=sys.stdout, flush=True)
+    # second arg is hash_size
+    # defaults to 8
+    # increase for more specific hashes
+    # hash = imagehash.average_hash(Image.open(path))
+    hash = imagehash.phash(Image.open(path), args.hash_size)
+    # hash = imagehash.dhash(Image.open(path))
+    # hash = imagehash.colorhash(Image.open(path)) # breaks, idk why
+    # hash = imagehash.whash(Image.open(path))
+
+    print(hash, file=sys.stdout, flush=True)
+
 sys.stdout.flush()
 sys.stdout.close()

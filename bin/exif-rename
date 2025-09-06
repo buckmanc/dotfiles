@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
+# TODO make this a generic standardization script
+# do not overwrite existing dates with exif dates, only add if missing
+# and standardize mashed dates like this
+# rename 's/^(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})([\-_]\d{1,2})?(?=\.)/$1-$2-$3 $4.$5.$6$7/g' *
+
 set -e
-dateRegex='\d{4}[\-:]\d{2}[\-:]\d{2}'
+dateRegex='(\d{4})[\-:](\d{2})[\-:](\d{2})(?:[ \-:](\d{2})[\-:](\d{2})[\-:](\d{2}))?'
 
 for arg in "$@"
 do
@@ -18,8 +23,21 @@ do
 	# get ^yyyy-mm-dd
 	fileDate="$(echo "$fileName" | grep -iPo "^$dateRegex" || true)"
 	# get exif date
-	exifDate="$(file "$arg" | grep -iPo '(?<=datetime=)'"$dateRegex" | perl -pe 's/:/\-/g')"
-	
+	exifDate="$(file "$arg" | grep -iPo '(?<=datetime=)'"$dateRegex")"
+
+	# backup exif date using exiftool
+	# for files that "file" fails
+	if [[ -z "$exifDate" ]]
+	then
+		exifDate="$(exiftool -CreateDate "$arg" | grep -iPo "$dateRegex")"
+	fi
+
+	# format the exifDate prior to comparison
+	if [[ -n "$exifDate" ]]
+	then
+		exifDate="$(echo "$exifDate" | perl -p -e "s/$dateRegex/\$1-\$2-\$3 \$4\.\$5.\$6/g;" -e 's/[ \-]$//g;')"
+	fi
+
 	if [[ -z "$exifDate" ]] || [[ "$exifDate" == "$fileDate" ]]
 	then
 		continue

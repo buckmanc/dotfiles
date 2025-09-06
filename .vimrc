@@ -28,6 +28,7 @@ set smartindent 	" smart indenting for coding
 set autoread		" reloads file only if unmodified in vim
 set novisualbell	" stop yelling at me
 set noerrorbells	" i'm serious
+set belloff=all         " no really
 set wildmenu		" command line tab completion
 set wildignorecase	" ignore case when tab completing paths
 set whichwrap+=<,>,h,l	" allow moving to next line from the ends
