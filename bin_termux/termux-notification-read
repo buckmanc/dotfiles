@@ -57,7 +57,7 @@ while read -r json
 do
 	packageName="$(echo "$json" | jq -r '.packageName')"
 	packageName="$(echo "$packageName" | perl -p \
-		-e 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec|cliffweitzman|jrtstudio)\.)+//g;' \
+		-e 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec|cliffweitzman|jrtstudio|lockdown)\.)+//g;' \
 		-e 's/^(facebook.orca)$/messenger/g;' \
 		-e 's/^(zhiliaoapp.musically)$/tiktok/g;' \
 		-e 's/^(gm)$/gmail/g;' \
@@ -76,38 +76,45 @@ do
 	if [[ "${packageName,,}" =~ ^(termux|spotify|aimp.player|newpipe|smartcapture|antennapod|systemui|samsungapps|speechify2?|anothermusicplayer)$ ]]
 	then
 		continue
-	# skip these unless passed --all
-	# things you might want to check once
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok)$ ]]
-	then
-		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* && "${content}" =~ \.(jpe?g|png)$ ]]
-	then
-		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "snapchat" ]] && [[ "${content,,}" == *'added a video to spotlight!' || "${content,,}" == *"is on snapchat!" || "${content,,}" == *"added to their story"* ]]
-	then
-		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "photos" ]] && [[ "${title,,}" == 'we made a collage'* ]]
-	then
-		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "dropbox" ]] && [[ "${title,,}" == 'changes saved' ]]
-	then
-		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "messaging" ]] && [[ "${content,,}" =~ (text|reply)(\ help\ for\ help\ and)?\ (stop|cancel)\ to\ (cancel|stop|opt[\ \-]out|unsubscribe|unsub) ]]
-	then
-		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "instagram" ]] && [[ "${content,,}" == *'who you might know, is on instagram'* || "${content,,}" == *"reposted"* ]]
-	then
-		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "youtube" ]] && [[ "${content,,}" == 'for you:'* ]]
-	then
-		continue
-	elif [[ "$optAll" == 0 ]] && [[ "$packageName" == "nextdoor" ]] && [[ "${content,,}" == *'reposted'* ]]
-	then
-		continue
+	# skip bupkiss
 	elif [[ -z "$title" && -z "$content" ]]
 	then
 		continue
+	# skip these unless passed --all
+	# things you might want to check once
+	elif [[ "$optAll" == 0 ]]
+	then
+		if [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok|weather|truebill)$ ]]
+		then
+			continue
+		elif [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* && "${content}" =~ \.(jpe?g|png)$ ]]
+		then
+			continue
+		elif [[ "$packageName" == "snapchat" ]] && [[ "${content,,}" == *'added a video to spotlight!' || "${content,,}" == *"is on snapchat!" || "${content,,}" == *"added to their story"* || "${content,,}" == "updating messages"* ]]
+		then
+			continue
+		elif [[ "$packageName" == "photos" ]] && [[ "${title,,}" == 'we made a collage'* ]]
+		then
+			continue
+		elif [[ "$packageName" == "dropbox" ]] && [[ "${title,,}" == 'changes saved' ]]
+		then
+			continue
+		elif [[ "$packageName" == "messaging" ]] && [[ "${content,,}" =~ (text|reply)(\ \"?(start|help)\"?\ for\ (help|consent)\ and)?\ \"?(stop|cancel)\"?\ to\ (cancel|stop|opt[\ \-]out|unsubscribe|unsub|decline) ]]
+		then
+			continue
+		elif [[ "$packageName" == "instagram" ]] && [[ "${content,,}" == *'who you might know, is on instagram'* || "${content,,}" == *"reposted"* ]]
+		then
+			continue
+		elif [[ "$packageName" == "youtube" ]] && [[ "${content,,}" == 'for you:'* ]]
+		then
+			continue
+		elif [[ "$packageName" == "nextdoor" ]] && [[ "${content,,}" == *'reposted'* ]]
+		then
+			continue
+		elif [[ "${content,,}" == *"a new login was detected"* ]]
+		then
+			continue
+		fi
 	fi
 
 	# app specific tweaks
@@ -152,9 +159,25 @@ outputHeight="$(echo "$output" | wc -l)"
 # echo "screenHeight: $screenHeight"
 # echo "outputHeight: $outputHeight"
 
+if [[ -z "$output" ]]
+then
+	output="no notifications"
+	# centerPath="$HOME/bin/center"
+	# if [[ -x "$centerPath" ]]
+	# then
+	# 	output="$(echo "$output" | "$centerPath")"
+	# fi
+
+	if (type lolcat > /dev/null 2>&1)
+	then
+		output="$(echo "$output" | lolcat)"
+	fi
+
+	echo "$output"
+	
 # do our own --quit-if-one-screen calc
 # to allow for prompt height
-if [[ -n "$output" ]]
+elif [[ -n "$output" ]]
 then
 	if [[ "$outputHeight" -gt "$screenHeight" ]]
 	then

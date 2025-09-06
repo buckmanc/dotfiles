@@ -37,9 +37,9 @@ glitchLevel(){
 	# fractional glitch level if bc is installed
 	if ( type bc >/dev/null 2>&1 )
 	then
-		return "$(bc -l <<< "$(shuf -i 300-800 -n 1)/100")"
+		echo "$(bc -l <<< "$(shuf -i 300-800 -n 1)/100")"
 	else
-		return "$(shuf -i 3-8 -n 1)"
+		echo "$(shuf -i 3-8 -n 1)"
 	fi
 }
 
@@ -276,9 +276,9 @@ then
 			glitch_this    -f -o "$paperPathGlitched" "$paperPathGlitched" 1 > /dev/null
 			glitch_this    -f -o "$paperPathGlitched" "$paperPathGlitched" 1 > /dev/null
 		else
-			glitch_this -c -f -o "$paperPathGlitched" "$paperPath"         glitchLevel > /dev/null
-			glitch_this -c -f -o "$paperPathGlitched" "$paperPathGlitched" glitchLevel > /dev/null
-			glitch_this -c -f -o "$paperPathGlitched" "$paperPathGlitched" glitchLevel > /dev/null
+			glitch_this -c -f -o "$paperPathGlitched" "$paperPath"         $(glitchLevel) > /dev/null
+			glitch_this -c -f -o "$paperPathGlitched" "$paperPathGlitched" $(glitchLevel) > /dev/null
+			glitch_this -c -f -o "$paperPathGlitched" "$paperPathGlitched" $(glitchLevel) > /dev/null
 		fi
 		paperPath="$paperPathGlitched"
 	else
