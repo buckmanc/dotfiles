@@ -51,6 +51,7 @@
 	axe's	en-US
 	B2B	en-US
 	Baahubali	en-US
+	backronym	en-US
 	bam	en-US
 	bandana	en-US
 	bariatric	en-US
@@ -227,6 +228,7 @@
 	esque	en-US
 	etsy	en-US
 	exvangelical	en-US
+	Exvangelicals	en-US
 	Faire	en-US
 	Faires	en-US
 	fakeout	en-US
@@ -361,6 +363,7 @@
 	Kolin	en-US
 	Konami	en-US
 	Kondo's	en-US
+	KonMari	en-US
 	Kool	en-US
 	Koolaid	en-US
 	kraken	en-US
@@ -948,6 +951,7 @@
 	Murderbot	en-US
 	Mystara	en-US
 	Mythos	en-US
+	Nabbit	en-US
 	Nalthis	en-US
 	Namira	en-US
 	Namira's	en-US
@@ -1236,6 +1240,7 @@
 	Gamer's	en-US
 	Gavilon	en-US
 	Gretna	en-US
+	Halleck	en-US
 	Hathaway	en-US
 	Hillcrest	en-US
 	Inacom	en-US
@@ -2342,6 +2347,7 @@
 	Jabez	en-US
 	Jael	en-US
 	Jael's	en-US
+	Jah	en-US
 	Kadesh	en-US
 	KJV	en-US
 	Levite	en-US
