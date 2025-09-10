@@ -133,7 +133,7 @@ else
 	# download the x most recent videos
 	# format from 'mp3' preset
 	# despite numerous posts online, the format arg is the only thing that has successfully prioritized audio-only streams, causing a *dramatic* speed increase
-	yt-dlp --format 'ba[acodec^=mp3]/ba/b' --extract-audio --embed-metadata --embed-thumbnail --audio-format "mp3" --audio-quality 1 --output "$cacheDir/$outputFormat.%(ext)s" --playlist-items "1:$maxFilesToDownload" --download-archive "$cacheDir/archive.log" --max-downloads "$maxFilesToDownload" $regexArg --restrict-filenames --no-overwrites --print "$outputFormat" --no-simulate --no-warnings --write-thumbnail --convert-thumbnails png -- "$optUrl"
+	yt-dlp --format 'ba[acodec^=mp3]/ba/b' --extract-audio --embed-metadata --embed-thumbnail --audio-format "mp3" --audio-quality 0 --output "$cacheDir/$outputFormat.%(ext)s" --playlist-items "1:$maxFilesToDownload" --download-archive "$cacheDir/archive.log" --max-downloads "$maxFilesToDownload" $regexArg --restrict-filenames --no-overwrites --print "$outputFormat" --no-simulate --no-warnings --write-thumbnail --convert-thumbnails png -- "$optUrl"
 fi
 
 # bad form, I know
