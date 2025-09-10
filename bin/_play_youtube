@@ -151,21 +151,29 @@ fi
 ls -t "$cacheDir/"*.mp3 | tail -n +"$maxFilesToKeepPlusOne" | xargs --delimiter '\n' --no-run-if-empty rm
 
 # trim black bars off thumbnails
-if (type magick >/dev/null 2>&1 && type ffmpeg >/dev/null 2>&1)
+if (type magick >/dev/null 2>&1 || type convert >/dev/null 2>&1) && type ffmpeg >/dev/null 2>&1
 then
 	find "$cacheDir" -type f -iname '*.mp3' | while read -r vidPath
 	do
-		thumbPath="$(echo "$vidPath" | perl -pe 's/\.mp3$/.png/')"
-		newThumbPath="$(echo "$vidPath" | perl -pe 's/\.mp3$/_new.png/')"
-		tempVidPath="$(echo "$vidPath" | perl -pe 's/\.mp3$/_temp.mp3/')"
+		thumbPath="$(		echo "$vidPath" | perl -pe 's/\.mp3$/.png/')"
+		newThumbPath="$(	echo "$vidPath" | perl -pe 's/\.mp3$/_new.png/')"
+		tempVidPath="$(		echo "$vidPath" | perl -pe 's/\.mp3$/_temp.mp3/')"
 
 		if [[ -z "$vidPath" || ! -f "$thumbPath" ]]
 		then
 			continue
 		fi
 
+		# imagemagick version compatibility
+		if type magick >/dev/null 2>&1
+		then
+			magick=magick
+		else
+			magick=''
+		fi
+
 		# trim thumbnail
-		magick convert "$thumbPath" -background black -fuzz 5% -trim "$newThumbPath"
+		$magick convert "$thumbPath" -background black -fuzz 5% -trim "$newThumbPath"
 		
 		# embed thumbnail
 		ffmpeg -nostdin -hide_banner -loglevel error -i "$vidPath" -i "$newThumbPath" -c copy -map 0:a -map 1 "$tempVidPath"
