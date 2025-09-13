@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+
+destDir="$HOME/storage/dcim/Camera/"
+
+termux-camera-info | jq -r .[].id | while read -r camID
+do
+	echo -n "camera $camID... "
+
+	# as of 2025-09-13 termux-camera-photo cannot handle filenames with spaces
+	# timeStamp="$(date '+%Y-%m-%d_%H.%M.%S')"
+	timeStamp="$(date '+%Y%m%d_%H%M%S')"
+	destPath="$destDir/${timeStamp}-cam$camID.jpg"
+	if timeout 20s termux-camera-photo -c "$camID" "$destPath"
+	then
+		echo "click"
+	else
+		echo "dammit"
+	fi
+done
+
+termux-media-scan "$destDir"
