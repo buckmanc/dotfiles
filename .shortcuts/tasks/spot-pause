@@ -1,0 +1,3 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+~/bin/xspot --pause | xargs -I {} termux-notification --title "xspot" --content {} --group "xspot"

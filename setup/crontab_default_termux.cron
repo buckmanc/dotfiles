@@ -1,0 +1,10 @@
+# 1 0 * * * $HOME/bin_local/send-home
+0 0 * * * $HOME/bin/send-logs-home
+*/5 * * * * $HOME/bin/wifi-log
+0 0 * * * $HOME/bin/nerdmoon_to_starship
+
+30 23 * * * $HOME/.shortcuts/tasks/update-wallpapers
+0 0 * * * $HOME/.shortcuts/tasks/shuffle-lockscreen-wallpaper --no-notify
+0 0 * * * $HOME/.shortcuts/tasks/shuffle-homescreen-wallpaper --no-notify
+0 0 * * * $HOME/bin_termux/termux-midnight-settings
+0 0 * * * git -C "$HOME" pull --ff-only

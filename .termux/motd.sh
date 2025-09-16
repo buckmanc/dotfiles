@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-$HOME/bin/fancy-message-hello
+timeout 5s "$HOME/bin/fancy-message-hello" || true

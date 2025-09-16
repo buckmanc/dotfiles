@@ -1,0 +1,40 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+wallpaperDirPath="$HOME/.config/shuffle-wallpaper/lock_dir_path.config"
+wallpaperDirPathDir="$(dirname "$wallpaperDirPath")"
+
+if [[ ! -f "$wallpaperDirPath" ]]
+then
+	default1="$HOME/storage/external-1/Wallpapers/mobile"
+	default2="$HOME/storage/shared/Wallpapers/mobile"
+
+	defaultWallDirs=()
+	defaultWallDirs+=("${default1}")
+	defaultWallDirs+=("${default2}")
+	defaultWallDirs+=("${default1,,}")
+	defaultWallDirs+=("${default2,,}")
+
+	for dir in "${defaultWallDirs[@]}"
+	do
+		if [[ -d "$dir" ]]
+		then
+			mkdir -p "$wallpaperDirPathDir"
+			echo "$dir" > "$wallpaperDirPath"
+			break
+		fi
+	done
+fi
+
+if [[ -f "$wallpaperDirPath" ]]
+then
+	wallpaperDir="$(cat "$wallpaperDirPath")"
+fi
+
+if [[ ! -d "$wallpaperDir" ]]
+then
+	echo "Can't find wallpaper directory. Try writing the path to:"
+	echo "$wallpaperDirPath"
+	exit 1
+fi
+
+"$HOME/bin/shuffle-wallpaper" "$wallpaperDir" -l "$@"

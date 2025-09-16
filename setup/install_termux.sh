@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 pkg upgrade
+pkg install jq python openssh ncurses-utils vim git cronie 7zip cowsay ruby termux-api
+pkg autoclean
+gem install lolcat
 
 # does this need to be permanent?
 export LDFLAGS="-landroid-spawn -lm -lpython3.11" 
@@ -8,18 +11,15 @@ export LDFLAGS="-landroid-spawn -lm -lpython3.11"
 pip install git+https://github.com/numpy/numpy
 pip install git+https://github.com/TotallyNotChase/glitch-this
 
-pkg install cowsay
-pkg install ruby
-gem install lolcat
-
 termux-setup-storage
 
-pkg install jq
-pkg install python
-pkg install openssh
-pkg install ncurses-utils
-pkg install vim
-pkg install git
+# install default cronjobs if no cronjobs present
+# shouldn't have to check for it to be installed since we're installing it above
+cronJobs="$(crontab -l)"
+if [[ -z "$cronJobs" ]]
+then
+	crontab "$HOME/setup/crontab_default_termux.cron"
+fi
 
 
 # installed apps as of 2023-11-22
