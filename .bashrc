@@ -167,31 +167,59 @@ function set_win_title(){
 	# special character for home dir
 	if [ "${HOME,,}" == "${PWD,,}" ]
 	then
-		# very hacky bug fix for juicessh
-		if [ -z "$SSH_CLIENT" ] || [[ ("$COLUMNS" != "75" && "$COLUMNS" != 37) ]]
-		then
-			text="ᐰ"
-		fi
+		# # very hacky bug fix for juicessh
+		# if [ -z "$SSH_CLIENT" ] || [[ ("$COLUMNS" != "75" && "$COLUMNS" != 37) ]]
+		# then
+		# 	text="ᐰ"
+		# fi
+
+		text="ᐰ"
 	fi
 
 	# neat idea for pulling directly from starship to support substitutions
 	# changing system fonts to a nerd font to get glyph support in the title bar is too painful though
 	#
 	# text="$(starship module directory)"
-	# text=$(basename "${text}")
+	# text=$(basename "$text")
 
 	# # strip off color codes as they interfere with window titling
 	# if type ansi2txt >/dev/null 2>&1
 	# then
-	# text="$(echo ${text} | ansi2txt)"
+	# text="$(echo $"text" | ansi2txt)"
 	# else
-	# 	text="$(echo ${text} | sed -e "s/\x1b\[.\{1,5\}m//g")"
+	# 	text="$(echo "$text" | sed -e "s/\x1b\[.\{1,5\}m//g")"
 	# fi
 
 	# only display hostname on certain platforms
 	if [[ "$USER" != *"."* ]]
 	then
-		text="${HOSTNAME} - ${text}"
+		if [[ -z "$hostyHost" ]]
+		then
+			# if the hostname is useless, use the ostype instead
+			if [[ "$HOSTNAME" == "localhost" ]]
+			then
+				# shorten android name
+				if [[ "$OSTYPE" == "linux-android" ]]
+				then
+					hostyHost="android"
+
+					# add the user number as a substitute for a useful hostname
+					userNum="$(echo "$USER" | grep -iPo '(?<=^u0_a).+')"
+					if [[ -n "$userNum" ]]
+					then
+						hostyHost="$hostyHost $userNum"
+					fi
+				else
+					hostyHost="$OSTYPE"
+				fi
+			else
+				hostyHost="$HOSTNAME"
+			fi
+
+			export hostyHost
+		fi
+
+		text="$hostyHost - $text"
 	fi
 
 	echo -ne "\033]0;${text}\007"

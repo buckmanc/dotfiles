@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 pkg upgrade
-pkg install jq python openssh ncurses-utils vim git cronie 7zip cowsay ruby termux-api
+pkg install jq python openssh ncurses-utils vim git cronie 7zip cowsay ruby termux-api screen
 pkg autoclean
 gem install lolcat
 

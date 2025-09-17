@@ -2,6 +2,10 @@
 
 set -e
 
+# TODO add timelapse mode
+# TODO de-dupe cameras from the list
+# TODO add fswebcam and non-termux support
+
 destDir="$HOME/storage/dcim/Camera/"
 
 termux-camera-info | jq -r .[].id | while read -r camID
@@ -12,12 +16,32 @@ do
 	# timeStamp="$(date '+%Y-%m-%d_%H.%M.%S')"
 	timeStamp="$(date '+%Y%m%d_%H%M%S')"
 	destPath="$destDir/${timeStamp}-cam$camID.jpg"
+
 	if timeout 20s termux-camera-photo -c "$camID" "$destPath"
 	then
-		echo "click"
+		echo -n "click "
+
+		# magick "$destPath" -colorspace gray -format "%[fx:100*mean]" info:
+		# magick "$destPath" -colorspace gray -format "%[fx:standard_deviation]" info:
+		solidBlack="$(magick "$destPath" -resize '600x' -colorspace gray -format "%[fx:standard_deviation<=0.01?1:0]" info:)"
+
+		# vim syntax highlighting is freaking out here
+		# but it runs and passes shellcheck
+		if [[ "$solidBlack" == 1 ]]
+		then
+			rm "$destPath"
+			echo " useless photo"
+		else
+			echo
+		fi
+		
 	else
 		echo "dammit"
 	fi
+	
+	# TODO if an output pic is solid black delete it
+	# unless doing a time lapse
 done
 
+echo -n "Adding to gallery: "
 termux-media-scan "$destDir"
