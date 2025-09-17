@@ -6,31 +6,114 @@ set -e
 # TODO de-dupe cameras from the list
 # TODO add fswebcam and non-termux support
 
-destDir="$HOME/storage/dcim/Camera/"
+getCameraIDs(){
+	if (type termux-camera-info > /dev/null 2>&1)
+	then
+		termux-camera-info | jq -r .[].id
+	else
+		ls /dev/video*
+	fi
+}
 
-termux-camera-info | jq -r .[].id | while read -r camID
+snapPhoto(){
+	cameraID="$1"
+	destPath="$2"
+
+	# vim syntax highlighting is freaking out here
+	# but it runs and passes shellcheck
+	# just a little sanity checking
+	if [[ -z "$cameraID" || -z "$destPath" ]]
+	then
+		echo "need cameraID and destPath"
+		exit 1
+	fi
+
+	if (type termux-camera-photo > /dev/null 2>&1)
+	then
+		termux-camera-photo -c "$cameraID" "$destPath"
+	elif (type fswebcam > /dev/null 2>&1)
+	then
+		# fswebcam spews garbage and doesn't throw errors for errors
+		fswebcam --resolution 1920x1080 --no-banner --device "$cameraID" --quiet "$destPath" > /dev/null 2>&1
+	else
+		echo "no camera app found"
+		exit 1
+	fi
+}
+
+defaultDestDirs=()
+defaultDestDirs+=("$HOME/external-1/dcim/Camera")
+defaultDestDirs+=("$HOME/storage/dcim/Camera")
+defaultDestDirs+=("$HOME/storage/shared")
+defaultDestDirs+=("$HOME/Pictures")
+defaultDestDirs+=("$HOME/My Pictures")
+defaultDestDirs+=("$HOME/My Documents/My Pictures")
+defaultDestDirs+=("$HOME/My Documents/Pictures")
+
+# find an existing dir
+for dir in "${defaultDestDirs[@]}"
 do
-	echo -n "camera $camID... "
+	if [[ -d "$dir" ]]
+	then
+		dirName="$(basename "$dir")"
+		if [[ "${dirName,,}" != "camera" ]]
+		then
+			destDir="$dir/xcamera"
+			mkdir -p "$destDir"
+		else
+			destDir="$dir"
+		fi
+
+		break
+	fi
+done
+
+if [[ -z "$destDir" ]]
+then
+	echo "could not find dir to save photos to"
+	exit 1
+fi
+
+if type magick > /dev/null 2>&1
+then
+	magick=magick
+elif type convert > /dev/null 2>&1
+then
+	magick=convert
+else
+	echo 'imagemagick not installed'
+	exit 1
+fi
+
+# export so we can use it with timeout below
+export -f snapPhoto
+
+echo "saving to: ${destDir/#$HOME/\~}"
+echo
+
+getCameraIDs | while read -r cameraID
+do
+	echo -n "camera $cameraID... "
 
 	# as of 2025-09-13 termux-camera-photo cannot handle filenames with spaces
 	# timeStamp="$(date '+%Y-%m-%d_%H.%M.%S')"
 	timeStamp="$(date '+%Y%m%d_%H%M%S')"
-	destPath="$destDir/${timeStamp}-cam$camID.jpg"
+	camIdNum="$(echo "$cameraID" | grep -iPo '\d+$')"
+	destPath="$destDir/${timeStamp}-cam$camIdNum.jpg"
 
-	if timeout 20s termux-camera-photo -c "$camID" "$destPath"
+	# do some shenannigans to get our function working with timeout
+	if timeout 20s bash -c "snapPhoto '$cameraID' '$destPath'" && [[ -f "$destPath" ]]
 	then
 		echo -n "click "
 
-		# magick "$destPath" -colorspace gray -format "%[fx:100*mean]" info:
-		# magick "$destPath" -colorspace gray -format "%[fx:standard_deviation]" info:
-		solidBlack="$(magick "$destPath" -resize '600x' -colorspace gray -format "%[fx:standard_deviation<=0.01?1:0]" info:)"
+		solidBlack="$($magick "$destPath" -resize '600x' -colorspace gray -format "%[fx:standard_deviation<=0.01?1:0]" info:)"
 
-		# vim syntax highlighting is freaking out here
-		# but it runs and passes shellcheck
+		# if an output pic is solid black delete it
+		# TODO unless doing a time lapse
 		if [[ "$solidBlack" == 1 ]]
 		then
-			rm "$destPath"
 			echo " useless photo"
+			rm "$destPath"
 		else
 			echo
 		fi
@@ -39,9 +122,11 @@ do
 		echo "dammit"
 	fi
 	
-	# TODO if an output pic is solid black delete it
-	# unless doing a time lapse
 done
 
-echo -n "Adding to gallery: "
-termux-media-scan "$destDir"
+if (type termux-media-scan > /dev/null 2>&1)
+then
+	echo
+	echo -n "Adding to gallery: "
+	termux-media-scan "$destDir"
+fi
