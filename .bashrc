@@ -145,7 +145,7 @@ then
 fi
 
 # provide a standard user environment variable between platforms
-if [ -z "$USER" ]; then
+if [[ -z "$USER" && -n "$USERNAME" ]]; then
 	export USER="$USERNAME"
 fi
 
@@ -216,6 +216,7 @@ function set_win_title(){
 				hostyHost="$HOSTNAME"
 			fi
 
+			# try to cache the hostyHost
 			export hostyHost
 		fi
 

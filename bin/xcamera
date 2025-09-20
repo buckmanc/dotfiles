@@ -5,6 +5,7 @@ set -e
 # TODO add timelapse mode
 # TODO de-dupe cameras from the list
 # TODO add fswebcam and non-termux support
+# TODO add optional arg to limit to a list of cameras
 
 getCameraIDs(){
 	if (type termux-camera-info > /dev/null 2>&1)
@@ -110,7 +111,7 @@ do
 
 		# if an output pic is solid black delete it
 		# TODO unless doing a time lapse
-		if [[ "$solidBlack" == 1 ]]
+		if [[ "$solidBlack" == 1 || ! -s "$destPath" ]]
 		then
 			echo " useless photo"
 			rm "$destPath"

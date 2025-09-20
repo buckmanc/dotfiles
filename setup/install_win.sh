@@ -14,6 +14,7 @@ winget install --id microsoft.windowsterminal -e
 winget install jqlang.jq
 winget install videolan.vlc
 winget install streamlink.streamlink
+winget install imagemagick
 
 cp "${PROGRAMFILES} (x86)/GnuWin32/bin/tree.exe" "${PROGRAMFILES}/Git/usr/bin/"
 
