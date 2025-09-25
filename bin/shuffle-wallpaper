@@ -6,13 +6,16 @@ optLockScreen=0
 optFloater=0
 optGlitch=0
 optChillGlitch=0
+optGreyscale=0
 optNoNotify=0
 optTerminal=0
 optReadArgsFromCache=0
 optOutPath=''
+optNoModifyCache=0
 optNextIsOutPath=0
 optUnrecent=0
 optVerbose=0
+reshuffleArgString=''
 
 helpDeets="
 
@@ -25,11 +28,14 @@ paths: any list of files and directories. if called with no arguments, pulls cac
 
   --glitch		use glitch-this to glitch the wallpaper first
   --chill-glitch	glitch, but less
+  --grey		make color images greyscale
   --floater		center the design on black first
   --no-notify		don't notify (android only)
-  --output		copy the wallpaper somewhere; primarily for internal use
   --unrecent		do nothing if shuffled in the last 6 hours
   --help		display this help dialogue
+
+  --output		copy the wallpaper somewhere; primarily for internal use
+  --no-modify-cache	leave the cache at its previous values; primarily for internal use
 "
 
 glitchLevel(){
@@ -49,14 +55,16 @@ do
 	then
 		echo "$helpDeets"
 		exit 0
-	elif [[ "$arg" == "-l" || "$arg" == "--lockscreen" ]]
+	elif [[ "$arg" == "-l" || "$arg" == "--lockscreen" || "$arg" == "--lock" ]]
 	then
 		optLockScreen=1
 		lockArg="-l"
 		titleText="Lockscreen Wallpaper Updated"
+		reshuffleArgString+="$arg "
 	elif [[ "$arg" == "--floater" ]]
 	then
 		optFloater=1
+		reshuffleArgString+="$arg "
 	elif [[ "$arg" == "--no-notify" ]]
 	then
 		optNoNotify=1
@@ -64,6 +72,7 @@ do
 	then
 		optTerminal=1
 		titleText="Terminal Wallpaper Updated"
+		reshuffleArgString+="$arg "
 	elif [[ "$arg" == "--glitch" ]]
 	then
 		optGlitch=1
@@ -71,6 +80,9 @@ do
 	then
 		optGlitch=1
 		optChillGlitch=1
+	elif [[ "$arg" =~ \-\-gr[ae]y(scale)? ]]
+	then
+		optGreyscale=1
 	elif [[ "$arg" == "--output" ]]
 	then
 		optNextIsOutPath=1
@@ -78,12 +90,19 @@ do
 	then
 		optOutPath="$arg"
 		optNextIsOutPath=0
+	elif [[ "$arg" == "--no-modify-cache" ]]
+	then
+		optNoModifyCache=1
 	elif [[ "$arg" == "--unrecent" ]]
 	then
 		optUnrecent=1
 	elif [[ "$arg" == "--verbose" || "$arg" == "-v" ]]
 	then
 		optVerbose=1
+	elif [[ "${arg:0:1}" == "-" ]]
+	then
+		echo "I have no idea what $arg means"
+		exit 1
 	else
 		# add to our arg array, thus filtering out valid options from paths
 		args+=("$arg")
@@ -146,8 +165,6 @@ then
 	fi
 fi
 
-# TODO preserve the input args for caching
-# otherwise file paths are getting cached instead of dir paths
 if [[ -z "$args" ]]
 then
 	if [[ -f "$argCachePath" ]]
@@ -171,8 +188,8 @@ topArg="$(echo "$args" | head -n 1)"
 # TODO handle $args with both files and dirs together
 if [[ ! -e "$topArg" ]]
 then
-	echo "bad path"
-	# echo "bad path: $topArg"
+	# echo "bad path"
+	echo "bad path: $topArg"
 	exit 1
 elif [[ -d "$topArg" ]]
 then
@@ -184,7 +201,7 @@ fi
 baseFilesCount="$(echo "$files" | wc -l)"
 
 # burn the history file if input paths have changed since last run
-if [[ -f "$historyCachePath" && "$args" != "$(cat "$argCachePath")" ]]
+if [[ "$optNoModifyCache" == 0 && -f "$historyCachePath" && "$args" != "$(cat "$argCachePath")" ]]
 then
 	if [[ "$optVerbose" == 1 ]]
 	then
@@ -194,7 +211,7 @@ then
 
 	rm "$historyCachePath"
 # remove files from the list that have already been used
-elif [[ -f "$historyCachePath" ]]
+elif [[ "$optNoModifyCache" == 0 && -f "$historyCachePath" ]]
 then
 	historyFiles="$(cat "$historyCachePath")"
 	filesMinusHistory="${files}"$'\n'"${historyFiles}"
@@ -258,49 +275,71 @@ fi
 
 paperPath="$(echo "$files" | shuf --random-source='/dev/urandom' -n 1)"
 paperFileName="$(basename "$paperPath")"
-glitchDir="$cacheDir/glitched"
-resizedDir="$cacheDir/resized"
-mkdir -p "$glitchDir"
-mkdir -p "$resizedDir"
-paperPathGlitched="${glitchDir}/glitched_$paperFileName"
-paperPathResized="${resizedDir}/resized_$paperFileName"
+modDir="$cacheDir/mods"
 
 if [[ "$optGlitch" == "1" ]]
 then
 	if ( type glitch_this >/dev/null 2>&1 )
 	then
+		mkdir -p "$modDir"
+		paperFileName="$(basename "$paperPath")"
+		paperPathMod="$modDir/glitched_$paperFileName"
 
 		if [[ "$optChillGlitch" = 1 ]]
 		then
-			glitch_this -c -f -o "$paperPathGlitched" "$paperPath"         2 > /dev/null
-			glitch_this    -f -o "$paperPathGlitched" "$paperPathGlitched" 1 > /dev/null
-			glitch_this    -f -o "$paperPathGlitched" "$paperPathGlitched" 1 > /dev/null
+			glitch_this -c -f -o "$paperPathMod" "$paperPath"         2 > /dev/null
+			glitch_this    -f -o "$paperPathMod" "$paperPathMod" 1 > /dev/null
+			glitch_this    -f -o "$paperPathMod" "$paperPathMod" 1 > /dev/null
 		else
-			glitch_this -c -f -o "$paperPathGlitched" "$paperPath"         $(glitchLevel) > /dev/null
-			glitch_this -c -f -o "$paperPathGlitched" "$paperPathGlitched" $(glitchLevel) > /dev/null
-			glitch_this -c -f -o "$paperPathGlitched" "$paperPathGlitched" $(glitchLevel) > /dev/null
+			glitch_this -c -f -o "$paperPathMod" "$paperPath"         $(glitchLevel) > /dev/null
+			glitch_this -c -f -o "$paperPathMod" "$paperPathMod" $(glitchLevel) > /dev/null
+			glitch_this -c -f -o "$paperPathMod" "$paperPathMod" $(glitchLevel) > /dev/null
 		fi
-		paperPath="$paperPathGlitched"
+
+		paperPath="$paperPathMod"
+		paperFileName="$(basename "$paperPath")"
 	else
 		echo "glitch_this is not installed"
 	fi
 fi
 
-if [ "$optFloater" = "1" ]
+if [[ "$optGreyscale" == "1" ]]
+then
+	if ( type convert >/dev/null 2>&1 )
+	then
+		mkdir -p "$modDir"
+		paperFileName="$(basename "$paperPath")"
+		paperPathMod="$modDir/grey_$paperFileName"
+
+		convert "$paperPath" -colorspace Gray "$paperPathMod"
+
+		paperPath="$paperPathMod"
+		paperFileName="$(basename "$paperPath")"
+	else
+		echo "imagemagick not installed"
+	fi
+fi
+
+if [[ "$optFloater" == "1" ]]
 then
 	if ( type identify >/dev/null 2>&1 && type convert >/dev/null 2>&1 )
 	then
 		aspectRatio="9/20"
 		width=$(identify -ping -format '%w' "${paperPath}")
-			targetHeight=$(echo "$width/($aspectRatio)" | bc -l)
-			targetHeight="${targetHeight%%.*}"
-			targetDimensions="${width}x${targetHeight}"
+		targetHeight=$(echo "$width/($aspectRatio)" | bc -l)
+		targetHeight="${targetHeight%%.*}"
+		targetDimensions="${width}x${targetHeight}"
 
-			# convert -background "black" -resize "${targetDimensions}" -gravity Center -extent "$targetDimensions" +repage "$paperPath" "$paperPathResized"
-			# convert -background "black" -resize "${targetDimensions}" -gravity Center +repage "$paperPath" "$paperPathResized"
-			convert -background "black" -gravity Center -extent "$targetDimensions" +repage "$paperPath" "$paperPathResized"
+		mkdir -p "$modDir"
+		paperFileName="$(basename "$paperPath")"
+		paperPathMod="$modDir/resized_$paperFileName"
 
-			paperPath="$paperPathResized"
+		# convert -background "black" -resize "${targetDimensions}" -gravity Center -extent "$targetDimensions" +repage "$paperPath" "$paperPathMod"
+		# convert -background "black" -resize "${targetDimensions}" -gravity Center +repage "$paperPath" "$paperPathMod"
+		convert -background "black" -gravity Center -extent "$targetDimensions" +repage "$paperPath" "$paperPathMod"
+
+		paperPath="$paperPathMod"
+		paperFileName="$(basename "$paperPath")"
 	else
 		echo "imagemagick not installed"
 	fi
@@ -355,7 +394,7 @@ else
 	exit 1
 fi
 
-if [[ "$optReadArgsFromCache" == 0 ]]
+if [[ "$optNoModifyCache" == 0 && "$optReadArgsFromCache" == 0 ]]
 then
 	# cache paths
 	echo "$args" > "$argCachePath"
@@ -369,29 +408,35 @@ if [[ "$optNoNotify" == "0" ]]
 then
 	if [[ -f "$HOME/bin/git-file-url" ]]
 	then
-		sharePath="$("$HOME/bin/git-file-url" "$paperPath")"
-	else
+		sharePath="$("$HOME/bin/git-file-url" "$paperPath" --raw)"
+	fi
+
+	if [[ -z "$sharePath" ]]
+	then
 		sharePath="$paperPath"
 	fi
 
 	if [[ "$OSTYPE" == "linux-android" ]]
 	then
 		# elaborate notification with actions to take
-		# gotta escape the dashes im the args
-		# oddly quotes are not enough
-		reshuffleAction="\"$HOME/bin/shuffle-wallpaper\" $(echo "$@" | sed 's/\-/\\-/g')"
+		reshuffleAction="\"$HOME/bin/shuffle-wallpaper\" $reshuffleArgString"
+		logPath="$HOME/.logs/shuffle-wallpaper-action.log"
 
-		# TODO change "share" to figure out the remote URL if it's a repo file and use that instead
-		# or should that be the "view" click?
-		termux-notification --image-path "$paperPath" --title "$titleText" --content "$(basename "$paperPath")" --group autopaper --id "$titleText" \
+		# if reshuffleArgString contained paths we would have to wrap them in quotes within the string
+		# as the action commands seemed to be stored as strings and the distinction between parameters is lost
+		# instead of using paths, reshuffle makes use of the cache to use the previous args as last time
+		# the other two actions leave the cache unmodified so that "reshuffle" still works
+		# as does manually shuffling with no path args
+
+		termux-notification --image-path "$paperPath" --title "$titleText" --content "$paperFileName" --group "shuffle-wallpaper" --id "$titleText" \
+			--action "termux-open \"$paperPath\" && termux-clipboard-set \"$sharePath\" > \"$logPath\" 2>&1" \
 			--button1 "reshuffle" \
-			--button1-action "$reshuffleAction" \
-			--button2 "copy url" \
-			--button2-action "termux-clipboard-set \"$sharePath\"" \
+			--button1-action "$reshuffleAction > \"$logPath\" 2>&1"\
+			--button2 "greyscale" \
+			--button2-action "\"$HOME/bin/shuffle-wallpaper\" --no-modify-cache --grey $lockArg \"$paperPath\" > \"$logPath\" 2>&1" \
 			--button3 "glitch" \
-			--button3-action "$HOME/bin/shuffle-wallpaper --glitch $lockArg \"$paperPath\""
+			--button3-action "\"$HOME/bin/shuffle-wallpaper\" --no-modify-cache --glitch $lockArg \"$paperPath\" > \"$logPath\" 2>&1" \
+			--icon 'wallpaper'
 
-			# termux-open cannot handle URLs at present
-			# --action "termux-open --view \"$sharePath\""
 	fi
 fi

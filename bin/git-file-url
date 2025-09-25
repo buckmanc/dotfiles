@@ -1,28 +1,66 @@
 #!/usr/bin/env bash
 
-inPath="$1"
+optRaw=0
+args=()
 
-if [[ -z "$inPath" ]]
+for arg in "$@"
+do
+	if [[ "$arg" == "-r" || "$arg" == "--raw" ]]
+	then
+		optRaw=1
+	else
+		# add to our arg array, thus filtering out valid options from paths
+		args+=("$arg")
+	fi
+done
+
+if [[ "${#args[@]}" == 0 ]]
 then
-	echo "need input path"
+	echo "no args provided"
 	exit 1
 fi
 
-fullPath="$(realpath "$inPath")"
-inDir="$(dirname "$fullPath")"
-gitRoot="$(git -C "$inDir" rev-parse --show-toplevel)"
-urlFilePath="${fullPath/#"$gitRoot/"}"
+for inPath in "${args[@]}"
+do
+	if [[ -z "$inPath" ]]
+	then
+		continue
+	fi
+
+	fullPath="$(realpath "$inPath")"
+	inDir="$(dirname "$fullPath")"
+	gitRoot="$(git -C "$inDir" rev-parse --show-toplevel 2> /dev/null)"
+	urlFilePath="${fullPath/#"$gitRoot/"}"
+
+	if [[ -z "$gitRoot" ]]
+	then
+		continue
+	fi
+
+	# use a script to urlencode the url if possible
+	if [[ -x "$HOME/bin/urlencode" ]] && type python > /dev/null 2>&1
+	then
+		urlFilePath="$(echo -n "$urlFilePath" | "$HOME/bin/urlencode")"
+	# otherwise, just manually url encode spaces, which is the most important char anyway
+	else
+		urlFilePath="$(echo "$urlFilePath" | perl -pe 's/ /%20/g')"
+	fi
 
 
-if git -C "$inDir" remote | grep -Piq '^github$'
-then
-	remoteName="github"
-else
-	remoteName="origin"
-fi
-repoRoot="$(git -C "$inDir" ls-remote --get-url "$remoteName" | perl -pe 's/(^git@|\.git$)//g' | perl -pe 's/(?<=\.com):/\//')"
-branchName="$(git -C "$inDir" branch --show-current)"
-outUrl="https://${repoRoot}/blob/${branchName}/${urlFilePath}"
+	if git -C "$inDir" remote | grep -Piq '^github$'
+	then
+		remoteName="github"
+	else
+		remoteName="origin"
+	fi
+	repoRoot="$(git -C "$inDir" ls-remote --get-url "$remoteName" | perl -pe 's/(^git@|\.git$)//g' | perl -pe 's/(?<=\.com):/\//')"
+	branchName="$(git -C "$inDir" branch --show-current)"
+	if [[ "$optRaw" == 0 ]]
+	then
+		outUrl="https://${repoRoot}/blob/${branchName}/${urlFilePath}"
+	else
+		outUrl="https://${repoRoot/github/raw.githubusercontent}/refs/heads/${branchName}/${urlFilePath}"
+	fi
 
-echo "$outUrl"
-
+	echo "$outUrl"
+done

@@ -17,10 +17,10 @@ fi
 if [[ "$optSmudge" == 1 && "$optTermux" == 1 ]] 
 then
 	# to termux
-	sed 's|^#!/usr/bin/env bash|#!/data/data/com.termux/files/usr/bin/bash|g'
+	sed 's|^#!/usr/bin/env |#!/data/data/com.termux/files/usr/bin/|g'
 elif [[ "$optClean" == 1 ]] || [[ "$optSmudge" == 1 && "$optTermux" == 0 ]]
 then
 	# away from termux
-	sed 's|^#!/data/data/com.termux/files/usr/bin/bash|#!/usr/bin/env bash|g'
+	sed 's|^#!/data/data/com.termux/files/usr/bin/|#!/usr/bin/env |g'
 fi
 
