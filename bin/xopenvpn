@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# download and then run the openvpn setup script
+scriptPath="$HOME/bin/_openvpn.sh"
+if [[ ! -f "$scriptPath" ]]
+then
+	curl https://get.vpnsetup.net/ovpn --output "$scriptPath"
+	chmod +x "$scriptPath"
+fi
+
+sudo "$scriptPath"

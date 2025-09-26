@@ -7,6 +7,7 @@ alias xtree='tree -fi | grep -i --color'
 alias xgrep='grep -i --color'
 alias xhistory='history | cut -c 8- | grep -ivE  "^x?hist(ory | )" | grep -i --color'
 alias xhist='xhistory'
+alias xschellcheck='xshellcheck'
 alias gut='git'
 alias got='git'
 alias it='git'
@@ -52,9 +53,33 @@ then
 	alias convert='magick convert'
 fi
 
-mkdircd() {
-	mkdir "$1"
-	cd "$1"
+# this has to be a shell function
+# scripts can't cd the user session
+# aliases can't handle args
+mkdircd(){
+	# not sure I've got the terminology right here
+	args=()
+	options=()
+
+	for arg in "$@"
+	do
+		if [[ "${arg:0:1}" == "-" ]]
+		then
+			options+=("$arg")
+		else
+			args+=("$arg")
+		fi
+	done
+
+	if [[ ! -e "${args[0]}" ]]
+	then
+		mkdir "$@"
+	fi
+
+	if [[ -e "${args[0]}" ]]
+	then
+		cd "${args[@]}"
+	fi
 }
 
 # fix trailing whitespace

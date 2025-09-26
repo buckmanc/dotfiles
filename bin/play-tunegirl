@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+"$HOME/bin/_play_youtube" --url 'https://www.youtube.com/playlist?list=PLKhlkmO6g-0O6VIxhR76MRhNlfsNlS8pp' --name 'tunegirl' --all

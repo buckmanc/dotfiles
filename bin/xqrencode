@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+outPath=""
+optNextIsOutPath=0
+
+for arg in "$@"
+do
+	if [[ "$arg" =~ (\-o|\-\-output) ]]
+	then
+		optNextIsOutPath=1
+	elif [[ "$optNextIsOutPath" == 1 ]]
+	then
+		outPath="$arg"
+		optNextIsOutPath=0
+	fi
+done
+
+qrencode --margin=1 --size=1 "$@" && convert "$outPath" -interpolate integer -filter point -resize "1000x1000^<" "$outPath"

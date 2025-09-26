@@ -47,7 +47,9 @@ elif [ "$OSTYPE" == 'linux-gnu' ]
 then
 
 	# if we have shutdown perms, don't ask for sudo
-	if test -w "$(which shutdown)"
+	# xubuntu fails this test but does not require sudo
+	# easier to check for xubuntu than whatever is the right way
+	if [[ "$DESKTOP_SESSION" == "xubuntu" ]] || test -w "$(which shutdown)"
 	then
 		clear
 		"$farewell"

@@ -11,14 +11,14 @@ fi
 # use a package to parse the output if available
 if type ffmpeg-progress-yield > /dev/null 2>&1
 then
-	progress="ffmpeg-progress-yield"
+	progress="ffmpeg-progress-yield --progress"
 else
 	progress=""
 fi
 
 # lower crf number is high quality
 # requires experimentation to find "visual losslessnes"
-crf=25
+crf=24
 codec=H264
 preset=slower
 testTimeStamp="0:07"
@@ -38,7 +38,8 @@ for src in "$@"
 do
 	pathNoExt="${src%.*}"
 	pathNoExtTrim="${pathNoExt% - Raw}"
-	destPathNoExt="$pathNoExtTrim - $codec CRF $crf"
+	# destPathNoExt="$pathNoExtTrim - $codec CRF $crf"
+	destPathNoExt="${pathNoExtTrim}_${codec}_CRF_$crf"
 	destPath="$destPathNoExt.mp4"
 
 	testPathSource="$pathNoExt.png"

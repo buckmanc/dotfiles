@@ -40,6 +40,7 @@
 	root=rev-parse --show-toplevel
 	fixcarriagereturn=!git ls-files --eol | grep -Pi 'w/(mixed|crlf)' | grep -Pio '(?<=\t).+$' | xargs -d '\n' -I {} perl -i -pe 's/\\r//g' '{}'
 	fixtw=!git ls-files | xargs -d '\n' sed -i 's/[ \t]*\\(\\r\\?\\)$/\\1/'
+	padd=add --patch
 [core]
 	editor = vim
 	autocrlf = input # only check in lf, check out whatever's in the index

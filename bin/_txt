@@ -32,5 +32,5 @@ then
 	echo "$text" | mutt "$number"
 else
 	echo "no program found to send texts with"
-	return 1
+	exit 1
 fi
