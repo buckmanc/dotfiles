@@ -39,7 +39,7 @@ then
 	echo
 	exit
 # use a different format for VLC
-elif [[ "${player,,}" == "vlc" ]]
+elif [[ "${player,,}" == "vlc"* ]]
 then
 	format="{{vlc:nowplaying}} - {{title}}"
 # format for spotify and other players
@@ -49,6 +49,9 @@ fi
 
 # get the status string
 nowPlaying="$(playerctl --player "$player" metadata --format "$format" | perl -p -e 's/( \- |[Ss]tream [Nn]ame)+$//g;' -e 's/^( \- )+//g;')"
+
+# echo "player: $player"
+# echo "nowPlaying: $nowPlaying"
 
 # need that speaker icon, but wminfo doesn't provide it
 # if [[ "${player,,}" == "firefox"* && "$nowPlaying" == *"is playing media" ]] && type wmctrl > /dev/null 2>&1
@@ -60,7 +63,19 @@ nowPlaying="$(playerctl --player "$player" metadata --format "$format" | perl -p
 # backup format is a beautified url
 if [[ -z "$nowPlaying" ]]
 then
-	nowPlaying="$(playerctl --player "$player" metadata --format "{{xesam:url}}" | perl -p -e 's=(^https?://|\.m3u8?$|/hls)==g;' -e 's|^([^/]+)/(.+$)|$1 - $2|g;' -e 's/(_|%20)/ /g;' -e 's|/| / |g;')"
+	nowPlaying="$(playerctl --player "$player" metadata --format "{{xesam:url}}")"
+
+	if [[ -e "$HOME/bin/urldecode" ]]
+	then
+		nowPlaying="$(echo "$nowPlaying" | "$HOME/bin/urldecode")"
+	fi
+
+	if [[ "$nowPlaying" == "http"* ]]
+	then
+		nowPlaying="$(echo "$nowPlaying" | perl -p -e 's=(^https?://|\.[^/\.]+?$|/hls)==g;' -e 's|^([^/]+)/(.+$)|$1 - $2|g;' -e 's/(_|%20)/ /g;' -e 's|/| / |g;')"
+	else
+		nowPlaying="$(echo "$nowPlaying" | perl -p -e 's|^.+/([^/]+)$|$1|g;' -e 's/\.[^\.]+$//g')"
+	fi
 fi
 
 # if the nowPlaying string is still empty, back out
