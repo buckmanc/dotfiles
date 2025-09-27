@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+ 
+# a simple playerctl / xspot wrapper
+# uses playerctl to know when the track changes
+# uses xspot to check the spotify api for more "now playing" details
+
+set -e
+
+if ! type playerctl > /dev/null 2>&1
+then
+	echo 'playerctl not installed'
+	exit 1
+fi
+
+# have to manually pick the player that's playing
+players="$(playerctl --list-all 2>&1)"
+
+# back out for borko
+if [[ "${players,,}" == "no players found" ]]
+then
+	echo
+	exit
+fi
+
+while read -r thisPlayer
+do
+	status="$(playerctl --player "$thisPlayer" status)"
+	if [[ "${status,,}" == "playing" ]]
+	then
+		player="$thisPlayer"
+		break
+	fi
+
+done < <(echo "$players")
+
+# return blank if nothing's playing
+if [[ -z "$player" ]]
+then
+	echo
+	exit
+# use a different format for VLC
+elif [[ "${player,,}" == "vlc" ]]
+then
+	format="{{vlc:nowplaying}} - {{title}}"
+# format for spotify and other players
+else
+	format="{{artist}} - {{title}}"
+fi
+
+# get the status string
+nowPlaying="$(playerctl --player "$player" metadata --format "$format" | perl -p -e 's/( \- |[Ss]tream [Nn]ame)+$//g;' -e 's/^( \- )+//g;')"
+
+# need that speaker icon, but wminfo doesn't provide it
+# if [[ "${player,,}" == "firefox"* && "$nowPlaying" == *"is playing media" ]] && type wmctrl > /dev/null 2>&1
+# then
+# 	windowTitle="$(wmctrl -l | grep -i "firefox" | head -n1)"
+# 	nowPlaying="$windowTitle"
+# fi
+
+# backup format is a beautified url
+if [[ -z "$nowPlaying" ]]
+then
+	nowPlaying="$(playerctl --player "$player" metadata --format "{{xesam:url}}" | perl -p -e 's=(^https?://|\.m3u8?$|/hls)==g;' -e 's|^([^/]+)/(.+$)|$1 - $2|g;' -e 's/(_|%20)/ /g;' -e 's|/| / |g;')"
+fi
+
+# if the nowPlaying string is still empty, back out
+if [[ -z "$nowPlaying" ]]
+then
+	echo
+	exit
+fi
+
+
+# check the spotify api for more details...
+if [[ "$player" == "spotify" ]]
+then
+
+	if [[ -z "$TEMP" ]]
+	then
+		TEMP="/tmp"
+	fi
+
+	lastPlayingPath="$TEMP/lastplaying"
+	lastXspotPlayingPath="$TEMP/lastxspotplaying"
+
+	# read from temp files or from exported variables if available
+	if [[ -z "$lastPlaying" && -f "$lastPlayingPath" ]]
+	then
+		lastPlaying="$(cat "$lastPlayingPath")"
+	fi
+
+	if [[ -z "$xspotNowPlaying" && -f "$lastXspotPlayingPath" ]]
+	then
+		xspotNowPlaying="$(cat "$lastXspotPlayingPath")"
+	fi
+
+	# ...but only if it's a different track then last time
+	if [[ "$nowPlaying" != "$lastPlaying" || -z "$xspotNowPlaying" ]]
+	then	
+		# echo "checking xspot"
+		xspotNowPlaying="$("$HOME/bin/xspot" --what)"
+		lastPlaying="$nowPlaying"
+
+		export xspotNowPlaying
+		export lastPlaying
+		echo "$xspotNowPlaying" > "$lastXspotPlayingPath"
+		echo "$lastPlaying" > "$lastPlayingPath"
+	fi
+
+	echo "$xspotNowPlaying"
+else
+	# for other players, just use the playerctl output
+	echo "$nowPlaying"
+fi

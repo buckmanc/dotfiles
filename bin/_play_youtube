@@ -10,6 +10,8 @@ optName=""
 optNextIsName=0
 optRegex=""
 optNextIsRegex=0
+optCookiePath=""
+optNextIsCookiePath=0
 
 for arg in "$@"
 do
@@ -49,6 +51,13 @@ do
 	then
 		optRegex="$arg"
 		optNextIsRegex=0
+	elif [[ "$arg" == "--cookies" ]]
+	then
+		optNextIsCookiePath=1
+	elif [[ "$optNextIsCookiePath" == "1" ]]
+	then
+		optCookiePath="$arg"
+		optNextIsCookiePath=0
 	elif [[ "$arg" == "-h" || "$arg" == "--help" ]]
 	then
 		helpDeets="
@@ -116,12 +125,26 @@ then
 else
 	outputFormat="%(title)s"
 fi
+
 playlistPath="$cacheDir/$optName.m3u"
+
 regexArg=""
 if [[ -n "$optRegex" ]]
 then
 	regexArg="--match-title ""$optRegex"""
 	# regexArg="--match-filters ""title~=(?i)\b$optRegex\b"""
+fi
+
+cookieArg=""
+if [[ -n "$optCookiePath" ]]
+then
+	if [[ ! -f "$optCookiePath" ]]
+	then
+		echo "invalid cookie path"
+		exit 1
+	fi
+
+	cookieArg="--cookies ""$optCookiePath"""
 fi
 
 mkdir -p "$cacheDir"
@@ -133,7 +156,8 @@ else
 	# download the x most recent videos
 	# format from 'mp3' preset
 	# despite numerous posts online, the format arg is the only thing that has successfully prioritized audio-only streams, causing a *dramatic* speed increase
-	yt-dlp --format 'ba[acodec^=mp3]/ba/b' --extract-audio --embed-metadata --embed-thumbnail --audio-format "mp3" --audio-quality 0 --output "$cacheDir/$outputFormat.%(ext)s" --playlist-items "1:$maxFilesToDownload" --download-archive "$cacheDir/archive.log" --max-downloads "$maxFilesToDownload" $regexArg --restrict-filenames --no-overwrites --print "$outputFormat" --no-simulate --no-warnings --write-thumbnail --convert-thumbnails png -- "$optUrl"
+	# the -t sleep preset introduces some small wait times to avoid bans
+	yt-dlp -t sleep --format 'ba[acodec^=mp3]/ba/b' --extract-audio --embed-metadata --embed-thumbnail --audio-format "mp3" --audio-quality 0 --output "$cacheDir/$outputFormat.%(ext)s" --playlist-items "1:$maxFilesToDownload" --download-archive "$cacheDir/archive.log" --max-downloads "$maxFilesToDownload" $regexArg $cookieArg --restrict-filenames --no-overwrites --print "$outputFormat" --no-simulate --no-warnings --write-thumbnail --convert-thumbnails png -- "$optUrl"
 fi
 
 # bad form, I know
