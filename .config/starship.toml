@@ -304,6 +304,7 @@ vlc			= "󰕼"
 "cache"		= "$$$"
 "email"		= "󰇮"
 "autohotkey"= ""
+"power"		= "⏻"
 
 
 [dotnet]
