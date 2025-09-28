@@ -255,6 +255,7 @@
 	fuddy	en-US
 	Fukushima	en-US
 	fundie	en-US
+	gabber	en-US
 	GAM	en-US
 	gameplay	en-US
 	gaslighting	en-US
