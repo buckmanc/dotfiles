@@ -2,7 +2,64 @@
 
 set -e
 
-if [[ "$#" -lt 1 ]]
+optForce=0
+optQuiet=0
+optDeleteSource=0
+optNoDeleteOld=0
+optDryRun=0
+optTestImage=0
+files=()
+
+for arg in "$@"
+do
+	if [[ -z "$arg" ]]
+	then
+		continue
+	fi
+
+	if [[ "$arg" =~ \-\-?f(orce)? ]]
+	then
+		optForce=1
+	elif [[ "$arg" =~ \-\-?q(uiet)? ]]
+	then
+		optQuiet=1
+	elif [[ "$arg" == "--delete" ]]
+	then
+		optDeleteSource=1
+	elif [[ "$arg" == "--no-delete" || "$arg" == "--no-delete-old" ]]
+	then
+		optNoDeleteOld=1
+	elif [[ "$arg" == "--dry-run" ]]
+	then
+		optDryRun=1
+	elif [[ "$arg" =~ \-\-test(\-image)? ]]
+	then
+		optTestImage=1
+	elif [[ "$arg" == -* ]]
+	then
+		echo "i have no clue what $arg means"
+		exit 1
+	elif [[ -d "$arg" ]]
+	then
+		# if we got a directory, grab any video files therein
+		# using file extensions instead of deeper inspection for performance
+		dirfiles="$(find "$arg" -type f -not -ipath '*/.git/*' -not -ipath '*/.internals/*' -regextype posix-extended -iregex '.+\.(mp4|3gp|avi|mpeg|mov|mkv|mpg|wmv|webm|ogv|avchd)' | sort)"
+
+		while read -r dirFile
+		do
+			files+=("$dirFile")
+		done < <(echo "$dirfiles")
+
+	elif [[ -f "$arg" ]]
+	then
+		files+=("$arg")
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
+
+if [[ "${#files[@]}" -lt 1 ]]
 then
 	echo "need at least one file path"
 	exit 1
@@ -22,53 +79,135 @@ crf=24
 codec=H264
 preset=slower
 testTimeStamp="0:07"
-optTest=0
+formatRegex="[ _\-]{1,3}H26\d[ _]CRF[ _]\d{1,2}\.mp4$"
 
 makeTestImage(){
 	testSource="$1"
 	testDest="$2"
-
-	if [[ "$optTest" == 1 ]]
+	if [[ "$optTestImage" == 1 ]]
 	then
-		ffmpeg -i "$testSource" -ss "$testTimeStamp" -vframes 1 -y -loglevel error "$testDest"
+		if [[ "$optDryRun" == 0 ]]
+		then
+			ffmpeg -i "$testSource" -ss "$testTimeStamp" -vframes 1 -y -loglevel error "$testDest"
+		else
+			echo "would have written $(basename "$testDest")"
+		fi
 	fi
 }
 
-for src in "$@"
+for src in "${files[@]}"
 do
-	pathNoExt="${src%.*}"
-	pathNoExtTrim="${pathNoExt% - Raw}"
-	# destPathNoExt="$pathNoExtTrim - $codec CRF $crf"
-	destPathNoExt="${pathNoExtTrim}_${codec}_CRF_$crf"
-	destPath="$destPathNoExt.mp4"
-
-	testPathSource="$pathNoExt.png"
-	testPathDest="$destPathNoExt.png"
-
-	if [[ -f "$destPath" ]]
+	if [[ -z "$src" ]]
 	then
 		continue
 	fi
 
+	destDir="$(dirname "$src")"
+	srcFileName="$(basename "$src")"
+
+	srcFileNameNoExt="${srcFileName%.*}"
+	srcFileNameNoExtTrim="${srcFileNameNoExt% - Raw}"
+	destFileNameNoExt="${srcFileNameNoExtTrim}_${codec}_CRF_$crf"
+	destFileName="$destFileNameNoExt.mp4"
+	destPath="$destDir/$destFileName"
+
+	destFileNameOldNoExt="${srcFileNameNoExtTrim} - ${codec} CRF $crf"
+	destFileNameOld="$destFileNameOldNoExt.mp4"
+	destPathOld="$destDir/$destFileNameOld"
+
+	if echo "$srcFileName" | grep -Piq "$formatRegex"
+	then
+		if [[ "$optQuiet" == 0 ]]
+		then
+			echo "skipping prior output file: $srcFileNameNoExt"
+		fi
+		continue
+	fi
+
+	if [[ -f "$destPath" || -f "$destPathOld" ]] && [[ "$optForce" == 0 ]]
+	then
+		if [[ "$optQuiet" == 0 ]]
+		then
+			# sucks to check it again but alas
+			if [[ -f "$destPath" ]]
+			then
+				echo "already exists: $destFileNameNoExt"
+			else
+				echo "already exists: $destFileNameOldNoExt"
+			fi
+		fi
+		continue
+	fi
+
+	otherOutputFiles="$(find "$destDir" -type f -iname "${srcFileNameNoExtTrim}*" | grep -iP "$formatRegex" || true)"
+
+	if [[ "$optNoDeleteOld" == 0 ]]
+	then
+		while read -r fileToBurn
+		do
+			if [[ -z "$fileToBurn" ]]
+			then
+				continue
+			fi
+
+			if [[ "$optDryRun" == 0 ]]
+			then
+				rm "$fileToBurn"
+			else
+				echo "would have deleted $(basename "$fileToBurn")"
+			fi
+		done < <(echo "$otherOutputFiles")
+	fi
+
+	testPathSource="$destDir/$srcFileNameNoExt.png"
+	testPathDest="$destDir/$destFileNameNoExt.png"
+
 	if [[ "${codec^^}" == "H264" ]]
 	then
-		"$progress" ffmpeg -hide_banner -i "$src" -vcodec libx264 -crf "$crf" -vf yadif=1 -c:a aac -preset "$preset" "$destPath"
+		if [[ "$optDryRun" == 0 ]]
+		then
+			$progress ffmpeg -hide_banner -i "$src" -vcodec libx264 -crf "$crf" -vf yadif=1 -c:a aac -preset "$preset" "$destPath"
+
+			rm -rf "$testPathDest"
+		else
+			echo "would have written $destFileNameNoExt"
+		fi
+
+		makeTestImage "$destPath" "$testPathDest"
 	elif [[ "${codec^^}" == "H265" ]]
 	then
-		"$progress" ffmpeg -hide_banner -i "$src" -vcodec libx265 -crf "$crf"-tag:v hvc1 -vf yadif=1 -c:a aac -preset "$preset" "$destPath"
+		if [[ "$optDryRun" == 0 ]]
+		then
+			$progress ffmpeg -hide_banner -i "$src" -vcodec libx265 -crf "$crf"-tag:v hvc1 -vf yadif=1 -c:a aac -preset "$preset" "$destPath"
+
+			rm -rf "$testPathDest"
+		else
+			echo "would have written $destFileNameNoExt"
+		fi
+
+		makeTestImage "$destPath" "$testPathDest"
 	else
 		echo "unknown codec"
 		exit 1
 	fi
 
 	# write a couple test images to compare quality
-	if [[ ! -f "$testPathSource" ]]
+	if [[ ! -f "$testPathSource" || "$optForce" == 1 ]]
 	then
 		makeTestImage "$src" "$testPathSource"
 	fi
 
-	rm -rf "$testPathDest"
-	makeTestImage "$destPath" "$testPathDest"
+	if [[ "$optDeleteSource" == 1 ]]
+	then
+		if [[ "$optDryRun" == 1 ]]
+		then
+			echo "would have deleted $srcFileNameNoExt"
+		# only delete if the destination file exists and isn't empty
+		elif [[ -s "$destPath" ]]
+		then
+			rm "$src"
+		fi
+	fi
 
 done
 
