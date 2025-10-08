@@ -61,6 +61,15 @@ then
 		elif [[ "${arg,,}" == "deluge" ]]
 		then
 			arg="DelugeTeam.Deluge"
+		elif [[ "${arg,,}" == "jq" ]]
+		then
+			arg="jqlang.jq"
+		elif [[ "${arg,,}" == "cmake" ]]
+		then
+			arg="kitware.cmake"
+		elif [[ "${arg,,}" == "ffmpeg" ]]
+		then
+			arg="gyan.ffmpeg"
 		fi
 
 		# if a full id isn't specified, use the most common syntax of package.package

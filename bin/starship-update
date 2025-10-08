@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
 
+set -e
+
+if type starship > /dev/null 2>&1
+then
+	which starship
+	echo -n "current version: "
+	starship --version | head -n1
+fi
+
 # prefer winget if available
-if ( type winget >/dev/null 2>&1 )
+if type winget >/dev/null 2>&1
 then
 	winget update starship
 else
@@ -9,13 +18,13 @@ else
 	tmpPath="/tmp/starship_install.sh"
 
 	curl -sS https://starship.rs/install.sh > "$tmpPath"
-
-	# bug fix for .curlrc breaking install script
-	# --disable must be first parameter or it is ignored
-	if ! grep -Piq 'curl --disable' "$tmpPath"
-	then
-		perl -i -pe 's/curl --fail/curl --disable --fail/g' "$tmpPath"
-	fi
+	
+	# strip out a bunch of status and tutorial messages at the end
+	perl -0777pe 's/[\r\n\s]+completed "Starship[\s\S]+$//g;' -i "$tmpPath"
 
 	cat "$tmpPath" | sh
+	echo
 fi
+
+echo -n "updated version: "
+starship --version | head -n1

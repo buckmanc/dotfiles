@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -e
+
+# TODO make this generic
+
+releasesUrl='https://api.github.com/repos/jgm/pandoc/releases/latest'
+shitVerRegex='((0|[1-9]\d*)\.){2,3}(0|[1-9]\d*)'
+tempDebPath="$TEMP/pandoc.deb"
+
+releasesJson="$(curl -L "$releasesUrl")"
+url="$(echo "$releasesJson" | grep -iPo 'http.+?amd64\.deb' | head -n1)"
+
+if [[ -z "$url" ]]
+then
+	echo "$releasesJson"
+	echo
+	echo "could not find release url"
+	exit 1
+fi
+
+if (type pandoc > /dev/null 2>&1)
+then
+	localVersion="$(pandoc --version | grep -iPo "$shitVerRegex" | head -n1)"
+	remoteVersion="$(echo "$url" | grep -iPo "$shitVerRegex" | head -n1)"
+fi
+
+echo "localVersion: $localVersion"
+echo "remoteVersion: $remoteVersion"
+
+if [[ -z "$localVersion" || "$localVersion" != "$remoteVersion" ]]
+then
+	# echo "would update"
+	curl -L "$url" -o "$tempDebPath"
+	sudo dpkg -i "$tempDebPath"
+else
+	echo "pandoc is up to date"
+fi

@@ -7,7 +7,7 @@
 nerdmoonGlyphs="$("$HOME/bin/_nerdmoon_glyphs")"
 
 url="wttr.in/?format=%M"
-moonday="$(timeout 10s bash -c "curl --disable -s \"${url}\"")"
+moonday="$(timeout 10s bash -c "curl -s \"${url}\"")"
 
 logPath="${HOME}/.logs/nerdmoon/$(date '+%Y%m').txt"
 mkdir -p "${HOME}/.logs/nerdmoon/"
@@ -21,7 +21,7 @@ echo "response: ${moonday}" >> "${logPath}"
 if [ -z "${moonday}" ]
 then
 	sleep 10s
-	moonday="$(timeout 10s bash -c "curl --disable -s \"${url}\"")"
+	moonday="$(timeout 10s bash -c "curl -s \"${url}\"")"
 	echo "response: ${moonday}" >> "${logPath}"
 fi
 

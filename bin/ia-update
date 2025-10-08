@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if type ia > /dev/null 2>&1
+then
+	echo -n "current version: "
+	ia --version
+fi
+
+curl --silent --create-dirs -L https://archive.org/download/ia-pex/ia -o ~/.local/bin/ia
+chmod a+rx ~/.local/bin/ia
+
+echo -n "updated version: "
+~/.local/bin/ia --version
