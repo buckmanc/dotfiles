@@ -10,8 +10,8 @@ fi
 # termux-brightness auto
 "$HOME/bin_termux/dim-toggle" auto
 termux-media-scan "$HOME/storage" > /dev/null
-# termux-media-scan "$HOME/storage/shared/Pictures" > /dev/null
 
 git -C "$HOME" fetch --all
+git -C "$HOME" pull --ff-only
 
 termux-toast "midnight settings updated"

@@ -108,7 +108,7 @@ do
 		elif [[ "$packageName" == "youtube" ]] && [[ "${content,,}" == 'for you:'* ]]
 		then
 			continue
-		elif [[ "$packageName" == "nextdoor" ]] && [[ "${content,,}" == *'reposted'* ]]
+		elif [[ "$packageName" == "nextdoor" ]] && [[ "${content,,}" == *'reposted'* || "${title,,}" == "updates you may have missed" ]]
 		then
 			continue
 		elif [[ "${content,,}" == *"a new login was detected"* ]]
