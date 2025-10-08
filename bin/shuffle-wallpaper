@@ -15,6 +15,7 @@ optNoModifyCache=0
 optNextIsOutPath=0
 optUnrecent=0
 optVerbose=0
+optCrop=0
 reshuffleArgString=''
 
 helpDeets="
@@ -29,6 +30,7 @@ paths: any list of files and directories. if called with no arguments, pulls cac
   --glitch		use glitch-this to glitch the wallpaper first
   --chill-glitch	glitch, but less
   --grey		make color images greyscale
+  --crop		auto-crop (most OS's will do this for you)
   --floater		center the design on black first
   --no-notify		don't notify (android only)
   --unrecent		do nothing if shuffled in the last 6 hours
@@ -41,12 +43,58 @@ paths: any list of files and directories. if called with no arguments, pulls cac
 glitchLevel(){
 
 	# fractional glitch level if bc is installed
-	if ( type bc >/dev/null 2>&1 )
+	if type bc >/dev/null 2>&1
 	then
 		echo "$(bc -l <<< "$(shuf -i 300-800 -n 1)/100")"
 	else
 		echo "$(shuf -i 3-8 -n 1)"
 	fi
+}
+
+# TODO figure out aspect ratio
+# TODO this really should be based on device resolution, not on aspect ratio
+getTargetDimensions(){
+	aspectRatio="9/20"
+	path="$1"
+	baseDim="${2:0:1}"
+
+	if [[ -z "$path" || -z "$baseDim" ]]
+	then
+		echo "bad args to getTargetDimensions:" >&2
+		echo "path: $path" >&2
+		echo "baseDim: $baseDim" >&2
+		exit 1
+	fi
+
+	if [[ "${baseDim,,}" == "w" ]]
+	then
+		width=$(identify -ping -format '%w' "$1")
+		targetWidth="$width"
+		targetHeight="$(echo "$width / ($aspectRatio)" | bc -l)"
+	elif [[ "${baseDim,,}" == "h" ]]
+	then
+		height=$(identify -ping -format '%h' "$1")
+		targetHeight="$height"
+		targetWidth="$(echo "$height * ($aspectRatio)" | bc -l)"
+	else
+		echo "bad baseDim arg" >&2
+		echo "baseDim: $baseDim" >&2
+		exit 1
+	fi
+
+	# round using stupid shenanigans
+	targetHeight="$(echo "($targetHeight + 0.5) / 1" | bc)"
+	targetWidth="$(echo "($targetWidth + 0.5) / 1" | bc)"
+
+	output="${targetWidth}x${targetHeight}"
+
+	# echo "path: $path" >&2
+	# echo "baseDim: $baseDim" >&2
+	# echo "targetHeight: $targetHeight" >&2
+	# echo "targetWidth: $targetWidth" >&2
+	# echo "output: $output" >&2
+
+	echo "$output"
 }
 
 for arg in "$@"
@@ -99,6 +147,9 @@ do
 	elif [[ "$arg" == "--verbose" || "$arg" == "-v" ]]
 	then
 		optVerbose=1
+	elif [[ "$arg" == "--crop" ]]
+	then
+		optCrop=1
 	elif [[ "${arg:0:1}" == "-" ]]
 	then
 		echo "I have no idea what $arg means"
@@ -213,15 +264,11 @@ then
 # remove files from the list that have already been used
 elif [[ "$optNoModifyCache" == 0 && -f "$historyCachePath" ]]
 then
-	historyFiles="$(cat "$historyCachePath")"
-	filesMinusHistory="${files}"$'\n'"${historyFiles}"
-	
-	filesMinusHistory="$(echo "$filesMinusHistory" | sort | uniq -u)"
+	filesMinusHistory="$(echo "$files" | grep -xiv -f "$historyCachePath")"
 	newFilesCount="$(echo "$filesMinusHistory" | wc -l)"
 
 	# update the var unless that would result in no files
 	# then start the history over
-	# if [[ "$newFilesCount" -gt 0 ]]
 	if [[ "$newFilesCount" -eq 1 && -z "$filesMinusHistory" ]]
 	then
 		if [[ "$optVerbose" == 1 ]]
@@ -274,12 +321,19 @@ then
 fi
 
 paperPath="$(echo "$files" | shuf --random-source='/dev/urandom' -n 1)"
+basePaperPath="$paperPath"
 paperFileName="$(basename "$paperPath")"
 modDir="$cacheDir/mods"
+if type magick > /dev/null 2>&1
+then
+	magick="magick"
+else
+	magick="convert"
+fi
 
 if [[ "$optGlitch" == "1" ]]
 then
-	if ( type glitch_this >/dev/null 2>&1 )
+	if type glitch_this >/dev/null 2>&1
 	then
 		mkdir -p "$modDir"
 		paperFileName="$(basename "$paperPath")"
@@ -305,13 +359,13 @@ fi
 
 if [[ "$optGreyscale" == "1" ]]
 then
-	if ( type convert >/dev/null 2>&1 )
+	if type $magick >/dev/null 2>&1
 	then
 		mkdir -p "$modDir"
 		paperFileName="$(basename "$paperPath")"
 		paperPathMod="$modDir/grey_$paperFileName"
 
-		convert "$paperPath" -colorspace Gray "$paperPathMod"
+		$magick "$paperPath" -colorspace Gray "$paperPathMod"
 
 		paperPath="$paperPathMod"
 		paperFileName="$(basename "$paperPath")"
@@ -320,23 +374,39 @@ then
 	fi
 fi
 
+# TODO once we've handled the aspect ratio / resolution TODO merge crop and floater handling
 if [[ "$optFloater" == "1" ]]
 then
-	if ( type identify >/dev/null 2>&1 && type convert >/dev/null 2>&1 )
+	if type identify >/dev/null 2>&1 && type $magick >/dev/null 2>&1
 	then
-		aspectRatio="9/20"
-		width=$(identify -ping -format '%w' "${paperPath}")
-		targetHeight=$(echo "$width/($aspectRatio)" | bc -l)
-		targetHeight="${targetHeight%%.*}"
-		targetDimensions="${width}x${targetHeight}"
+		targetDimensions="$(getTargetDimensions "$paperPath" "width")"
+		echo "cropping to $targetDimensions"
 
 		mkdir -p "$modDir"
 		paperFileName="$(basename "$paperPath")"
 		paperPathMod="$modDir/resized_$paperFileName"
 
-		# convert -background "black" -resize "${targetDimensions}" -gravity Center -extent "$targetDimensions" +repage "$paperPath" "$paperPathMod"
-		# convert -background "black" -resize "${targetDimensions}" -gravity Center +repage "$paperPath" "$paperPathMod"
-		convert -background "black" -gravity Center -extent "$targetDimensions" +repage "$paperPath" "$paperPathMod"
+		$magick -background "black" -gravity Center "$paperPath" -extent "$targetDimensions" +repage "$paperPathMod"
+
+		paperPath="$paperPathMod"
+		paperFileName="$(basename "$paperPath")"
+	else
+		echo "imagemagick not installed"
+	fi
+fi
+
+if [[ "$optCrop" == "1" ]]
+then
+	if type identify >/dev/null 2>&1 && type $magick >/dev/null 2>&1
+	then
+		targetDimensions="$(getTargetDimensions "$paperPath" "height")"
+		echo "cropping to $targetDimensions"
+
+		mkdir -p "$modDir"
+		paperFileName="$(basename "$paperPath")"
+		paperPathMod="$modDir/crop_$paperFileName"
+
+		$magick -background "black" -gravity Center "$paperPath" -extent "$targetDimensions" +repage "$paperPathMod"
 
 		paperPath="$paperPathMod"
 		paperFileName="$(basename "$paperPath")"
@@ -360,7 +430,7 @@ then
 	
 	wtPaperPath="$paperPath"
 	# swap unix to windows path
-	if ( type cygpath >/dev/null 2>&1 )
+	if type cygpath >/dev/null 2>&1
 	then
 		wtPaperPath="$(cygpath -w "$wtPaperPath")"
 	fi
@@ -395,7 +465,7 @@ then
 		echo "$text" > "$xfceTermXmlPath"
 	fi
 
-	# if ( type xfconf-query >/dev/null 2>&1 )
+	# if type xfconf-query >/dev/null 2>&1
 	# then
 	# 	xfconf-query -c xfce4-terminal -p /background-image-file -s "$paperPath"
 	# fi
@@ -412,7 +482,8 @@ then
 fi
 
 echo "$paperFileName"
-echo "$paperPath" >> "$historyCachePath"
+# have to cache the *original* paper path, regardless of modifications after the fact
+echo "$basePaperPath" >> "$historyCachePath"
 
 # notify if appropriate and possible
 if [[ "$optNoNotify" == "0" ]]
