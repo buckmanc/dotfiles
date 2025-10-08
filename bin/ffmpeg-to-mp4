@@ -8,6 +8,8 @@ optDeleteSource=0
 optNoDeleteOld=0
 optDryRun=0
 optTestImage=0
+optCrf=24
+optNextIsCrf=0
 files=()
 
 for arg in "$@"
@@ -17,7 +19,11 @@ do
 		continue
 	fi
 
-	if [[ "$arg" =~ \-\-?f(orce)? ]]
+	if [[ "$optNextIsCrf" == 1 ]]
+	then
+		optCrf="$arg"
+		optNextIsCrf=0
+	elif [[ "$arg" =~ \-\-?f(orce)? ]]
 	then
 		optForce=1
 	elif [[ "$arg" =~ \-\-?q(uiet)? ]]
@@ -35,6 +41,9 @@ do
 	elif [[ "$arg" =~ \-\-test(\-image)? ]]
 	then
 		optTestImage=1
+	elif [[ "$arg" == "--crf" ]]
+	then
+		optNextIsCrf=1
 	elif [[ "$arg" == -* ]]
 	then
 		echo "i have no clue what $arg means"
@@ -43,7 +52,7 @@ do
 	then
 		# if we got a directory, grab any video files therein
 		# using file extensions instead of deeper inspection for performance
-		dirfiles="$(find "$arg" -type f -not -ipath '*/.git/*' -not -ipath '*/.internals/*' -regextype posix-extended -iregex '.+\.(mp4|3gp|avi|mpeg|mov|mkv|mpg|wmv|webm|ogv|avchd)' | sort)"
+		dirfiles="$(find "$arg" -type f -not -ipath '*/.git/*' -not -ipath '*/.internals/*' -regextype posix-extended -iregex '.+\.(mp4|3gp|avi|mpeg|mov|mkv|mpg|wmv|webm|ogv|avchd)' -size +0 | sort)"
 
 		while read -r dirFile
 		do
@@ -75,7 +84,6 @@ fi
 
 # lower crf number is high quality
 # requires experimentation to find "visual losslessnes"
-crf=24
 codec=H264
 preset=slower
 testTimeStamp="0:07"
@@ -86,6 +94,12 @@ makeTestImage(){
 	testDest="$2"
 	if [[ "$optTestImage" == 1 ]]
 	then
+		# skip test image in case of failure
+		if [[ ! -f "$testSource" ]]
+		then
+			return
+		fi
+
 		if [[ "$optDryRun" == 0 ]]
 		then
 			ffmpeg -i "$testSource" -ss "$testTimeStamp" -vframes 1 -y -loglevel error "$testDest"
@@ -107,11 +121,11 @@ do
 
 	srcFileNameNoExt="${srcFileName%.*}"
 	srcFileNameNoExtTrim="${srcFileNameNoExt% - Raw}"
-	destFileNameNoExt="${srcFileNameNoExtTrim}_${codec}_CRF_$crf"
+	destFileNameNoExt="${srcFileNameNoExtTrim}_${codec}_CRF_$optCrf"
 	destFileName="$destFileNameNoExt.mp4"
 	destPath="$destDir/$destFileName"
 
-	destFileNameOldNoExt="${srcFileNameNoExtTrim} - ${codec} CRF $crf"
+	destFileNameOldNoExt="${srcFileNameNoExtTrim} - ${codec} CRF $optCrf"
 	destFileNameOld="$destFileNameOldNoExt.mp4"
 	destPathOld="$destDir/$destFileNameOld"
 
@@ -124,7 +138,13 @@ do
 		continue
 	fi
 
+	skippySkip=0
 	if [[ -f "$destPath" || -f "$destPathOld" ]] && [[ "$optForce" == 0 ]]
+	then
+		skippySkip=1
+	fi
+
+	if [[ "$skippySkip" == 1 ]]
 	then
 		if [[ "$optQuiet" == 0 ]]
 		then
@@ -136,10 +156,9 @@ do
 				echo "already exists: $destFileNameOldNoExt"
 			fi
 		fi
-		continue
 	fi
 
-	otherOutputFiles="$(find "$destDir" -type f -iname "${srcFileNameNoExtTrim}*" | grep -iP "$formatRegex" || true)"
+	otherOutputFiles="$(find "$destDir" -type f -iname "${srcFileNameNoExtTrim}*" -not -iname "${destFileNameNoExt}*" -not -iname "${destFileNameOldNoExt}*" | grep -iP "$formatRegex" || true)"
 
 	if [[ "$optNoDeleteOld" == 0 ]]
 	then
@@ -162,11 +181,14 @@ do
 	testPathSource="$destDir/$srcFileNameNoExt.png"
 	testPathDest="$destDir/$destFileNameNoExt.png"
 
-	if [[ "${codec^^}" == "H264" ]]
+	if [[ "$skippySkip" == 1 ]]
+	then
+		: # no op
+	elif [[ "${codec^^}" == "H264" ]]
 	then
 		if [[ "$optDryRun" == 0 ]]
 		then
-			$progress ffmpeg -hide_banner -i "$src" -vcodec libx264 -crf "$crf" -vf yadif=1 -c:a aac -preset "$preset" "$destPath"
+			$progress ffmpeg -hide_banner -i "$src" -vcodec libx264 -crf "$optCrf" -vf yadif=1 -c:a aac -preset "$preset" "$destPath" || true
 
 			rm -rf "$testPathDest"
 		else
@@ -178,7 +200,7 @@ do
 	then
 		if [[ "$optDryRun" == 0 ]]
 		then
-			$progress ffmpeg -hide_banner -i "$src" -vcodec libx265 -crf "$crf"-tag:v hvc1 -vf yadif=1 -c:a aac -preset "$preset" "$destPath"
+			$progress ffmpeg -hide_banner -i "$src" -vcodec libx265 -crf "$optCrf"-tag:v hvc1 -vf yadif=1 -c:a aac -preset "$preset" "$destPath" || true
 
 			rm -rf "$testPathDest"
 		else
@@ -197,6 +219,7 @@ do
 		makeTestImage "$src" "$testPathSource"
 	fi
 
+	# do this part even if skipping
 	if [[ "$optDeleteSource" == 1 ]]
 	then
 		if [[ "$optDryRun" == 1 ]]
