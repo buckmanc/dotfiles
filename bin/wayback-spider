@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+set -e
+
+# TODO figure out 404's
+
+if ! type waybackpy > /dev/null 2>&1
+then
+	echo 'waybackpy not installed'
+	exit 1
+fi
+
+urls="$("$HOME/bin/wget-spider" "$@" | grep -Piv '\.(woff2|ttf)' | grep -Piv 'cdn\-cgi.+?email\-(protection|decode)')"
+
+if [[ -n "$urls" ]]
+then
+	urlCount="$(echo "$urls" | wc -l)"
+else
+	urlCount=0
+fi
+
+echo "$urlCount urls"
+
+while read -r url
+do
+	if [[ -z "$url" ]]
+	then
+		continue
+	fi
+
+	echo "--------------"
+	echo "Site URL:"
+	echo "$url"
+	waybackpy --url "$url" --save
+
+	# output="$(waybackpy --url "$url" --save 2>&1 | tee /dev/tty)"
+    #
+	# # an error occurred
+	# if echo "$output" | grep -Piq '^Traceback'
+	# then
+	# 	# but 404s are fine
+	# 	if echo "$output" | grep -Fiq 'failed to save and retrieve the archive'
+	# 	then
+	# 		:
+	# 	# break for anything else
+	# 	else
+	# 		exit 1
+	# 	fi
+	# fi
+
+	# wayback save limit is 15 urls per minute
+	# 60 / 15 = 4s
+	# but for some reason that still raises a rate limit error
+	sleep 30s
+
+done < <(echo "$urls")

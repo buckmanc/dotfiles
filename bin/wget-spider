@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+if [[ "$#" -eq 0 ]]
+then
+	echo 'need urls'
+	exit 1
+fi
+
+for arg in "$@"
+do
+	wget --spider -r -l30 "$arg" 2>&1 | grep -iP '^--' | grep -iPo 'http.+$' | perl -pe 's|/$||g' | sort -u
+done
