@@ -164,6 +164,7 @@
 	Cricut	en-US
 	cricut	en-US
 	cringey	en-US
+	Crossy Road	en-US
 	cubbies	en-US
 	cubby	en-US
 	cuirass	en-US
@@ -209,6 +210,7 @@
 	DQ	en-US
 	dropbox	en-US
 	duddy	en-US
+	dudette	en-US
 	Duggar	en-US
 	Duplo	en-US
 	Duplos	en-US
@@ -311,6 +313,9 @@
 	homeschoolers	en-US
 	homeschooling	en-US
 	homeworld	en-US
+	homie	en-US
+	homie's	en-US
+	homies	en-US
 	hotdog	en-US
 	hotdogs	en-US
 	https	en-US
@@ -505,6 +510,7 @@
 	PJs	en-US
 	Plandemic	en-US
 	plasticware	en-US
+	platformer	en-US
 	playthrough	en-US
 	pls	en-US
 	plushie	en-US
@@ -708,6 +714,7 @@
 	vibing	en-US
 	vids	en-US
 	Vischer	en-US
+	voxel	en-US
 	Vredefort	en-US
 	Wachovia	en-US
 	waifu	en-US
@@ -1165,6 +1172,7 @@
 	fyi	en-US
 	gratz	en-US
 	gtfo	en-US
+	gtg	en-US
 	idk	en-US
 	iirc	en-US
 	im	en-US
