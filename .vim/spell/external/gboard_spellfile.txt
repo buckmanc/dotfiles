@@ -67,6 +67,7 @@
 	Benadryl	en-US
 	berserker	en-US
 	bevy	en-US
+	bf	en-US
 	BGM	en-US
 	Bing	en-US
 	binky	en-US
@@ -180,6 +181,8 @@
 	dedupe	en-US
 	deets	en-US
 	demonological	en-US
+	deprioritize	en-US
+	deprioritized	en-US
 	Des	en-US
 	DeSantis	en-US
 	Deus	en-US
@@ -226,6 +229,7 @@
 	Elon	en-US
 	Elrod	en-US
 	else's	en-US
+	enby	en-US
 	ENT	en-US
 	esque	en-US
 	etsy	en-US
@@ -267,6 +271,7 @@
 	GDQ	en-US
 	geez	en-US
 	Gemma	en-US
+	gf	en-US
 	glyphs	en-US
 	gma	en-US
 	gobless	en-US
@@ -612,6 +617,7 @@
 	Shoney's	en-US
 	shoppy	en-US
 	si	en-US
+	Silksong	en-US
 	sippy	en-US
 	skelly	en-US
 	skibidi	en-US
@@ -2469,6 +2475,7 @@
 	VBS	en-US
 	vimrc	en-US
 	VPN	en-US
+	Wayback	en-US
 	WebEx	en-US
 	WebExs	en-US
 	xls	en-US

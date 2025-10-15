@@ -45,7 +45,7 @@ do
 	if [[ "${REPLY,,}" == "q" ]]
 	then
 		break
-	elif [[ "${REPLY,,}" == "s" ]]
+	elif [[ "${REPLY,,}" =~ [sn] ]]
 	then
 		continue
 	elif [[ "${REPLY,,}" == "d" ]]
