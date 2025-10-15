@@ -1,0 +1,160 @@
+#!/usr/bin/env bash
+
+set -e
+
+# http://fileformats.archiveteam.org/wiki/Netscape_bookmarks
+
+# TODO better handling of local urls
+# may have to provide a "urlDir" override
+# handle markdown urls by auto-converting with pandoc
+
+optUrlOverride=""
+optNextIsUrlOverride=0
+
+output="
+<!DOCTYPE NETSCAPE-Bookmark-file-1>
+    <Title>Bookmark Export</Title>
+    <H1>Bookmarks</H1>
+	<DL>
+"
+
+doWork(){
+	pageUrl="$1"
+
+	if [[ -n "$optUrlOverride" ]]
+	then
+		sourceUrl="$optUrlOverride"
+	else
+		sourceUrl="$pageUrl"
+	fi
+
+	domain="$(echo "$sourceUrl" | grep -iPo '^https?://[^/]+')"
+	urlDir="$(echo "$sourceUrl" | perl -p -e 's|[^/]+\.[^/]{1,5}$||g;' -e 's|/$||g;')"
+	urlName="$(echo "$sourceUrl" | perl -p -e 's|^https?://||g;' -e 's|/$||g;' -e 's|\.[^/\.]+$||g;')"
+
+	# echo "domain: $domain" >&2
+	# echo "urlDir: $urlDir" >&2
+
+	# handle both web and local files
+	if [[ "$pageUrl" == http* ]]
+	then
+		body="$(curl -sL "$pageUrl")"
+	else
+		body="$(cat "$pageUrl")"
+	fi
+
+	# convert markdown files to html for standardized parsing
+	if [[ "${pageUrl,,}" == *.md ]]
+	then
+		body="$(echo "$body" | pandoc --from gfm --to html --standalone --wrap=preserve	| sed -e 's|/index\.md|/|g' -e 's/\.md"/"/g')"
+	fi
+
+	tags="$(echo "$body" | grep -iPo '<(?:a|h\d)[^>]+>[^<]*<\/(?:a|h\d)>')"
+
+	echo "$urlName: $(echo "$tags" | wc -l) tags" >&2
+
+output+="
+
+    <DT><H2>$urlName</H2>
+    <DL><p>
+    <DT><H3>Misc</H3>
+    <DL><p>
+"
+
+	while read -r tag
+	do
+		# echo >&2
+		# echo "tag: $tag" >&2
+
+		if [[ "$tag" == *href* ]]
+		then
+			tag="$(echo "$tag" | perl -pe 's/class="[^"]+"//g')"
+			destUrl="$(echo "$tag" | grep -iPo '(?<=href=")[^"]+')"
+			modUrl=''
+
+			# echo "destUrl: $destUrl" >&2
+			
+			# skip gronk
+			if [[ "$destUrl" == *#* || "$destUrl" =~ ^[\./]+$ ]]
+			then
+				continue
+
+			# root links
+			elif [[ "$destUrl" == /* ]]
+			then
+				modUrl="$domain$destUrl"
+				
+			# relative links
+			elif [[ "$destUrl" == ../* ]]
+			then
+				modUrl="$urlDir/$destUrl"
+				while [[ "$modUrl" == *../* ]]
+				do
+					modUrl="$(echo "$modUrl" | perl -pe 's|([^/]+[^/\.]/\.\./)+||g')"
+				done
+			elif [[ "$destUrl" != http* ]]
+			then
+				modUrl="$urlDir/$destUrl"
+			fi
+
+			if [[ -n "$modUrl" ]]
+			then
+				# rebuild the tag
+				tag="$(echo "$tag" | perl -pe 's|(?<=href=")[^"]+|'"$modUrl|g")"
+
+				# echo "modUrl: $modUrl" >&2
+				# echo "mod tag: $tag" >&2
+			fi
+
+			output+="<DT>$tag"$'\n'
+		elif [[ "$tag" =~ \<h[0-9] ]]
+		then
+			tag="$(echo "$tag" | perl -p -e 's|<[hH]\d|<H3|g;' -e 's|</[hH]\d|</H3|g;')"
+
+			# TODO handle levels and make sub dirs
+			output+="</DL><p>"$'\n'
+			output+=$'\n'
+			output+="<DT>$tag"$'\n'
+			output+="<DL><p>"$'\n'
+		else
+			echo "no idea what kind of tag this is"
+			echo "$tag"
+			exit 1
+		fi
+		
+	done < <(echo "$tags")
+
+	output+="</DL>"$'\n'
+	output+="</DL>"$'\n'
+}
+
+for arg in "$@"
+do
+	if [[ -z "$arg" ]]
+	then
+		continue
+	fi
+
+	if [[ "$optNextIsUrlOverride" == 1 ]]
+	then
+		optUrlOverride="$arg"
+		optNextIsUrlOverride=0
+	elif [[ "$arg" == "--url-override" ]]
+	then
+		optNextIsUrlOverride=1
+	elif [[ "$arg" == -* ]]
+	then
+		echo "i have no clue what $arg means"
+		exit 1
+	else
+		doWork "$arg"
+	fi
+done
+
+output+="</DL>"
+
+# remove empty dirs
+# TODO will have to mod if subdir support is added
+output="$(echo "$output" | perl -0777pe 's|<DT><[hH]\d.+[\r\n]+<DL>.*[\r\n]+</DL>.*[\r\n]+||g')"
+
+echo "$output"
