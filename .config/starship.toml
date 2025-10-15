@@ -212,6 +212,9 @@ use_os_path_sep = false
 "Program Files"	= ""
 " (x86)"	= "󰻟"
 " (x64)"	= "󰻠"
+"sync"		= "󰓦"
+"Sync"		= "󰓦"
+"SYNC"		= "󰓦"
 "spotify_playlist_generator"	= ""
 "TopMons"	= "󰐝"
 "Pokemon"	= "󰐝"
@@ -305,7 +308,7 @@ vlc			= "󰕼"
 "email"		= "󰇮"
 "autohotkey"= ""
 "power"		= "⏻"
-
+"tolkien"	= "󱐍"
 
 [dotnet]
 style = 'dev'

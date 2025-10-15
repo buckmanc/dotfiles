@@ -26,4 +26,12 @@ cp "${PROGRAMFILES} (x86)/GnuWin32/bin/tree.exe" "${PROGRAMFILES}/Git/usr/bin/"
 # winget install microsoft.visualstudio.2022.Professional
 # winget install microsoft.visualstudio.2022.Community
 
+# TODO install missing bash apps
+# www2.futureware.at/~nickoe/msys2-mirror/msys/x86_64
+# to ~/.local/bin
+# bc
+# dc
+# rsync
+# msys-xxhash-o.dll
+
 # TODO schtasks nerdmoon install; schtasks -create -sc hourly -tn nerdmoon -tr ~/bin/nerdmoon
