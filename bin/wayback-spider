@@ -2,15 +2,13 @@
 
 set -e
 
-# TODO figure out 404's
-
 if ! type waybackpy > /dev/null 2>&1
 then
 	echo 'waybackpy not installed'
 	exit 1
 fi
 
-urls="$("$HOME/bin/wget-spider" "$@" | grep -Piv '\.(woff2|ttf)' | grep -Piv 'cdn\-cgi.+?email\-(protection|decode)')"
+urls="$("$HOME/bin/wget-spider" "$@" | grep -Piv '\.(woff2|ttf)' || true)"
 
 if [[ -n "$urls" ]]
 then
@@ -19,38 +17,108 @@ else
 	urlCount=0
 fi
 
+echo
 echo "$urlCount urls"
+
+logPath="$HOME/.cache/wayback-spider.log"
+mkdir -p "$HOME/.cache"
+
+if [[ -f "$logPath" ]]
+then
+	fileModTime=$(stat -c '%Y' "$logPath")
+	currentTime=$(date +%s)
+	timeDifference=$((currentTime - fileModTime))
+
+	# delete the log if it's older than x hours
+	if [[ "$timeDifference" -gt $((60 * 60 * 24)) ]]
+	then
+		rm "$logPath"
+	# otherwise, remove recently checked urls from the list of urls
+	# this gives makes recovering failed sessions a little easier
+	else
+		echo "removing recently checked urls..."
+		urls="$(echo "$urls" | grep -Fivx -f "$logPath")"
+
+		if [[ -n "$urls" ]]
+		then
+			newUrlCount="$(echo "$urls" | wc -l)"
+		else
+			newUrlCount=0
+		fi
+
+		echo "$newUrlCount urls"
+		i=$((urlCount-newUrlCount))
+	fi
+fi
+
+echo '----------'
+
+if [[ -z "$i" ]]
+then
+	i=0
+fi
 
 while read -r url
 do
+	i=$((i+1))
+
 	if [[ -z "$url" ]]
 	then
 		continue
 	fi
 
-	echo "--------------"
-	echo "Site URL:"
-	echo "$url"
-	waybackpy --url "$url" --save
+	perc="$(echo "scale=4; ($i / $urlCount) * 100" | bc -l | perl -pe 's/0+$//g')%"
 
-	# output="$(waybackpy --url "$url" --save 2>&1 | tee /dev/tty)"
-    #
-	# # an error occurred
-	# if echo "$output" | grep -Piq '^Traceback'
-	# then
-	# 	# but 404s are fine
-	# 	if echo "$output" | grep -Fiq 'failed to save and retrieve the archive'
-	# 	then
-	# 		:
-	# 	# break for anything else
-	# 	else
-	# 		exit 1
-	# 	fi
-	# fi
+	domain="$(echo "$url" | grep -iPo 'https?://[^/]+')"
+
+	formattedUrl="$url"
+	formattedUrl="${formattedUrl/#$domain\//}"
+	formattedUrl="${formattedUrl/#http*:\/\//}"
+
+	echo -e "\r   ${formattedUrl}\033[K"
+	echo -n "$perc"
+	output="$(waybackpy --url "$url" --save 2>&1 || true)"
+	lastLine="$(echo "$output" | tail -n1)"
+	exceptions="$(echo "$output" | grep -iP 'exception' || true)"
+
+	if [[ -n "$exceptions" ]]
+	then
+		echo
+		echo "$exceptions"
+		iExceptions=$((iExceptions+1))
+
+		if [[ "$iExceptions" -ge 3 ]]
+		then
+			echo "exiting due to $iExceptions consecutive exceptions"
+			exit 1
+		fi
+	
+	elif [[ "${output,,}" == *"archive url:"* && "${output,,}" == *"cached save:"* && "${lastLine,,}" =~ (true|false) ]]
+	then
+		iExceptions=0
+		echo -ne "\033[1A\r✓"
+		if [[ "${lastLine,,}" == "false" ]]
+		then
+			echo -n "+"
+		fi
+			echo
+	else
+		echo
+		echo "unexpected output format from waybackpy:"
+		echo "$output"
+		exit 1
+	fi
+
+	if [[ "$iExceptions" -eq 0 ]]
+	then
+		echo "$url" >> "$logPath"
+	fi
 
 	# wayback save limit is 15 urls per minute
 	# 60 / 15 = 4s
 	# but for some reason that still raises a rate limit error
-	sleep 30s
+	iSeconds="$((60 * (iExceptions + 1)))s"
+	echo -n "$perc waiting ${iSeconds}"
+	sleep "$iSeconds"
 
 done < <(echo "$urls")

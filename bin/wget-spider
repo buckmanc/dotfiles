@@ -8,5 +8,13 @@ fi
 
 for arg in "$@"
 do
-	wget --spider -r -l30 "$arg" 2>&1 | grep -iP '^--' | grep -iPo 'http.+$' | perl -pe 's|/$||g' | sort -u
+	output="$(wget --spider -r -l30 "$arg" 2>&1)"
+	urls="$(echo "$output" | grep -iP '^--' | grep -iPo 'http.+$' | perl -pe 's|/$||g;' | sort -u)"
+
+	brokenLinks="$(echo "$output" | grep -ziPo 'found \d+ broken links[.\r\n\s\S]+?FINISHED' | grep -iPoa 'http.+$' | perl -pe 's|/$||g;')"
+
+	urls="$(echo "$urls" | grep -vFix -f <(echo "$brokenLinks"))"
+
+	echo "$urls"
+
 done

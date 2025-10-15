@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# sort by file path rather than git logic
+git status -s "$@" | sort --field-separator=@ -k1.4

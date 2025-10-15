@@ -89,6 +89,11 @@ preset=slower
 testTimeStamp="0:07"
 formatRegex="[ _\-]{1,3}H26\d[ _]CRF[ _]\d{1,2}\.mp4$"
 
+# stackoverflow.com/a/296135731995812
+quoteRe() {
+	sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a\'$'\n''\\n' <<<"$1" | tr -d '\n'
+}
+
 makeTestImage(){
 	testSource="$1"
 	testDest="$2"
@@ -119,9 +124,28 @@ do
 	destDir="$(dirname "$src")"
 	srcFileName="$(basename "$src")"
 
+	srcExt="${src##*.}"
+	srcExt="${srcExt,,}"
 	srcFileNameNoExt="${srcFileName%.*}"
 	srcFileNameNoExtTrim="${srcFileNameNoExt% - Raw}"
-	destFileNameNoExt="${srcFileNameNoExtTrim}_${codec}_CRF_$optCrf"
+
+	dupeCheckPath="$destDir/${srcFileNameNoExt}."
+	dupeCheckPath="$(echo "$dupeCheckPath" | perl -pe 's|^\./||g')"
+	# echo "dupeCheckPath: $dupeCheckPath"
+	# echo "files:"
+	# printf '%s\n' "${files[@]}"
+
+	dupeCheckCount="$(printf '%s\n' "${files[@]}" | perl -pe 's|^\./||g' | grep -Fc "$dupeCheckPath")"
+
+	# if there is likely to be an output collision, add the source file ext to the filename
+	if [[ "$dupeCheckCount" -ge 2 ]]
+	then
+		dupeClause="${srcExt}_"
+	else
+		dupeClause=""
+	fi
+
+	destFileNameNoExt="${srcFileNameNoExtTrim}_${codec}_${dupeClause}CRF_$optCrf"
 	destFileName="$destFileNameNoExt.mp4"
 	destPath="$destDir/$destFileName"
 
@@ -158,7 +182,9 @@ do
 		fi
 	fi
 
-	otherOutputFiles="$(find "$destDir" -type f -iname "${srcFileNameNoExtTrim}*" -not -iname "${destFileNameNoExt}*" -not -iname "${destFileNameOldNoExt}*" | grep -iP "$formatRegex" || true)"
+	srcFileBaseRegex="$(quoteRe "$srcFileNameNoExtTrim")$formatRegex"
+
+	otherOutputFiles="$(find "$destDir" -type f -iname "${srcFileNameNoExtTrim}*" -not -iname "${destFileNameNoExt}*" -not -iname "${destFileNameOldNoExt}*" | grep -iP "$srcFileBaseRegex" || true)"
 
 	if [[ "$optNoDeleteOld" == 0 ]]
 	then
