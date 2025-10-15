@@ -22,6 +22,7 @@ then
 	exit
 fi
 
+# find the first playing player
 while read -r thisPlayer
 do
 	status="$(playerctl --player "$thisPlayer" status)"
@@ -33,22 +34,22 @@ do
 
 done < <(echo "$players")
 
-# return blank if nothing's playing
+# return nopers for nopers
 if [[ -z "$player" ]]
 then
-	echo
+	echo '||'
 	exit
 # use a different format for VLC
 elif [[ "${player,,}" == "vlc"* ]]
 then
-	format="{{vlc:nowplaying}} - {{title}}"
+	format="{{vlc:nowplaying}} - {{artist}} - {{title}}"
 # format for spotify and other players
 else
 	format="{{artist}} - {{title}}"
 fi
 
 # get the status string
-nowPlaying="$(playerctl --player "$player" metadata --format "$format" | perl -p -e 's/( \- |[Ss]tream [Nn]ame)+$//g;' -e 's/^( \- )+//g;')"
+nowPlaying="$(playerctl --player "$player" metadata --format "$format" | perl -p -e 's/( \- |[Ss]tream [Nn]ame)+$//g;' -e 's/^( \- )+//g;' -e 's/( \- ){2,}/ - /g;')"
 
 # echo "player: $player"
 # echo "nowPlaying: $nowPlaying"
@@ -65,7 +66,7 @@ if [[ -z "$nowPlaying" ]]
 then
 	nowPlaying="$(playerctl --player "$player" metadata --format "{{xesam:url}}")"
 
-	if [[ -e "$HOME/bin/urldecode" ]]
+	if [[ -n "$nowPlaying" && -x "$HOME/bin/urldecode" ]]
 	then
 		nowPlaying="$(echo "$nowPlaying" | "$HOME/bin/urldecode")"
 	fi
@@ -81,7 +82,7 @@ fi
 # if the nowPlaying string is still empty, back out
 if [[ -z "$nowPlaying" ]]
 then
-	echo
+	echo '?'
 	exit
 fi
 
@@ -122,7 +123,13 @@ then
 		echo "$lastPlaying" > "$lastPlayingPath"
 	fi
 
-	echo "$xspotNowPlaying"
+	# fallback to local now playing in case of borko borko
+	if [[ -n "$xspotNowPlaying" ]]
+	then
+		echo "$xspotNowPlaying"
+	else
+		echo "$nowPlaying"
+	fi
 else
 	# for other players, just use the playerctl output
 	echo "$nowPlaying"
