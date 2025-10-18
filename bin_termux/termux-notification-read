@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
 lastHeader=''
+lastContent=''
 optAll=0
-# reverseJqArg=''
 reverseJqArg=" | reverse"
+# ltr mark, pop directional formatting, ltr embedding
+dumpCharRegex='(\xE2\x80\x8E|\xE2\x80\xAC|\xE2\x80\xAA)'
+
 for arg in "$@"
 do
 	if [[ "$arg" == "--all" || "$arg" == "-a" ]]
@@ -57,15 +60,15 @@ while read -r json
 do
 	packageName="$(echo "$json" | jq -r '.packageName')"
 	packageName="$(echo "$packageName" | perl -p \
-		-e 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec|cliffweitzman|jrtstudio|lockdown)\.)+//g;' \
+		-e 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec|cliffweitzman|jrtstudio|lockdown|scee)\.)+//g;' \
 		-e 's/^(facebook.orca)$/messenger/g;' \
 		-e 's/^(zhiliaoapp.musically)$/tiktok/g;' \
 		-e 's/^(gm)$/gmail/g;' \
 		-e 's/(\.(orca|android|frontpage|application|mShop|shopping|katana|music))+$//g;' \
 		| cat)"
 
-	title="$(echo "$json" | jq -r '.title')"
-	content="$(echo "$json" | jq -r '.content')"
+	title="$(echo "$json" | jq -r '.title' | perl -pe "s/$dumpCharRegex//g")"
+	content="$(echo "$json" | jq -r '.content' | perl -pe "s/$dumpCharRegex//g")"
 
 	if [[ "${packageName,,}" == "${title,,}" ]]
 	then
@@ -84,7 +87,7 @@ do
 	# things you might want to check once
 	elif [[ "$optAll" == 0 ]]
 	then
-		if [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok|weather|truebill)$ ]]
+		if [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok|weather|truebill|walmart|jimmyjohns|psxandroid|youtube|vvm|scloud)$ ]]
 		then
 			continue
 		elif [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* && "${content}" =~ \.(jpe?g|png)$ ]]
@@ -102,10 +105,20 @@ do
 		elif [[ "$packageName" == "messaging" ]] && [[ "${content,,}" =~ (text|reply)(\ \"?(start|help)\"?\ for\ (help|consent)\ and)?\ \"?(stop|cancel)\"?\ to\ (cancel|stop|opt[\ \-]out|unsubscribe|unsub|decline) ]]
 		then
 			continue
+		elif [[ "$packageName" == "messaging" && "${content,,}" == *department* ]]
+		then
+			firstSentence="$(echo "$content" | grep -iPo '^[^\.\r\n]+\.' | head -n1)"
+			if echo "$firstSentence" | grep -qiP 'this is .+ from the .+ department'
+			then
+				continue
+			fi
 		elif [[ "$packageName" == "instagram" ]] && [[ "${content,,}" == *'who you might know, is on instagram'* || "${content,,}" == *"reposted"* ]]
 		then
 			continue
 		elif [[ "$packageName" == "youtube" ]] && [[ "${content,,}" == 'for you:'* ]]
+		then
+			continue
+		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" == *'see where your package is'* ]]
 		then
 			continue
 		elif [[ "$packageName" == "nextdoor" ]] && [[ "${content,,}" == *'reposted'* || "${title,,}" == "updates you may have missed" ]]
@@ -146,10 +159,25 @@ do
 
 	if [[ -n "$content" ]]
 	then
+		if [[ "$header" == "$lastHeader" ]]
+		then
+			# if the previous content starts with this one, skip
+			if [[ "$lastContent" == "$content"* ]]
+			then
+				continue
+			# if this content starts with the previous content, remove the previous content
+			elif [[ -n "$lastContent" && "$content" == "$lastContent"* ]]
+			then
+				# gotta manually re-add that trailing new line because "echo" removes it
+				output="$(echo "$output" | perl -0777pe 's/(?<=\n)[^\n]+\n$/\n\n/g')"$'\n'
+			fi
+		fi
 		output+="$content"$'\n'
+
+		lastContent="$content"
 	fi
 	
-done < <( echo "$jsonList" ) 
+done < <( echo "$jsonList" )
 
 output="$(echo "$output" | perl -0777pe 's/(^[\s-]+|[\s-]+$)//g')"
 
