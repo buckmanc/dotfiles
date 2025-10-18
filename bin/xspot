@@ -41,30 +41,50 @@ tokenPath="$HOME/.cache/xspot_tokens.json"
 # 	fi
 # }
 
-currentNameExp='([.item.artists[].name] | join(", ")) + " - " + .item.name + " (" + .item.album.release_date[0:4] + ")"'
-currentIdExp=".item.id"
-currentBothExp="$currentIdExp + \"|\" + $currentNameExp"
-currentUrlExp=".item.external_urls.spotify"
 get_current(){
 	typey="$1"
+
+	# one url hit
+	json="$(curl -s -X GET "https://api.spotify.com/v1/me/player/currently-playing" "${headers[@]}")"
+
+	# parse them deets
+	trackName="$(echo "$json" | jq -r '([.item.artists[].name] | join(", ")) + " - " + .item.name + " (" + .item.album.release_date[0:4] + ")"')"
+	trackId="$(echo "$json"   | jq -r '.item.id')"
+	trackUrl="$(echo "$json"  | jq -r '.item.external_urls.spotify')"
+
+	# append a heart to the name if
+	# 1) returning the name and
+	# 2) track is liked
+	if [[ "${typey,,}" == "details" || "${typey,,}" == "name" ]]
+	then
+		trackLiked="$(get_like_status "$trackId")"
+		if [[ "$trackLiked" == 1 ]]
+		then
+			trackName+=" ♥"
+		fi
+	fi
+
+	# echo "typey: $typey"
+	# echo "trackId: $trackId"
+	# echo "trackLiked: $trackLiked"
+
+	# return depending on what was asked for
 	if [[ "${typey,,}" == "name" ]]
 	then
-		jqExp="$currentNameExp"
+		echo "$trackName"
 	elif [[ "${typey,,}" == "id" ]]
 	then
-		jqExp="$currentIdExp"
-	elif [[ "${typey,,}" == "both" ]]
+		echo "$trackId"
+	elif [[ "${typey,,}" == "details" ]]
 	then
-		jqExp="$currentBothExp"
+		echo "${trackId}|${trackName}|${trackLiked}"
 	elif [[ "${typey,,}" == "url" ]]
 	then
-		jqExp="$currentUrlExp"
+		echo "$trackUrl"
 	else
 		echo "invalid get_current type"
 		exit 1
 	fi
-
-	curl -s -X GET "https://api.spotify.com/v1/me/player/currently-playing" "${headers[@]}" | jq -r "$jqExp"
 }
 
 play_toggle(){
@@ -112,12 +132,35 @@ skip_previous(){
 	curl -s -X POST "https://api.spotify.com/v1/me/player/previous" "${headers[@]}" --header "Content-Length:0" > /dev/null &
 }
 
+get_like_status(){
+
+	trackUris="$1"
+
+	json="$(curl -s -X GET "https://api.spotify.com/v1/me/tracks/contains?ids=$trackUris" "${headers[@]}")"
+	boolString="$(echo "$json" | jq 'all(.[]; . == true) and .[0] == true')"
+
+	# echo "json: $json"
+	# echo "boolString: $boolString"
+
+	if [[ "$boolString" == "true" ]]
+	then
+		echo 1
+	elif [[ "$boolString" == "false" ]]
+	then
+		echo 0
+	else
+		echo
+	fi
+}
+
 like_track(){
-	alreadyLiked=0
 	alreadyLikedString=""
 
 	trackUris="$(echo "$1" | cut -d "|" -f 1)"
 	trackTitle="$(echo "$1" | cut -d "|" -f 2)"
+	trackLiked="$(echo "$1" | cut -d "|" -f 3)"
+
+	# echo "like_track arg: $1"
 
 	# null coalesce the track name
 	# won't occur without external scripting
@@ -128,17 +171,17 @@ like_track(){
 
 	# can't skip this check
 	# otherwise it will scoot likes to the top if already liked
-	json="$(curl -s -X GET "https://api.spotify.com/v1/me/tracks/contains?ids=$trackUris" "${headers[@]}")"
-	if [[ "$(echo "$json" | jq 'all(.[]; . == true) and .[0] == true')" == "true" ]]
+	if [[ -z "$trackLiked" ]]
 	then
-		alreadyLiked=1
-		alreadyLikedString="already "
+		trackLiked="$(get_like_status "$trackUris")"
 	fi
 
 	# like the track
-	if [[ "$alreadyLiked" == 0 ]]
+	if [[ "$trackLiked" == 0 ]]
 	then
 		curl -s -X PUT "https://api.spotify.com/v1/me/tracks?ids=$trackUris" "${headers[@]}" --header "Content-Length:0"
+	else
+		alreadyLikedString="already "
 	fi
 
 	echo "${alreadyLikedString}liked $trackTitle"
@@ -414,8 +457,8 @@ fi
 
 if [[ "$optLike" == 1 ]] && [[ -z "$likeTrack" ]]
 then
-	# grab current track id and name in one fell swoop unless one has been provided
-	likeTrack="$(get_current "both")"
+	# grab current track id and details in one fell swoop unless an id has been provided
+	likeTrack="$(get_current "details")"
 fi
 
 if [[ "$optDeviceToggle" == 1 ]]
