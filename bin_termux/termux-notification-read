@@ -90,7 +90,7 @@ do
 		if [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok|weather|truebill|walmart|jimmyjohns|psxandroid|youtube|vvm|scloud)$ ]]
 		then
 			continue
-		elif [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* && "${content}" =~ \.(jpe?g|png)$ ]]
+		elif [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* ]] && [[ "${content,,}" =~ \.(jpe?g|png)$ || "${content,,}" =~ ^http.+(youtu\.?be|tiktok) ]]
 		then
 			continue
 		elif [[ "$packageName" == "snapchat" ]] && [[ "${content,,}" == *'added a video to spotlight!' || "${content,,}" == *"is on snapchat!" || "${content,,}" == *"added to their story"* || "${content,,}" == "updating messages"* ]]

@@ -180,6 +180,14 @@ like_track(){
 	if [[ "$trackLiked" == 0 ]]
 	then
 		curl -s -X PUT "https://api.spotify.com/v1/me/tracks?ids=$trackUris" "${headers[@]}" --header "Content-Length:0"
+
+		# if the user happens to be also using the "now playing" script
+		# delete the track file to make it refresh with the "liked" indicator
+		nowPlayingLogPath="/tmp/lastplaying"
+		if [[ -f "$nowPlayingLogPath" ]]
+		then
+			rm "$nowPlayingLogPath"
+		fi
 	else
 		alreadyLikedString="already "
 	fi

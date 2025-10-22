@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+set -e
+
+optTest=0
+cacheDir="$HOME/.cache/txt"
+
+files=( "$@" )
+
+if [[ "${#files[@]}" -eq 0 ]]
+then
+	files=()
+	while read -r file
+	do
+		if [[ -z "$file" ]]
+		then
+			continue
+		fi
+
+		files+=("$file")
+	done < <(find "$cacheDir" -type f)
+fi
+
+if [[ "${#files[@]}" -eq 0 ]]
+then
+	echo "no files found"
+	exit 1
+fi
+
+contactsJson="$(termux-contact-list)"
+
+for file in "${files[@]}"
+do
+	if [[ -z "$file" ]]
+	then
+		continue
+	fi
+
+	fileName="$(basename "$file")"
+	fileName="${fileName%%.*}"
+	fileName="${fileName,,}"
+	fileName="$(echo -n "$fileName")"
+	dir="$(dirname "$file")"
+
+	if [[ -z "$fileName" ]]
+	then
+		continue
+	fi
+
+	fileText="$(cat "$file")"
+
+	if [[ -z "$fileText" ]]
+	then
+		continue
+	elif echo "$fileText" | grep -Piqz '^[\s\r\n]+$'
+	then
+		continue
+	fi
+
+	echo -n "$fileName"
+
+	# if the filename is number, use it
+	if [[ "$fileName" =~ ^[0-9]+$ ]]
+	then
+		number="$fileName"
+	# otherwise, find a matching number from the contacts
+	else
+		number="$(echo "$contactsJson" | jq -r ".[] | select(.name | ascii_downcase | contains(\"$fileName\")) | .number")"
+	fi
+
+	numberCount="$(echo "$number" | wc -l)"
+
+	# we should have found *exactly one* number
+	if [[ -z "$number" ]]
+	then
+		echo
+		echo "no matching numbers found"
+		exit 1
+	elif [[ "$numberCount" -eq 0 ]]
+	then
+		echo
+		echo "too many matching numbers found"
+		exit 1
+	elif ! echo -n "$number" | grep -Piq '^[\d\.\-\(\) \+]+$'
+	then
+		echo
+		echo "invalid number found: $number"
+		exit 1
+	fi
+
+	number="$(echo "$number" | perl -pe 's/[\.\-\(\) \+]+//g')"
+
+	if [[ "$optTest" == 0 ]]
+	then
+		echo "$fileText" | termux-sms-send -n "$number"
+		echo " sent to $number"
+
+		if [[ "$dir" -ef "$cacheDir" ]]
+		then
+			rm "$file"
+		fi
+	else
+		echo " would have sent to $number"
+	fi
+
+done
