@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+
+set -e
+
+# for safe automation of keeping git repos up-to-date
+# with concise output
+
+inDir="$1"
+badHosts=()
+
+if [[ -z "$inDir" ]]
+then
+	inDir="."
+fi
+
+if [[ ! -d "$inDir" ]]
+then
+	echo "bad dir"
+	exit 1
+fi
+
+find "$inDir" -maxdepth 3 -type d -iname '.git' | while read -r gitDir
+do
+	repoDir="$(dirname "$gitDir")"
+	repoDirName="$(basename "$repoDir")"
+	userOutput=''
+
+	echo -n "${repoDirName}... "
+
+	# if there are any known bad hosts already
+	# compare them against this repo's remote before actually trying to pull
+	if [[ "${#badHosts[@]}" -gt 0 ]]
+	then
+		remoteUrl="$(git -C "$repoDir" --remote -v | head -n 1)"
+		for badHost in "${badHosts[@]}"
+		do
+			if [[ "${remoteUrl,,}" == *"${badHost,,}" ]]
+			then
+				userOutput="bad host"
+				break
+			fi
+		done
+	fi
+
+	if [[ -n "$userOutput" ]]
+	then
+		echo "$userOutput"
+		continue
+	fi
+
+	# pull and provide more concise results
+	if pullOutput="$(git -C "$repoDir" pull --ff-only 2>&1)"
+	then
+		if [[ "${pullOutput,,}" == "already up to date"* ]]
+		then
+			userOutput="already gtg"
+		else
+			userOutput="updated"
+		fi
+	elif [[ "${pullOutput,,}" == *"please specify which branch"* ]]
+	then
+		userOutput="branch mismatch"
+	elif [[ "${pullOutput,,}" == *"would be overwritten by the merge"* ]]
+	then
+		userOutput="non-ff"
+	# elif [[ "${pullOutput,,}" == *"could not resolve host"* ]]
+	elif badHost="$(echo "$pullOutput" | grep -iPo '(?<=Could not resolve host: ).+$')"
+		then
+		userOutput="bad host"
+		badHosts+=("$badHost")
+	elif [[ "${pullOutput,,}" == *"fatal: unable to access"* ]]
+	then
+		userOutput="no access"
+	elif [[ "${pullOutput,,}" == *"shallow roots"* ]]
+	then
+		userOutput="shallow"
+	else
+		userOutput="uknown error"
+	fi
+
+	echo "$userOutput"
+done
