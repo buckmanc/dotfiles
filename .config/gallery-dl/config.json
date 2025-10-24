@@ -9,7 +9,7 @@
 		"verify": true,
 		"fallback": true,
 
-		"path-restrict": "auto",
+		"path-restrict": "/\\\\|<>:;\"?~!@#$%^&*+()\\[\\]{}",
 		"path-replace": "_",
 		"path-remove": "\\u0000-\\u001f\\u007f",
 		"path-strip": "auto",
@@ -22,10 +22,10 @@
 			"jif" : "jpg",
 			"jfi" : "jpg"
 		},
-		"filename":"{date:%Y-%m-%d} {id}.{extension}",
-		"directory":["{date:%Y-%m-%d} {title} by {username}"],
+		"filename":"{title|tag_string_character}_{id}_{date:%Y-%m-%d}_by_{tag_string_artist|username|user[name]}.{extension}",
+		"directory":["{tag_string_artist|username|user[name]}"],
 		"facebook":{
-			"cookies": "$HOME/.cache/cookies.txt"
+			"filename":"{date:%Y-%m-%d} {id}.{extension}"
 		},
 		"last-line-with-no-comma":true
 	}

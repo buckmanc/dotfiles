@@ -65,7 +65,6 @@ then
 
 	# TODO log what files are already in the folder so new files can be sanitized
 
-	# download big teeturtle images
 	if echo "$domain" | grep -Piq '(youtube|youtu\.be|tiktok)'
 	then
 		# exec bash
@@ -97,7 +96,7 @@ then
 		curl -O "$modUrl2" --output-dir "$outDir"
 	# download images off this unknown page
 	else
-		if ! gallery-dl -D "$outDir" "$1"
+		if ! "$HOME/bin/xgallery-dl" -d "$outDir" "$1"
 		then
 			echo "Could not download with gallery-dl. Falling back to generic downloader."
 			$HOME/bin/download-page-images "$1" "$outDir"

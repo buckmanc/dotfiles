@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# use ~/.config/gallery-dl/config.json for config
+# use --list-keywords to show what dir/file name fields are available for this url
+# the main purpose of this script is to provide an optional private config path that can be kept out of source control
+# for things like cookies and api keys
+
+# this would force gallery-dl back to the foreground, but it doesn't work in a script
+# gallery-dl "$@" ; fg
+
+privateConfigPath="$HOME/.config/gallery-dl/private.json"
+
+args=()
+
+if [[ -f "$privateConfigPath" ]]
+then
+	args+=(--config "$privateConfigPath")
+fi
+
+gallery-dl "${args[@]}" "$@"
