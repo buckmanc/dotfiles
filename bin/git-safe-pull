@@ -31,12 +31,12 @@ do
 	# compare them against this repo's remote before actually trying to pull
 	if [[ "${#badHosts[@]}" -gt 0 ]]
 	then
-		remoteUrl="$(git -C "$repoDir" --remote -v | head -n 1)"
+		remoteUrl="$(git -C "$repoDir" remote -v | head -n 1)"
 		for badHost in "${badHosts[@]}"
 		do
-			if [[ "${remoteUrl,,}" == *"${badHost,,}" ]]
+			if [[ "${remoteUrl,,}" == *"${badHost,,}"* ]]
 			then
-				userOutput="bad host"
+				userOutput="known bad host"
 				break
 			fi
 		done
@@ -51,7 +51,7 @@ do
 	# pull and provide more concise results
 	if pullOutput="$(git -C "$repoDir" pull --ff-only 2>&1)"
 	then
-		if [[ "${pullOutput,,}" == "already up to date"* ]]
+		if [[ "${pullOutput,,}" == *"already up to date"* ]]
 		then
 			userOutput="already gtg"
 		else
@@ -59,8 +59,14 @@ do
 		fi
 	elif [[ "${pullOutput,,}" == *"please specify which branch"* ]]
 	then
-		userOutput="branch mismatch"
-	elif [[ "${pullOutput,,}" == *"would be overwritten by the merge"* ]]
+		remoteUrl="$(git -C "$repoDir" remote -v | head -n 1)"
+		if [[ -z "$remoteUrl" ]]
+		then
+			userOutput="no remote"
+		else
+			userOutput="branch mismatch"
+		fi
+	elif [[ "${pullOutput,,}" == *"would be overwritten by merge"* ]]
 	then
 		userOutput="non-ff"
 	# elif [[ "${pullOutput,,}" == *"could not resolve host"* ]]
@@ -68,6 +74,9 @@ do
 		then
 		userOutput="bad host"
 		badHosts+=("$badHost")
+	elif [[ "${pullOutput,,}" == *"does not appear to be a git"* ]] || [[ "${pullOutput,,}" == *"fatal: could not read from remote"* ]]
+	then
+		userOutput="bad remote"
 	elif [[ "${pullOutput,,}" == *"fatal: unable to access"* ]]
 	then
 		userOutput="no access"
@@ -75,7 +84,8 @@ do
 	then
 		userOutput="shallow"
 	else
-		userOutput="uknown error"
+		echo "$pullOutput" > "$HOME/.logs/git-safe-pull_error_output.log"
+		userOutput="unknown error"
 	fi
 
 	echo "$userOutput"
