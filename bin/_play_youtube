@@ -127,6 +127,7 @@ else
 fi
 
 playlistPath="$cacheDir/$optName.m3u"
+ytDlpUpdatePath="$HOME/bin/yt-dlp-update"
 
 regexArg=()
 if [[ -n "$optRegex" ]]
@@ -151,10 +152,11 @@ fi
 metadataArgs=()
 if [[ "${optUrl,,}" == *dungeonsyntharchives* ]]
 then
-	metadataArgs=(--parse-metadata '%(uploader)s:%(meta_album)s' --parse-metadata 'title:(?P<meta_artist>.+) \- (?P<meta_title>.+) \((?P<meta_date>\d+)\)')
+	metadataArgs=(--parse-metadata '%(playlist_channel)s:%(meta_album)s' --parse-metadata 'title:(?P<meta_artist>.+) \- (?P<meta_title>.+) \((?P<meta_date>\d+)\)')
 elif [[ "${optName,,}" == *keygen-castlevania* ]]
 then
-	metadataArgs=(--parse-metadata '%(uploader)s:%(meta_artist)s' --parse-metadata '%(playlist_title)s:%(meta_album)s' --replace-in-metadata 'title' ' \|.+$' '' --replace-in-metadata 'title' '^\d+ ' '')
+	# metadataArgs=(--parse-metadata '%(playlist_channel)s:%(meta_artist)s' --parse-metadata '%(playlist_title)s:%(meta_album)s' --replace-in-metadata 'title' ' \|.+$' '' --replace-in-metadata 'title' '^\d+ ' '')
+	metadataArgs=(--parse-metadata '%(playlist_channel)s:%(meta_artist)s' --parse-metadata '%(playlist_title)s:%(meta_album)s' --replace-in-metadata 'title' ' \|.+$' '' --parse-metadata 'title:^(?P<meta_track>\d+) (?P<meta_title>[^\|]+)')
 fi
 
 
@@ -164,6 +166,12 @@ if [[ "$OSTYPE" = "linux-android" ]] && ! "$HOME/bin_termux/termux-on-wifi"
 then
 	echo "skipping download on mobile data"
 else
+	# five seconds for an update is faster than wondering why we're getting a 403 yet again
+	if [[ -x "$ytDlpUpdatePath" ]]
+	then
+		"$ytDlpUpdatePath"
+	fi
+
 	# download the x most recent videos
 	# format from 'mp3' preset
 	# despite numerous posts online, the format arg is the only thing that has successfully prioritized audio-only streams, causing a *dramatic* speed increase
