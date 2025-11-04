@@ -2,13 +2,9 @@
 
 set -e
 
-if ! type waybackpy > /dev/null 2>&1
-then
-	echo 'waybackpy not installed'
-	exit 1
-fi
-
 urls="$("$HOME/bin/wget-spider" "$@" | grep -Piv '\.(woff2|ttf)' || true)"
+
+urls="$(echo "$urls" | perl -pe 's/^http:/https:/g' | sort -u)"
 
 if [[ -n "$urls" ]]
 then
@@ -21,7 +17,9 @@ echo
 echo "$urlCount urls"
 
 logPath="$HOME/.cache/wayback-spider.log"
+errorLogPath="$HOME/.cache/wayback-spider-fail.html"
 mkdir -p "$HOME/.cache"
+saveBaseUrl='https://web.archive.org/save'
 
 if [[ -f "$logPath" ]]
 then
@@ -57,6 +55,7 @@ if [[ -z "$i" ]]
 then
 	i=0
 fi
+iExceptions=0
 
 while read -r url
 do
@@ -77,48 +76,73 @@ do
 
 	echo -e "\r   ${formattedUrl}\033[K"
 	echo -n "$perc"
-	output="$(waybackpy --url "$url" --save 2>&1 || true)"
-	lastLine="$(echo "$output" | tail -n1)"
-	exceptions="$(echo "$output" | grep -iP 'exception' || true)"
 
-	if [[ -n "$exceptions" ]]
-	then
-		echo
-		echo "$exceptions"
-		iExceptions=$((iExceptions+1))
+	saveUrl="$saveBaseUrl/$url"
 
-		if [[ "$iExceptions" -ge 3 ]]
+	while true
+	do
+		if ! output="$(curl -sL "$saveUrl" | tr -d '\0')"
+		then
+			echo -e "\rrequest failure\033[K"
+			iExceptions=$((iExceptions+1))
+		elif [[ "$output" == *"<!-- End Wayback Rewrite JS Include -->"* || "${output,,}" == *"appended by wayback machine"* ]]
+		then
+			iExceptions=0
+			echo -ne "\033[1A\r✓ "
+			echo
+		elif [[ "${output,,}" == *"you have already reached the limit of active save page now"* || "${output,,}" == *"please wait for a minute and then try again"* ]]
+		then
+			echo -e "\rrate limit\033[K"
+			iExceptions=$((iExceptions+1))
+		elif [[ "${output,,}" == *"<p>job failed</p>"* ]]
+		then
+			echo -e "\r'job failed'\033[K"
+			iExceptions=$((iExceptions+1))
+		# elif [[ "${url,,}" == *".css" ]]
+		# then
+		# 	# some file types just return a very plain response
+		# 	iExceptions=0
+		# 	echo -ne "\033[1A\r✓ "
+		# 	echo
+		elif [[ "${output,,}" != *wayback* ]]
+		then
+			iExceptions=0
+			echo -e "\033[1A\r? "
+			echo -e "\rno wayback mention\033[K"
+			# iExceptions=$((iExceptions+1))
+		else
+			echo
+			echo "unexpected output format"
+			echo "$saveUrl"
+			echo "response saved to $errorLogPath"
+			echo "$output" > "$errorLogPath"
+
+			exit 1
+		fi
+
+		if [[ "$iExceptions" -ge 10 ]]
 		then
 			echo "exiting due to $iExceptions consecutive exceptions"
 			exit 1
-		fi
-	
-	elif [[ "${output,,}" == *"archive url:"* && "${output,,}" == *"cached save:"* && "${lastLine,,}" =~ (true|false) ]]
-	then
-		iExceptions=0
-		echo -ne "\033[1A\r✓"
-		if [[ "${lastLine,,}" == "false" ]]
+		elif [[ "$iExceptions" -eq 0 ]]
 		then
-			echo -n "+"
+			echo "$url" >> "$logPath"
 		fi
-			echo
-	else
-		echo
-		echo "unexpected output format from waybackpy:"
-		echo "$output"
-		exit 1
-	fi
 
-	if [[ "$iExceptions" -eq 0 ]]
-	then
-		echo "$url" >> "$logPath"
-	fi
+		# wayback save limit is 15 urls per minute
+		# 60 / 15 = 4s
+		# but for some reason that still raises a rate limit error
+		# iSeconds="$((15 * (iExceptions + 1)))s"
+		iSeconds="$((15 + (iExceptions * 60)))s"
+		echo -n "$perc waiting ${iSeconds}"
+		sleep "$iSeconds"
 
-	# wayback save limit is 15 urls per minute
-	# 60 / 15 = 4s
-	# but for some reason that still raises a rate limit error
-	iSeconds="$((60 * (iExceptions + 1)))s"
-	echo -n "$perc waiting ${iSeconds}"
-	sleep "$iSeconds"
-
+		# break out of the attempt loop
+		# and move on to the next url
+		if [[ "$iExceptions" -eq 0 ]]
+		then
+			break
+		fi
+	done
 done < <(echo "$urls")
+echo
