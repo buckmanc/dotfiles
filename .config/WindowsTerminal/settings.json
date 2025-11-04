@@ -37,10 +37,8 @@
     }
   ],
   "copyFormatting": "none",
-  "copyOnSelect": false,
+  "copyOnSelect": true,
   "defaultProfile": "{e9961a24-1111-2222-3333-835a2d22397d}",
-  "largePasteWarning": false,
-  "multiLinePasteWarning": false,
   "newTabMenu": [
     {
       "type": "remainingProfiles"
@@ -194,5 +192,7 @@
   "tabSwitcherMode": "disabled",
   "tabWidthMode": "titleLength",
   "themes": [],
+  "warning.largePaste": false,
+  "warning.multiLinePaste": false,
   "windowingBehavior": "useAnyExisting"
 }
