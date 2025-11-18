@@ -495,6 +495,7 @@ pachinko
 pachislot
 Paevey
 Panera
+panini
 panky
 paracord
 parmesan
@@ -628,6 +629,7 @@ Slurpees
 smithing
 sms
 snapple
+Snipperclips
 snuck
 societally
 sockies
@@ -2421,6 +2423,7 @@ jpg
 json
 M2
 macropad
+mailhost
 mssql
 MSSQL
 mvp
@@ -2477,6 +2480,8 @@ VPN
 Wayback
 WebEx
 WebExs
+Xiaomi
+Xiaomi Redmi
 xls
 xlsm
 xlsx

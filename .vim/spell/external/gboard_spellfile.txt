@@ -496,6 +496,7 @@
 	pachislot	en-US
 	Paevey	en-US
 	Panera	en-US
+	panini	en-US
 	panky	en-US
 	paracord	en-US
 	parmesan	en-US
@@ -629,6 +630,7 @@
 	smithing	en-US
 	sms	en-US
 	snapple	en-US
+	Snipperclips	en-US
 	snuck	en-US
 	societally	en-US
 	sockies	en-US
@@ -2422,6 +2424,7 @@
 	json	en-US
 	M2	en-US
 	macropad	en-US
+	mailhost	en-US
 	mssql	en-US
 	MSSQL	en-US
 	mvp	en-US
@@ -2478,6 +2481,8 @@
 	Wayback	en-US
 	WebEx	en-US
 	WebExs	en-US
+	Xiaomi	en-US
+	Xiaomi Redmi	en-US
 	xls	en-US
 	xlsm	en-US
 	xlsx	en-US
