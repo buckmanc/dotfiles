@@ -2,7 +2,8 @@
 
 set -e
 
-urls="$("$HOME/bin/wget-spider" "$@" | grep -Piv '\.(woff2|ttf)' || true)"
+# images seem to get cached as a part of the page, so we can skip those
+urls="$("$HOME/bin/wget-spider" "$@" | grep -Piv '\.(woff2|ttf|png|bmp|jpe?g)$' || true)"
 
 urls="$(echo "$urls" | perl -pe 's/^http:/https:/g' | sort -u)"
 
@@ -97,6 +98,10 @@ do
 		elif [[ "${output,,}" == *"<p>job failed</p>"* ]]
 		then
 			echo -e "\r'job failed'\033[K"
+			iExceptions=$((iExceptions+1))
+		elif [[ "${output,,}" == *"target url returned a gateway timeout error"* ]]
+		then
+			echo -e "\r'target url error'\033[K"
 			iExceptions=$((iExceptions+1))
 		# elif [[ "${url,,}" == *".css" ]]
 		# then
