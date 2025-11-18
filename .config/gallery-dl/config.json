@@ -22,7 +22,7 @@
 			"jif" : "jpg",
 			"jfi" : "jpg"
 		},
-		"filename":"{title|tag_string_character}_{id}_{date:%Y-%m-%d}_by_{tag_string_artist|username|user[name]}.{extension}",
+		"filename":"{title|tag_string_character[:200]}_{id}_{date:%Y-%m-%d}_by_{tag_string_artist|username|user[name]}.{extension}",
 		"directory":["{tag_string_artist|username|user[name]}"],
 		"facebook":{
 			"filename":"{date:%Y-%m-%d} {id}.{extension}"

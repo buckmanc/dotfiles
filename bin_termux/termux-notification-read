@@ -3,6 +3,7 @@
 lastHeader=''
 lastContent=''
 optAll=0
+optShort=0
 reverseJqArg=" | reverse"
 # ltr mark, pop directional formatting, ltr embedding
 dumpCharRegex='(\xE2\x80\x8E|\xE2\x80\xAC|\xE2\x80\xAA)'
@@ -16,6 +17,9 @@ do
 	then
 		# reverseJqArg=" | reverse"
 		reverseJqArg=''
+	elif [[ "$arg" == "-s" || "$arg" == "--short" ]]
+	then
+		optShort=1
 	fi
 done
 
@@ -60,10 +64,12 @@ while read -r json
 do
 	packageName="$(echo "$json" | jq -r '.packageName')"
 	packageName="$(echo "$packageName" | perl -p \
-		-e 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec|cliffweitzman|jrtstudio|lockdown|scee)\.)+//g;' \
+		-e 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec|cliffweitzman|jrtstudio|lockdown|scee|kids|ballistiq|providers)\.)+//g;' \
 		-e 's/^(facebook.orca)$/messenger/g;' \
+		-e 's/^(oceanwing.care.cam)$/eufy Baby/g;' \
 		-e 's/^(zhiliaoapp.musically)$/tiktok/g;' \
 		-e 's/^(gm)$/gmail/g;' \
+		-e 's/^(vending)$/googleplay/g;' \
 		-e 's/(\.(orca|android|frontpage|application|mShop|shopping|katana|music))+$//g;' \
 		| cat)"
 
@@ -87,10 +93,10 @@ do
 	# things you might want to check once
 	elif [[ "$optAll" == 0 ]]
 	then
-		if [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok|weather|truebill|walmart|jimmyjohns|psxandroid|youtube|vvm|scloud)$ ]]
+		if [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok|weather|truebill|walmart|jimmyjohns|psxandroid|youtube|vvm|scloud|downloads)$ ]]
 		then
 			continue
-		elif [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* ]] && [[ "${content,,}" =~ \.(jpe?g|png)$ || "${content,,}" =~ ^http.+(youtu\.?be|tiktok) ]]
+		elif [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* ]] && [[ "${content,,}" =~ \.(jpe?g|png|mp4)$ || "${content,,}" =~ ^http.+(youtu\.?be|tiktok) || "${content,,}" =~ ^reacted.+to\ your ]]
 		then
 			continue
 		elif [[ "$packageName" == "snapchat" ]] && [[ "${content,,}" == *'added a video to spotlight!' || "${content,,}" == *"is on snapchat!" || "${content,,}" == *"added to their story"* || "${content,,}" == "updating messages"* ]]
@@ -102,15 +108,23 @@ do
 		elif [[ "$packageName" == "dropbox" ]] && [[ "${title,,}" == 'changes saved' ]]
 		then
 			continue
-		elif [[ "$packageName" == "messaging" ]] && [[ "${content,,}" =~ (text|reply)(\ \"?(start|help)\"?\ for\ (help|consent)\ and)?\ \"?(stop|cancel)\"?\ to\ (cancel|stop|opt[\ \-]out|unsubscribe|unsub|decline) ]]
+		elif [[ "$packageName" == "messaging" ]]
 		then
-			continue
-		elif [[ "$packageName" == "messaging" && "${content,,}" == *department* ]]
-		then
-			firstSentence="$(echo "$content" | grep -iPo '^[^\.\r\n]+\.' | head -n1)"
-			if echo "$firstSentence" | grep -qiP 'this is .+ from the .+ department'
+			if [[ "${content,,}" =~ (text|reply)(\ \"?(start|help)\"?\ for\ (help|consent)\ and)?\ \"?(stop|cancel)\"?\ to\ (cancel|stop|opt[\ \-]out|unsubscribe|unsub|decline) ]]
 			then
 				continue
+			elif [[ "${content,,}" == *"new voicemail from"*  && "${content,,}" == *"no transcript available"* ]]
+			then
+				continue
+			elif [[ "${content,,}" =~ visit\ http ]]
+			then
+				continue
+			elif [[ "${content,,}" =~ (department|group|unit) ]]
+			then
+				if echo "$content" | grep -qiP 'this( message)? is ?[^\.]* from the [^\.]+ (department|group|unit)'
+				then
+					continue
+				fi
 			fi
 		elif [[ "$packageName" == "instagram" ]] && [[ "${content,,}" == *'who you might know, is on instagram'* || "${content,,}" == *"reposted"* ]]
 		then
@@ -118,10 +132,16 @@ do
 		elif [[ "$packageName" == "youtube" ]] && [[ "${content,,}" == 'for you:'* ]]
 		then
 			continue
-		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" == *'see where your package is'* ]]
+		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" == *'see where your package is'* || "${title,,}" == *'out for delivery'* || "${title,,}" == "new from"* ]]
+		then
+			continue
+		elif [[ "$packageName" == "googleplay" ]] && [[ "${content,,}" == *'successfully installed'* ]]
 		then
 			continue
 		elif [[ "$packageName" == "nextdoor" ]] && [[ "${content,,}" == *'reposted'* || "${title,,}" == "updates you may have missed" ]]
+		then
+			continue
+		elif [[ "${packageName,,}" == "dialer" && "${content,,}" == "suspected spam" ]]
 		then
 			continue
 		elif [[ "${content,,}" == *"a new login was detected"* ]]
@@ -149,9 +169,15 @@ do
 	header="$packageName: $title"
 	if [[ "$header" != "$lastHeader" ]]
 	then
-		output+=$'\n'
+		if [[ "$optShort" == 0 ]]
+		then
+			output+=$'\n'
+		fi
 		output+="--------"$'\n'
-		output+=$'\n'
+		if [[ "$optShort" == 0 ]]
+		then
+			output+=$'\n'
+		fi
 		output+="$header"$'\n'
 
 		lastHeader="$header"
