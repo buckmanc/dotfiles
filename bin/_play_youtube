@@ -79,9 +79,10 @@ done
 
 if [[ -z "$optName" ]]
 then
-	echo "name cannot be null"
-	exit 1
-elif [[ -z "$optUrl" ]]
+	optName="unknown"
+fi
+
+if [[ -z "$optUrl" ]]
 then
 	echo "url cannot be null"
 	exit 1

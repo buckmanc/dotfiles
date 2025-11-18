@@ -21,6 +21,8 @@ getCleanName(){
 
     filename="$(basename "$1")"
     filenameNoExt="${filename%.*}"
+    # trim off the ffmpeg-to-mp4 formatting at the end
+    filenameNoExt="$(echo "$filenameNoExt" | perl -pe 's/[ _\-]{1,3}H26\d[ _]CRF[ _]\d{1,2}$//g')"
     date="$(echo "$filenameNoExt" | grep -iPo "$dateRegex")"
     if [[ -n "$date" && "$optSimple" == 0 ]]
     then

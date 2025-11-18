@@ -1,1 +1,1 @@
-feh --geometry 500x500 --scale-down --auto-zoom
+feh --geometry 500x500 --scale-down --auto-zoom --info 'echo "%wx%h\n$(exiftool -DateTimeOriginal %F | cut -d : -f 2-)"'
