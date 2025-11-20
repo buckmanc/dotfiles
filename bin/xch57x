@@ -8,13 +8,20 @@ vim "$configPath"
 
 if ch57x-keyboard-tool validate "$configPath"
 then
-	output="$(ch57x-keyboard-tool upload "$configPath" 2>&1 || echo "unknown error")"
+	output="$(ch57x-keyboard-tool upload "$configPath" 2>&1 || true)"
 
-	if echo "$output" | grep -iq 'error: find usb device'
+	# sudo try again
+	if [[ "${output,,}" == *"insufficient permissions"* ]]
+	then
+		output="$(sudo "$(which ch57x-keyboard-tool)" upload "$configPath" 2>&1 || true)"
+	fi
+
+	if [[ "${output,,}" == *"error: find usb device"* ]]
 	then
 		echo 'macropad not detected'
 		exit 1
 	else
+		# echo "output: $output"
 		echo "$output"
 	fi
 fi

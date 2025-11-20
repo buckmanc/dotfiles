@@ -70,9 +70,9 @@ layers:
       - ccw: "volumedown"
         press: "mute"
         cw: "volumeup"
-      - ccw: "wheeldown"
-        press: "escape"
-        cw: "wheelup"
+      - ccw: "prev"
+        press: "play"
+        cw: "next"
 
   # layer 2: same but with different knobs
   - buttons:
@@ -98,6 +98,6 @@ layers:
       - ccw: "volumedown"
         press: "mute"
         cw: "volumeup"
-      - ccw: "wheeldown"
-        press: "z"
-        cw: "wheelup"
+      - ccw: "prev"
+        press: "play"
+        cw: "next"
