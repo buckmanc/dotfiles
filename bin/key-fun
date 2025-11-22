@@ -35,6 +35,6 @@ do
 
 		echo -e "$output2"
 	fi
-	
-	
+
+
 done

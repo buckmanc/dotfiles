@@ -73,7 +73,7 @@ output+="
 			modUrl=''
 
 			# echo "destUrl: $destUrl" >&2
-			
+
 			# skip gronk
 			if [[ "$destUrl" == *#* || "$destUrl" =~ ^[\./]+$ ]]
 			then
@@ -83,7 +83,7 @@ output+="
 			elif [[ "$destUrl" == /* ]]
 			then
 				modUrl="$domain$destUrl"
-				
+
 			# relative links
 			elif [[ "$destUrl" == ../* ]]
 			then
@@ -121,7 +121,7 @@ output+="
 			echo "$tag"
 			exit 1
 		fi
-		
+
 	done < <(echo "$tags")
 
 	output+="</DL>"$'\n'

@@ -96,7 +96,7 @@ do
 		macAddyRegex='([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
 
 		# strip control chars
-		line=$(echo "$line" | ansi2txt | perl -pe 's/[\cA\cB]//g') 
+		line=$(echo "$line" | ansi2txt | perl -pe 's/[\cA\cB]//g')
 		event=$(echo "$line" | grep -Pio '^\[\w+?\] ' | perl -pe 's/[ \[\]]//g')
 		logLine=$(echo "$line" | perl -pe 's/^(\S+?) (\S+?) (\S+?) (.+)$/\2,\3/g')
 		deviceName=$(echo "$line" | perl -pe 's/^(\S+?) (\S+?) (\S+?) (.+)$/\4/g')

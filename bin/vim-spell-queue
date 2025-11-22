@@ -40,7 +40,7 @@ do
 	fi
 
 	read -p "$prompt" -r </dev/tty
-	
+
 
 	if [[ "${REPLY,,}" == "q" ]]
 	then

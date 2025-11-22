@@ -30,7 +30,7 @@ if [ "$OSTYPE" == 'msys' ] && [[ "$optRestart" == 1 ]]
 then
 	clear
 	"$farewell"
-	sleep $cowtime 
+	sleep $cowtime
 
 	"$(which shutdown)" -r -f -t 0
 

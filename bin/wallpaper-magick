@@ -175,7 +175,7 @@ fi
 
 if [[ "$inPathExt" == "svg" ]]
 then
-	rsvg-convert --keep-aspect-ratio --background-color transparent --width "$defaultLength" --format png --output "$inPathTemp" -- "$inPath" 
+	rsvg-convert --keep-aspect-ratio --background-color transparent --width "$defaultLength" --format png --output "$inPathTemp" -- "$inPath"
 elif [[ "$inPathExt" == "eps" ]]
 then
 	convert "$inPath" -size "x${defaultLength}" -stroke "$defaultColor" -background none "PNG64:$inPathTemp"
@@ -188,7 +188,7 @@ then
 # after this, text handling is the same as input image handling
 elif [[ -n "$text" ]]
 then
-	textRes="${defaultLength}x${defaultLength}"	
+	textRes="${defaultLength}x${defaultLength}"
 
 	# render text to temp path
 	convert -background none -size "${textRes}" -gravity center -fill "$defaultColor" -font "$font" caption:"$text" "PNG64:$inPathTemp"
@@ -393,7 +393,7 @@ then
 else
 	# final output
 	convert -gravity "$gravity" "$bgOutPath" "$inPathTemp" -geometry "${offset}" -composite -resize "$maxRes" "PNG64:$outPath"
-fi 
+fi
 
 if [[ "$mode" == "icon" && -f "$imageOutlinePath" ]]
 then

@@ -18,7 +18,7 @@ else
 	tmpPath="/tmp/starship_install.sh"
 
 	curl -sS https://starship.rs/install.sh > "$tmpPath"
-	
+
 	# strip out a bunch of status and tutorial messages at the end
 	perl -0777pe 's/[\r\n\s]+completed "Starship[\s\S]+$//g;' -i "$tmpPath"
 

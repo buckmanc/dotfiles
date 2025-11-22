@@ -67,7 +67,7 @@ then
 
 		echo "$input" > "$localClipPath"
 	fi
-	
+
 # paste
 else
 	verbEcho "pasting..."

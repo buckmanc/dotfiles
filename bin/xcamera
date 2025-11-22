@@ -118,11 +118,11 @@ do
 		else
 			echo
 		fi
-		
+
 	else
 		echo "dammit"
 	fi
-	
+
 done
 
 if (type termux-media-scan > /dev/null 2>&1)

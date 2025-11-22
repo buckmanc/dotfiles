@@ -11,7 +11,7 @@ do
 
 	# ocrmypdf --clean --rotate-pages --rotate-pages-threshold 10 --sidecar "$txtOutPath" "$arg" "$pdfOutPath"
 	# ocrmypdf --clean --sidecar "$txtOutPath" "$arg" "$pdfOutPath"
-	
+
 	# in place
 	# ocrmypdf --clean "$arg" "$arg"
 	ocrmypdf --clean "$arg" "$pdfOutPath"

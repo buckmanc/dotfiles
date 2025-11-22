@@ -218,7 +218,7 @@ then
 
 		# trim thumbnail
 		$magick convert "$thumbPath" -background black -fuzz 5% -trim "$newThumbPath"
-		
+
 		# embed thumbnail
 		ffmpeg -nostdin -hide_banner -loglevel error -i "$vidPath" -i "$newThumbPath" -c copy -map 0:a -map 1 "$tempVidPath"
 

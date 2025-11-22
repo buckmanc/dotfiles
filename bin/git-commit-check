@@ -71,7 +71,7 @@ then
 				exitCode=1
 			fi
 		fi
-		
+
 		# TODO find a migrations folder and backup one level from that to use as the project dir
 		# TODO check if dotnet-ef is installed
 		# TODO check if dotnet-ef migrations list works or Microsoft.EntityFrameworkCore.Design is referenced

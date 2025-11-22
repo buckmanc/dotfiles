@@ -18,7 +18,7 @@ fi
 for url in $urls
 do
 	echo "base page: $url"
-	curl --silent "${url}?page=1000" | tac | tac | grep -iPo 'http[^" ,?]+' | grep designs | sort -u | sed 's|/[a-z]*/t-shirt/regular/\?$||g' >> "$productUrlPath"	
+	curl --silent "${url}?page=1000" | tac | tac | grep -iPo 'http[^" ,?]+' | grep designs | sort -u | sed 's|/[a-z]*/t-shirt/regular/\?$||g' >> "$productUrlPath"
 done
 
 sort -u -o "$productUrlPath" "$productUrlPath"

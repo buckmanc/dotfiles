@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
- 
+
 # a simple playerctl / xspot wrapper
 # uses playerctl to know when the track changes
 # uses xspot to check the spotify api for more "now playing" details
@@ -112,7 +112,7 @@ then
 
 	# ...but only if it's a different track then last time
 	if [[ "$nowPlaying" != "$lastPlaying" || -z "$xspotNowPlaying" ]]
-	then	
+	then
 		# echo "checking xspot"
 		xspotNowPlaying="$("$HOME/bin/xspot" --what)"
 		lastPlaying="$nowPlaying"

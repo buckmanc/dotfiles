@@ -221,7 +221,7 @@ device_toggle(){
 	then
 		deviceNames="computer,web player,smartphone"
 	fi
-		
+
 
 	while read -r name
 	do
@@ -326,7 +326,7 @@ readTokens(){
 	else
 		configJson="{}"
 	fi
-	
+
 	if [[ -f "$tokenPath" ]]
 	then
 		tokenJson="$(cat "$tokenPath")"
@@ -429,7 +429,7 @@ do
 		optRefresh=1
 	else
 		echo "no clue what $arg means"
-	fi	
+	fi
 done
 
 if [[ -z "$client_id" || -z "$client_secret" || -z "$country" ]]

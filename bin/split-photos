@@ -84,6 +84,6 @@ do
 	fi
 
 	convert "$path" -fuzz "$fuzzArg" -trim +repage $croppy +repage -fuzz "$fuzzArg" -trim "$destPath"
-	
+
 done
 

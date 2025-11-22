@@ -70,7 +70,7 @@ clip(){
         #
 		# # combine to one final snap
 		# convert "$tempDir/first.png" "$tempDir/mid.png" "$tempDir/last.png" +append "$snapPath"
-		
+
 		convert "$tempDir/first.png" -resize 50% "$tempDir/first.png"
 		convert "$tempDir/mid.png"   -resize 50% "$tempDir/mid.png"
 		convert "$tempDir/last.png"  -resize 50% "$tempDir/last.png"
@@ -78,7 +78,7 @@ clip(){
 		# combine to one final snap
 		convert "$tempDir/first.png" "$tempDir/mid.png" "$tempDir/last.png" -append "$snapPath"
 	fi
-	
+
 	echo
 }
 

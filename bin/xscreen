@@ -35,7 +35,7 @@ else
 	# run a command on a screen with this name
 	# bashrc is loaded by this method
 	# screen remains open after and can be used interactively
-	
+
 	detachedArg="-d"
 	if [[ "$optUsingConfig" == 1 ]]
 	then

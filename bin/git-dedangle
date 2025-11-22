@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
-if ! git fsck 2>&1 | grep -i dangling 
+if ! git fsck 2>&1 | grep -i dangling
 then
 	echo 'nothing dangling'
 	exit 0

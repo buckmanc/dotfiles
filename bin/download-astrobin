@@ -20,7 +20,7 @@ body="$(curl -L --silent "$1" | tac | tac)"
 # tr is just to stop warnings
 title="$(echo "$body" | grep -iPoz '(?s)(?<=<title>).*(?=</title>)' | tr -d '\000')"
 name="$(echo "$title" | grep -iPoz '^.+(?=\s\(\s+)' | tr -d '\000' | recode html..utf8)"
-author="$(echo "$title" | grep -iPoz '(?<=\s{5})\w.+\w(?=\s+)' | tr -d '\000')" 
+author="$(echo "$title" | grep -iPoz '(?<=\s{5})\w.+\w(?=\s+)' | tr -d '\000')"
 
 
 jsonUrl="$(echo "${1}/thumb/real" | sed 's|//|/|g')"

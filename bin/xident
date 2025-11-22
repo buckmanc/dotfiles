@@ -15,7 +15,7 @@ do
 	if echo "$mimeType" | grep -Piq '(video)\/'
 	then
 		json="$(ffprobe -i "$arg" -loglevel error -show_entries format=duration -show_entries stream=width,height -of json)"
-		output+="${fileName}§$(echo "$json" | jq -r '"\(.streams[0].width)x\(.streams[0].height)§\(.format.duration)"')"$'\n' 
+		output+="${fileName}§$(echo "$json" | jq -r '"\(.streams[0].width)x\(.streams[0].height)§\(.format.duration)"')"$'\n'
 	elif echo "$mimeType" | grep -Piq '(image|pdf)'
 	then
 		output+="$(identify -format '%f§%wx%h' "$arg")"$'\n'

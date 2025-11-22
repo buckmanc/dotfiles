@@ -193,5 +193,5 @@ elif [ "${optVim}" == 1 ]
 then
 	vim "${outPath}" +"set nospell"
 else
-	cat "${outPath}" 
+	cat "${outPath}"
 fi
