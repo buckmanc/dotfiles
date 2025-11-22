@@ -427,7 +427,7 @@ then
 		echo "cannot find windows terminal settings"
 		exit 1
 	fi
-	
+
 	wtPaperPath="$paperPath"
 	# swap unix to windows path
 	if type cygpath >/dev/null 2>&1
@@ -443,33 +443,23 @@ elif [[ "$OSTYPE" == "linux-android" ]]
 then
 	termux-wallpaper $lockArg -f "$paperPath"
 	termux-media-scan "$paperPath"
-elif [[ "$OSTYPE" == "linux-gnu" && "$optTerminal" == "1" ]]
+elif [[ "$OSTYPE" == "linux-gnu" ]] && type xfconf-query >/dev/null 2>&1
 then
-	# how do we know if we're on an xfce system?
-	# if this file is in your dotfiles it will exist every time
-	xfceTermRcPath="$HOME/.config/xfce4/terminal/terminalrc"
-	xfceTermXmlPath="$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-terminal.xml"
-
-	if [[ -f "$xfceTermRcPath" ]]
+	if [[ "$optTerminal" == "1" ]]
 	then
-		perl -pi -e "s|(?<=^BackgroundImageFile=).+$|$paperPath|g" "$xfceTermRcPath"
-	fi
-
-	# verify that we have xq - and the *right* xq - before updating the XML file
-	# pip install yq
-	# TODO figure out how to tell xfce that the file has changed
-	# otherwise we only see the new wallpaper after a reboot
-	if [[ -f "$xfceTermXmlPath" ]] && type yq > /dev/null 2>&1 && type xq > /dev/null 2>&1
+		xfconf-query -c xfce4-terminal -p /background-image-file -s "$paperPath"
+	elif [[ "$optLockScreen" == "1" ]]
 	then
-		text="$(xq '.channel.property |= map(if ."@name" == "background-image-file" then ."@value" = "'"$paperPath"'" else . end)' "$xfceTermXmlPath" -x | perl -pe 's|></property>$|/>|g')"
-		echo "$text" > "$xfceTermXmlPath"
+		echo "what xfconf-query command changes the lockscreen wallpaper?"
+		exit 1
+	else
+		# TODO support all monitors
+		xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorHDMI-1/workspace0/last-image -s "$paperPath"
 	fi
-
-	# if type xfconf-query >/dev/null 2>&1
-	# then
-	# 	xfconf-query -c xfce4-terminal -p /background-image-file -s "$paperPath"
-	# fi
-
+elif [[ "$OSTYPE" == "linux-gnu" ]] && type xfconf-query >/dev/null 2>&1
+then
+	echo "non-xfce linux not yet supported"
+	exit 1
 else
 	echo "OS $OSTYPE not yet supported"
 	exit 1
