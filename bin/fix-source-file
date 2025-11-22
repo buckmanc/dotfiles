@@ -13,40 +13,61 @@ optTw=0
 optCarriageReturn=0
 optCommentSpacing=0
 optTab=0
-for arg in "$@"
+files=()
+
+argsFound=0
+args=("$@")
+for arg in "${args[@]}"
+do
+	if [[ "$arg" == "-"* ]]
+	then
+		argsFound=1
+	fi
+done
+
+# default to "all" if no args are provided
+if [[ "$argsFound" == 0 ]]
+then
+	args+=("--all")
+fi
+
+for arg in "${args[@]}"
 do
 	if [[ "$arg" == "--tw" || "$arg" == "--trailing-whitespace" || "$arg" == "-w" ]]
 	then
 		optTw=1
-		shift
-	elif [[ "$arg" == "--nl" || "$arg" == "--carriage-return" || "$arg" == "--cr" || "$arg" == "-c" ]]
+	elif [[ "$arg" == "--nl" || "$arg" == "-l" || "$arg" == "--carriage-return" || "$arg" == "--cr" ]]
 	then
 		optCarriageReturn=1
-		shift
 	elif [[ "$arg" == "--tab" || "$arg" == "-t" ]]
 	then
 		optTab=1
-		shift
-	elif [[ "$arg" == "--comment" || "$arg" == "-C" ]]
+	elif [[ "$arg" == "--comment" || "$arg" == "-c" ]]
 	then
 		optCommentSpacing=1
-		shift
 	elif [[ "$arg" == "--all" || "$arg" == "-a" ]]
 	then
 		optTw=1
 		optCarriageReturn=1
 		optTab=1
 		optCommentSpacing=1
-		shift
 	elif [[ "$arg" == "-"* ]]
 	then
 		echo "invalid arg: $arg"
 		exit 1
+	elif [[ -f "$arg" ]]
+	then
+		files+=("$arg")
+	elif [[ -d "$arg" ]]
+	then
+		# add files in the dir to our list of files
+		readarray -d '' files < <(find "$arg" -type f -print0 -not -ipath '*/.git/*')
+	else
+		echo 'invalid path'
+		exit 1
 	fi
 done
 
-
-files=( "$@" )
 
 # add pipe args to the list of regular args
 if [ ! -t 0 ]
@@ -62,6 +83,10 @@ do
 	if [[ -z "$file" ]]
 	then
 		continue
+	elif [[ ! -f "$file" ]]
+	then
+		echo "file does not exist: $file"
+		continue
 	fi
 
 	fileType="$(file --brief --mime-type "$file" | cut -d '/' -f1)"
@@ -74,29 +99,31 @@ do
 
 	if [[ "$optTw" == 1 ]] && grep -Piq '[ \t]+$' "$file"
 	then
-		perl -i -pe 's/[ \t]\+$//g' "$file"
+		perl -i -pe 's/[ \t]+$//g' "$file"
 	elif [[ "$optCarriageReturn" == 1 ]] && grep -q --binary $'\r' "$file"
 	then
 		perl -i -pe 's/\r//g' "$file"
 	elif [[ "$optTab" == 1 ]] && grep -Piq '^\W*?\t+?\W*?\w' "$file"
 	then
-		expand -i -t 4 "$file"
+		# tempPath="$(mktemp)"
+		# expand -i -t 4 "$file" > "$tempPath" && mv "$tempPath" "$file"
+		:
 	elif [[ "$optCommentSpacing" == 1 ]]
 	then
 		fileExt="${file##*.,,}"
 		if [[ "$fileExt" == "cs" ]]
 		then
-			commentChar="\\"
+			commentChar="\\\\"
 		elif [[ "$fileExt" == "sql" ]]
 		then
 			commentChar="--"
 		else
 			# using # for the default comment char, so no need to test for bash scripts
-			commentChar="#"
+			commentChar="\#"
 		fi
 
-		perl -pe "s#(?<=[^${commentChar}])${commentChar}(?=[^ !\$${commentChar}])#${commentChar} #g" "$file"
-		perl -pe "s#(?<=^)${commentChar}(?=[^ !\$${commentChar}])#${commentChar} #g" "$file"
+		perl -i -pe "s@(?<=[^${commentChar}])${commentChar}(?=[^ !\$${commentChar}])@${commentChar} @g" "$file"
+		perl -i -pe "s@(?<=^)${commentChar}(?=[^ !\$${commentChar}])@${commentChar} @g" "$file"
 	fi
 
 done
