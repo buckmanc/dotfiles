@@ -73,9 +73,13 @@ output+="
 			modUrl=''
 
 			# echo "destUrl: $destUrl" >&2
-
+			
+			# bookmarklets as-is
+			if [[ "$destUrl" == *javascript:* ]]
+			then
+				:	
 			# skip gronk
-			if [[ "$destUrl" == *#* || "$destUrl" =~ ^[\./]+$ ]]
+			elif [[ "$destUrl" == *#* || "$destUrl" =~ ^[\./]+$ ]]
 			then
 				continue
 
