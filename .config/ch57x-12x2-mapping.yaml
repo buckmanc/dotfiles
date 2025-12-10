@@ -60,6 +60,10 @@ knobs: 2
 # unfort only msteams is supported by default
 # TODO see if you can map this in discord
 
+# TODO
+# add ctrl+shift+h for msteams/slack hangup
+# add shift+s for vlc screenshot
+
 layers:
   # layer 1: macros and play controls
   - buttons:
