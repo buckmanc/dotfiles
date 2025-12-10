@@ -2,10 +2,27 @@
 
 set -e
 
-configPath="$HOME/.config/ch57x-12x2-mapping.yaml"
+searchArg="$1"
 
+# default macropad
+if [[ -z "$searchArg" ]]
+then
+	searchArg="4x3"
+fi
+
+# find the appropriate config file
+configPath="$(find "$HOME/.config" -type f -iname '*ch57x*.yaml' -iname "*$searchArg*" -print -quit)"
+
+if [[ ! -f "$configPath" ]]
+then
+	echo "could not find config path"
+	exit 1
+fi
+
+# edit
 vim "$configPath"
 
+# validate and update
 if ch57x-keyboard-tool validate "$configPath"
 then
 	output="$(ch57x-keyboard-tool upload "$configPath" 2>&1 || true)"
@@ -18,10 +35,14 @@ then
 
 	if [[ "${output,,}" == *"error: find usb device"* ]]
 	then
-		echo 'macropad not detected'
+		echo 'macropad not detected 👎'
 		exit 1
-	else
+	elif [[ -n "$output" ]]
+	then
 		# echo "output: $output"
 		echo "$output"
+	else
+		# thumbs up to match validation message
+		echo 'updated 👍'
 	fi
 fi

@@ -1,6 +1,11 @@
 # default notes are double commented
 # config for this model:
-# https://www.amazon.com/dp/B0C6PHV9HF/
+# https://www.amazon.com/dp/B0C6PHV9HF
+# using this tool:
+# https://github.com/kriomant/ch57x-keyboard-tool
+# with these keycaps:
+# https://yuzukeycaps.com/c/eb42b481-f974-4691-98b8-ee4362e7b3b8
+# https://raw.githubusercontent.com/buckmanc/dotfiles/refs/heads/main/.config/assets/macropads/ch57x_macropad_4x3_v2.png
 
 # bluetooth
 # toggle switch on top controls bluetooth
@@ -58,14 +63,28 @@ knobs: 2
 
 # win-alt-k is a windows mic mute shortcut
 # unfort only msteams is supported by default
+# does not require the call window to be focused
 # TODO see if you can map this in discord
-
-# TODO
-# add ctrl+shift+h for msteams/slack hangup
-# add shift+s for vlc screenshot
+# ctrl+shift+h is a hangup call shortcut for msteams/slack
+# ctrl+shift+o is a camera toggle shortcut for msteams
+# requires the call window to be focused
 
 layers:
-  # layer 1: macros and play controls
+  # layer 1: v2 primary layout
+  # play controls, meeting controls, shortcuts
+  - buttons:
+      - ["play", "prev", "next", "win-alt-k"]
+      - ["win-l", "shift-s", "mute", "ctrl-shift-o"]
+      - ["win-alt-F1", "ctrl-shift-g", "win-alt-F2", "ctrl-shift-h"]
+    knobs:
+      - ccw: "volumedown"
+        press: "mute"
+        cw: "volumeup"
+      - ccw: "prev"
+        press: "play"
+        cw: "next"
+
+  # layer 2: v1 primary layout
   - buttons:
       - ["play", "prev", "next", "win-alt-k"]
       - ["win-l", "ctrl-shift-g", "win-alt-F5", "mute"]
@@ -77,19 +96,6 @@ layers:
       - ccw: "prev"
         press: "play"
         cw: "next"
-
-  # layer 2: same but with different knobs
-  - buttons:
-      - ["play", "prev", "next", "win-alt-k"]
-      - ["win-l", "ctrl-shift-g", "win-alt-F5", "mute"]
-      - ["win-alt-F1", "win-alt-F2", "win-alt-F3", "win-alt-F4"]
-    knobs:
-      - ccw: "ctrl-shift-tab"
-        press: "escape"
-        cw: "ctrl-tab"
-      - ccw: "wheeldown"
-        press: "escape"
-        cw: "wheelup"
 
   # vim
   # row 1: yank/paste with register a, undo/redo

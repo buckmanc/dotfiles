@@ -74,6 +74,7 @@ RunBash(cmd)
 	else if WinActive("ahk_exe webfishing.exe")
 	{
 		; fish faster
+		; still untested
 		click 50 
 	}
 	else if WinActive("ahk_exe discord.exe") or WinActive("ahk_exe msteams.exe")
@@ -84,30 +85,33 @@ RunBash(cmd)
 	else if WinActive("ahk_exe retroarch.exe")
 	{
 		; hadouken!
+		; still untested
 		Send "{Down down}{Right down}{Down up}{Right up}a"
 	}
-	else if WinActive("ahk_exe chrome.exe")
-	{
-		; move tabs between windows
-		Send "+!t"				; focus the first item on the toolbar
-		Send "{F6}"				; select the current tab
-		Send "{Apps}m{Right}"	; menu, move to window, list windows
-		; pick the window
-		if WinActive("ill") or WinActive("sic")
-		{
-			Send "o"
-		}
-		else if WinActive("ork")
-		{
-			Send "i"
-		}
-		else
-		{
-			Send "{Down}"
-		}
-
-		Send "{Enter}"			; select
-	}
+	; never worked right
+	; else if WinActive("ahk_exe chrome.exe")
+	; {
+	; 	; move tabs between windows
+	; 	Send "+!t"				; focus the first item on the toolbar
+	; 	Send "{F6}"				; select the current tab
+	; 	Send "{Apps}m{Right}"	; menu, move to window, list windows
+    ;
+	; 	; pick the window
+	; 	if WinActive("ill") or WinActive("sic")
+	; 	{
+	; 		Send "o"
+	; 	}
+	; 	else if WinActive("ork")
+	; 	{
+	; 		Send "i"
+	; 	}
+	; 	else
+	; 	{
+	; 		Send "{Down}"
+	; 	}
+    ;
+	; 	Send "{Enter}"			; select
+	; }
 	else if WinActive("ahk_exe spotify.exe")
 	{
 		; Send "!+b"		; like the current song DO NOT USE as it unlikes liked songs too
@@ -152,8 +156,5 @@ Browser_Search::
 #HotIf
 
 ; some spotify controls for macropads
-!#F1::RunBash '\"$HOME/bin/xspot\" --play-toggle'
-!#F2::RunBash '\"$HOME/bin/xspot\" --skip-next'
-!#F3::RunBash '\"$HOME/bin/xspot\" --skip-previous'
-!#F4::RunBash '\"$HOME/bin/xspot\" --like'
-!#F5::RunBash '\"$HOME/bin/xspot\" --device auto'
+!#F1::RunBash '\"$HOME/bin/xspot\" --like'
+!#F2::RunBash '\"$HOME/bin/xspot\" --device auto'
