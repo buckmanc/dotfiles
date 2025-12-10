@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+"$HOME/bin/_play_youtube" "https://www.youtube.com/playlist?list=PLKhlkmO6g-0NNkFxjPi8yn643Aa2F5H64" "https://www.youtube.com/playlist?list=PLaCXN_6NGgLrZILCzydNdtuPzoad36He9" --name "mega-man-guitar-playthroughs" --all --chronological --ignore-date --regex "mega ?man" "$@"

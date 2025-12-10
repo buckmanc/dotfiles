@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+inDir="$1"
+outPath="$2"
+rootDir="$3"
+
+if [[ -z "$inDir" ]]
+then
+	echo "need input directory"
+	exit 1
+elif [[ ! -d "$inDir" ]]
+then
+	echo "input directory does not exist"
+	exit 1
+elif [[ -z "$outPath" ]]
+then
+	echo "need output path"
+	exit 1
+elif [[ -n "$rootDir" && ! -d "$rootDir" ]]
+then
+	echo "root dir does not exist"
+	exit 1
+fi
+
+outDir="$(dirname "$outPath")"
+romList="$(find "$inDir" -type f -not -regex '.+\.(png|jpg|sh)$')"
+playlistList="$(find "$outDir" -type f -iname '*.lpl')"
+
+
+jsonItems=''
+while read -r romPath
+do
+	crc="$(crc32 "$romPath")"
+	fileName="$(basename "$romPath")"
+	romName="${fileName%.*}"
+	# romName="${romName%[*}"
+	# romName="${romName%% }"
+	# dbName="$(grep --files-with-matches "$filename" "$outDir/"*.lpl | head -n 1)"
+	dbName="DETECT"
+
+	json="$(jq -n \
+		--arg path "$romPath" \
+		--arg label "$romName" \
+		--arg "core_path" "DETECT" \
+		--arg "core_name" "DETECT" \
+		--arg "crc32" "${crc}|crc" \
+		--arg "db_name" "$dbName" \
+		'$ARGS.named'
+	)"
+	jsonItems+="$json,"$'\n'
+done < <(echo "$romList")
+
+finalJson="
+{
+  \"version\": \"1.5\",
+  \"base_content_directory\": \"$rootDir\",
+  \"items\": [$jsonItems]
+}"
+
+echo "$finalJson" > "$outPath"

@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 # TODO find a way to put your favs first
-"$HOME/bin/_play_youtube" --url "https://www.youtube.com/watch?v=DCYb-Kpb-hI https://www.youtube.com/watch?v=Cua6ZrFIdWM&list=PLLZUT9h0MPg-9OAJmZU4l6lX-5mxvFEBT" --name "animalisa-keys-full" --all --chronological --ignore-date "$@"
+"$HOME/bin/_play_youtube" "https://www.youtube.com/watch?v=DCYb-Kpb-hI https://www.youtube.com/watch?v=Cua6ZrFIdWM&list=PLLZUT9h0MPg-9OAJmZU4l6lX-5mxvFEBT" --name "animalisa-keys-full" --all --chronological --ignore-date "$@"

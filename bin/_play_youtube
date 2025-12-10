@@ -4,14 +4,19 @@ optMore=0
 optAll=0
 optSortByLatest=1
 optIgnoreDate=0
-optUrl=""
-optNextIsUrl=0
 optName=""
 optNextIsName=0
 optRegex=""
 optNextIsRegex=0
 optCookiePath=""
 optNextIsCookiePath=0
+optVerbose=0
+# optSplitChapters=0
+urls=()
+
+# --split-chapters support was attempted, but is too much work and causes too many problems
+# hard to support both videos with and without chapters
+
 
 for arg in "$@"
 do
@@ -30,13 +35,6 @@ do
 	elif [[ "$arg" == "--ignore-date" ]]
 	then
 		optIgnoreDate=1
-	elif [[ "$arg" == "--url" ]]
-	then
-		optNextIsUrl=1
-	elif [[ "$optNextIsUrl" == "1" ]]
-	then
-		optUrl="$arg"
-		optNextIsUrl=0
 	elif [[ "$arg" == "--name" ]]
 	then
 		optNextIsName=1
@@ -58,6 +56,12 @@ do
 	then
 		optCookiePath="$arg"
 		optNextIsCookiePath=0
+	elif [[ "$arg" == "-v" || "$arg" == "--verbose" ]]
+	then
+		optVerbose=1
+	# elif [[ "$arg" == "--split-chapters" || "$arg" == "--split-chapter" ]]
+	# then
+	# 	optSplitChapters=1
 	elif [[ "$arg" == "-h" || "$arg" == "--help" ]]
 	then
 		helpDeets="
@@ -71,6 +75,13 @@ do
 		"
 		echo "$helpDeets"
 		exit 0
+	elif [[ "$arg" == "-"* ]]
+	then
+		echo "I don't know what $arg is"
+		exit 1
+	elif [[ "$arg" == "http"* || "$arg" == *".com"* ]]
+	then
+		urls+=("$arg")
 	else
 		echo "I don't know what $arg is"
 		exit 1
@@ -82,16 +93,16 @@ then
 	optName="unknown"
 fi
 
-if [[ -z "$optUrl" ]]
+if [[ "${#urls[@]}" -eq 0 ]]
 then
-	echo "url cannot be null"
+	echo "provide at least one url"
 	exit 1
 fi
 
 if ( ! type yt-dlp > /dev/null 2>&1 )
 then
 	echo "yt-dlp not installed, opening URL instead"
-	"$HOME/bin/open" "$optUrl"
+	"$HOME/bin/open" "${urls[@]}"
 	exit 0
 fi
 
@@ -120,12 +131,20 @@ fi
 # calc an absolute index for the filename
 # breaks with many other args
 # outputFormat="%(playlist_count+1-playlist_index)0d_%(title)s"
+outputFormat=""
+outputPrefix=""
 if [[ "$optIgnoreDate" == "0" ]]
 then
-	outputFormat="%(upload_date)s_%(title)s"
-else
-	outputFormat="%(title)s"
+	outputFormat="%(upload_date)s_"
 fi
+
+outputFormat="${outputFormat}%(title)s"
+
+# if [[ "$optSplitChapters" == 1 ]]
+# then
+# 	outputFormat="${outputFormat}_%(section_number)s_%(section_title)s"
+# 	outputPrefix="chapter:"
+# fi
 
 playlistPath="$cacheDir/$optName.m3u"
 ytDlpUpdatePath="$HOME/bin/yt-dlp-update"
@@ -133,7 +152,7 @@ ytDlpUpdatePath="$HOME/bin/yt-dlp-update"
 regexArg=()
 if [[ -n "$optRegex" ]]
 then
-	regexArg=(--match-title '$optRegex')
+	regexArg=(--match-title "$optRegex")
 fi
 
 cookieArg=()
@@ -145,19 +164,44 @@ then
 		exit 1
 	fi
 
-	cookieArg=(--cookies '$optCookiePath')
+	cookieArg=(--cookies "$optCookiePath")
 	# cookieArg=(--cookies-from-browser firefox)
 fi
 
 # cleanup specific meta data here
 metadataArgs=()
-if [[ "${optUrl,,}" == *dungeonsyntharchives* ]]
+if [[ "${urls[*]}" == *dungeonsyntharchives* ]]
 then
 	metadataArgs=(--parse-metadata '%(playlist_channel)s:%(meta_album)s' --parse-metadata 'title:(?P<meta_artist>.+) \- (?P<meta_title>.+) \((?P<meta_date>\d+)\)')
 elif [[ "${optName,,}" == *keygen-castlevania* ]]
 then
 	# metadataArgs=(--parse-metadata '%(playlist_channel)s:%(meta_artist)s' --parse-metadata '%(playlist_title)s:%(meta_album)s' --replace-in-metadata 'title' ' \|.+$' '' --replace-in-metadata 'title' '^\d+ ' '')
 	metadataArgs=(--parse-metadata '%(playlist_channel)s:%(meta_artist)s' --parse-metadata '%(playlist_title)s:%(meta_album)s' --replace-in-metadata 'title' ' \|.+$' '' --parse-metadata 'title:^(?P<meta_track>\d+) (?P<meta_title>[^\|]+)')
+# elif [[ "$optSplitChapters" == 1 ]]
+# then
+# 	metadataArgs=(--parse-metadata 'section_title:%(meta_title)s' --parse-metadata 'title:%(meta_album)s' --parse-metadata 'section_number:%(meta_track)s')
+else
+	metadataArgs=(--parse-metadata 'YouTube:%(meta_album)s')
+fi
+
+# splitChaptersArg=()
+# if [[ "$optSplitChapters" == 1 ]]
+# then
+# 	splitChaptersArg=(--split-chapters)
+# fi
+
+nonVerboseArgs=()
+if [[ "$optVerbose" == 0 ]]
+then
+	nonVerboseArgs=(--print "$outputFormat" --no-warnings)
+else
+	echo "urls: ${urls[*]}"
+	echo "metadataArgs: ${metadataArgs[@]}"
+	echo "nonVerboseArgs: ${nonVerboseArgs[*]}"
+	echo "regexArg: ${regexArg[*]}"
+	echo "cookieArg: ${cookieArg[*]}"
+	echo "outputPrefix: $outputPrefix"
+	echo "outputFormat: $outputFormat"
 fi
 
 
@@ -177,7 +221,7 @@ else
 	# format from 'mp3' preset
 	# despite numerous posts online, the format arg is the only thing that has successfully prioritized audio-only streams, causing a *dramatic* speed increase
 	# the -t sleep preset introduces some small wait times to avoid bans
-	yt-dlp -t sleep --format 'ba[acodec^=mp3]/ba/b' --extract-audio --embed-metadata --embed-thumbnail --audio-format "mp3" --audio-quality 0 --output "$cacheDir/$outputFormat.%(ext)s" --playlist-items "1:$maxFilesToDownload" --download-archive "$cacheDir/archive.log" --max-downloads "$maxFilesToDownload" "${regexArg[@]}" "${cookieArg[@]}" "${metadataArgs[@]}" --restrict-filenames --no-overwrites --print "$outputFormat" --no-simulate --no-warnings --write-thumbnail --convert-thumbnails png -- "$optUrl"
+	yt-dlp -t sleep --format 'ba[acodec^=mp3]/ba/b' --extract-audio --embed-metadata --embed-thumbnail --audio-format "mp3" --audio-quality 0 --output "$outputPrefix$cacheDir/$outputFormat.%(ext)s" --playlist-items "1:$maxFilesToDownload" --download-archive "$cacheDir/archive.log" --max-downloads "$maxFilesToDownload" "${regexArg[@]}" "${cookieArg[@]}" "${metadataArgs[@]}" "${nonVerboseArgs[@]}" --restrict-filenames --no-overwrites --no-simulate --write-thumbnail --convert-thumbnails png --remote-components ejs:github -- "${urls[@]}"
 fi
 
 # bad form, I know

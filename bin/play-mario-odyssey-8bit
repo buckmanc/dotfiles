@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-"$HOME/bin/_play_youtube" --url https://youtube.com/playlist?list=PL2XjmdkuVL-1c0ueQmNgltkf4hFWnZgyi --name "mario-odyssey-8bit" --all --chronological --ignore-date --regex "8-?bit" "$@"
+"$HOME/bin/_play_youtube" https://youtube.com/playlist?list=PL2XjmdkuVL-1c0ueQmNgltkf4hFWnZgyi --name "mario-odyssey-8bit" --all --chronological --ignore-date --regex "8-?bit" "$@"

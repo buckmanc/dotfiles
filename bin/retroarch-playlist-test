@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+~/bin/retroarch-playlist "/media/content/Roms/romhacks" "/media/content/Dropbox/RetroArch_Config/playlists/Rom Hacks.lpl" "/media/content/"
