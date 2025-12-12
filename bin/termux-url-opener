@@ -96,7 +96,7 @@ then
 		curl -O "$modUrl2" --output-dir "$outDir"
 	# download images off this unknown page
 	else
-		if ! "$HOME/bin/xgallery-dl" -d "$outDir" "$1"
+		if ! "$HOME/bin/xgallery-dl" -D "$outDir" "$1"
 		then
 			echo "Could not download with gallery-dl. Falling back to generic downloader."
 			$HOME/bin/download-page-images "$1" "$outDir"

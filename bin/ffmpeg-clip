@@ -2,6 +2,7 @@
 
 set -e
 
+optTitle=0
 args=()
 
 for arg in "$@"
@@ -9,8 +10,15 @@ do
 	if [[ -f "$arg" ]]
 	then
 		inputFile="$arg"
-	else
+	elif [[ "$arg" == "-t" || "$arg" == "--title" ]]
+	then
+		optTitle=1
+	elif [[ "$arg" =~ [0-9]:[0-9] ]]
+	then
 		args+=("$arg")
+	else
+		echo "I have no idea what $arg means"
+		exit 1
 	fi
 done
 
@@ -23,9 +31,19 @@ fi
 echo "got ${#args[@]} timestamps"
 
 inputExt="${inputFile##*.}"
+fileNameNoExt="$(basename "$inputFile")"
+fileNameNoExt="${fileNameNoExt%.*}"
 inputFileDir="$(dirname "$inputFile")"
 tempDir="$TEMP/$inputFile"
 clipSnapsDir="$inputFileDir/clip snaps"
+totalSeconds="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$inputFile")"
+
+if type magick > /dev/null 2>&1
+then
+	magick="magick"
+else
+	magick="convert"
+fi
 
 mkdir -p "$tempDir"
 mkdir -p "$clipSnapsDir"
@@ -37,8 +55,8 @@ clip(){
 	start="$1"
 	fin="$2"
 
-	outPath="$inputFileDir/$id.$inputExt"
-	snapPath="$clipSnapsDir/${id}_$(echo "$start" | perl -pe 's/[:\.]/_/g')_to_$(echo "$fin" | perl -pe 's/[:\.]/_/g').png"
+	outPath="$inputFileDir/${fileNameNoExt}_$id.$inputExt"
+	snapPath="$clipSnapsDir/${fileNameNoExt}_${id}_$(echo "$start" | perl -pe 's/[:\.]/_/g')_to_$(echo "$fin" | perl -pe 's/[:\.]/_/g').png"
 
 	echo -n "clip $id"
 
@@ -46,8 +64,16 @@ clip(){
 	then
 		echo -n " already exists"
 	else
+		titleArgs=()
+		if [[ "$optTitle" == 1 ]]
+		then
+			titleArgs+=(-vf "drawtext=${HOME}/.termux/font.ttf:text='part ${id##0}':fontcolor=white:fontsize=(w/7):box=1:boxcolor=black@0.5:boxborderw=5:x=w-tw:y=h-th")
+		else
+			titleArgs+=(-c:v copy)
+		fi
+
 		# clip
-		ffmpeg -loglevel warning -n -i "$inputFile" -ss "$start" -to "$fin" -c:v copy -c:a copy "$outPath"
+		ffmpeg -loglevel warning -n -i "$inputFile" -ss "$start" -to "$fin" -c:a copy "${titleArgs[@]}" "$outPath"
 
 		# calc frames
 		totalFrames="$(ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=nb_read_frames -of csv=p=0 "$outPath" | perl -pe 's/,$//g')"
@@ -58,33 +84,43 @@ clip(){
 		ffmpeg -y -loglevel error -i "$outPath" -vf select=\'eq\(n,"$midFrame"\) -vframes 1 "$tempDir/mid.png"
 		ffmpeg -y -loglevel error -sseof -3 -i "$outPath" -update true "$tempDir/last.png" -y
 
-		# produces a very cool effect but it's as useful
-		# # crop snaps
-		# width="$(identify -format '%w' "$tempDir/first.png")"
-		# widthThird="$((width/3))"
-		# height="$(identify -format '%h')"
-        #
-		# convert "$tempDir/first.png" -gravity west -extent "${widthThird}x${height}" "$tempDir/first.png"
-		# convert "$tempDir/mid.png" -gravity center -extent "${widthThird}x${height}" "$tempDir/mid.png"
-		# convert "$tempDir/last.png" -gravity east  -extent "${widthThird}x${height}" "$tempDir/last.png"
-        #
-		# # combine to one final snap
-		# convert "$tempDir/first.png" "$tempDir/mid.png" "$tempDir/last.png" +append "$snapPath"
-
-		convert "$tempDir/first.png" -resize 50% "$tempDir/first.png"
-		convert "$tempDir/mid.png"   -resize 50% "$tempDir/mid.png"
-		convert "$tempDir/last.png"  -resize 50% "$tempDir/last.png"
+		"$magick" "$tempDir/first.png" -resize 50% "$tempDir/first.png"
+		"$magick" "$tempDir/mid.png"   -resize 50% "$tempDir/mid.png"
+		"$magick" "$tempDir/last.png"  -resize 50% "$tempDir/last.png"
 
 		# combine to one final snap
-		convert "$tempDir/first.png" "$tempDir/mid.png" "$tempDir/last.png" -append "$snapPath"
+		"$magick" "$tempDir/first.png" "$tempDir/mid.png" "$tempDir/last.png" -append "$snapPath"
 	fi
 
 	echo
 }
 
+# echo "totalSeconds: $totalSeconds"
+
 lastArg=0
 for arg in "${args[@]}"
 do
+	adjStamp="$arg"
+	while ! echo "$adjStamp" | grep -Piq '(\d+:){2}'
+	do
+		adjStamp="00:${adjStamp}"
+	done
+
+	# will break if video is gt 24 hours
+	clipSeconds="$(date --utc --date "1970-01-01 $adjStamp" +%s)"
+	greaterThanTotal="$(echo "$clipSeconds > $totalSeconds" | bc -l)"
+
+	# echo "arg: $arg"
+	# echo "adjStamp: $adjStamp"
+	# echo "clipSeconds: $clipSeconds"
+	# echo "greaterThanTotal: $greaterThanTotal"
+
+	if [[ "$greaterThanTotal" == 1 ]]
+	then
+		echo "timestamp greaters than length of clip, skipping"
+		break
+	fi
+
 	# do work
 	clip "$lastArg" "$arg"
 

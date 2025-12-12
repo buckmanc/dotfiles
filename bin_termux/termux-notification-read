@@ -99,7 +99,7 @@ do
 		elif [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* ]] && [[ "${content,,}" =~ \.(jpe?g|png|mp4)$ || "${content,,}" =~ ^http.+(youtu\.?be|tiktok) || "${content,,}" =~ ^reacted.+to\ your ]]
 		then
 			continue
-		elif [[ "$packageName" == "snapchat" ]] && [[ "${content,,}" == *'added a video to spotlight!' || "${content,,}" == *"is on snapchat!" || "${content,,}" == *"added to their story"* || "${content,,}" == "updating messages"* ]]
+		elif [[ "$packageName" == "snapchat" ]] && [[ "${content,,}" == *'added a video to spotlight!' || "${content,,}" == *"is on snapchat!" || "${content,,}" == *"added to their story"* || "${content,,}" == "updating messages"* || "${content,,}" == *"new friend suggestion"* ]]
 		then
 			continue
 		elif [[ "$packageName" == "photos" ]] && [[ "${title,,}" == 'we made a collage'* ]]
