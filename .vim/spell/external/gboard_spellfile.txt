@@ -20,6 +20,8 @@
 	AGDQ2024	en-US
 	AirBNB	en-US
 	Airbnb	en-US
+	airbud	en-US
+	airbuds	en-US
 	airpod	en-US
 	airpods	en-US
 	alabastron	en-US
@@ -615,6 +617,7 @@
 	Shang	en-US
 	Shia	en-US
 	shifter	en-US
+	shitshow	en-US
 	Shoney's	en-US
 	shoppy	en-US
 	si	en-US
@@ -706,6 +709,7 @@
 	unjamming	en-US
 	unkillable	en-US
 	Uno	en-US
+	unregrettable	en-US
 	unremodeled	en-US
 	unrepaired	en-US
 	unshielded	en-US
@@ -798,6 +802,7 @@
 	Amphibia	en-US
 	Anu	en-US
 	Aon	en-US
+	Argonian	en-US
 	Arishem	en-US
 	Arkay	en-US
 	Arkay's	en-US
@@ -2476,6 +2481,7 @@
 	usb	en-US
 	UX	en-US
 	VBS	en-US
+	Veracode	en-US
 	vimrc	en-US
 	VPN	en-US
 	Wayback	en-US

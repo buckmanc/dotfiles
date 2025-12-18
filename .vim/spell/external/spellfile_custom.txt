@@ -19,6 +19,8 @@ AGDQ2023
 AGDQ2024
 AirBNB
 Airbnb
+airbud
+airbuds
 airpod
 airpods
 alabastron
@@ -614,6 +616,7 @@ shader
 Shang
 Shia
 shifter
+shitshow
 Shoney's
 shoppy
 si
@@ -705,6 +708,7 @@ unjam
 unjamming
 unkillable
 Uno
+unregrettable
 unremodeled
 unrepaired
 unshielded
@@ -797,6 +801,7 @@ AMatWQ
 Amphibia
 Anu
 Aon
+Argonian
 Arishem
 Arkay
 Arkay's
@@ -2475,6 +2480,7 @@ uptime
 usb
 UX
 VBS
+Veracode
 vimrc
 VPN
 Wayback
