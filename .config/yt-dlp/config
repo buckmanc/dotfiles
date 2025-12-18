@@ -1,0 +1,4 @@
+--restrict-filename
+-t sleep
+--embed-metadata
+--embed-thumbnail

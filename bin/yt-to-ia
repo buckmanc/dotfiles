@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ "$#" -eq 0 ]]
+then
+	echo "url(s) required"
+	exit 1
+fi
+
+ytUpdatePath="$HOME/bin/yt-dlp-update"
+iaUpdatePath="$HOME/bin/ia-update"
+tempDir="./yt-to-ia-temp"
+optTest=1
+
+freeGb="$(df . --output=avail --block-size=1G | tail -n1 | tr -d ' ')"
+
+if [[ "$(echo "$freeGb > 100" | bc)" == "0" ]]
+then
+	read -p "This location only has ${freeGb}G free. Are you sure you want to download here?" -n 1 -r
+	if [[ $REPLY =~ ^[^Yy]$ ]]
+	then
+		echo
+		exit 0
+	fi
+fi
+
+mkdir -p "$tempDir"
+
+if [[ -x "$ytUpdatePath" ]]
+then
+	"$ytUpdatePath"
+fi
+
+if [[ -x "$iaUpdatePath" ]]
+then
+	"$iaUpdatePath"
+fi
+
+# create a temp dir to dl to
+
+yt-dlp "$@" --paths home:"$tempDir" --write-info-json --no-clean-info-json --download-archive "$tempDir/archive.log" --restrict-filenames #--skip-download
+
+# iterate json files
+# jq '.description'
+#	are escapes going to work?
+# jq '.filename'
+
+while read -r src
+do
+	# read the json
+	desc="$(jq -r '.description' "$src")"
+	vidPath="$(jq -r '.filename' "$src")"
+	title="$(jq -r '.title' "$src")"
+	tags="$(jq -r '.tags | join(",")' "$src")"
+
+	# parse out the date from the title
+	date="$(echo "$title" | grep -iPo '^\d{4}(\-(\d{4}|\d{1,2}\-\d{1,2}))?')"
+
+	# sanitize the hell out of that identifier
+	identifier="$(echo "${title#$date}" | perl -p \
+		-e 's/[ \-_\(\)\[\]\\\/\.]+/_/g;' \
+		-e 's/_$//g;' \
+		-e 's/^_//g;' \
+		)"
+
+	# if there's a date, add it back onto the identifier
+	# thus preserving dashes
+	if [[ -n "$date" ]]
+	then
+		identifier="${date}_$identifier"
+	fi
+
+	fileName="$(basename "$vidPath")"
+
+	if [[ ! -f "$vidPath" ]]
+	then
+		echo "$fileName does not exist"
+		continue
+	fi
+
+	length="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 -sexagesimal "$vidPath")"
+	if [[ "$optTest" == 0 ]]
+	then
+		collection="movies"
+	else
+		collection="test_collection"
+	fi
+
+	echo "fileName: $fileName"
+	echo "length: $length"
+	# echo "desc: $desc"
+	echo "identifier: $identifier"
+
+	# tags? identifier?
+	ia upload "$identifier" "$vidPath" \
+		--metadata="mediatype:movies" \
+		--metadata="title:$title" \
+		--metadata="description:$desc" \
+		--metadata="language:English" \
+		--metadata="subject:$tags" \
+		--metadata="date:$date" \
+		--metadata="collection:$collection"
+
+	# if the upload was successful, burn the source files
+	rm "$vidPath"
+	rm "$src"
+
+	echo '----------'
+
+done < <(find "$tempDir" -type f -iname '*.json')

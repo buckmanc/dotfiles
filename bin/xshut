@@ -43,7 +43,7 @@ then
 	# -hybrid not supported on some platforms
 	"$(which shutdown)" -s -hybrid -f -t 0 || "$(which shutdown)" -s -f -t 0
 
-elif [ "$OSTYPE" == 'linux-gnu'* ]
+elif [[ "$OSTYPE" == 'linux-gnu'* ]]
 then
 
 	# if we have shutdown perms, don't ask for sudo
