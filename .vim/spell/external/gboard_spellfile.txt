@@ -355,6 +355,7 @@
 	ivermectin	en-US
 	Jackbox	en-US
 	Janzen's	en-US
+	Jase	en-US
 	JD	en-US
 	Jemisin's	en-US
 	jiggler	en-US
@@ -792,6 +793,7 @@
 	Adolin's	en-US
 	Adonalsium	en-US
 	Aetherius	en-US
+	aiji	en-US
 	Akatosh	en-US
 	Akatosh's	en-US
 	Albus	en-US
@@ -808,6 +810,7 @@
 	Arkay's	en-US
 	Armello	en-US
 	Ashyn	en-US
+	Atevi	en-US
 	Azura	en-US
 	Azura's	en-US
 	Bat'leth	en-US
@@ -826,6 +829,8 @@
 	BotW	en-US
 	BotW's	en-US
 	Braize	en-US
+	Bren	en-US
+	Bren's	en-US
 	Brudder	en-US
 	Canticle	en-US
 	Cardassia	en-US
@@ -946,6 +951,7 @@
 	Magica	en-US
 	Malacath	en-US
 	Malacath's	en-US
+	man'chi	en-US
 	Maneater	en-US
 	Maquis	en-US
 	Matlock	en-US
@@ -986,6 +992,7 @@
 	ODST	en-US
 	Olimar's	en-US
 	Paddington	en-US
+	paidhi	en-US
 	Parangosky	en-US
 	perpendicularity	en-US
 	Peryite	en-US
@@ -1046,9 +1053,12 @@
 	Sunreach	en-US
 	Szeth	en-US
 	Szeth's	en-US
+	Tabini	en-US
 	Taldain	en-US
 	Talos	en-US
 	Talos's	en-US
+	Tamun	en-US
+	Tamun's	en-US
 	Taravangian	en-US
 	Teft	en-US
 	Temba	en-US
