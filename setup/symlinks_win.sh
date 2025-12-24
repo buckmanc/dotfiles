@@ -7,7 +7,7 @@ fileordir(){
 	else
 		if [[ "$optTestOnly" == 1 ]]
 			then
-				echo "does not exist: $1" > $(tty)
+				echo "does not exist: $1" > "$(tty)"
 		fi
 		
 		return 1
@@ -61,9 +61,9 @@ linkylink(){
 		# gotta use weird mklink syntax
 		if [[ "$optTestOnly" == 1 ]]
 		then
-			echo "would have linked ${source} to ${dest}" > $(tty)
+			echo "would have linked ${source} to ${dest}" > "$(tty)"
 		else
-			echo "attempting to link ${source} to ${dest}" > $(tty)
+			echo "attempting to link ${source} to ${dest}" > "$(tty)"
 			cmd <<< "mklink ${junctionArg} \"${dest}\" \"${source}\""
 		fi
 	fi

@@ -31,5 +31,6 @@ then
 		taskkill -f -im "$killme"
 	fi
 else
-	pkill -f "$killme"
+	# pkill -f "$killme"
+	pkill "$killme"
 fi
