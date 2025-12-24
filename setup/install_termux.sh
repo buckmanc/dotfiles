@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
 pkg upgrade
-pkg install jq python openssh ncurses-utils vim git cronie 7zip cowsay ruby termux-api screen imagemagick
+pkg install -y jq python openssh ncurses-utils vim git cronie 7zip cowsay ruby termux-api screen imagemagick termux-am
+# package require for pyphash
+pkg install -y python-scipy
 pkg autoclean
 gem install lolcat
 
 # does this need to be permanent?
-export LDFLAGS="-landroid-spawn -lm -lpython3.11" 
+export LDFLAGS="-landroid-spawn -lm -lpython3.11"
 
+# there exists a pkg package called "python-numpy"
+# python-scipy installs that as a dependency, but it isn't sufficient to get pyphash running
 pip install git+https://github.com/numpy/numpy
 pip install git+https://github.com/TotallyNotChase/glitch-this
 

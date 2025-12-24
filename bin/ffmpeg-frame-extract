@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+set -e
+
+files=()
+tsStart=''
+tsEnd=''
+optDeDupe=0
+pyphashDedupePath="$HOME/bin/pyphash-sequential-dedupe"
+
+
+for arg in "$@"
+do
+	if [[ "$arg" == "--dedupe" ]]
+	then
+		optDeDupe=1
+	elif [[ "$arg" == *- ]]
+	then
+		echo "bad arg: $arg"
+	elif [[ "$arg" =~ [0-9]:[0-9] ]]
+	then
+		if [[ -z "$tsStart" ]]
+		then
+			tsStart="$arg"
+		elif [[ -z "$tsEnd" ]]
+		then
+			tsEnd="$arg"
+		else
+			echo "too many timestamps"
+			exit 1
+		fi
+	# elif [[ -d "$arg" ]]
+	# then
+	# 	dirFiles="$(find "$arg" -type f -not -ipath '*/.git/*' -not -ipath '*/.internals/*' -regextype posix-extended -iregex '.+\.(jpe?g|png|bmp|tiff)' -size +0 | sort)"
+    #
+	# 	while read -r dirFile
+	# 	do
+	# 		files+=("$dirFile")
+	# 	done < <(echo "$dirFiles")
+	elif [[ -f "$arg" ]]
+	then
+		files+=("$arg")
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
+
+if [[ "${#files[@]}" -eq 0 ]]
+then
+	echo "no file paths"
+	exit 1
+elif [[ "$optDeDupe" == 1 && ! -x "$pyphashDedupePath" ]]
+then
+	echo "cannot find pyphash script"
+	exit 1
+fi
+
+# # if only one timestamp was provided, that's the end
+# if [[ -z "$tsEnd" && -n "$tsStart" ]]
+# then
+# 	tsEnd="$tsStart"
+# 	tsStart=''
+# fi
+
+ffArgs=()
+if [[ -n "$tsStart" && -n "$tsEnd" ]]
+then
+	ffArgs=(-ss "$tsStart" -to "$tsEnd")
+elif [[ -z "$tsStart" && -n "$tsEnd" ]]
+then
+	ffArgs=(-to "$tsEnd")
+fi
+
+for thisFile in "${files[@]}"
+do
+	ffmpeg -i "$thisFile" "${ffArgs[@]}" "frame%05d.png"
+
+	if [[ "$optDeDupe" == 1 ]]
+	then
+		"$pyphashDedupePath" --delete frame*.png
+	fi
+done

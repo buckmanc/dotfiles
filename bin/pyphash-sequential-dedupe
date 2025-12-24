@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+set -e
+
+files=()
+optDelete=0
+optDryRun=0
+line="-----------------------"
+pyphashPath="$HOME/bin/pyphash"
+pyphash(){
+	"$pyphashPath" "$@"
+}
+
+if [[ ! -x "$pyphashPath" ]]
+then
+	echo "cannot find pyphash script"
+	exit 1
+fi
+
+for arg in "$@"
+do
+	if [[ "$arg" == *- ]]
+	then
+		echo "bad arg: $arg"
+	elif [[ "$arg" == "--delete" ]]
+	then
+		optDelete=1
+	elif [[ "$arg" == "--dry-run" ]]
+	then
+		optDryRun=1
+	elif [[ -d "$arg" ]]
+	then
+		dirFiles="$(find "$arg" -type f -not -ipath '*/.git/*' -not -ipath '*/.internals/*' -regextype posix-extended -iregex '.+\.(jpe?g|png|bmp|tiff)' -size +0 | sort)"
+
+		while read -r dirFile
+		do
+			files+=("$dirFile")
+		done < <(echo "$dirFiles")
+	elif [[ -f "$arg" ]]
+	then
+		files+=("$arg")
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
+
+if [[ "${#files[@]}" -eq 0 ]]
+then
+	echo "no file paths"
+	exit 1
+elif [[ "$optDryRun" == 0 && "$optDelete" == 0 ]]
+then
+	echo "must specify --dry-run or --delete"
+	exit 1
+fi
+
+lastFile=''
+lastPhash=''
+lastRes=''
+lastEchoedLastFile=''
+
+for thisFile in "${files[@]}"
+do
+	thisPhash="$(pyphash --hash-size 8 "$thisFile")"
+	burnIt=0
+
+	if [[ -n "$thisPhash" && "$thisPhash" == "$lastPhash" ]]
+	then
+		lastRes="$(identify -format '%wx%h' "$lastFile")"
+		thisRes="$(identify -format '%wx%h' "$thisFile")"
+
+		if [[ "$lastRes" == "$thisRes" ]]
+		then
+			burnIt=1
+		fi
+	fi
+
+	if [[ "$burnIt" == 1 ]]
+	then
+		if [[ "$lastEchoedLastFile" != "$lastFile" ]]
+		then
+			echo "$line"
+			echo "$lastFile"
+			lastEchoedLastFile="$lastFile"
+		fi
+
+		echo -n "$thisFile"
+		echo -n " x"
+		echo
+
+		if [[ "$optDelete" == 1 ]]
+		then
+			rm -f "$thisFile"
+		fi
+	else
+		lastFile="$thisFile"
+		lastPhash="$thisPhash"
+	fi
+done

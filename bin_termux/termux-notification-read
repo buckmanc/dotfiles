@@ -68,7 +68,10 @@ do
 		-e 's/^(facebook.orca)$/messenger/g;' \
 		-e 's/^(oceanwing.care.cam)$/eufy Baby/g;' \
 		-e 's/^(zhiliaoapp.musically)$/tiktok/g;' \
+		-e 's/^(instagram.barcelona)$/threads/g;' \
+		-e 's/^(daemonapp)$/weather/g;' \
 		-e 's/^(gm)$/gmail/g;' \
+		-e 's/^(tycho)$/googlefi/g;' \
 		-e 's/^(vending)$/googleplay/g;' \
 		-e 's/(\.(orca|android|frontpage|application|mShop|shopping|katana|music))+$//g;' \
 		| cat)"
@@ -129,10 +132,16 @@ do
 		elif [[ "$packageName" == "instagram" ]] && [[ "${content,,}" == *'who you might know, is on instagram'* || "${content,,}" == *"reposted"* ]]
 		then
 			continue
+		elif [[ "$packageName" == "threads" ]] && [[ "${title,,}" == *suggested* ]]
+		then
+			continue
 		elif [[ "$packageName" == "youtube" ]] && [[ "${content,,}" == 'for you:'* ]]
 		then
 			continue
 		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" == *'see where your package is'* || "${title,,}" == *'out for delivery'* || "${title,,}" == "new from"* ]]
+		then
+			continue
+		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" =~ (^get this|deals) && "${content,,}" =~ (shop|save) ]]
 		then
 			continue
 		elif [[ "$packageName" == "googleplay" ]] && [[ "${content,,}" == *'successfully installed'* ]]
