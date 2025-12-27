@@ -170,7 +170,7 @@ fi
 
 # cleanup specific meta data here
 metadataArgs=()
-if [[ "${urls[*]}" == *dungeonsyntharchives* ]]
+if [[ "${urls[*],,}" == *dungeonsyntharchives* ]]
 then
 	metadataArgs=(--parse-metadata '%(playlist_channel)s:%(meta_album)s' --parse-metadata 'title:(?P<meta_artist>.+) \- (?P<meta_title>.+) \((?P<meta_date>\d+)\)')
 elif [[ "${optName,,}" == *keygen-castlevania* ]]

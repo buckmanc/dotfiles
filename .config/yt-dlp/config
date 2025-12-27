@@ -2,3 +2,4 @@
 -t sleep
 --embed-metadata
 --embed-thumbnail
+--cookies "$HOME/.cache/cookies/cookies.youtube.txt"
