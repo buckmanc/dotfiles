@@ -25,7 +25,11 @@
 		"filename":"{title|tag_string_character[:200]}_{id}_{date:%Y-%m-%d}_by_{tag_string_artist|username|user[name]}.{extension}",
 		"directory":["{tag_string_artist|username|user[name]}"],
 		"facebook":{
-			"filename":"{date:%Y-%m-%d} {id}.{extension}"
+			"filename":"{date:%Y-%m-%d} {id}.{extension}",
+			"cookies": "$HOME/.cache/cookies/cookies.facebook.txt"
+		},
+		"instagram":{
+			"cookies": "$HOME/.cache/cookies/cookies.instagram.txt"
 		},
 		"last-line-with-no-comma":true
 	}
