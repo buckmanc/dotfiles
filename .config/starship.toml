@@ -7,6 +7,12 @@
 # ${custom.df}\
 # ${custom.random}\
 # ${custom.bash_line_break}\
+# ${custom.shellscripts}\
+# ${custom.powershell}\
+# ${custom.batch}\
+# ${custom.python}\
+# ${custom.sql}\
+# $dotnet\
 format = """
 $sudo\
 ${custom.screen}\
@@ -15,12 +21,6 @@ $username\
 $hostname\
 ${custom.shlvl} \
 $directory\
-$dotnet\
-${custom.shellscripts}\
-${custom.powershell}\
-${custom.batch}\
-${custom.python}\
-${custom.sql}\
 $git_branch\
 $git_commit\
 $git_state\
@@ -384,7 +384,7 @@ disabled = true
 
 [cmd_duration]
 format = "[ $duration]($style)"
-style = "priority-1"
+style = "priority-2"
 
 ## simple character module
 # [character]
@@ -400,14 +400,16 @@ style = "priority-1"
 # error data in the middle of the prompt using status and character modules
 [character]
 format = '$symbol'
-success_symbol = "[ ❯ ](git)"
+# success_symbol = "[ ❯ ](git)"
+success_symbol = "[留❯ ](git)"
 error_symbol = ''
 
 [status]
 success_symbol = '✓'
 disabled = false
 pipestatus = false
-format = '[( $common_meaning$signal_name$maybe_int ❯ )]($style)'
+# format = '[( $common_meaning$signal_name$maybe_int ❯ )]($style)'
+format = '[(六$common_meaning$signal_name$maybe_int ❯ )]($style)'
 # handy pipestatus_format if I could get it to hide on success
 # pipestatus_format = '[ \[$pipestatus\] => $common_meaning$signal_name$maybe_int ❯ ]($style)'
 # pipestatus_segment_format = '[ $symbol$maybe_int ]($style)'
