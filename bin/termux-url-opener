@@ -98,8 +98,7 @@ then
 	else
 		if ! "$HOME/bin/xgallery-dl" -D "$outDir" "$1"
 		then
-			echo "Could not download with gallery-dl. Falling back to generic downloader."
-			$HOME/bin/download-page-images "$1" "$outDir"
+			sleep 5s
 		fi
 	fi
 
