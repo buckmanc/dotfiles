@@ -56,8 +56,14 @@ then
 elif [[ -z "$TMPDIR" && -n "$TEMP" && -d "$TEMP" ]]
 then
 	export TMPDIR="$TEMP"
-elif [[ -z "$TEMP" && -n "$TMPDIR" && -d "$TMPDIR" ]]
+elif [[ -z "$TEMP" && -n "$TMPDIR" ]]
 then
+	# recreate the damn dir if it got deleted somehow
+	if [[ ! -d "$TMPDIR" ]]
+	then
+		mkdir "$TMPDIR"
+	fi
+
 	export TEMP="$TMPDIR"
 fi
 
