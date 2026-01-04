@@ -38,11 +38,11 @@ alias screeny='xscreen'
 alias xscr='xscreen'
 alias xscrn='xscreen'
 
-if [ -d ~/.jpsxdec ]
+if [[ -d ~/.jpsxdec ]]
 then
 	alias jpsxdec='java -jar ~/.jpsxdec/jpsxdec.jar'
 fi
-if [ -f ~/dropbox.py ]
+if [[ -f ~/dropbox.py ]]
 then
 	alias dropbox='python3 ~/dropbox.py'
 fi
@@ -82,83 +82,12 @@ mkdircd(){
 	fi
 }
 
-# fix trailing whitespace
-# remove whitespace from the end of files
-fixtw(){
-	# add pipe args to the list of regular args
-	args="$@"
-	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
-
-	# iterate over args
-	for i in "$@"
-	do
-		# ignore empty args, which show up when using pipes for some reason
-		if [[ -z $i ]]
-		then
-			continue
-		fi
-
-		sed -bi 's/[ \t]*\(\r\?\)$/\1/' "$i"
-	done
-}
-# add a space after //
-# this isn't perfect and will require manual review, so do it on a clean repo
-fixcomment(){
-	# add pipe args to the list of regular args
-	args="$@"
-	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
-
-	sed -i "s#(\s+?////+?)([^\s//])#\1 \2#g" "$@"
-
-}
-fixtab(){
-
-	# add pipe args to the list of regular args
-	args="$@"
-	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
-
-	# iterate over args
-	for i in "$@"
-	do
-		text=`expand -i -t 4 "$i"`
-		echo "$text" > "$i"
-
-	done
-
-	return 0
-}
-
-fixcarriagereturn(){
-
-
-	# add pipe args to the list of regular args
-	args="$@"
-	[[ -p /dev/stdin ]] && { mapfile -t; set -- "${MAPFILE[@]}"; set -- "$@" "$args"; }
-
-	# iterate over args
-	for i in "$@"
-	do
-		# ignore empty args, which show up when using pipes for some reason
-		if [[ -z $i ]]
-		then
-			continue
-		fi
-
-		perl -i -pe 's/\r//g' "$i"
-	done
-
-	return 0
-}
-
-# set window title
-title() { echo -ne "\e]0;$1\a"; }
-
 figtest() {
 
 	if (! type figlet >/dev/null 2>&1)
 	then
 		echo 'figlet not installed'
-		return -1
+		return 1
 	fi
 
 	echo
@@ -189,7 +118,7 @@ for range in $(fc-match --format='%{charset}\n' "$1"); do
 done | while read -r n_hex; do
     count=$((count + 1))
     printf "%-5s\U$n_hex\t" "$n_hex"
-    [ $((count % 10)) = 0 ] && printf "\n"
+    [[ $((count % 10)) = 0 ]] && printf "\n"
 done
 printf "\n"
 }
@@ -215,7 +144,7 @@ Options:
 	smallScreen=0
 	path='.'
 
-	if [ $COLUMNS -gt 0 ] && [ $COLUMNS -lt 40 ]
+	if [[ $COLUMNS -gt 0 ]] && [[ $COLUMNS -lt 40 ]]
 	then
 		smallScreen=1
 	fi
@@ -253,7 +182,7 @@ Options:
 		fi
 	done
 
-	if [ "$optHelp" == 1 ]
+	if [[ "$optHelp" == 1 ]]
 	then
 		echo "$help"
 		return 0
@@ -262,18 +191,18 @@ Options:
 	buildFlags="--nologo --verbosity quiet -consoleLoggerParameters:NoSummary"
 
 	# both is just default
-	if [ "$optWarnings" == 1 ] && [ "$optErrors" == 1 ]
+	if [[ "$optWarnings" == 1 ]] && [[ "$optErrors" == 1 ]]
 	then
 		optWarnings=0
 		optErrors=0
 	fi
 	
 	# set what text to search for
-	if [ "$optWarnings" == 1 ]
+	if [[ "$optWarnings" == 1 ]]
 	then
 		buildFlags="${buildFlags} -consoleLoggerParameters:WarningsOnly"
 		errowarn="warning"
-	elif [ "$optErrors" == 1 ]
+	elif [[ "$optErrors" == 1 ]]
 	then
 		buildFlags="${buildFlags} -consoleLoggerParameters:ErrorsOnly"
 		errowarn="error"
@@ -286,13 +215,13 @@ Options:
 	numTrim="cat"
 	# hide all dangling columns
 	tableHideColumns="-"
-	if [ "$optShort" == 1 ]
+	if [[ "$optShort" == 1 ]]
 	then
 		tableHideColumns="${tableHideColumns},file"
 	fi
-	if [ "$optLong" -ne 1 ] || [ "$optShort" == 1 ]
+	if [[ "$optLong" -ne 1 ]] || [[ "$optShort" == 1 ]]
 	then
-		if [ "$optWarnings" == 1 ] || [ "$optErrors" == 1 ]
+		if [[ "$optWarnings" == 1 ]] || [[ "$optErrors" == 1 ]]
 		then
 			tableHideColumns="${tableHideColumns}, error num"
 		else
@@ -302,8 +231,8 @@ Options:
 
 	# truncate file names when the screen is small
 	fileTrim="cat"
-	# if [ "$smallScreen" == 1 ] && [ "$optShort" == 0 ] && [ "$optLong" == 0 ]
-	if [ "$smallScreen" == 1 ] && [ "$optShort" == 0 ]
+	# if [[ "$smallScreen" == 1 ]] && [[ "$optShort" == 0 ]] && [[ "$optLong" == 0 ]]
+	if [[ "$smallScreen" == 1 ]] && [[ "$optShort" == 0 ]]
 	then
 		fileTrim="perl -pe s/^([\.\w]{7})[\.\w]{3,}/\1\.\.\./g"
 	fi
@@ -320,12 +249,12 @@ Options:
 		$numTrim)
 
 	# unless in long mode, don't wrap 
-	if [ "$optLong" -ne 1 ]
+	if [[ "$optLong" -ne 1 ]]
 	then
 		text=$(echo "${text}" | cut -c-"$COLUMNS")
 	fi
 
-	if [ "$optLong" == 1 ] && [ "$smallScreen" == 1 ] && [ "$optShort" == 0 ]
+	if [[ "$optLong" == 1 ]] && [[ "$smallScreen" == 1 ]] && [[ "$optShort" == 0 ]]
 	then
 		# regex some nicer formatting
 		text=$(echo "${text}" | perl -pe 's/(\(\d+,\d+\)\s+(?:erro(?:r?)|warn(?:ing)?) \w+?\d+)\s+/\1 \2\n/g')
@@ -338,7 +267,7 @@ Options:
 	text=$(echo "${text}" | perl -pe 's/^[^\S\r\n]//g')
 
 	# don't return an error if nothing was found
-	if [ -z "$text" ]
+	if [[ -z "$text" ]]
 	then
 		return 0
 	fi
@@ -383,13 +312,13 @@ completeme(){
 
 	if [[ "${cmd}" != *"--"* ]]
 	then
-		if [ -z "${shortCmd}" ]
+		if [[ -z "${shortCmd}" ]]
 		then
 			shortCmd="${cmd}"
 		fi
 
 		cmd="${cmd} --help"
-	elif [ -z "${shortCmd}" ]
+	elif [[ -z "${shortCmd}" ]]
 	then
 		shortCmd=$(echo "${cmd}" | perl -pe 's/^(.+) --.+/\1/g')
 	fi
@@ -479,7 +408,7 @@ xwttr(){
 		locs=''
 		aliasLines=''
 	fi
-	if [ $# -eq 0 ]
+	if [[ $# -eq 0 ]]
 	then
 		results="$(timeout 5s bash -c "wttr '$locs' 'format=%l:~%t(%f)~%c%C\n'")"
 		while read -r line
@@ -493,7 +422,7 @@ xwttr(){
 
 		echo "$results" | sed -e 's/ \{2,\}/ /g' -e 's/°[CF]//g' -e 's/\+//g' -e "s/)/) $degrees/g" | column --table --separator '~'
 
-	elif [ "$1" = "moon" ]
+	elif [[ "$1" = "moon" ]]
 	then
 		timeout 5s bash -c "wttr $@"
 	else
@@ -545,7 +474,7 @@ quoter_update(){
 	fileSearch="${1}"
 	textToAdd="${2}"
 
-	if [ -z "${fileSearch}" ]
+	if [[ -z "${fileSearch}" ]]
 	then
 		blarp=blorp
 		# list optional names
@@ -555,7 +484,7 @@ quoter_update(){
 	# something like '^${fileSearch.*'
 	# warn an exit if more than one matching path found
 
-	if [ -z "${textToAdd}" ]
+	if [[ -z "${textToAdd}" ]]
 	then
 		blarp=blorp
 		# vim file
@@ -568,7 +497,7 @@ quoter_update(){
 
 dotnewt(){
 
-	if [ $# -eq 0 ]
+	if [[ $# -eq 0 ]]
 	then
 		>&2 echo "You've gotta at least provide a template name"
 		return 1

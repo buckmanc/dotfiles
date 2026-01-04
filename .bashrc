@@ -1,20 +1,10 @@
-if [ -f ~/.bash_aliases ]; then
+if [[ -f ~/.bash_aliases ]]; then
     . ~/.bash_aliases
 fi
 
-if [ -f ~/.bash_aliases_local ]; then
+if [[ -f ~/.bash_aliases_local ]]; then
     . ~/.bash_aliases_local
 fi
-
-if [[ "$HOME" == *"termux"* ]]; then
-	XENVIRO=mobile
-elif [[ "$HOME" == *"OneDrive"* ]]; then
-	XENVIRO=work
-else
-	XENVIRO=other
-fi
-
-export XENVIRO
 
 # If not running interactively, don't do anything
 case $- in
@@ -75,9 +65,9 @@ fi
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
+  if [[ -f /usr/share/bash-completion/bash_completion ]]; then
     . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
+  elif [[ -f /etc/bash_completion ]]; then
     . /etc/bash_completion
   fi
 fi
@@ -85,7 +75,7 @@ fi
 addtopath(){
 	newPath="$1"
 	newPath="$(echo "$newPath" | sed 's|^C:\\|/c/|g')"
-	if [ -d "$newPath" ]
+	if [[ -d "$newPath" ]]
 	then
 
 		export PATH="$PATH:$newPath"
@@ -94,7 +84,7 @@ addtopath(){
 addtopathstart(){
 	newPath="$1"
 	newPath="$(echo "$newPath" | sed 's|^C:\\|/c/|g')"
-	if [ -d "$newPath" ]
+	if [[ -d "$newPath" ]]
 	then
 
 		export PATH="$newPath:$PATH"
@@ -110,7 +100,7 @@ ANDROID_HOME="/media/content/Coding/androidsdk"
 
 addtopathstart "${HOME}/bin"
 addtopathstart "${HOME}/bin_local"
-if [ "$XENVIRO" == "mobile" ]
+if [[ "$OSTYPE" == "linux-android" ]]
 then
 	addtopath "${HOME}/bin_termux"
 	addtopath "${HOME}/.shortcuts"
@@ -132,20 +122,21 @@ addtopath "$PROGRAMFILES/AutoHotkey/"
 addtopath "$PROGRAMFILES/VideoLAN/VLC/"
 addtopath "/c/Program Files (x86)/Google/Cloud SDK/google-cloud-sdk/bin"
 
-if [ -d "${ANDROID_HOME}" ]
+if [[ -d "${ANDROID_HOME}" ]]
 then
 	export ANDROID_HOME
 fi
 
-if [ -d "${NVM_DIR}" ]
+if [[ -d "${NVM_DIR}" ]]
 then
 	export NVM_DIR
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+	[[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+	[[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 fi
 
 # provide a standard user environment variable between platforms
-if [[ -z "$USER" && -n "$USERNAME" ]]; then
+if [[ -z "$USER" && -n "$USERNAME" ]]
+then
 	export USER="$USERNAME"
 fi
 
@@ -160,20 +151,16 @@ export COLUMNS
 export DOTNET_NOLOGO=true
 export DOTNET_ROOT=/usr/share/dotnet
 
+customHomeChar="ᐰ"
+
 function set_win_title(){
 	
-	text=$(basename "$PWD")
-
 	# special character for home dir
-	if [ "${HOME,,}" == "${PWD,,}" ]
+	if [[ "$HOME" -ef "$PWD" ]]
 	then
-		# # very hacky bug fix for juicessh
-		# if [ -z "$SSH_CLIENT" ] || [[ ("$COLUMNS" != "75" && "$COLUMNS" != 37) ]]
-		# then
-		# 	text="ᐰ"
-		# fi
-
-		text="ᐰ"
+		text="$customHomeChar"
+	else
+		text=$(basename "$PWD")
 	fi
 
 	# neat idea for pulling directly from starship to support substitutions
@@ -225,15 +212,42 @@ function set_win_title(){
 
 	echo -ne "\033]0;${text}\007"
 }
+
+function custom_pwd_ps1(){
+
+	echo -n "${PWD/#$HOME/$customHomeChar}"
+}
+function custom_git_ps1(){
+
+	customGitStat="$(__git_ps1)"
+
+	if [[ -n "$customGitStat" ]]
+	then
+		customGitStat=" ( $(echo "$customGitStat" | sed 's/[\(\) ]//g'))"
+	fi
+
+	echo -n "$customGitStat"
+}
+
 starship_precmd_user_func="set_win_title"
 # suppress warnings
 export STARSHIP_LOG=error
 
+# use starship if installed
 if type starship >/dev/null 2>&1; then
 	eval "$(starship init bash)"
+# otherwise, use a stripped down yet pretty prompt
+else
+	# doesn't work unless you're using \w in PS1
+	# PROMPT_DIRTRIM=2
+
+	PROMPT_COMMAND="set_win_title"
+	# not that the backticks here are not doing command subtitution as normal; the string is not double quoted
+	# bash does its own command substitution with them
+	PS1='\n\[\033[32m\]`custom_pwd_ps1`\[\033[36m\]`custom_git_ps1`\[\033[0m\]\n★ ❯ '
 fi
 
-if [ -d /home/linuxbrew ]
+if [[ -d /home/linuxbrew ]]
 then
 	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
@@ -256,21 +270,6 @@ then
 	complete -f -F _dotnet_bash_complete dotnet
 fi
 
-# if type thefuck	>/dev/null 2>&1; then
-# 	eval "$(thefuck --alias)"
-# else
-# 	# alias thefuck='pip install thefuck --user'
-# 	# install bug fix version for now
-# 	alias thefuck='pip install https://github.com/DJStompZone/thefuck/archive/master.zip --break-system-packages --user'
-# fi
-
-# thefuck is dead, long live pay-respects
-# github.com/nvbn/thefuck/issues/1466
-if type pay-respects >/dev/null 2>&1; then
-	eval "$(pay-respects bash --alias --nocnf)"
-	alias fuck=f
-fi
-
 if type pandoc >/dev/null 2>&1; then
 	eval "$(pandoc --bash-completion)"
 fi
@@ -280,6 +279,7 @@ if [[ -f /usr/share/bash-completion/completions/screen ]]
 then
 	source /usr/share/bash-completion/completions/screen
 fi
+
 # https://superuser.com/a/947240
 function _complete_xscreen() {
 	local does_screen_exist=$(type -t _screen_sessions)
