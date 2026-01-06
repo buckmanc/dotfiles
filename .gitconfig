@@ -68,6 +68,9 @@
 [filter "termux_shell"]
 	clean = "~/.config/gitconfig_scripts/termux_filter.sh" --clean
 	smudge = "~/.config/gitconfig_scripts/termux_filter.sh" --smudge
+[filter "termux_shell_clean_only"]
+	clean = "~/.config/gitconfig_scripts/termux_filter.sh" --clean
+	smudge = "cat"
 [filter "xml"]
 	clean = "~/bin/sort-xml"
 [filter "json"]

@@ -1,4 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# this is very tricky
+# it fails when smudging itself, so a "clean only" filter is set in a folder specific .gitattributes
+# when setting up termux a termux shebang will have to be manually added to this file
+# termux documentation says you can use the standard env shebang
+# but it doesn't work in all circumstances, like during login
 
 optClean=0
 optSmudge=1
