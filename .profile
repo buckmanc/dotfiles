@@ -26,8 +26,3 @@ fi
 if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
-
-if [ -f "$HOME/.deno/env" ]
-then
-    . "$HOME/.deno/env"
-fi

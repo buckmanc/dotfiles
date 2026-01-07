@@ -286,6 +286,12 @@ then
 	source /usr/share/bash-completion/completions/screen
 fi
 
+if [[ -f "$HOME/.deno/env" ]]
+then
+	source "$HOME/.deno/env"
+	# source /home/bucko/.local/share/bash-completion/completions/deno.bash
+fi
+
 # https://superuser.com/a/947240
 function _complete_xscreen() {
 	local does_screen_exist=$(type -t _screen_sessions)
