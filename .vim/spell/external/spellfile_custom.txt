@@ -194,6 +194,8 @@ diarrheal
 diem
 dimmable
 dinked
+dino
+dinos
 Dinotopia
 Dios
 direness
@@ -487,6 +489,7 @@ Orobourous
 Orson
 OST
 other's
+othered
 ouija
 out-of-towner
 outro
@@ -534,6 +537,7 @@ ppl
 pranked
 pranking
 pre
+prediabetes
 prep'd
 prep'ing
 PSAT
@@ -654,6 +658,7 @@ strikethrough
 strikethroughs
 stuffie
 styleless
+styrofoam
 supportively
 synergize
 talkbox
@@ -705,6 +710,7 @@ undiagnosed
 unfort
 ungrounded
 unintuitive
+United Healthcare's
 unjam
 unjamming
 unkillable
@@ -816,8 +822,10 @@ Bat'leth
 Battar
 batton
 Beckman
+Beleriand
 Ben Hur
 Ben-Hur
+Beren
 Bioshock
 Bjendal
 Blart
@@ -891,6 +899,7 @@ Ganon
 Ghibli
 Godrick
 Gollum
+Gondolin
 gorram
 Gramps
 Greylings
@@ -909,6 +918,7 @@ Hylia
 Hylia's
 Hyrule
 Héra
+Húrin
 Ico
 IDW
 Iggy
@@ -946,6 +956,7 @@ LotR
 luma
 Lumar
 lumas
+Lúthien
 Madoka
 Magica
 Malacath
@@ -1031,6 +1042,7 @@ Shazam
 Sheogorath
 Sheogorath's
 shinies
+shovelry
 Silmarillion
 Skooma
 Skyrim
@@ -1090,6 +1102,7 @@ Wyndle
 wyrm
 Yaezir's
 Yolen
+Yoshi's
 Ysmir's
 Yumi
 Zenithar
@@ -2408,6 +2421,7 @@ backend
 backends
 Blazor
 CC's
+ch57x
 cli
 concat
 config
@@ -2436,12 +2450,16 @@ Jira
 jpeg
 jpg
 json
+keycap
+keycaps
 M2
 macropad
+macropads
 mailhost
 mssql
 MSSQL
 mvp
+nvarchar
 Pandoc
 PCIe
 performant
@@ -2489,6 +2507,7 @@ upsert
 uptime
 usb
 UX
+varchar
 VBS
 Veracode
 vimrc
@@ -2502,6 +2521,7 @@ xls
 xlsm
 xlsx
 Xubuntu
+yaml
 Baladia
 Baladian
 Berglund

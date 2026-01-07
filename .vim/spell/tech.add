@@ -6,6 +6,7 @@ backend
 backends
 Blazor
 CC's
+ch57x
 cli
 concat
 config
@@ -34,12 +35,16 @@ Jira
 jpeg
 jpg
 json
+keycap
+keycaps
 M2
 macropad
+macropads
 mailhost
 mssql
 MSSQL
 mvp
+nvarchar
 Pandoc
 PCIe
 performant
@@ -87,6 +92,7 @@ upsert
 uptime
 usb
 UX
+varchar
 VBS
 Veracode
 vimrc
@@ -100,3 +106,4 @@ xls
 xlsm
 xlsx
 Xubuntu
+yaml

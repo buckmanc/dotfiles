@@ -195,6 +195,8 @@
 	diem	en-US
 	dimmable	en-US
 	dinked	en-US
+	dino	en-US
+	dinos	en-US
 	Dinotopia	en-US
 	Dios	en-US
 	direness	en-US
@@ -488,6 +490,7 @@
 	Orson	en-US
 	OST	en-US
 	other's	en-US
+	othered	en-US
 	ouija	en-US
 	out-of-towner	en-US
 	outro	en-US
@@ -535,6 +538,7 @@
 	pranked	en-US
 	pranking	en-US
 	pre	en-US
+	prediabetes	en-US
 	prep'd	en-US
 	prep'ing	en-US
 	PSAT	en-US
@@ -655,6 +659,7 @@
 	strikethroughs	en-US
 	stuffie	en-US
 	styleless	en-US
+	styrofoam	en-US
 	supportively	en-US
 	synergize	en-US
 	talkbox	en-US
@@ -706,6 +711,7 @@
 	unfort	en-US
 	ungrounded	en-US
 	unintuitive	en-US
+	United Healthcare's	en-US
 	unjam	en-US
 	unjamming	en-US
 	unkillable	en-US
@@ -817,8 +823,10 @@
 	Battar	en-US
 	batton	en-US
 	Beckman	en-US
+	Beleriand	en-US
 	Ben Hur	en-US
 	Ben-Hur	en-US
+	Beren	en-US
 	Bioshock	en-US
 	Bjendal	en-US
 	Blart	en-US
@@ -892,6 +900,7 @@
 	Ghibli	en-US
 	Godrick	en-US
 	Gollum	en-US
+	Gondolin	en-US
 	gorram	en-US
 	Gramps	en-US
 	Greylings	en-US
@@ -910,6 +919,7 @@
 	Hylia's	en-US
 	Hyrule	en-US
 	Héra	en-US
+	Húrin	en-US
 	Ico	en-US
 	IDW	en-US
 	Iggy	en-US
@@ -947,6 +957,7 @@
 	luma	en-US
 	Lumar	en-US
 	lumas	en-US
+	Lúthien	en-US
 	Madoka	en-US
 	Magica	en-US
 	Malacath	en-US
@@ -1032,6 +1043,7 @@
 	Sheogorath	en-US
 	Sheogorath's	en-US
 	shinies	en-US
+	shovelry	en-US
 	Silmarillion	en-US
 	Skooma	en-US
 	Skyrim	en-US
@@ -1091,6 +1103,7 @@
 	wyrm	en-US
 	Yaezir's	en-US
 	Yolen	en-US
+	Yoshi's	en-US
 	Ysmir's	en-US
 	Yumi	en-US
 	Zenithar	en-US
@@ -2409,6 +2422,7 @@
 	backends	en-US
 	Blazor	en-US
 	CC's	en-US
+	ch57x	en-US
 	cli	en-US
 	concat	en-US
 	config	en-US
@@ -2437,12 +2451,16 @@
 	jpeg	en-US
 	jpg	en-US
 	json	en-US
+	keycap	en-US
+	keycaps	en-US
 	M2	en-US
 	macropad	en-US
+	macropads	en-US
 	mailhost	en-US
 	mssql	en-US
 	MSSQL	en-US
 	mvp	en-US
+	nvarchar	en-US
 	Pandoc	en-US
 	PCIe	en-US
 	performant	en-US
@@ -2490,6 +2508,7 @@
 	uptime	en-US
 	usb	en-US
 	UX	en-US
+	varchar	en-US
 	VBS	en-US
 	Veracode	en-US
 	vimrc	en-US
@@ -2503,6 +2522,7 @@
 	xlsm	en-US
 	xlsx	en-US
 	Xubuntu	en-US
+	yaml	en-US
 	Baladia	en-US
 	Baladian	en-US
 	Berglund	en-US
