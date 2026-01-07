@@ -103,6 +103,10 @@ do
 		then
 			echo -e "\r'target url error'\033[K"
 			iExceptions=$((iExceptions+1))
+		elif [[ "${output,,}" == *"please enter a valid web address"* ]]
+		then
+			echo -e "\r'invalid url error'\033[K"
+			iExceptions=$((iExceptions+1))
 		# elif [[ "${url,,}" == *".css" ]]
 		# then
 		# 	# some file types just return a very plain response
