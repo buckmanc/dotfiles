@@ -309,6 +309,10 @@ vlc			= "󰕼"
 "autohotkey"= ""
 "power"		= "⏻"
 "tolkien"	= "󱐍"
+"google"	= ""
+"Google"	= ""
+"docs"		= ""
+"Docs"		= ""
 
 [dotnet]
 style = 'dev'
@@ -401,7 +405,8 @@ style = "priority-2"
 [character]
 format = '$symbol'
 # success_symbol = "[ ❯ ](git)"
-success_symbol = "[留❯ ](git)"
+# success_symbol = "[留❯ ](git)"
+success_symbol = "[★ ❯ ](git)"
 error_symbol = ''
 
 [status]
@@ -409,7 +414,8 @@ success_symbol = '✓'
 disabled = false
 pipestatus = false
 # format = '[( $common_meaning$signal_name$maybe_int ❯ )]($style)'
-format = '[(六$common_meaning$signal_name$maybe_int ❯ )]($style)'
+# format = '[(六$common_meaning$signal_name$maybe_int ❯ )]($style)'
+format = '[(☆ $common_meaning$signal_name$maybe_int ❯ )]($style)'
 # handy pipestatus_format if I could get it to hide on success
 # pipestatus_format = '[ \[$pipestatus\] => $common_meaning$signal_name$maybe_int ❯ ]($style)'
 # pipestatus_segment_format = '[ $symbol$maybe_int ]($style)'
