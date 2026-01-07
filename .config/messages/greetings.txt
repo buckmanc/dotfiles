@@ -31,6 +31,7 @@ Am I getting paid for this?
 Here we go again
 Today is a good day for pie
 Can I get two wheat for an ore?
+Today is a good day for an OSHA violation
 #star trek
 Something new from Forcas Three?
 Temba, at rest
@@ -60,7 +61,7 @@ Fate rewards us with acquaintance!
 #homestar
 Hails and horns!
 #gideon the ninth
-Saddle up, sunshine.
+Saddle up, sunshine
 #sanderson
 Carp Diem. Seize the fish.
 Carp Diem. Fish the day.
@@ -85,3 +86,30 @@ Wowie zowie!
 Stay sparkly!
 # roblox
 I bite ankles
+# shovel knight
+## intros
+for shovelry!
+dig in
+sharpen thy shovel
+it's shoveling time
+get digging
+strike the earth
+ready
+let's get shoveling
+## bard
+Oooohhhh! You have a music sheet! Please accept 500 gold as a reward!
+Untold glory and riches await you on this grand adventure!
+As your adventure begins, we are regaled with tales of bravery and despair.
+Your trials are far from over, but for now, you can rest your shovel.
+Rest your greaves, toast a marshmallow, and enjoy the starry night.
+danger looms large on the horizon.
+Even the dead can dance in this desolate land.
+## mona
+I suppose peaceful solitude is too much to ask for.
+You got 32 points! That's not very good, though. If you're trying to impress me, you should try for 75 next time.
+Yeah, I dance down here. All the time. By myself.
+## shovel knight
+Wharglebrhgbr!
+Ahh, it's nice to get that helmet off sometimes
+## black knight
+steel thy shovel
