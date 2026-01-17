@@ -1,0 +1,338 @@
+#!/usr/bin/env bash
+
+set -e
+
+repoPath="$TEMP/death_generator"
+tempDir="$TEMP/deathstitch_generator"
+textTempPath="$tempDir/text.png"
+url="https://github.com/foone/SierraDeathGenerator"
+
+optGame=""
+optSubFont=""
+optText=""
+optOutPath=""
+optSize=""
+optVerbose=0
+optBorderPath=""
+optCenterBorderPath=""
+
+for arg in "$@"
+do
+	if [[ -z "$arg" ]]
+	then
+		continue
+	fi
+
+	if [[ "$optNextIsGame" == 1 ]]
+	then
+		optGame="$arg"
+		optNextIsGame=0
+	elif [[ "$optNextIsSubFont" == 1 ]]
+	then
+		optSubFont="$arg"
+		optNextIsSubFont=0
+	elif [[ "$optNextIsText" == 1 ]]
+	then
+		optText="$arg"
+		optNextIsText=0
+	elif [[ "$optNextIsOutPath" == 1 ]]
+	then
+		optOutPath="$arg"
+		optNextIsOutPath=0
+	elif [[ "$optNextIsBorderPath" == 1 ]]
+	then
+		optBorderPath="$arg"
+		optNextIsBorderPath=0
+	elif [[ "$optNextIsCenterBorderPath" == 1 ]]
+	then
+		optCenterBorderPath="$arg"
+		optNextIsCenterBorderPath=0
+	elif [[ "$arg" == "-v" || "$arg" == "--verbose" ]]
+	then
+		optVerbose=1
+	elif [[ "$arg" == "--game" || "$arg" == "--font" ]]
+	then
+		optNextIsGame=1
+	elif [[ "$arg" == "--subfont" ]]
+	then
+		optNextIsSubFont=1
+	elif [[ "$arg" == "--text" ]]
+	then
+		optNextIsText=1
+	elif [[ "$arg" == "--outpath" ]]
+	then
+		optNextIsOutPath=1
+	elif [[ "$arg" == "--border" ]]
+	then
+		optNextIsBorderPath=1
+	elif [[ "$arg" == "--center-border" || "$arg" == "--border-center" ]]
+	then
+		optNextIsCenterBorderPath=1
+	# elif [[ "$arg" =~ \-\-?q(uiet)? ]]
+	# then
+	# 	optQuiet=1
+	elif [[ "$arg" =~ [0-9]+[xX][0-9]+ ]]
+	then
+		optSize="$arg"
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
+
+if [[ -z "$optGame" || -z "$optText" || -z "$optOutPath" ]]
+then
+	echo "need --game, --text, and --outpath"
+	exit 1
+fi
+
+if [[ -n "$optBorderPath" && ! -f "$optBorderPath" ]]
+then
+	echo "border path does not exist:"
+	echo "$optBorderPath"
+	exit 1
+elif [[ -n "$optCenterBorderPath" && ! -f "$optCenterBorderPath" ]]
+then
+	echo "center border path does not exist:"
+	echo "$optCenterBorderPath"
+	exit 1
+fi
+
+# imagemagick version compatibility
+if type magick >/dev/null 2>&1
+then
+	magick=magick
+elif type convert >/dev/null 2>&1
+then
+	magick=convert
+else
+	echo 'imagemagick not installed'
+	exit 1
+fi
+
+if [[ -d "$repoPath/.git" ]]
+then
+	# TODO smooth out probs
+	git -C "$repoPath" pull
+else
+	git clone "$url" "$repoPath"
+fi
+
+outDir="$(dirname "$optOutPath")"
+
+mkdir -p "$outDir"
+mkdir -p "$tempDir"
+
+# only game dirs with a json config file
+# they *can* have multiple config files, but only one game does
+gamesList="$(find "$repoPath/games/" -type f -iname '*.json' -not -ipath '*/tests/*' -not -ipath '*/tools/*' | sort | xargs dirname | xargs -L 1 -d '\n' basename | uniq)"
+matchingGame="$(echo "$gamesList" | grep -i "$optGame")"
+
+if [[ "$(echo "$matchingGame" | wc -l)" -gt 1 ]]
+then
+	echo "found too many matches. limiting to exact matches instead of contains..."
+	matchingGame="$(echo "$matchingGame" | grep -Fix "$optGame")"
+fi
+
+if [[ -z "$matchingGame" ]]
+then
+	echo "no matching games found"
+	exit 1
+elif [[ "$(echo "$matchingGame" | wc -l)" -gt 1 ]]
+then
+	echo "found too many matches"
+	echo "$matchingGame"
+	exit 1
+fi
+
+echo "game: $matchingGame"
+echo
+
+# TODO handle multiple json config files
+# so far there's only one game that has multiple
+gameDirPath="$repoPath/games/$matchingGame/"
+gameConfigJsonPath="$(find "$gameDirPath" -maxdepth 1 -type f -iname '*.json' | head -n 1)"
+gameFontImagePath="$(find "$gameDirPath" -maxdepth 1 -type f -iname '*-font.png' | head -n 1)"
+
+gameConfigJson="$(cat "$gameConfigJsonPath")"
+subFontsJson="$(echo "$gameConfigJson" | jq -c '.subfonts')"
+
+if [[ -n "$optSubFont" ]]
+then
+	if [[ -z "$subFontsJson" || "$subFontsJson" == "null" ]]
+	then
+		echo "game has no subfonts"
+		exit 1
+	fi
+
+	kvp="$(echo "$subFontsJson" | jq -c "to_entries.[] | select(.key | contains(\"$optSubFont\"))" | head -n1)"
+	fontName="$(echo "$kvp" | jq -r '.key')"
+	fontConfigJson="$(echo "$kvp" | jq -r '.value')"
+
+	if [[ -n "$fontConfigJson" && -n "$fontName" ]]
+	then
+		echo "found subfont $fontName"
+	else
+		echo "could not find subfont $optSubFont"
+		exit 1
+	fi
+else
+	fontConfigJson="$gameConfigJson"
+	
+	if [[ -n "$subFontsJson" && "$subFontsJson" != null ]]
+	then
+		otherFonts="$(echo "$subFontsJson" | jq 'to_entries.[].key' -r)"
+		
+		if [[ -n "$otherFonts" ]]
+		then
+			echo "possible subfonts:"
+			echo "$otherFonts"
+			echo
+		fi
+	fi
+fi
+
+if [[ "$optVerbose" == 1 ]]
+then
+	echo "gameConfigJsonPath: $gameConfigJsonPath"
+fi
+
+defaultX="$(echo "$fontConfigJson" | jq -r '.default.x // 0')"
+defaultY="$(echo "$fontConfigJson" | jq -r '.default.y // 0')"
+defaultW="$(echo "$fontConfigJson" | jq -r '.default.w // 0')"
+defaultH="$(echo "$fontConfigJson" | jq -r '.default.h // 0')"
+# defaultH="$(echo "$fontConfigJson" | jq -r '.height // 0')"
+
+# TODO check the font config json as well
+nullCharCode="$(echo "$gameConfigJson" | jq -r '."null-character" // 32')"
+nullCharJson="$(echo "$fontConfigJson" | jq -rc ".\"$nullCharCode\"")"
+caseFold="$(echo "$fontConfigJson" | jq -r '."case-fold"')"
+
+i=0
+magickTextArgs=()
+magickTextArgs+=("$magick -background none")
+
+# appending chars horizontally to make lines
+# appending lines vertically to make the text
+
+while read -r line
+do
+	i=$((i+1))
+
+	if [[ "$caseFold" == "upper" ]]
+	then
+		line="${line^^}"
+	fi
+
+	chars="$(echo "$line" | sed -e 's/\(.\)/\1\n/g')"
+	lineOutPath="$tempDir/$i.png"
+
+	magickTextArgs+=("$lineOutPath")
+
+	magickLineArgs=()
+	magickLineArgs+=("$magick $gameFontImagePath -background none")
+
+	if [[ "$optVerbose" == 1 ]]
+	then
+		echo "line: $line"
+		# echo "chars: $chars"
+	fi
+
+	while read -r char
+	do
+		# if [[ -z "$char" ]]
+		# then
+		# 	continue
+		# fi
+
+		charCode="$(echo -n "$char" | od -An -td1 -w1 -v | perl -pe 's/( +$|^ +)//g')"
+		charJson="$(echo "$fontConfigJson" | jq -rc ".\"$charCode\"")"
+
+		if [[ "$optVerbose" == 1 ]]
+		then
+			echo "char: $char $(printf "%*s" "3" "$charCode") $charJson"
+		fi
+
+		if [[ -z "$charJson" || "$charJson" == "null" ]]
+		then
+			charJson="$nullCharJson"
+		fi
+
+		charX="$(echo "$charJson" | jq -rc ".x // $defaultX")"
+		charY="$(echo "$charJson" | jq -rc ".y // $defaultY")"
+		charW="$(echo "$charJson" | jq -rc ".w // $defaultW")"
+		charH="$(echo "$charJson" | jq -rc ".h // $defaultH")"
+
+		magickLineArgs+=("\( -clone 0 -crop ${charW}x${charH}+${charX}+${charY} +repage \)")
+
+	done < <( echo "$chars" )
+
+	magickLineArgs+=("-delete 0 +append $lineOutPath")
+
+	if [[ "$optVerbose" == 1 ]]
+	then
+		echo "magickLineArgs: ${magickLineArgs[*]}"
+	fi
+
+	eval "${magickLineArgs[*]}"
+
+done < <( echo "$optText" )
+
+magickTextArgs+=("-gravity center -append $textTempPath")
+
+if [[ "$optVerbose" == 1 ]]
+then
+	echo "magickTextArgs: ${magickTextArgs[*]}"
+fi
+
+eval "${magickTextArgs[*]}"
+
+# slap it on a canvas if given a size
+if [[ -n "$optSize" ]]
+then
+	"$magick" \( -size "$optSize" xc:transparent \) "$textTempPath" -gravity center -composite "$optOutPath"
+else
+	cp "$textTempPath" "$optOutPath"
+fi
+
+if [[ -n "$optBorderPath" ]]
+then
+
+	outputDim="$(identify -format '%wx%h' "$optOutPath")"
+	borderDim="$(identify -format '%wx%h' "$optBorderPath")"
+
+	outputWidth="$( echo "$outputDim" | cut -d 'x' -f 1)"
+	outputHeight="$(echo "$outputDim" | cut -d 'x' -f 2)"
+	borderWidth="$( echo "$borderDim" | cut -d 'x' -f 1)"
+	borderHeight="$(echo "$borderDim" | cut -d 'x' -f 2)"
+
+	fillerWidth=$((outputWidth - borderWidth - borderWidth))
+	fillerHeight=$((outputHeight - borderHeight - borderHeight))
+
+	fillerTopPath="$tempDir/filler_top.png"
+	fillerSidePath="$tempDir/filler_side.png"
+
+	# create border fillers by stretching the final pixels of the corners
+	"$magick" "$optBorderPath" -gravity northeast -crop 1x+0-0 +repage -scale "${fillerWidth}x!" "$fillerTopPath"
+	"$magick" "$optBorderPath" -gravity southwest -crop x1+0-0 +repage -scale "x${fillerHeight}!" "$fillerSidePath"
+
+	# support optional little embellishments on the top and bottom of the border
+	if [[ -n "$optCenterBorderPath" ]]
+	then
+		"$magick" "$fillerTopPath" "$optCenterBorderPath" "$fillerTopPath" -background none -gravity north +append +repage -extent "${fillerWidth}" "$fillerTopPath"
+	fi
+
+	# add the borders in the corners and the filler between them
+	"$magick" "$optOutPath" \
+		\( "$optBorderPath"				\) -gravity northwest	-composite \
+		\( "$optBorderPath" -flop		\) -gravity northeast	-composite \
+		\( "$optBorderPath" -flip		\) -gravity southwest	-composite \
+		\( "$optBorderPath" -flip -flop	\) -gravity southeast	-composite \
+		\( "$fillerTopPath"				\) -gravity north		-composite \
+		\( "$fillerTopPath" -flip		\) -gravity south		-composite \
+		\( "$fillerSidePath"			\) -gravity west		-composite \
+		\( "$fillerSidePath" -flop		\) -gravity east		-composite \
+		"$optOutPath"
+fi
+
+xident "$optOutPath"
