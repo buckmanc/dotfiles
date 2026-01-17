@@ -2,15 +2,16 @@
 
 set -e
 
-# TODO add timelapse mode
 # TODO de-dupe cameras from the list
-# TODO add fswebcam and non-termux support
 # TODO add optional arg to limit to a list of cameras
 
 getCameraIDs(){
 	if (type termux-camera-info > /dev/null 2>&1)
 	then
 		termux-camera-info | jq -r .[].id
+	elif [[ "$OSTYPE" == "msys" ]]
+	then
+		ffmpeg -list_devices true -f dshow -i dummy 2>&1 | grep -i '(video)' | grep -iPo '(?<=")[^"]+(?=")'
 	else
 		ls /dev/video*
 	fi
@@ -36,6 +37,9 @@ snapPhoto(){
 	then
 		# fswebcam spews garbage and doesn't throw errors for errors
 		fswebcam --resolution 1920x1080 --no-banner --device "$cameraID" --quiet "$destPath" > /dev/null 2>&1
+	elif [[ "$OSTYPE" == "msys" ]] && (type ffmpeg > /dev/null 2>&1)
+	then
+		ffmpeg -f dshow -i "video=$cameraID" -vframes 1 -update true "$destPath" -loglevel quiet
 	else
 		echo "no camera app found"
 		exit 1
@@ -46,6 +50,7 @@ defaultDestDirs=()
 defaultDestDirs+=("$HOME/external-1/dcim/Camera")
 defaultDestDirs+=("$HOME/storage/dcim/Camera")
 defaultDestDirs+=("$HOME/storage/shared")
+defaultDestDirs+=("/d/Pictures")
 defaultDestDirs+=("$HOME/Pictures")
 defaultDestDirs+=("$HOME/My Pictures")
 defaultDestDirs+=("$HOME/My Documents/My Pictures")
@@ -92,14 +97,25 @@ export -f snapPhoto
 echo "saving to: ${destDir/#$HOME/\~}"
 echo
 
-getCameraIDs | while read -r cameraID
+cameraIDs="$(getCameraIDs)"
+
+if [[ -z "$cameraIDs" ]]
+then
+	echo "no cameras found"
+	exit 1
+fi
+
+i=-1
+echo "$cameraIDs" | while read -r cameraID
 do
 	echo -n "camera $cameraID... "
+	i=$((i+1))
+
 
 	# as of 2025-09-13 termux-camera-photo cannot handle filenames with spaces
 	# timeStamp="$(date '+%Y-%m-%d_%H.%M.%S')"
 	timeStamp="$(date '+%Y%m%d_%H%M%S')"
-	camIdNum="$(echo "$cameraID" | grep -iPo '\d+$')"
+	camIdNum="$(echo "$cameraID" | grep -iPo '\d+$' || echo "$i")"
 	destPath="$destDir/${timeStamp}-cam$camIdNum.jpg"
 
 	# do some shenannigans to get our function working with timeout
