@@ -2,13 +2,14 @@
 
 set -e
 
-# TODO de-dupe cameras from the list
 # TODO add optional arg to limit to a list of cameras
+# ie, "front", "back", "1", "logitech"
 
 getCameraIDs(){
 	if (type termux-camera-info > /dev/null 2>&1)
 	then
-		termux-camera-info | jq -r .[].id
+		# take the largest camera of each orientation
+		termux-camera-info | jq 'group_by(.facing) | map(sort_by(.physical_size) | .[-1])' | jq -r '.[].id'
 	elif [[ "$OSTYPE" == "msys" ]]
 	then
 		ffmpeg -list_devices true -f dshow -i dummy 2>&1 | grep -i '(video)' | grep -iPo '(?<=")[^"]+(?=")'

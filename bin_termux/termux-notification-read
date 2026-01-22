@@ -122,9 +122,9 @@ do
 			elif [[ "${content,,}" =~ visit\ http ]]
 			then
 				continue
-			elif [[ "${content,,}" =~ (department|group|unit) ]]
+			elif [[ "${content,,}" =~ (department|group|unit|desk) ]]
 			then
-				if echo "$content" | grep -qiP 'this( message)? is ?[^\.]* from the [^\.]+ (department|group|unit)'
+				if echo "$content" | grep -qiP 'this( message)? is ?[^\.]* from the [^\.]+ (department|group|unit|desk)'
 				then
 					continue
 				fi

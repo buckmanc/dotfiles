@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+
+waitSeconds=3
+
+while ((waitSeconds > 0))
+do
+	echo "${waitSeconds}"
+	sleep 1s
+	waitSeconds=$((waitSeconds-1))
+done
+
+if [[ "$OSTYPE" == "linux-android" ]]
+then
+	echo -n "click"
+	if ! am broadcast -a com.github.cvzi.screenshottile.SCREENSHOT -e secret 'hocuspocustakethedamnscreenshot' com.github.cvzi.screenshottile > /dev/null
+	then
+		echo ' ...dammit'
+	else
+		echo
+	fi
+fi
