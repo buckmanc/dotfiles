@@ -1,12 +1,28 @@
 #!/usr/bin/env bash
 
+set -e
+
 lastHeader=''
 lastContent=''
 optAll=0
 optShort=0
+optNew=0
+optSpeak=0
+optQuiet=0
 reverseJqArg=" | reverse"
 # ltr mark, pop directional formatting, ltr embedding
 dumpCharRegex='(\xE2\x80\x8E|\xE2\x80\xAC|\xE2\x80\xAA)'
+
+cacheDir="$HOME/.log"
+lastCheckPath="$cacheDir/termux-notification-read.log"
+mkdir -p "$cacheDir"
+
+if [[ -f "$lastCheckPath" ]]
+then
+	lastCheckStamp="$(date --reference "$lastCheckPath" '+%s')"
+else
+	lastCheckStamp=0
+fi
 
 for arg in "$@"
 do
@@ -20,48 +36,41 @@ do
 	elif [[ "$arg" == "-s" || "$arg" == "--short" ]]
 	then
 		optShort=1
+	elif [[ "$arg" == "--new" ]]
+	then
+		optNew=1
+	elif [[ "$arg" == "--speak" || "$arg" == "--read" ]]
+	then
+		optSpeak=1
+	elif [[ "$arg" == "--quiet" ]]
+	then
+		optQuiet=1
+	else
+		echo "I have no idea what $arg means"
+		exit 1
 	fi
 done
 
-# use regex replace to support sleep syntax
-# 1s, 1h, 1m, 1d etc
-# final line formats unknown parameters
-# allowing for month, year, etc
-dateInput=$(echo "$*" \
-	| grep -iPo '\b\d+ ?[a-zA-Z]+(?=\d| |$)' \
-	| perl -p \
-	-e 's/(\d+)s(?=\d| |$)/\1second /g;' \
-	-e 's/(\d+)m(?=\d| |$)/\1minute /g;' \
-	-e 's/(\d+)h(?=\d| |$)/\1hour /g;' \
-	-e 's/(\d+)d(?=\d| |$)/\1day /g;' \
-	-e 's/(\d+)w(?=\d| |$)/\1week /g;' \
-	-e 's/(\d+[a-zA-Z]+)(?=\d| |$)/\1 /g;'
-)
-
-if [[ -n "$dateInput" ]]
-then
-	startEpochSec=$(date +"%s")
-	futureEpochSec=$(date --date="$dateInput" +"%s")
-	secInPast="$((futureEpochSec-startEpochSec))"
-	targetEpochSec="$((startEpochSec-secInPast))"
-else
-	# secInPast=$((365*24*60*60))
-	targetEpochSec=0
-fi
-
-# echo "dateInput: $dateInput"
-# echo "secInPast: $secInPast"
-# echo "targetEpochSec: $targetEpochSec"
-
-# right now this doesn't work
+# time considerations in jq aren't working
 # seems like jq is introducing a timezone problem, despite both times being local
 
 # selecting only the fields we want and piping to uniq
 # to remove sequential logical dupes
-jsonList="$(termux-notification-list | jq "sort_by(.when) $reverseJqArg" | jq -rc ".[] | select((.when | strptime(\"%Y-%m-%d %H:%M:%S\") | mktime) > $targetEpochSec) | {packageName, title, content}" | uniq)"
+# ddjsonList="$(termux-notification-list | jq "sort_by(.when) $reverseJqArg" | jq -rc ".[] | select((.when | strptime(\"%Y-%m-%d %H:%M:%S\") | mktime) > $targetEpochSec) | {packageName, title, content}" | uniq)"
+# jsonList="$(termux-notification-list | jq "sort_by(.when) $reverseJqArg" | jq -rc ".[] | {packageName, title, content}" | uniq)"
+nabStamp="@$(date '+%s')"
+jsonList="$(termux-notification-list | jq -rc "group_by(.packageName, .title, .content) | map(max_by(.when)) | sort_by(.when) $reverseJqArg | .[] | {packageName, title, content, when}" | uniq)"
 
 while read -r json
 do
+	notiTimeStamp="$(echo "$json" | jq -r '.when')"
+
+	# if showing new only, skip if old
+	if [[ "$optNew" == 1 && "$(date --date "$notiTimeStamp" '+%s')" -lt "$lastCheckStamp" ]]
+	then
+		continue
+	fi
+
 	packageName="$(echo "$json" | jq -r '.packageName')"
 	packageName="$(echo "$packageName" | perl -p \
 		-e 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec|cliffweitzman|jrtstudio|lockdown|scee|kids|ballistiq|providers)\.)+//g;' \
@@ -222,6 +231,10 @@ outputHeight="$(echo "$output" | wc -l)"
 # echo "screenHeight: $screenHeight"
 # echo "outputHeight: $outputHeight"
 
+# update the last check file with the stamp of just before notifications were nabbed
+# doing it here in case of errors between here and there
+touch --date "$nabStamp" "$lastCheckPath"
+
 if [[ -z "$output" ]]
 then
 	output="no notifications"
@@ -236,12 +249,20 @@ then
 		output="$(echo "$output" | lolcat)"
 	fi
 
-	echo "$output"
+	if [[ "$optQuiet" == 0 ]]
+	then
+		echo "$output"
+	fi
 	
 # do our own --quit-if-one-screen calc
 # to allow for prompt height
 elif [[ -n "$output" ]]
 then
+	if [[ "$optSpeak" == 1 ]]
+	then
+		(echo "$output" | termux-tts-speak &)
+	fi
+
 	if [[ "$outputHeight" -gt "$screenHeight" ]]
 	then
 		echo "$output" | less

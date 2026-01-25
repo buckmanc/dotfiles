@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+"$HOME/bin_termux/termux-notification-read-watch" "$@"

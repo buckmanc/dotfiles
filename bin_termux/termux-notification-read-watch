@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+mainPath="$HOME/bin_termux/termux-notification-read"
+optShort=0
+
+for arg in "$@"
+do
+	if [[ "$arg" == "--short" || "$arg" == "-s" ]]
+	then
+		optShort=1
+	fi
+done
+
+if [[ "$optShort" == 0 ]]
+then
+	divider+=$'\n'
+fi
+divider+="--------"$'\n'
+if [[ "$optShort" == 0 ]]
+then
+	divider+=$'\n'
+fi
+
+while true
+do
+	sleep 10s
+	output="$("$mainPath" --new --speak --quiet | cat)"
+	if [[ -n "$output" ]]
+	then
+		echo "$output"
+		echo "$divider"
+	fi
+done

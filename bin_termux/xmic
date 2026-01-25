@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# use this function as a toggle
+if [[ "$(termux-microphone-record -i | jq -r .isRecording)" == "true" ]]
+then
+	termux-microphone-record -q
+	exit
+fi
+
+destDir="$HOME/storage/dcim/Camera"
+timeStamp="$(date '+%Y%m%d_%H%M%S')"
+outPath="$destDir/${timeStamp}_xmic.mp3"
+
+termux-microphone-record -f "$outPath" -l 0 -e aac -c 1
