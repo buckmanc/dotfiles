@@ -2,10 +2,18 @@
 
 set -e
 
+# TODO search by game title rather than game code
+
 repoPath="$TEMP/death_generator"
 tempDir="$TEMP/deathstitch_generator"
 textTempPath="$tempDir/text.png"
-url="https://github.com/foone/SierraDeathGenerator"
+qrTempPath="$tempDir/qr.png"
+tempOutPath="$tempDir/output.png"
+repoUrl="https://github.com/foone/SierraDeathGenerator"
+
+labelFontPoints=60
+labelFontLines=5 # needs to be manually updated if changed
+qrSize="$(echo "$labelFontPoints * $labelFontLines * 1.3333" | bc -l | perl -pe 's/\.\d+$//g')"
 
 optGame=""
 optSubFont=""
@@ -15,6 +23,8 @@ optSize=""
 optVerbose=0
 optBorderPath=""
 optCenterBorderPath=""
+optQrUrl='https://github.com/buckmanc/dotfiles/blob/main/bin/deathstitch-generator'
+optImagePath=""
 
 for arg in "$@"
 do
@@ -47,6 +57,14 @@ do
 	then
 		optCenterBorderPath="$arg"
 		optNextIsCenterBorderPath=0
+	elif [[ "$optNextIsQrUrl" == 1 ]]
+	then
+		optQrUrl="$arg"
+		optNextIsQrUrl=0
+	elif [[ "$optNextIsImagePath" == 1 ]]
+	then
+		optImagePath="$arg"
+		optNextIsImagePath=0
 	elif [[ "$arg" == "-v" || "$arg" == "--verbose" ]]
 	then
 		optVerbose=1
@@ -68,9 +86,12 @@ do
 	elif [[ "$arg" == "--center-border" || "$arg" == "--border-center" ]]
 	then
 		optNextIsCenterBorderPath=1
-	# elif [[ "$arg" =~ \-\-?q(uiet)? ]]
-	# then
-	# 	optQuiet=1
+	elif [[ "$arg" == "--qr" ]]
+	then
+		optNextIsQrUrl=1
+	elif [[ "$arg" == "--image" ]]
+	then
+		optNextIsImagePath=1
 	elif [[ "$arg" =~ [0-9]+[xX][0-9]+ ]]
 	then
 		optSize="$arg"
@@ -96,6 +117,11 @@ then
 	echo "center border path does not exist:"
 	echo "$optCenterBorderPath"
 	exit 1
+elif [[ -n "$optImagePathPath" && ! -f "$optImagePathPath" ]]
+then
+	echo "image path does not exist:"
+	echo "$optImagePathPath"
+	exit 1
 fi
 
 # imagemagick version compatibility
@@ -110,15 +136,29 @@ else
 	exit 1
 fi
 
+if ! type json_repair >/dev/null 2>&1
+then
+	echo 'json_repair not installed'
+	echo 'run pip install json-repair'
+	exit 1
+fi
+
 if [[ -d "$repoPath/.git" ]]
 then
 	# TODO smooth out probs
-	git -C "$repoPath" pull
+	git -C "$repoPath" pull > /dev/null
 else
-	git clone "$url" "$repoPath"
+	git clone "$repoUrl" "$repoPath"
+	echo
 fi
 
 outDir="$(dirname "$optOutPath")"
+outFileName="$(basename "$optOutPath")"
+outExt="${outFileName##*.}"
+outPatternFileName="${outFileName%.**}_pattern.${outExt}"
+outPatternPath="$outDir/$outPatternFileName"
+
+echo "file:     ${outFileName%.**}"
 
 mkdir -p "$outDir"
 mkdir -p "$tempDir"
@@ -145,8 +185,17 @@ then
 	exit 1
 fi
 
-echo "game: $matchingGame"
-echo
+# use the javascript generators details and use json_repair to convert it to json for deets
+gameDeetsJson="$(cat "$repoPath/js/generators.js" | head -n -1 | tail -n +2 | grep -iv 'defaulttext' | json_repair | jq ". | to_entries[] | select(.key == \"$matchingGame\").value")"
+
+if [[ -n "$gameDeetsJson" && "$gameDeetsJson" != "null" ]]
+then
+	gameTitle="$(echo "$gameDeetsJson" | jq '.title + " (" + (.year | tostring) + ")"')"
+else
+	gameTitle="$matchingGame"
+fi
+
+echo "game:     $matchingGame"
 
 # TODO handle multiple json config files
 # so far there's only one game that has multiple
@@ -185,9 +234,8 @@ else
 		
 		if [[ -n "$otherFonts" ]]
 		then
-			echo "possible subfonts:"
-			echo "$otherFonts"
-			echo
+			echo "  possible subfonts:"
+			echo "$otherFonts" | perl -pe 's/^/  /g'
 		fi
 	fi
 fi
@@ -201,7 +249,7 @@ defaultX="$(echo "$fontConfigJson" | jq -r '.default.x // 0')"
 defaultY="$(echo "$fontConfigJson" | jq -r '.default.y // 0')"
 defaultW="$(echo "$fontConfigJson" | jq -r '.default.w // 0')"
 defaultH="$(echo "$fontConfigJson" | jq -r '.default.h // 0')"
-# defaultH="$(echo "$fontConfigJson" | jq -r '.height // 0')"
+lineHeight="$(echo "$fontConfigJson" | jq -r '.height // 0')"
 
 # TODO check the font config json as well
 nullCharCode="$(echo "$gameConfigJson" | jq -r '."null-character" // 32')"
@@ -211,6 +259,13 @@ caseFold="$(echo "$fontConfigJson" | jq -r '."case-fold"')"
 i=0
 magickTextArgs=()
 magickTextArgs+=("$magick -background none")
+
+if [[ -n "$optImagePath" ]]
+then
+	magickTextArgs+=("\( $optImagePath -background transparent -gravity south -splice 0x5 \)")
+	optImageWidth="$(identify -format '%w' "$optImagePath")"
+
+fi
 
 # appending chars horizontally to make lines
 # appending lines vertically to make the text
@@ -240,10 +295,10 @@ do
 
 	while read -r char
 	do
-		# if [[ -z "$char" ]]
-		# then
-		# 	continue
-		# fi
+		if [[ -z "$char" ]]
+		then
+			char=" "
+		fi
 
 		charCode="$(echo -n "$char" | od -An -td1 -w1 -v | perl -pe 's/( +$|^ +)//g')"
 		charJson="$(echo "$fontConfigJson" | jq -rc ".\"$charCode\"")"
@@ -267,7 +322,7 @@ do
 
 	done < <( echo "$chars" )
 
-	magickLineArgs+=("-delete 0 +append $lineOutPath")
+	magickLineArgs+=("-delete 0 +append +repage -extent 'x${lineHeight}<' $lineOutPath")
 
 	if [[ "$optVerbose" == 1 ]]
 	then
@@ -276,8 +331,43 @@ do
 
 	eval "${magickLineArgs[*]}"
 
+	# if optImagePath exists, make sure the line image has the same even/oddness as the optImage
+	# if not, add one pixel to the line width
+	# keeps the image centered
+	if [[ -r "$optImagePath" ]]
+	then
+		lineWidth="$(identify -format '%w' "$lineOutPath")"
+
+		if ((optImageWidth % 2 != lineWidth % 2))
+		then
+
+			echo "adjusting line width"
+			echo "lineWidth: $lineWidth, optImageWidth: $optImageWidth, lineIndex: $i"
+			"$magick" "$lineOutPath" \
+				\( -size "1x${lineHeight}" xc:transparent \) \
+				+append "$lineOutPath"
+
+		lineWidth="$(identify -format '%w' "$lineOutPath")"
+		echo "new lineWidth: $lineWidth"
+		fi
+	fi
+
 done < <( echo "$optText" )
 
+if [[ "$matchingGame" =~ (ff5|fft|mmx1|sth2) ]]
+then
+	magickTextArgs+=(-fill grey -opaque white)
+elif [[ "$matchingGame" =~ (lttp) ]]
+then
+	magickTextArgs+=(-transparent white -fill black -colorize 100)
+# elif [[ "$matchingGame" =~ (goku2|minishcap) ]]
+# then
+else
+	magickTextArgs+=(-fill black -colorize 100)
+fi
+
+# TODO do a vertical trim here
+# not a side to side trim; that will mess with the parity centering adjustments
 magickTextArgs+=("-gravity center -append $textTempPath")
 
 if [[ "$optVerbose" == 1 ]]
@@ -285,27 +375,59 @@ then
 	echo "magickTextArgs: ${magickTextArgs[*]}"
 fi
 
+# render the text
 eval "${magickTextArgs[*]}"
 
-# slap it on a canvas if given a size
-if [[ -n "$optSize" ]]
-then
-	"$magick" \( -size "$optSize" xc:transparent \) "$textTempPath" -gravity center -composite "$optOutPath"
-else
-	cp "$textTempPath" "$optOutPath"
-fi
-
+# calculate border dimensions
 if [[ -n "$optBorderPath" ]]
 then
 
-	outputDim="$(identify -format '%wx%h' "$optOutPath")"
 	borderDim="$(identify -format '%wx%h' "$optBorderPath")"
-
-	outputWidth="$( echo "$outputDim" | cut -d 'x' -f 1)"
-	outputHeight="$(echo "$outputDim" | cut -d 'x' -f 2)"
 	borderWidth="$( echo "$borderDim" | cut -d 'x' -f 1)"
 	borderHeight="$(echo "$borderDim" | cut -d 'x' -f 2)"
+fi
 
+# if not given a size but given a border path
+# then calculate a canvas size based on text size + border size
+if [[ -z "$optSize" && -n "$optBorderPath" ]]
+then
+	textDim="$(identify -format '%wx%h' "$textTempPath")"
+	textWidth="$( echo "$textDim" | cut -d 'x' -f 1)"
+	textHeight="$(echo "$textDim" | cut -d 'x' -f 2)"
+
+	# keep the text width even to assure symbols are centered
+	# TODO check symbol and/or center border parity first and match to that instead
+	# maybe only match if they're the same
+	# maybe create a var to determine if centering adjustments are necessary
+	# and check that here and at the text line adjustment
+	if (( ( textWidth + borderWidth ) % 2 == 0 ))
+	then
+		widthParityAdj=0
+	else
+		widthParityAdj=1
+	fi
+
+	optSize="$((textWidth + borderWidth + widthParityAdj))x$((textHeight + borderHeight))"
+fi
+
+# slap it on a canvas if given a size for one
+if [[ -n "$optSize" ]]
+then
+	"$magick" \( -size "$optSize" xc:transparent \) "$textTempPath" -gravity center -composite "$tempOutPath"
+# otherwise just run with what we got
+else
+	cp "$textTempPath" "$tempOutPath"
+fi
+
+	outputDim="$(identify -format '%wx%h' "$tempOutPath")"
+	outputWidth="$( echo "$outputDim" | cut -d 'x' -f 1)"
+	outputHeight="$(echo "$outputDim" | cut -d 'x' -f 2)"
+
+# you can provide the top left corner as a border
+# this is then flip/flopped to all corners and edge pixels are stretched between the corners
+# top/bottom center embellishments can also be provided
+if [[ -n "$optBorderPath" ]]
+then
 	fillerWidth=$((outputWidth - borderWidth - borderWidth))
 	fillerHeight=$((outputHeight - borderHeight - borderHeight))
 
@@ -316,6 +438,11 @@ then
 	"$magick" "$optBorderPath" -gravity northeast -crop 1x+0-0 +repage -scale "${fillerWidth}x!" "$fillerTopPath"
 	"$magick" "$optBorderPath" -gravity southwest -crop x1+0-0 +repage -scale "x${fillerHeight}!" "$fillerSidePath"
 
+	# TODO calculate the amount to trim borders if the canvas is too small
+	# if fillerW/H is negative, remove (abs(fillerW/H) / 2) from the border
+	# could also increase fillerWidth to make sure the center thing is preserved
+	# but the juice is probably not worth the squeeze for these
+
 	# support optional little embellishments on the top and bottom of the border
 	if [[ -n "$optCenterBorderPath" ]]
 	then
@@ -323,7 +450,7 @@ then
 	fi
 
 	# add the borders in the corners and the filler between them
-	"$magick" "$optOutPath" \
+	"$magick" "$tempOutPath" \
 		\( "$optBorderPath"				\) -gravity northwest	-composite \
 		\( "$optBorderPath" -flop		\) -gravity northeast	-composite \
 		\( "$optBorderPath" -flip		\) -gravity southwest	-composite \
@@ -332,7 +459,48 @@ then
 		\( "$fillerTopPath" -flip		\) -gravity south		-composite \
 		\( "$fillerSidePath"			\) -gravity west		-composite \
 		\( "$fillerSidePath" -flop		\) -gravity east		-composite \
-		"$optOutPath"
+		"$tempOutPath"
 fi
 
-xident "$optOutPath"
+cp "$tempOutPath" "$optOutPath"
+
+
+inchesWidth="$(echo "scale=2; $outputWidth / 14" | bc -l)"
+inchesHeight="$(echo "scale=2; $outputHeight / 14" | bc -l)"
+
+if [[ "$inchesWidth" == *"."* ]]
+then
+	inchesWidth="$(echo "$inchesWidth" | perl -p -e 's/0+$//g;' -e 's/\.$//g;')"
+fi
+
+if [[ "$inchesHeight" == *"."* ]]
+then
+	inchesHeight="$(echo "$inchesHeight" | perl -p -e 's/0+$//g;' -e 's/\.$//g;')"
+fi
+
+stitchesDim="${outputWidth} x ${outputHeight}"
+inchesDim="${inchesWidth}\" x ${inchesHeight}\""
+
+echo "stitches: $stitchesDim"
+echo "inches:   $inchesDim"
+
+# generate a tiny one-to-one qr code
+echo "$optQrUrl" | qrencode --size 1 --margin 1 --output "$qrTempPath"
+
+# TODO extract all of this to a separate script that can be run on manually created/altered pixel images to turn them into cross stitch patterns
+# TODO add grid lines with thicker lines every x
+# TODO build line args, then you can count the array elements update the line count arg for the qr code size calculation
+"$magick" \
+	"$tempOutPath" -interpolate integer -filter point -resize "1500x1500^<" \
+	\( -background transparent -pointsize "$labelFontPoints" -fill black label:"stitches: $outputDim" \) \
+	\( -background transparent -pointsize "$labelFontPoints" -fill black label:"inches: $inchesWidth\" x $inchesHeight\" (with 14 ct Aida)" \) \
+	\( -background transparent -pointsize "$labelFontPoints" -fill black label:"font: $gameTitle" \) \
+	\( -background transparent -pointsize "$labelFontPoints" -fill black label:"font sourced from death generator" \) \
+	\( -background transparent -pointsize "$labelFontPoints" -fill black label:"pattern made with deathstitch generator" \) \
+	-append +repage \
+	\( "$qrTempPath" -interpolate integer -filter point -resize "${qrSize}x${qrSize}<" \) \
+	-gravity southeast -composite \
+	-background white -alpha remove -bordercolor white -border 20 "$outPatternPath"
+
+echo "done!"
+echo

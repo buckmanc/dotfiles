@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -e
+
+imeiDir="$TEMP/imei"
+
+if [[ "$OSTYPE" == "msys" ]]
+then
+	winget install imagemagick.imagemagick
+elif [[ "$OSTYPE" == "linux-android" ]]
+then
+	pkg upgrade imagemagick
+elif [[ "$OSTYPE" == "linux-gnu" ]]
+then
+
+	echo "updating imagemagick easy install..."
+
+	if [[ -d "$imeiDir/.git" ]]
+	then
+		git -C "$imeiDir" pull
+	else
+		git clone https://github.com/SoftCreatR/imei "$imeiDir"
+		chmod +x "$imeiDir/imei.sh"
+	fi
+
+	sudo "$imeiDir/imei.sh"
+else
+
+	echo "$OSTYPE not supported"
+	exit 1
+fi
