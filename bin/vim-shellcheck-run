@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+if vim "$@"
+then
+	for arg in "$@"
+	do
+		if [[ -f "$arg" ]]
+		then
+			"$HOME/bin/xshellcheck" "$arg"
+		fi
+	done
+
+	for arg in "$@"
+	do
+		if [[ -x "$arg" ]]
+		then
+			"$arg"
+		fi
+	done
+fi
