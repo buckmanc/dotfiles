@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+optTitle=''
+optContent=''
+optImagePath=''
+
+passThruArgs=()
+for arg in "$@"
+do
+	if [[ -f "$arg" && -z "$optImagePath" ]]
+	then
+		optImagePath="$(realpath "$arg")"
+	elif [[ -z "$optTitle" ]]
+	then
+		optTitle="$arg"
+	elif [[ -z "$optContent" ]]
+	then
+		optContent="$arg"
+	else
+		passThruArgs+=("$arg")
+	fi
+done
+
+# echo "optTitle: $optTitle"
+# echo "optContent: $optContent"
+# echo "optImagePath: $optImagePath"
+# echo "passThruArgs: ${passThruArgs[*]}"
+
+# if we only got one regular string, it's the content, not the title
+if [[ -n "$optTitle" && -z "$optContent" ]]
+then
+	optContent="$optTitle"
+	optTitle=""
+fi
+
+if [[ -z "$optContent" ]]
+then
+	echo 'nothing to notify'
+	exit 1
+fi
+
+if [[ -z "$optTitle" ]]
+then
+	optTitle="yo"
+fi
+
+# echo "optTitle: $optTitle"
+# echo "optContent: $optContent"
+# echo "optImagePath: $optImagePath"
+
+simpleText="$optTitle: $optContent"
+
+echo "$simpleText"
+termux-notification --title "$optTitle" --content "$optContent" --image-path "$optImagePath" "${passThruArgs[@]}"
+termux-toast "$simpleText"

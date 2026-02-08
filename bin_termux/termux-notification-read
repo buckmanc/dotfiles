@@ -13,7 +13,7 @@ reverseJqArg=" | reverse"
 # ltr mark, pop directional formatting, ltr embedding
 dumpCharRegex='(\xE2\x80\x8E|\xE2\x80\xAC|\xE2\x80\xAA)'
 
-cacheDir="$HOME/.log"
+cacheDir="$HOME/.logs"
 lastCheckPath="$cacheDir/termux-notification-read.log"
 mkdir -p "$cacheDir"
 
@@ -75,30 +75,38 @@ do
 	packageName="$(echo "$packageName" | perl -p \
 		-e 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec|cliffweitzman|jrtstudio|lockdown|scee|kids|ballistiq|providers)\.)+//g;' \
 		-e 's/^(facebook.orca)$/messenger/g;' \
-		-e 's/^(oceanwing.care.cam)$/eufy Baby/g;' \
+		-e 's/^(oceanwing.care.cam)$/eufy baby/g;' \
 		-e 's/^(zhiliaoapp.musically)$/tiktok/g;' \
 		-e 's/^(instagram.barcelona)$/threads/g;' \
 		-e 's/^(daemonapp)$/weather/g;' \
 		-e 's/^(gm)$/gmail/g;' \
 		-e 's/^(tycho)$/googlefi/g;' \
 		-e 's/^(vending)$/googleplay/g;' \
-		-e 's/(\.(orca|android|frontpage|application|mShop|shopping|katana|music))+$//g;' \
+		-e 's/^(fdroid.fdroid)$/fdroid/g;' \
+		-e 's/(\.(orca|android|frontpage|application|app|mShop|shopping|katana|music))+$//g;' \
 		| cat)"
+	packageName="${packageName,,}"
 
 	title="$(echo "$json" | jq -r '.title' | perl -pe "s/$dumpCharRegex//g")"
 	content="$(echo "$json" | jq -r '.content' | perl -pe "s/$dumpCharRegex//g")"
 
-	if [[ "${packageName,,}" == "${title,,}" ]]
+	if [[ "$packageName" == "${title,,}" ]]
 	then
 		title=''
 	fi
 
+	# echo "title: $title"
+	# echo "content: $content"
+
 	# skip these no matter what
-	if [[ "${packageName,,}" =~ ^(termux|spotify|aimp.player|newpipe|smartcapture|antennapod|systemui|samsungapps|speechify2?|anothermusicplayer)$ ]]
+	if [[ "$packageName" =~ ^(spotify|aimp.player|newpipe|smartcapture|antennapod|systemui|samsungapps|speechify2?|anothermusicplayer|ipsgeofence)$ ]]
 	then
 		continue
 	# skip bupkiss
 	elif [[ -z "$title" && -z "$content" ]]
+	then
+		continue
+	elif [[ "$packageName" == "termux" && "$content" =~ ^[0-9]+\ sessions? ]]
 	then
 		continue
 	# skip these unless passed --all
@@ -147,7 +155,7 @@ do
 		elif [[ "$packageName" == "youtube" ]] && [[ "${content,,}" == 'for you:'* ]]
 		then
 			continue
-		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" == *'see where your package is'* || "${title,,}" == *'out for delivery'* || "${title,,}" == "new from"* ]]
+		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" =~ (see\ where\ your\ package\ is|^out\ for\ delivery|^new from) || "${content,,}" =~ (^today\ only:) ]]
 		then
 			continue
 		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" =~ (^get this|deals) && "${content,,}" =~ (shop|save) ]]
@@ -160,6 +168,15 @@ do
 		then
 			continue
 		elif [[ "${packageName,,}" == "dialer" && "${content,,}" == "suspected spam" ]]
+		then
+			continue
+		elif [[ "${packageName,,}" == "mypostcard" && "${title,,}" == "order received"* ]]
+		then
+			continue
+		elif [[ "${packageName,,}" == "whisper_android" && "${title,,}" =~ (recording )?audio ]]
+		then
+			continue
+		elif [[ "${packageName,,}" == "fdroid" ]] && [[ "${title,,}" =~ ^(updating repositories) || "${content,,}" =~ ^(downloading update for) ]]
 		then
 			continue
 		elif [[ "${content,,}" == *"a new login was detected"* ]]

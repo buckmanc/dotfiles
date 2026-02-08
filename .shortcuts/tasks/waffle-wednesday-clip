@@ -1,36 +1,133 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-if [[ -n "$1" ]]
+set -e
+
+# TODO support more than one destination
+cameraDir="$HOME/storage/dcim/Camera"
+numberPath="$HOME/.config/txt/waffle_number.txt"
+numberPathTest="$HOME/.config/txt/waffle_test_number.txt"
+rcloneDestDir="gdrive:Waffle Wednesday"
+optTest=0
+
+notify="$HOME/bin_termux/termux-notify"
+
+for arg in "$@"
+do
+	if [[ "$arg" == "--test" ]]
+	then
+		optTest=1
+	elif [[ -f "$arg" ]]
+	then
+		vidPath="$arg"
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
+
+if [[ "$optTest" == 1 ]]
 then
-	vidPath="$1"
-else
-	# find the most recent camera video
-	vidPath="$(find "$HOME/storage/dcim/Camera" -type f -iname '*.mp4' -mtime -2 -regextype posix-extended -iregex '.*/[0-9]{8}[\-_ ][^/]*$' -not -iregex '.*_[0-9]{3}\.[a-z0-9]' | sort | tail -n1)"
+	rcloneDestDir="${rcloneDestDir}_test"
+	numberPath="$numberPathTest"
 fi
 
 if [[ -z "$vidPath" ]]
 then
-	echo "could not find video"
+	# find the most recent camera video
+	vidPath="$(find "$cameraDir" -type f -iname '*.mp4' -mtime -2 -regextype posix-extended -iregex '.*/[0-9]{8}[\-_ ][^/]*$' -not -iregex '.*_[0-9]{3}\.[a-z0-9]' | sort | tail -n1)"
+fi
+
+if [[ -z "$vidPath" ]]
+then
+	"$notify" "waffle wednesday" "could not find video"
 	exit 1
 elif [[ ! -f "$vidPath" ]]
 then
-	echo "video path does not exist"
+	"$notify" "waffle wednesday" "video path does not exist"
+	echo "$vidPath"
 	exit 1
 fi
 
-fileName="$(basename "$vidPath")"
 vidDir="$(dirname "$vidPath")"
+vidFileNameFull="$(basename "$vidPath")"
+vidFileName="${vidFileNameFull%.*}"
+vidExt="${vidFileNameFull##*.}"
+vidShortName="$(echo "$vidFileName" | perl -pe 's/^(\d{4})\-?(\d{2})\-?(\d{2}).+/$1-$2-$3/g')"
 
-echo "found $fileName"
+if [[ -z "$vidShortName" ]]
+then
+	vidShortName="$vidFileName"
+fi
+
+# echo "vidDir: $vidDir"
+# echo "vidFileNameFull: $vidFileNameFull"
+# echo "vidFileName: $vidFileName"
+# echo "vidExt: $vidExt"
+
+if [[ -f "$numberPath" ]]
+then
+	number="$(cat "$numberPath")"
+fi
+
+echo "found $vidFileNameFull"
 
 # ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$vidPath"
 # ffprobe "$vidPath"
 
-# this is a crappy method of breaking up the video
-# ideally we'd calculate how many clips we need
-# but practically this is good enough
-"$HOME/bin/ffmpeg-clip" "$vidPath" 1:30 3:00 4:30 6:00 7:30 9:00 10:30 --title --no-snap
+# # this is a crappy method of breaking up the video
+# # ideally we'd calculate how many clips we need
+# # but practically this is good enough
+# "$HOME/bin/ffmpeg-clip" "$vidPath" 1:30 3:00 4:30 6:00 7:30 9:00 10:30 --title --no-snap
+
+"$HOME/bin/ffmpeg-to-mp4" "$vidPath" --delete
+
+compressedVidPath="$(find "$vidDir" -type f -iname "*${vidFileName}*" -iname '*H26*' -iname '*crf*' -print -quit)"
+
+if [[ -z "$compressedVidPath" ]]
+then
+	"$notify" "waffle wednesday" "could not find compressed vid!"
+	exit 1
+fi
+
+localHash="$(md5sum "$compressedVidPath" | cut -d ' ' -f1)"
+
+i=0
+while true
+do
+	destFileName="${vidShortName}_$(printf "%02d" "$i")"
+	destFileNameFull="${destFileName}.${vidExt}"
+
+	remoteFileResult="$(rclone ls --include "${destFileName}.*" "$rcloneDestDir/" 2>&1)"
+	remoteHash="$(rclone md5sum "$rcloneDestDir/$destFileNameFull" 2>&1 | cut -d ' ' -f1)"
+
+	# echo "remoteFileResult: $remoteFileResult"
+	# echo "remoteHash: $remoteHash"
+
+	# if no file was found on the remote then we're good to go
+	if [[ -z "$remoteFileResult" || "${remoteFileResult,,}" =~ \b(notice:|failed)\b ]]
+	then
+		break
+	# avoid dupe upload
+	elif [[ "$localHash" == "$remoteHash" ]]
+	then
+		"$notify" "waffle wednesday" "file already uploaded!"
+		exit 1
+	fi
+	 
+	# otherwise, increment the counter and keep checking
+	i=$((i+1))
+done
+
+echo "destFileNameFull: $destFileNameFull"
+
+snapPath="${compressedVidPath%.*}_snap.jpg"
+ffmpeg -y -loglevel error -i "$compressedVidPath" -ss "0" -vframes 1 "$snapPath"
+
+rclone copyto "$compressedVidPath" "$rcloneDestDir/$destFileNameFull"
+
+# notificationAction="\"bash -c '$HOME/bin_termux/termux-mms-send' '$number' 'waffle wednesday clip uploaded' '$snapPath'\" > .logs/mms.log 2>&1"
+# notificationAction="\"'$HOME/bin_termux/termux-mms-send' '$number' 'waffle wednesday clip uploaded' '$snapPath'\" > .logs/mms.log 2>&1"
+notificationAction="'$HOME/bin_termux/termux-mms-send' '$number' 'waffle wednesday clip uploaded' '$snapPath' > .logs/mms.log 2>&1"
 
 termux-media-scan "$vidDir"
-termux-notification --content 'waffle wednesday clip complete'
-
+"$notify" 'waffle wednesday' 'vid uploaded' "$snapPath" --action "$notificationAction"

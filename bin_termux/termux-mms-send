@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -e
+
+optNumber=''
+optMessage=''
+optImage=''
+
+for arg in "$@"
+do
+	if [[ "$arg" =~ ^[0-9\-]+$ ]]
+	then
+		optNumber="$arg"
+	elif [[ -f "$arg" ]]
+	then
+		optImage="$arg"
+	else
+		optMessage="$arg"
+	fi
+done
+
+# echo "optNumber: $optNumber"
+# echo "optMessage: $optMessage"
+# echo "optImage: $optImage"
+
+# TODO handle empty args
+# right now the image isn't actually getting attached, but it does get very close
+
+am start -a android.intent.action.SEND --user 0 \
+	-p "com.google.android.apps.messaging" \
+	-t "image/*" \
+	--es "sms_body" "$optMessage" \
+	--eu android.intent.extra.STREAM "file://$(realpath "$optImage")" \
+	--es "address" "$optNumber" \
+	> /dev/null
+
