@@ -10,6 +10,7 @@ textTempPath="$tempDir/text.png"
 qrTempPath="$tempDir/qr.png"
 tempOutPath="$tempDir/output.png"
 repoUrl="https://github.com/foone/SierraDeathGenerator"
+borderDir="$(dirname "$0")/deathstitch_borders"
 
 labelFontPoints=60
 labelFontLines=5 # needs to be manually updated if changed
@@ -21,8 +22,7 @@ optText=""
 optOutPath=""
 optSize=""
 optVerbose=0
-optBorderPath=""
-optCenterBorderPath=""
+optBorder=""
 optQrUrl='https://github.com/buckmanc/dotfiles/blob/main/bin/deathstitch-generator'
 optImagePath=""
 
@@ -49,14 +49,10 @@ do
 	then
 		optOutPath="$arg"
 		optNextIsOutPath=0
-	elif [[ "$optNextIsBorderPath" == 1 ]]
+	elif [[ "$optNextIsBorder" == 1 ]]
 	then
-		optBorderPath="$arg"
-		optNextIsBorderPath=0
-	elif [[ "$optNextIsCenterBorderPath" == 1 ]]
-	then
-		optCenterBorderPath="$arg"
-		optNextIsCenterBorderPath=0
+		optBorder="$arg"
+		optNextIsBorder=0
 	elif [[ "$optNextIsQrUrl" == 1 ]]
 	then
 		optQrUrl="$arg"
@@ -82,10 +78,7 @@ do
 		optNextIsOutPath=1
 	elif [[ "$arg" == "--border" ]]
 	then
-		optNextIsBorderPath=1
-	elif [[ "$arg" == "--center-border" || "$arg" == "--border-center" ]]
-	then
-		optNextIsCenterBorderPath=1
+		optNextIsBorder=1
 	elif [[ "$arg" == "--qr" ]]
 	then
 		optNextIsQrUrl=1
@@ -107,20 +100,35 @@ then
 	exit 1
 fi
 
-if [[ -n "$optBorderPath" && ! -f "$optBorderPath" ]]
+if [[ -n "$optBorder" ]]
 then
-	echo "border path does not exist:"
-	echo "$optBorderPath"
-	exit 1
-elif [[ -n "$optCenterBorderPath" && ! -f "$optCenterBorderPath" ]]
-then
-	echo "center border path does not exist:"
-	echo "$optCenterBorderPath"
-	exit 1
-elif [[ -n "$optImagePathPath" && ! -f "$optImagePathPath" ]]
+	if [[ ! -d "$borderDir" ]]
+	then
+		echo "border directory not found:"
+		echo "$borderDir"
+		exit 1
+	fi
+
+	# not perfect but should suffice
+	if [[ "$optBorder" =~ ^[0-9]+$ ]]
+	then
+		optBorder="_${optBorder}"
+	fi
+
+	optBorderPath="$(find "$borderDir" -type f -iname "*${optBorder}*" -not -iname '*center*' | head -n1)"
+	optCenterBorderPath="$(find "$borderDir" -type f -iname "*${optBorder}*" -iname '*center*' | head -n1)"
+
+	if [[ -z "$optBorderPath" ]]
+	then
+		echo "no matching border found in $borderDir"
+		exit 1
+	fi
+fi
+
+if [[ -n "$optImagePath" && ! -f "$optImagePath" ]]
 then
 	echo "image path does not exist:"
-	echo "$optImagePathPath"
+	echo "$optImagePath"
 	exit 1
 fi
 
@@ -153,10 +161,17 @@ else
 fi
 
 outDir="$(dirname "$optOutPath")"
-outFileName="$(basename "$optOutPath")"
-outExt="${outFileName##*.}"
-outPatternFileName="${outFileName%.**}_pattern.${outExt}"
-outPatternPath="$outDir/$outPatternFileName"
+outFullFileName="$(basename "$optOutPath")"
+outFileName="${outFullFileName%%.*}"
+outExt="${outFullFileName##*.}"
+if [[ "${outExt,,}" != "png" ]]
+then
+	outExt="png"
+	optOutPath="$outDir/${outFileName}.$outExt"
+fi
+
+outPatternFullFileName="${outFileName}_pattern.${outExt}"
+outPatternPath="$outDir/$outPatternFullFileName"
 
 echo "file:     ${outFileName%.**}"
 
@@ -166,12 +181,14 @@ mkdir -p "$tempDir"
 # only game dirs with a json config file
 # they *can* have multiple config files, but only one game does
 gamesList="$(find "$repoPath/games/" -type f -iname '*.json' -not -ipath '*/tests/*' -not -ipath '*/tools/*' | sort | xargs dirname | xargs -L 1 -d '\n' basename | uniq)"
-matchingGame="$(echo "$gamesList" | grep -i "$optGame")"
+matchingGame="$(echo "$gamesList" | grep -i "$optGame" || true)"
+
+# echo "asdfasdf: $optGame"
 
 if [[ "$(echo "$matchingGame" | wc -l)" -gt 1 ]]
 then
 	echo "found too many matches. limiting to exact matches instead of contains..."
-	matchingGame="$(echo "$matchingGame" | grep -Fix "$optGame")"
+	matchingGame="$(echo "$matchingGame" | grep -Fix "$optGame" || true)"
 fi
 
 if [[ -z "$matchingGame" ]]
@@ -264,7 +281,20 @@ if [[ -n "$optImagePath" ]]
 then
 	magickTextArgs+=("\( $optImagePath -background transparent -gravity south -splice 0x5 \)")
 	optImageWidth="$(identify -format '%w' "$optImagePath")"
+fi
 
+# colorize the text as best as we can
+magickLineColorArgs=()
+if [[ "$matchingGame" =~ (ff5|fft|mmx1|sth2) ]]
+then
+	magickLineColorArgs=("-fill grey -opaque white")
+elif [[ "$matchingGame" =~ (lttp) ]]
+then
+	magickLineColorArgs=("-transparent white -fill black -colorize 100")
+# elif [[ "$matchingGame" =~ (goku2|minishcap) ]]
+# then
+else
+	magickLineColorArgs=("-fill black -colorize 100")
 fi
 
 # appending chars horizontally to make lines
@@ -322,7 +352,10 @@ do
 
 	done < <( echo "$chars" )
 
-	magickLineArgs+=("-delete 0 +append +repage -extent 'x${lineHeight}<' $lineOutPath")
+	magickLineArgs+=("-delete 0")
+	magickLineArgs+=("+append +repage -extent 'x${lineHeight}<'")
+	magickLineArgs+=( "${magickLineColorArgs[@]}" )
+	magickLineArgs+=("$lineOutPath")
 
 	if [[ "$optVerbose" == 1 ]]
 	then
@@ -341,30 +374,26 @@ do
 		if ((optImageWidth % 2 != lineWidth % 2))
 		then
 
-			echo "adjusting line width"
-			echo "lineWidth: $lineWidth, optImageWidth: $optImageWidth, lineIndex: $i"
+			if [[ "$optVerbose" == 1 ]]
+			then
+				echo "adjusting line width"
+				echo "lineWidth: $lineWidth, optImageWidth: $optImageWidth, lineIndex: $i"
+			fi
+
 			"$magick" "$lineOutPath" \
 				\( -size "1x${lineHeight}" xc:transparent \) \
 				+append "$lineOutPath"
 
-		lineWidth="$(identify -format '%w' "$lineOutPath")"
-		echo "new lineWidth: $lineWidth"
+			lineWidth="$(identify -format '%w' "$lineOutPath")"
+
+			if [[ "$optVerbose" == 1 ]]
+			then
+				echo "new lineWidth: $lineWidth"
+			fi
 		fi
 	fi
 
 done < <( echo "$optText" )
-
-if [[ "$matchingGame" =~ (ff5|fft|mmx1|sth2) ]]
-then
-	magickTextArgs+=(-fill grey -opaque white)
-elif [[ "$matchingGame" =~ (lttp) ]]
-then
-	magickTextArgs+=(-transparent white -fill black -colorize 100)
-# elif [[ "$matchingGame" =~ (goku2|minishcap) ]]
-# then
-else
-	magickTextArgs+=(-fill black -colorize 100)
-fi
 
 # TODO do a vertical trim here
 # not a side to side trim; that will mess with the parity centering adjustments
