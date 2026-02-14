@@ -35,6 +35,7 @@
 	amened	en-US
 	amidst	en-US
 	Anji	en-US
+	anthropomorphization	en-US
 	apnea	en-US
 	appt	en-US
 	Arby's	en-US
@@ -137,6 +138,7 @@
 	chonk	en-US
 	chonker	en-US
 	chonkers	en-US
+	chyron	en-US
 	cinco	en-US
 	cishet	en-US
 	CJ	en-US
@@ -201,6 +203,9 @@
 	Dios	en-US
 	direness	en-US
 	discog	en-US
+	disincentivize	en-US
+	disincentivized	en-US
+	disincentivizes	en-US
 	disincentivizing	en-US
 	disposability	en-US
 	DLC	en-US
@@ -356,6 +361,7 @@
 	Ittibitz	en-US
 	ivermectin	en-US
 	Jackbox	en-US
+	jank	en-US
 	Janzen's	en-US
 	Jase	en-US
 	JD	en-US
@@ -398,6 +404,7 @@
 	lofi	en-US
 	Logitech	en-US
 	Longaberger	en-US
+	lort	en-US
 	lovey-dovey	en-US
 	LUCA	en-US
 	lumen	en-US
@@ -456,11 +463,13 @@
 	Morgana	en-US
 	Morgana's	en-US
 	mothership	en-US
+	moustache	en-US
 	mowhawk	en-US
 	must've	en-US
 	nanite	en-US
 	nd	en-US
 	necklet	en-US
+	negatable	en-US
 	nerddom	en-US
 	nerdfont	en-US
 	Netgear	en-US
@@ -476,6 +485,7 @@
 	NPC	en-US
 	numbingly	en-US
 	nunchuck	en-US
+	obby	en-US
 	Odwalla	en-US
 	offput	en-US
 	ok	en-US
@@ -573,6 +583,7 @@
 	resemblant	en-US
 	retcon	en-US
 	retconned	en-US
+	RetroAchievements	en-US
 	retroarch	en-US
 	retweeted	en-US
 	rewatch	en-US
@@ -599,6 +610,8 @@
 	Röntgen	en-US
 	scamvangelist	en-US
 	scanline	en-US
+	Scheels	en-US
+	schoolers	en-US
 	SCOTUS	en-US
 	screamies	en-US
 	screaminess	en-US
@@ -609,6 +622,7 @@
 	secondaries	en-US
 	secrеting	en-US
 	selah	en-US
+	Sephora	en-US
 	SGDQ	en-US
 	SGDQ2017	en-US
 	SGDQ2018	en-US
@@ -619,6 +633,7 @@
 	SGDQ2023	en-US
 	SGDQ2024	en-US
 	shader	en-US
+	shakey	en-US
 	Shang	en-US
 	Shia	en-US
 	shifter	en-US
@@ -660,6 +675,7 @@
 	stuffie	en-US
 	styleless	en-US
 	styrofoam	en-US
+	supermajority	en-US
 	supportively	en-US
 	synergize	en-US
 	talkbox	en-US
@@ -671,6 +687,7 @@
 	tf	en-US
 	TGI	en-US
 	th	en-US
+	thall	en-US
 	Thangles	en-US
 	that	en-US
 	that'll	en-US
@@ -705,17 +722,20 @@
 	unboxed	en-US
 	unboxing	en-US
 	uncancelled	en-US
+	uncategorized	en-US
 	uncomplicatedly	en-US
 	underpowered	en-US
 	undiagnosed	en-US
 	unfort	en-US
 	ungrounded	en-US
+	ungrouped	en-US
 	unintuitive	en-US
 	United Healthcare's	en-US
 	unjam	en-US
 	unjamming	en-US
 	unkillable	en-US
 	Uno	en-US
+	unparsable	en-US
 	unregrettable	en-US
 	unremodeled	en-US
 	unrepaired	en-US
@@ -732,6 +752,7 @@
 	VGM	en-US
 	vibing	en-US
 	vids	en-US
+	villanized	en-US
 	Vischer	en-US
 	voxel	en-US
 	Vredefort	en-US
@@ -773,6 +794,7 @@
 	xferring	en-US
 	Xianity	en-US
 	xmas	en-US
+	xstitch	en-US
 	xyz	en-US
 	Y2K	en-US
 	yack	en-US
@@ -795,6 +817,7 @@
 	Zenni	en-US
 	zonked	en-US
 	zonking	en-US
+	Zootopia	en-US
 	Adolin	en-US
 	Adolin's	en-US
 	Adonalsium	en-US
@@ -945,6 +968,7 @@
 	Komashi	en-US
 	Koopa	en-US
 	Korok	en-US
+	Koroks	en-US
 	Kynareth	en-US
 	Kynareth's	en-US
 	l4d2	en-US
@@ -1005,6 +1029,7 @@
 	Paddington	en-US
 	paidhi	en-US
 	Parangosky	en-US
+	Perelandra	en-US
 	perpendicularity	en-US
 	Peryite	en-US
 	Peryite's	en-US
@@ -2414,52 +2439,99 @@
 	estufa	en-US
 	estufar	en-US
 	mañana	en-US
+	8BitDo	en-US
 	api	en-US
 	ascii	en-US
 	async	en-US
 	AutoHotKey	en-US
+	backdoors	en-US
 	backend	en-US
 	backends	en-US
+	basename	en-US
 	Blazor	en-US
 	CC's	en-US
 	ch57x	en-US
+	ciphertext	en-US
 	cli	en-US
+	CMYK	en-US
 	concat	en-US
 	config	en-US
+	crontab	en-US
+	css	en-US
 	deserialize	en-US
 	dir	en-US
 	dirs	en-US
+	divs	en-US
 	dotfile	en-US
 	dotfiles	en-US
 	dotnet	en-US
+	dropdown	en-US
 	DSL	en-US
 	ETL	en-US
 	etl	en-US
 	etls	en-US
 	ETLs	en-US
+	F1	en-US
+	F10	en-US
+	F11	en-US
+	F12	en-US
+	F13	en-US
+	F14	en-US
+	F15	en-US
+	F16	en-US
+	F17	en-US
+	F18	en-US
+	F19	en-US
+	F2	en-US
+	F20	en-US
+	F21	en-US
+	F22	en-US
+	F23	en-US
+	F24	en-US
+	F3	en-US
+	F4	en-US
+	F5	en-US
+	F6	en-US
+	F7	en-US
+	F8	en-US
+	F9	en-US
+	falsy	en-US
+	filesystem	en-US
+	filesystems	en-US
+	frontend	en-US
 	gif	en-US
 	gitconfig	en-US
 	github	en-US
 	gitignore	en-US
 	globbing	en-US
+	GPG	en-US
 	groc	en-US
 	Hotmail	en-US
+	href	en-US
 	ImageMagick	en-US
 	intellisense	en-US
 	interwebs	en-US
+	IPv4	en-US
+	IPv6	en-US
+	iterable	en-US
+	iterables	en-US
+	javascript	en-US
 	Jira	en-US
 	jpeg	en-US
 	jpg	en-US
 	json	en-US
 	keycap	en-US
 	keycaps	en-US
+	localhost	en-US
 	M2	en-US
 	macropad	en-US
 	macropads	en-US
 	mailhost	en-US
 	mssql	en-US
 	MSSQL	en-US
+	multiline	en-US
 	mvp	en-US
+	npm	en-US
 	nvarchar	en-US
 	Pandoc	en-US
 	PCIe	en-US
@@ -2480,7 +2552,9 @@
 	raspi5	en-US
 	rasterize	en-US
 	readme	en-US
+	rebase	en-US
 	recency	en-US
+	reflog	en-US
 	remoting	en-US
 	repo	en-US
 	repoint	en-US
@@ -2488,12 +2562,17 @@
 	repointing	en-US
 	scripter	en-US
 	serialize	en-US
+	SHA	en-US
 	sproc	en-US
 	sprocs	en-US
 	sqlbulkcopy	en-US
 	SqlBulkCopy	en-US
 	SSH'ing	en-US
 	SSID	en-US
+	stylesheet	en-US
+	stylesheets	en-US
+	subquery	en-US
+	sudo	en-US
 	svg	en-US
 	svgs	en-US
 	symlink	en-US
@@ -2502,20 +2581,28 @@
 	Teradata	en-US
 	Termux	en-US
 	tiff	en-US
+	truthy	en-US
+	unescaped	en-US
 	uninstallability	en-US
 	unmaintainable	en-US
+	unstage	en-US
 	upsert	en-US
 	uptime	en-US
+	url	en-US
 	usb	en-US
 	UX	en-US
 	varchar	en-US
+	VB6	en-US
+	VBA	en-US
 	VBS	en-US
 	Veracode	en-US
 	vimrc	en-US
 	VPN	en-US
+	W3C	en-US
 	Wayback	en-US
 	WebEx	en-US
 	WebExs	en-US
+	whitespace	en-US
 	Xiaomi	en-US
 	Xiaomi Redmi	en-US
 	xls	en-US
