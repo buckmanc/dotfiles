@@ -20,6 +20,7 @@ alias mgit='git'
 alias ugit='git'
 alias vum='vim'
 alias vom='vim'
+alias im='vim'
 alias vin='echo "praise the Ascendant Warrior" ; vim'
 alias :q="echo \"this isn't vim, "'$("$HOME/bin/message-error-name")'"\""
 alias :wq=":q"

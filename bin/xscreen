@@ -1,25 +1,54 @@
 #!/usr/bin/env bash
 
-name="$1"
-cmd="$2"
+optName=""
+optCmd=""
+optDetached=0
 configPath="$HOME/.config/xscreen.json"
-optUsingConfig=0
+usingConfig=0
 
-if [[ -z "$name" ]]
+for arg in "$@"
+do
+	if [[ "$arg" == "--detached" || "$arg" == "-d" ]]
+	then
+		optDetached=1
+	elif [[ "$arg" == "-"* ]]
+	then
+		echo "I have no idea what $arg means"
+		exit 1
+	elif [[ -z "$optName" ]]
+	then
+		optName="$arg"
+	elif [[ -z "$optCmd" ]]
+	then
+		optCmd="$arg"
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
+
+if [[ -z "$optName" ]]
 then
-	name="screeny_weeny"
+	optName="screeny_weeny"
+fi
+
+if screen -ls "$optName" > /dev/null 2>&1
+then
+	screenExists=1
+else
+	screenExists=0
 fi
 
 # if there's no command, no matching screen, and the config path exists
 # then check the config file for a matching pre-defined command to run
-if [[ -z "$cmd" ]] && [[ -f "$configPath" ]] && ! screen -ls "$name" > /dev/null 2>&1
+if [[ -z "$optCmd" ]] && [[ -f "$configPath" ]]
 then
-	configJson="$(jq ".[] | to_entries | map(select(.key|match(\"^$name\";\"i\")))[]" "$configPath")"
+	configJson="$(jq ".[] | to_entries | map(select(.key|match(\"^$optName\";\"i\")))[]" "$configPath")"
 	if [[ -n "$configJson" ]]
 	then
-		name="$(echo "$configJson" | jq -r '.key')"
-		cmd="$(echo "$configJson" | jq -r '.value')"
-		optUsingConfig=1
+		optName="$(echo "$configJson" | jq -r '.key')"
+		optCmd="$(echo "$configJson" | jq -r '.value')"
+		usingConfig=1
 	fi
 #
 # 	echo "configJson: $configJson"
@@ -27,22 +56,27 @@ then
 # 	echo "nopers"
 fi
 
-if [[ -z "$cmd" ]]
+
+detachedCmdArg="-d"
+if [[ "$usingConfig" == 1 && "$optDetached" == 0 ]]
+then
+	detachedCmdArg=""
+fi
+
+if [[ -n "$optCmd" && -n "$detachedCmdArg" && "$screenExists" == 1 ]]
+then
+	echo "screen already exists"
+	exit 1
+elif [[ -z "$optCmd" || "$screenExists" == 1 ]]
 then
 	# create/reattach to a screen with this name
-	screen -DRRqS "$name" -L
+	screen -DRRqS "$optName" -L
 else
 	# run a command on a screen with this name
 	# bashrc is loaded by this method
 	# screen remains open after and can be used interactively
 
-	detachedArg="-d"
-	if [[ "$optUsingConfig" == 1 ]]
-	then
-		detachedArg=""
-	fi
-
 	# TODO does cmd need to be escaped?
-	screen -S "$name" -L $detachedArg -m bash -c "bash --rcfile <(echo '. ~/.bashrc; $cmd ')"
+	screen -S "$optName" -L $detachedCmdArg -m bash -c "bash --rcfile <(echo '. ~/.bashrc; $optCmd ')"
 fi
 

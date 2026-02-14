@@ -1,36 +1,69 @@
 #!/usr/bin/env bash
 
-killme="$1"
+set -m
 
-if [[ -z "$killme" ]]
-then
-	jorbs="$(jobs -l)"
-	if [[ -n "$jorbs" ]]
+progNames=()
+
+for arg in "$@"
+do
+	if [[ "$arg" == "-"* ]]
 	then
-		kill %1
-		exit 0
+		echo "I have no idea what $arg means"
+		exit 1
+	else
+		progNames+=("$arg")
+	fi
+done
+
+# if given no args, kill stopped jobs
+if [[ "${#progNames[@]}" -eq 0 ]]
+then
+	# jobs doesn't work in a script
+	# jorbs="$(jobs -ps)"
+	
+	# ps has different formats and stopped jobs have different states on different OSs
+	if [[ "$OSTYPE" == "msys" ]]
+	then
+		jorbs="$(ps | grep -P '^S')"
+	else
+		jorbs="$(ps -a -o 'state,pid' | grep -P '^T')"
 	fi
 
-	echo "need process name"
-	exit 1
+	# trim down to just the pid
+	jorbs="$(echo "$jorbs" | perl -pe 's/^\w\s+(\d+)(\s.+)?$/$1/g')"
+
+	if [[ -z "$jorbs" ]]
+	then
+		echo "nothing to kill"
+		exit 1
+	fi
+
+	while read -r jobId
+	do
+		# note we're using kill, not pkill
+		kill -s KILL "$jobId"
+	done < <(echo "$jorbs")
 fi
 
-if [[ "$OSTYPE" == "msys" ]]
-then
-	# if the name given does *not* end in .exe
-	# try appending .exe *first*
-
-	ext="${killme##*.}"
-	if [[ "${ext,,}" != "exe" ]]
+for progName in "${progNames[@]}"
+do
+	if [[ "$OSTYPE" == "msys" ]]
 	then
-		if ! taskkill -f -im "${killme}.exe" 2> /dev/null | sed -E 's/ with PID [0-9]+//g' | sort -u
+		# if the name given does *not* end in .exe
+		# try appending .exe *first*
+
+		ext="${progName##*.}"
+		if [[ "${ext,,}" != "exe" ]]
 		then
-			taskkill -f -im "$killme" | sed -E 's/ with PID [0-9]+//g' | sort -u
+			if ! taskkill -f -im "${progName}.exe" 2> /dev/null | sed -E 's/ with PID [0-9]+//g' | sort -u
+			then
+				taskkill -f -im "$progName" | sed -E 's/ with PID [0-9]+//g' | sort -u
+			fi
+		else
+			taskkill -f -im "$progName"
 		fi
 	else
-		taskkill -f -im "$killme"
+		# pkill -f "$progName"
+		pkill -KILL "$progName"
 	fi
-else
-	# pkill -f "$killme"
-	pkill "$killme"
-fi
+done

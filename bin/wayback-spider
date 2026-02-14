@@ -3,7 +3,9 @@
 set -e
 
 # images seem to get cached as a part of the page, so we can skip those
-urls="$("$HOME/bin/wget-spider" "$@" | grep -Piv '\.(woff2|ttf|png|bmp|jpe?g)$' || true)"
+# update: images only get cached if they're embedded, not if they're linked
+# urls="$("$HOME/bin/wget-spider" "$@" | grep -Piv '\.(woff2|ttf|png|bmp|jpe?g)$' || true)"
+urls="$("$HOME/bin/wget-spider" "$@" | grep -Fiv '/thumbnails/' || true)"
 
 urls="$(echo "$urls" | perl -pe 's/^http:/https:/g' | sort -u)"
 
@@ -29,7 +31,8 @@ then
 	timeDifference=$((currentTime - fileModTime))
 
 	# delete the log if it's older than x hours
-	if [[ "$timeDifference" -gt $((60 * 60 * 24)) ]]
+	# temporarily extending time
+	if [[ "$timeDifference" -gt $((60 * 60 * 240000)) ]]
 	then
 		rm "$logPath"
 	# otherwise, remove recently checked urls from the list of urls
@@ -142,7 +145,7 @@ do
 		# 60 / 15 = 4s
 		# but for some reason that still raises a rate limit error
 		# iSeconds="$((15 * (iExceptions + 1)))s"
-		iSeconds="$((15 + (iExceptions * 60)))s"
+		iSeconds="$((15 + (iExceptions * 180)))s"
 		echo -n "$perc waiting ${iSeconds}"
 		sleep "$iSeconds"
 

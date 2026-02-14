@@ -1,8 +1,25 @@
 #!/usr/bin/env bash
 
-output="$(shellcheck --severity=warning --format=gcc "$@" | perl -pe 's/(?<=:\d{1,10}):\d{1,10}:(?= )//g')"
+warningErrorRegex='(warning|error|^$)'
+excludeCodes=''
+
+output="$(shellcheck --severity warning --format gcc --exclude "$excludeCodes" "$@" | perl -pe 's/(?<=:\d{1,10}):\d{1,10}:(?= )//g' | grep -iP "$warningErrorRegex")"
 
 if [[ -n "$output" ]]
 then
-	echo "$output" | grep -iP '(warning|error|^$)'
+	# trim off the file name if only one file
+	if [[ "$#" -eq 1 ]]
+	then
+		output="$(echo "$output" | perl -pe 's/^.+?://g')"
+	fi
+
+	# print messages and highlight
+	echo "$output" | grep -iP "$warningErrorRegex"
+	
+	# return an error code if shellcheck detects an "error" level problem
+	# makes edit - check - run loop easier
+	if [[ "$output" =~ [0-9]+\ error: ]]
+	then
+		exit 1
+	fi
 fi
