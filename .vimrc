@@ -232,8 +232,8 @@ if filereadable(expand("~/.vim/plug.vim"))
 
 	Plug 'tpope/vim-sensible'	" tpope's sensible defaults
 	Plug 'tpope/vim-sleuth'		" hueristic file options
-	Plug 'tpope/vim-speeddating'	" mods ctrl+x and ctrl+a to work with dates
-	Plug 'tpope/vim-eunuch'		" simple file operations, namely :Delete and :SudoWrite
+	" Plug 'tpope/vim-speeddating'	" mods ctrl+x and ctrl+a to work with dates
+	Plug 'tpope/vim-eunuch'		" simple file operations, namely :Delete and :SudoWrite and :Mkdir
 	Plug 'tomtom/tcomment_vim'	" gcc/gc to comment
 	Plug 'vim-airline/vim-airline'	" fancy status line
 	Plug 'vim-airline/vim-airline-themes'

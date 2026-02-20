@@ -121,6 +121,7 @@ then
 	if [[ -z "$optBorderPath" ]]
 	then
 		echo "no matching border found in $borderDir"
+		echo "optBorder: $optBorder"
 		exit 1
 	fi
 fi
@@ -194,6 +195,7 @@ fi
 if [[ -z "$matchingGame" ]]
 then
 	echo "no matching games found"
+	echo "optGame: $optGame"
 	exit 1
 elif [[ "$(echo "$matchingGame" | wc -l)" -gt 1 ]]
 then

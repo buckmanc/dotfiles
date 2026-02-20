@@ -1,48 +1,149 @@
 #!/usr/bin/env bash
 
 # designed to refine gboard speech-to-text transcriptions
+# and whisper transcriptions
 
-filePath="$1"
-if [[ -z "$filePath" ]]
+# make sure this is declared before the function
+expressions=()
+
+addEnclosureExpressions(){
+	openSymbol="$1"
+	closeSymbol="$2"
+	name="$3"
+
+	# handle noted open/closes
+	expressions+=("s/[,\.]? ?([Oo]pen) ?\b${name}\b[,\.]? ?/ ${openSymbol}/g")
+	expressions+=("s/[,\.]? ?([Cc]lose|[Ee]nd) ?\b${name}\b[,]? ?/${closeSymbol} /g")
+	# guess at others
+	expressions+=("s/[,\.]? ?\b${name}\b[,]? ?/ ${openSymbol} /g")
+	expressions+=("s/ (?:${openSymbol}) ?(.+?) ?(?:${openSymbol}) / ${openSymbol}\$1${closeSymbol} /g;")
+}
+
+addPuncExpression(){
+	puncSymbol="$1"
+	name="$2"
+
+	expressions+=("s/[,\.]? ?\b${name}\b[,\.]? ?/${puncSymbol} /g")
+}
+
+if [[ "$#" -eq 0 ]]
 then
 	echo "please provide a filepath"
-	return 1
-elif [[ ! -f "$filePath" ]]
-then
-	echo "file does not exist"
-	return 1
+	exit 1
 fi
 
-localFixPath="$HOME/bin_local/_fix-transcription"
 
-fileStringOld="$(cat "$filePath")"
-fileStringNew="$(echo "$fileStringOld" | \
-	tr -d '\r' | \
-	perl -pe 's/(?:parentheses|\() ?(.+?)(?: and| end| close)? ?(?:parentheses|(?<=[^:;])\(|(?<=[^:;])\))/($1)/g' | \
-	perl -pe 's/(?:quote|quotation mark|") ?([^:].+?)(?: and| end| close)? ?(?:quote|quotation mark|")/"$1"/g' | \
-	perl -pe 's/(?:bracket|\[) ?(.+?)(?: and| end| close)? ?(?:bracket|\])/\[$1\]/g' | \
-	perl -pe 's/(?:asterisk|\*) ?(.+?) ?(?:asterisk|\*)/\*$1\*/g' | \
-	perl -pe 's/(ampersand|and [hp]ers[ae]nd|and percent)/&/g' | \
-	perl -pe 's/:-\)/:\)/g' | \
-	perl -pe 's/:-\(/:\(/g' | \
-	perl -pe 's/[nN]ew line ?/\n/g' | \
-	perl -pe 's/([\.!\?]"? ?[a-z])/\U\1/g' | \
-	perl -pe 's/(^[a-z])/\U\1/g' | \
-	perl -pe 's/ \.(?=[^\.])/./g' | \
-	perl -pe 's/^ (?=\S)//g' | \
-	perl -pe 's/ +$//g' | \
-	cat)"
+for filePath in "$@"
+do
 
-# allow for custom adjustments outside the repo
-# this script should take input via stdin and return stdin
-if [[ -x "$localFixPath" ]]
-then
-	fileStringNew="$(echo "$fileStringNew" | "$localFixPath")"
-fi
+	if [[ -z "$filePath" ]]
+	then
+		continue
+	elif [[ ! -f "$filePath" ]]
+	then
+		echo "file does not exist"
+		continue
+	fi
 
-if [[ "$fileStringOld" != "$fileStringNew" ]]
-then
-	echo "$fileStringNew" > "$filePath"
-else
-	echo "no changes"
-fi
+	fileNameFull="$(basename "$filePath")"
+	fileName="${fileNameFull%.*}"
+	fileDir="$(dirname "$filePath")"
+	outPath="$fileDir/${fileName}_fixed.txt"
+
+	echo -n "$fileName "
+
+	localFixPath="$HOME/bin_local/_fix-transcription"
+
+	fileStringOld="$(cat "$filePath")"
+	# old method kept for reference
+	# fileStringNew="$(echo "$fileStringOld" | \
+	# 	tr -d '\r' | \
+	# 	perl -p \
+	# 	-e 's/(?:parentheses|\() ?(.+?)(?: and| end| close)? ?(?:parentheses|(?<=[^:;])\(|(?<=[^:;])\))/($1)/g;' \
+	# 	-e 's/(?:quote|quotation mark|") ?([^:].+?)(?: and| end| close)? ?(?:quote|quotation mark|")/"$1"/g;' \
+	# 	-e 's/(?:bracket|\[) ?(.+?)(?: and| end| close)? ?(?:bracket|\])/\[$1\]/g;' \
+	# 	-e 's/(?:asterisk|\*) ?(.+?) ?(?:asterisk|\*)/\*$1\*/g;' \
+	# 	-e 's/(ampersand|and [hp]ers[ae]nd|and percent)/&/g;' \
+	# 	-e 's/:-\)/:\)/g;' \
+	# 	-e 's/:-\(/:\(/g;' \
+	# 	-e 's/[nN]ew line ?/\n/g;' \
+	# 	-e 's/([\.!\?]"? ?[a-z])/\U\1/g;' \
+	# 	-e 's/(^[a-z])/\U\1/g;' \
+	# 	-e 's/ \.(?=[^\.])/./g;' \
+	# 	-e 's/^ (?=\S)//g;' \
+	# 	-e 's/ +$//g;' \
+	# 	| cat)"
+	
+	fileStringNew="$(echo "$fileStringOld" | tr -d '\r')"
+
+	# if the file contains the words "new line", erase existing new lines and opt for explicity ones only
+	if echo "$fileStringOld" | grep -Piq "\b[Nn]ew line\b"
+	then
+		expressions+=("s/ *\n */ /g")
+	fi
+
+	expressions+=("s/\b[Nn]ew line\b[,\.]? */\n/g")
+
+	addEnclosureExpressions '\(' '\)' '[Pp]arenthes[ei]s'
+	addEnclosureExpressions '\[' '\]' '[Bb]rackets?'
+	addEnclosureExpressions '\{' '\}' '([Cc]urly )?[Bb]races?'
+	addEnclosureExpressions '\*' '\*' '[Aa]sterisks?'
+	addEnclosureExpressions '"'  '"'  '[Qq]uotes?(ation mark)?'
+
+	addPuncExpression ':' '[Cc]olon'
+	addPuncExpression ';' '[Ss]emi\-?[Cc]olon'
+	addPuncExpression ',' '[Cc]omma'
+	addPuncExpression '.' '[Pp]eriod'
+	addPuncExpression '.' '[Ee]xclaimation point'
+	addPuncExpression '.' '[Qq]uestion mark'
+
+	expressions+=('s/[,\.]? ?[Aa]mpersand[,\.]? ?/ & /g')
+	expressions+=('s/^ +//g')
+	expressions+=('s/ +$//g')
+	expressions+=('s/(?<=[\(\[\{]) //g')
+	expressions+=('s/ (?=[\)\]\}])//g')
+
+	# standardize them dates into yyyy-mm-dd Monday/holiday format
+	# as markdown headers
+	expressions+=('s/^(\d{4})[,\. ]+(January|February|March|April|May|June|July|August|September|October|November|December|\d{1,2})[,\. ]+(\d{1,2})(st|nd|rd|th)?[,\. ]{0,2}((?:\s?[^ \.,]+){1,3})[,\.]?/# $1-$2-$3 $5/g')
+	expressions+=('s/(?<=\d\-)January(?=\-\d)/01/g')
+	expressions+=('s/(?<=\d\-)February(?=\-\d)/02/g')
+	expressions+=('s/(?<=\d\-)March(?=\-\d)/03/g')
+	expressions+=('s/(?<=\d\-)April(?=\-\d)/04/g')
+	expressions+=('s/(?<=\d\-)May(?=\-\d)/05/g')
+	expressions+=('s/(?<=\d\-)June(?=\-\d)/06/g')
+	expressions+=('s/(?<=\d\-)July(?=\-\d)/07/g')
+	expressions+=('s/(?<=\d\-)August(?=\-\d)/08/g')
+	expressions+=('s/(?<=\d\-)September(?=\-\d)/09/g')
+	expressions+=('s/(?<=\d\-)October(?=\-\d)/10/g')
+	expressions+=('s/(?<=\d\-)November(?=\-\d)/11/g')
+	expressions+=('s/(?<=\d\-)December(?=\-\d)/12/g')
+
+	expressions+=('s/\n{0,2}[Ss]ection separator[,\.]\n{0,2}/\n\n---\n\n/g')
+
+	# allow for custom expressions outside the repo
+	if [[ -f "$localFixPath" ]]
+	then
+		while read -r line
+		do
+			# echo "local expression: $line"
+			expressions+=("$line")
+		done < <(cat "$localFixPath")
+	fi
+
+	# would be more efficient to chain these into one big perl call, but this is simpler
+	for expression in "${expressions[@]}"
+	do
+		# echo "$expression"
+		fileStringNew="$(echo "$fileStringNew" | perl -pe "$expression")"
+	done
+
+	if [[ "$fileStringOld" != "$fileStringNew" ]]
+	then
+		echo "$fileStringNew" > "$outPath"
+		echo "done"
+	else
+		echo "no changes"
+	fi
+
+done
