@@ -66,6 +66,7 @@ bbq
 BCE
 BCP
 beflued
+behaviour
 Benadryl
 berserker
 bevy
@@ -123,6 +124,7 @@ CEOs
 Ceska
 channelling
 charcuterie
+cheatsheets
 cheebo
 cheerleading
 chicky
@@ -336,7 +338,6 @@ HTTSKWLALSKWT
 hubbers
 hun
 hurty
-hydroxychloroquine
 hyperdrive
 Ibanez
 ideation
@@ -550,6 +551,7 @@ pre
 prediabetes
 prep'd
 prep'ing
+prework
 PSAT
 psuedo
 PTSD
@@ -570,6 +572,7 @@ Rahab's
 ramen
 ramped
 rando
+randos
 rangoon
 realtor
 reconvince
@@ -827,6 +830,7 @@ Akatosh's
 Albus
 Allant
 Aloysius
+Alucard's
 Amaram
 AMatWQ
 Amphibia
@@ -1279,6 +1283,208 @@ yw
 zzz
 in aere piscari
 in mare venari
+acetaminophen
+acyclovir
+adalimumab
+albuterol
+alendronate
+allopurinol
+alprazolam
+amitriptyline
+amlodipine
+amoxicillin
+amphetamine
+amphetamine aspartate
+anastrozole
+apixaban
+aripiprazole
+aspirin
+atenolol
+atomoxetine
+atorvastatin
+azelastine
+azithromycin
+baclofen
+benazepril
+benzonatate
+budesonide
+bupropion
+buspirone
+calcium
+carbamazepine
+carvedilol
+cefdinir
+celecoxib
+cephalexin
+cetirizine
+chlorthalidone
+cholecalciferol
+ciprofloxacin
+citalopram
+clavulanate
+clindamycin
+clobetasol
+clonazepam
+clonidine
+clopidogrel
+cyanocobalamin
+cyclobenzaprine
+cyclosporine
+dapagliflozin
+desvenlafaxine
+dexmethylphenidate
+dextroamphetamine
+dextroamphetamine saccharate
+diazepam
+diclofenac
+dicyclomine
+diltiazem
+docusate
+donepezil
+dorzolamide
+doxazosin
+doxepin
+doxycycline
+drospirenone
+dulaglutide
+duloxetine
+empagliflozin
+enalapril
+ergocalciferol
+escitalopram
+esomeprazole
+estradiol
+ethinyl estradiol
+etonogestrel
+evolocumab
+ezetimibe
+famotidine
+fenofibrate
+ferrous sulfate
+finasteride
+fluconazole
+fluoxetine
+fluticasone
+folic acid
+formoterol
+furosemide
+gabapentin
+glimepiride
+glipizide
+hydralazine
+hydrochlorothiazide
+hydrocodone
+hydrocortisone
+hydroxychloroquine
+hydroxyzine
+ibuprofen
+insulin aspart
+insulin degludec
+insulin detemir
+insulin glargine
+insulin human
+insulin isophane human
+insulin lispro
+ipratropium
+irbesartan
+isosorbide
+ketoconazole
+lamotrigine
+latanoprost
+levetiracetam
+levocetirizine
+levonorgestrel
+levothyroxine
+linaclotide
+lisdexamfetamine
+lisinopril
+lithium
+loratadine
+lorazepam
+losartan
+lovastatin
+magnesium salts
+meclizine
+melatonin
+meloxicam
+memantine
+metformin
+methocarbamol
+methotrexate
+methylphenidate
+methylprednisolone
+metoprolol
+mirtazapine
+montelukast
+morphine
+mupirocin
+naproxen
+nebivolol
+nifedipine
+nirmatrelvir
+nitrofurantoin
+norethindrone
+norgestimate
+ofloxacin
+olanzapine
+olmesartan
+omeprazole
+ondansetron
+oxybutynin
+oxycodone
+pantoprazole
+paroxetine
+phentermine
+pioglitazone
+polyethylene glycol
+potassium chloride
+pravastatin
+prednisolone
+prednisone
+pregabalin
+progesterone
+propranolol
+quetiapine
+risperidone
+ritonavir
+rivaroxaban
+rosuvastatin
+sacubitril
+salmeterol
+semaglutide
+sertraline
+sildenafil
+simvastatin
+sitagliptin
+spironolactone
+sulfamethoxazole
+sumatriptan
+tadalafil
+tamsulosin
+telmisartan
+testosterone
+thyroid
+timolol
+tiotropium
+tirzepatide
+tizanidine
+topiramate
+torsemide
+tramadol
+trazodone
+tretinoin
+triamcinolone
+triamterene
+trimethoprim
+umeclidinium
+valacyclovir
+valproate
+valsartan
+venlafaxine
+verapamil
+vilanterol
+warfarin
+zolpidem
 Aksarben
 Ameristar
 Ameritrade
@@ -1314,6 +1520,7 @@ Hathaway
 Hillcrest
 Inacom
 infoUSA
+iPho #1
 Joslyn
 Kanesville
 Kearney

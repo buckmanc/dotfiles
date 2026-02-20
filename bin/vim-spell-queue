@@ -7,7 +7,7 @@ defaultFile="en.utf-8"
 
 defaultPath="$spellDir/$defaultFile.add"
 newWords="$(git -C "$HOME" diff --no-ext-diff --unified=0 --no-prefix -a "$defaultPath" | grep -iPo '(?<=^\+)[^\+].+')"
-fileOptions="$("$HOME/bin/vim-spell")"
+fileOptions="$("$HOME/bin/vim-spell-list")"
 filePaths="$(find "$HOME/.vim/spell" -type f -iname '*.add' | sort)"
 readarray -t filePathsArray <<< "$filePaths"
 

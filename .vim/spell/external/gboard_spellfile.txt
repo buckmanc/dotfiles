@@ -67,6 +67,7 @@
 	BCE	en-US
 	BCP	en-US
 	beflued	en-US
+	behaviour	en-US
 	Benadryl	en-US
 	berserker	en-US
 	bevy	en-US
@@ -124,6 +125,7 @@
 	Ceska	en-US
 	channelling	en-US
 	charcuterie	en-US
+	cheatsheets	en-US
 	cheebo	en-US
 	cheerleading	en-US
 	chicky	en-US
@@ -337,7 +339,6 @@
 	hubbers	en-US
 	hun	en-US
 	hurty	en-US
-	hydroxychloroquine	en-US
 	hyperdrive	en-US
 	Ibanez	en-US
 	ideation	en-US
@@ -551,6 +552,7 @@
 	prediabetes	en-US
 	prep'd	en-US
 	prep'ing	en-US
+	prework	en-US
 	PSAT	en-US
 	psuedo	en-US
 	PTSD	en-US
@@ -571,6 +573,7 @@
 	ramen	en-US
 	ramped	en-US
 	rando	en-US
+	randos	en-US
 	rangoon	en-US
 	realtor	en-US
 	reconvince	en-US
@@ -828,6 +831,7 @@
 	Albus	en-US
 	Allant	en-US
 	Aloysius	en-US
+	Alucard's	en-US
 	Amaram	en-US
 	AMatWQ	en-US
 	Amphibia	en-US
@@ -1280,6 +1284,208 @@
 	zzz	en-US
 	in aere piscari	en-US
 	in mare venari	en-US
+	acetaminophen	en-US
+	acyclovir	en-US
+	adalimumab	en-US
+	albuterol	en-US
+	alendronate	en-US
+	allopurinol	en-US
+	alprazolam	en-US
+	amitriptyline	en-US
+	amlodipine	en-US
+	amoxicillin	en-US
+	amphetamine	en-US
+	amphetamine aspartate	en-US
+	anastrozole	en-US
+	apixaban	en-US
+	aripiprazole	en-US
+	aspirin	en-US
+	atenolol	en-US
+	atomoxetine	en-US
+	atorvastatin	en-US
+	azelastine	en-US
+	azithromycin	en-US
+	baclofen	en-US
+	benazepril	en-US
+	benzonatate	en-US
+	budesonide	en-US
+	bupropion	en-US
+	buspirone	en-US
+	calcium	en-US
+	carbamazepine	en-US
+	carvedilol	en-US
+	cefdinir	en-US
+	celecoxib	en-US
+	cephalexin	en-US
+	cetirizine	en-US
+	chlorthalidone	en-US
+	cholecalciferol	en-US
+	ciprofloxacin	en-US
+	citalopram	en-US
+	clavulanate	en-US
+	clindamycin	en-US
+	clobetasol	en-US
+	clonazepam	en-US
+	clonidine	en-US
+	clopidogrel	en-US
+	cyanocobalamin	en-US
+	cyclobenzaprine	en-US
+	cyclosporine	en-US
+	dapagliflozin	en-US
+	desvenlafaxine	en-US
+	dexmethylphenidate	en-US
+	dextroamphetamine	en-US
+	dextroamphetamine saccharate	en-US
+	diazepam	en-US
+	diclofenac	en-US
+	dicyclomine	en-US
+	diltiazem	en-US
+	docusate	en-US
+	donepezil	en-US
+	dorzolamide	en-US
+	doxazosin	en-US
+	doxepin	en-US
+	doxycycline	en-US
+	drospirenone	en-US
+	dulaglutide	en-US
+	duloxetine	en-US
+	empagliflozin	en-US
+	enalapril	en-US
+	ergocalciferol	en-US
+	escitalopram	en-US
+	esomeprazole	en-US
+	estradiol	en-US
+	ethinyl estradiol	en-US
+	etonogestrel	en-US
+	evolocumab	en-US
+	ezetimibe	en-US
+	famotidine	en-US
+	fenofibrate	en-US
+	ferrous sulfate	en-US
+	finasteride	en-US
+	fluconazole	en-US
+	fluoxetine	en-US
+	fluticasone	en-US
+	folic acid	en-US
+	formoterol	en-US
+	furosemide	en-US
+	gabapentin	en-US
+	glimepiride	en-US
+	glipizide	en-US
+	hydralazine	en-US
+	hydrochlorothiazide	en-US
+	hydrocodone	en-US
+	hydrocortisone	en-US
+	hydroxychloroquine	en-US
+	hydroxyzine	en-US
+	ibuprofen	en-US
+	insulin aspart	en-US
+	insulin degludec	en-US
+	insulin detemir	en-US
+	insulin glargine	en-US
+	insulin human	en-US
+	insulin isophane human	en-US
+	insulin lispro	en-US
+	ipratropium	en-US
+	irbesartan	en-US
+	isosorbide	en-US
+	ketoconazole	en-US
+	lamotrigine	en-US
+	latanoprost	en-US
+	levetiracetam	en-US
+	levocetirizine	en-US
+	levonorgestrel	en-US
+	levothyroxine	en-US
+	linaclotide	en-US
+	lisdexamfetamine	en-US
+	lisinopril	en-US
+	lithium	en-US
+	loratadine	en-US
+	lorazepam	en-US
+	losartan	en-US
+	lovastatin	en-US
+	magnesium salts	en-US
+	meclizine	en-US
+	melatonin	en-US
+	meloxicam	en-US
+	memantine	en-US
+	metformin	en-US
+	methocarbamol	en-US
+	methotrexate	en-US
+	methylphenidate	en-US
+	methylprednisolone	en-US
+	metoprolol	en-US
+	mirtazapine	en-US
+	montelukast	en-US
+	morphine	en-US
+	mupirocin	en-US
+	naproxen	en-US
+	nebivolol	en-US
+	nifedipine	en-US
+	nirmatrelvir	en-US
+	nitrofurantoin	en-US
+	norethindrone	en-US
+	norgestimate	en-US
+	ofloxacin	en-US
+	olanzapine	en-US
+	olmesartan	en-US
+	omeprazole	en-US
+	ondansetron	en-US
+	oxybutynin	en-US
+	oxycodone	en-US
+	pantoprazole	en-US
+	paroxetine	en-US
+	phentermine	en-US
+	pioglitazone	en-US
+	polyethylene glycol	en-US
+	potassium chloride	en-US
+	pravastatin	en-US
+	prednisolone	en-US
+	prednisone	en-US
+	pregabalin	en-US
+	progesterone	en-US
+	propranolol	en-US
+	quetiapine	en-US
+	risperidone	en-US
+	ritonavir	en-US
+	rivaroxaban	en-US
+	rosuvastatin	en-US
+	sacubitril	en-US
+	salmeterol	en-US
+	semaglutide	en-US
+	sertraline	en-US
+	sildenafil	en-US
+	simvastatin	en-US
+	sitagliptin	en-US
+	spironolactone	en-US
+	sulfamethoxazole	en-US
+	sumatriptan	en-US
+	tadalafil	en-US
+	tamsulosin	en-US
+	telmisartan	en-US
+	testosterone	en-US
+	thyroid	en-US
+	timolol	en-US
+	tiotropium	en-US
+	tirzepatide	en-US
+	tizanidine	en-US
+	topiramate	en-US
+	torsemide	en-US
+	tramadol	en-US
+	trazodone	en-US
+	tretinoin	en-US
+	triamcinolone	en-US
+	triamterene	en-US
+	trimethoprim	en-US
+	umeclidinium	en-US
+	valacyclovir	en-US
+	valproate	en-US
+	valsartan	en-US
+	venlafaxine	en-US
+	verapamil	en-US
+	vilanterol	en-US
+	warfarin	en-US
+	zolpidem	en-US
 	Aksarben	en-US
 	Ameristar	en-US
 	Ameritrade	en-US
@@ -1315,6 +1521,7 @@
 	Hillcrest	en-US
 	Inacom	en-US
 	infoUSA	en-US
+	iPho #1	en-US
 	Joslyn	en-US
 	Kanesville	en-US
 	Kearney	en-US
