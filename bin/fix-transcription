@@ -82,7 +82,7 @@ do
 		expressions+=("s/ *\n */ /g")
 	fi
 
-	expressions+=("s/\b[Nn]ew line\b[,\.]? */\n/g")
+	expressions+=("s/\b[Nn]ew line\b[,\.]? */\n\n/g")
 
 	addEnclosureExpressions '\(' '\)' '[Pp]arenthes[ei]s'
 	addEnclosureExpressions '\[' '\]' '[Bb]rackets?'
@@ -90,17 +90,31 @@ do
 	addEnclosureExpressions '\*' '\*' '[Aa]sterisks?'
 	addEnclosureExpressions '"'  '"'  '[Qq]uotes?(ation mark)?'
 
-	addPuncExpression ':' '[Cc]olon'
 	addPuncExpression ';' '[Ss]emi\-?[Cc]olon'
+	addPuncExpression ':' '[Cc]olon'
 	addPuncExpression ',' '[Cc]omma'
 	addPuncExpression '.' '[Pp]eriod'
-	addPuncExpression '.' '[Ee]xclaimation point'
-	addPuncExpression '.' '[Qq]uestion mark'
+	addPuncExpression '!' '[Ee]xclamation point'
+	addPuncExpression '?' '[Qq]uestion mark'
+	addPuncExpression ' -' '[Dd]ash'
+
+	expressions+=('s/ slash / \/ /g')
+
+	expressions+=('s/([,\.] )?dot dot dot dot/..../g')
+	expressions+=('s/([,\.] )?dot dot dot/.../g')
+
+	expressions+=('s/ [Ss]miley face[\.,]/ :) /g')
+	expressions+=('s/ [Ss]ad face[\.,]/ :( /g')
+	expressions+=('s/ [Ww]orried face[\.,]/ <:( /g')
+	expressions+=('s/ [Aa]ngry face[\.,]/ >:( /g')
 
 	expressions+=('s/[,\.]? ?[Aa]mpersand[,\.]? ?/ & /g')
 	expressions+=('s/^ +//g')
 	expressions+=('s/ +$//g')
 	expressions+=('s/(?<=[\(\[\{]) //g')
+	expressions+=('s/ (?=[\)\]\}])//g')
+	expressions+=('s/ (?=\.$)//g')
+	expressions+=('s/ (?=\. )//g')
 	expressions+=('s/ (?=[\)\]\}])//g')
 
 	# standardize them dates into yyyy-mm-dd Monday/holiday format
@@ -119,7 +133,7 @@ do
 	expressions+=('s/(?<=\d\-)November(?=\-\d)/11/g')
 	expressions+=('s/(?<=\d\-)December(?=\-\d)/12/g')
 
-	expressions+=('s/\n{0,2}[Ss]ection separator[,\.]\n{0,2}/\n\n---\n\n/g')
+	expressions+=('s/\n*[Ss]ection separator[,\.]\n*/\n\n---\n\n/g')
 
 	# allow for custom expressions outside the repo
 	if [[ -f "$localFixPath" ]]
@@ -135,8 +149,12 @@ do
 	for expression in "${expressions[@]}"
 	do
 		# echo "$expression"
-		fileStringNew="$(echo "$fileStringNew" | perl -pe "$expression")"
+		fileStringNew="$(echo "$fileStringNew" | perl -pe "$expression" | perl -0777 -pe 's/\n{3,}/\n\n/g')"
 	done
+
+	# zero out expressions at the end
+	# we *could* assemble these outside of the for loop, but we may have more file-specific variations we want in the future
+	expressions=()
 
 	if [[ "$fileStringOld" != "$fileStringNew" ]]
 	then
