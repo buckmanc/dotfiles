@@ -19,3 +19,6 @@ bin_termux/* filter=termux_shell
 *.tif diff=image
 *.tiff diff=image
 *.webp diff=image
+*.mp3 diff=music
+*.m4a diff=music
+*.wav diff=music

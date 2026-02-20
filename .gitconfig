@@ -85,6 +85,8 @@
 	wsErrorHighlight = all
 [diff "image"]
 	textconv = ~/bin/git-image-diff
+[diff "music"]
+	textconv = ~/bin/git-music-diff
 [color "diff"]
 	meta = blue
 	frag = dim blue

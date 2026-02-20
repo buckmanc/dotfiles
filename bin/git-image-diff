@@ -2,13 +2,12 @@
 
 runifexists(){
 	local command="$1"
-	local args="$2"
-	local progName=$(echo "$command" | cut -d' ' -f 1)
-	echo "command: $command"
-	echo "args: $2"
+	shift
+	local progName
+	progName=$(echo "$command" | cut -d' ' -f 1)
 	if ( type $progName >/dev/null 2>&1 )
 	then
-		$command $2
+		$command "$@"
 	else
 		return 1
 	fi
