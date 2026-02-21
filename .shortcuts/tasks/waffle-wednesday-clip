@@ -91,7 +91,7 @@ fi
 
 localHash="$(md5sum "$compressedVidPath" | cut -d ' ' -f1)"
 
-i=0
+i=1
 while true
 do
 	destFileName="${vidShortName}_$(printf "%02d" "$i")"

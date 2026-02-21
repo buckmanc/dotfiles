@@ -155,7 +155,7 @@ do
 		elif [[ "$packageName" == "youtube" ]] && [[ "${content,,}" == 'for you:'* ]]
 		then
 			continue
-		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" =~ (see\ where\ your\ package\ is|^out\ for\ delivery|^new from) || "${content,,}" =~ (^today\ only:) ]]
+		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" =~ (see\ where\ your\ package\ is|^out\ for\ delivery|^new from) || "${content,,}" =~ (^today\ only:|based\ on\ items) ]]
 		then
 			continue
 		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" =~ (^get this|deals) && "${content,,}" =~ (shop|save) ]]
@@ -177,6 +177,9 @@ do
 		then
 			continue
 		elif [[ "${packageName,,}" == "fdroid" ]] && [[ "${title,,}" =~ ^(updating repositories) || "${content,,}" =~ ^(downloading update for) ]]
+		then
+			continue
+		elif [[ "$packageName" == "messenger" && "${content,,}" =~ ^sent\ a\ message:\ .*minutes\ ago.$ ]]
 		then
 			continue
 		elif [[ "${content,,}" == *"a new login was detected"* ]]

@@ -97,7 +97,9 @@ set spellsuggest+=10	" limit spell suggest for small screens
 if has("eval")
 	" iterate over custom spellfiles
 	let spellPaths = ''
-	for d in glob('~/.vim/spell/*.add', 1, 1)
+	" glob isn't working with full paths under termux
+	" for d in glob(expand('~/.vim/spell') . '/*.add', 1, 1)
+	for d in split(system('find "$HOME/.vim/spell" -type f -iname "*.add"'), '\n')
 		if (filereadable(d))
 
 			" compile the file if needed

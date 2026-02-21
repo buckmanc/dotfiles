@@ -1,9 +1,21 @@
 #!/usr/bin/env python3
 
 import sys
+import os
+# import contextlib
+# import warnings
+#
+# warnings.filterwarnings("ignore", category=RuntimeWarning)
+# with contextlib.suppress(BrokenPipeError):
+
 lines = sys.stdin.read().strip().split("\n")
 # sortedLines = sorted(set(lines), key=str.casefold)
 sortedLines = sorted(lines, key=str.casefold)
-print("\n".join(sortedLines), file=sys.stdout, flush=True)
-sys.stdout.flush()
-sys.stdout.close()
+
+try:
+    print("\n".join(sortedLines), file=sys.stdout, flush=True)
+    sys.stdout.flush()
+    sys.stdout.close()
+except BrokenPipeError:
+    devnull = os.open(os.devnull, os.O_WRONLY)
+    os.dup2(devnull, sys.stdout.fileno())
