@@ -9,14 +9,23 @@ farewell="$HOME/bin/fancy-message-farewell"
 
 cowtime=2
 optRestart=0
-# lazy arg parsing
-if [[ "$1" == "-r" ]]
-then
-	optRestart=1
-fi
+optForce=0
+for arg in "$@"
+do
+	if [[ "$arg" == "-r" ]]
+	then
+		optRestart=1
+	elif [[ "$arg" == "-f" ]]
+	then
+		optForce=1
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
 
 #confirm if the user REALLY WANTS to shutdown this machine
-if [ -n "$SSH_CLIENT" ] && [[ "$optRestart" == 0 ]]
+if [ -n "$SSH_CLIENT" ] && [[ "$optRestart" == 0 && "$optForce" == 0 ]]
 then
 	read -p "Are you sure you want to shutdown this remote machine?" -n 1 -r
 	if [[ $REPLY =~ ^[^Yy]$ ]]
