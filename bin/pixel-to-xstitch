@@ -1,0 +1,260 @@
+#!/usr/bin/env bash
+
+set -e
+tempDir="$TEMP/pixel-to-xstitch"
+qrTempPath="$tempDir/qr.png"
+
+labelFontPoints=60
+minOutputDim=1500
+
+# grid line settings
+bigGridLinesEvery=10
+normalGridLineWidth=1
+normalGridLineColor="#909090"
+bigGridLineWidth=3
+# bigGridLineColor="#202020"
+bigGridLineColor="$normalGridLineColor"
+
+optFile=''
+optTextLines=()
+optAida=14
+optNextIsAida=0
+optQrUrl=""
+optNextIsQrUrl=0
+optVerbose=0
+
+for arg in "$@"
+do
+	if [[ "$arg" == "--aida" ]]
+	then
+		optNextIsAida=1
+	elif [[ "$arg" =~ ^\-\-(qr\-)?url$ ]]
+	then
+		optNextIsQrUrl=1
+	elif [[ "$optNextIsAida" == 1 ]]
+	then
+		optAida="$arg"
+		optNextIsAida=0
+	elif [[ "$optNextIsQrUrl" == 1 ]]
+	then
+		optQrUrl="$arg"
+		optNextIsQrUrl=0
+	elif [[ "$arg" == "--verbose" ]]
+	then
+		optVerbose=1
+	elif [[ -f "$arg" ]]
+	then
+		if [[ -z "$optFile" ]]
+		then
+			optFile="$arg"
+		else
+			echo "did you provide two file args?"
+			exit 1
+		fi
+	else
+		optTextLines+=("$arg")
+	fi
+done
+
+if [[ -z "$optFile" ]]
+then
+	echo 'need source image'
+	exit 1
+fi
+
+mkdir -p "$tempDir"
+
+# imagemagick version compatibility
+if type magick >/dev/null 2>&1
+then
+	magick=magick
+elif type convert >/dev/null 2>&1
+then
+	magick=convert
+else
+	echo 'imagemagick not installed'
+	exit 1
+fi
+
+
+dir="$(dirname "$optFile")"
+fileNameFull="$(basename "$optFile")"
+fileName="${fileNameFull%.*}"
+outFullFileName="${fileName}_pattern.png"
+outPath="$dir/$outFullFileName"
+
+histoReport="$(magick "$optFile" -format '%c' histogram:info:)"
+
+# remove alpha from the report if it exists
+# otherwise remove white
+if echo "$histoReport" | grep -qiP ' #00000000 '
+then
+	histoReport="$(echo "$histoReport" | grep -Piv ' #00000000 ')"
+else
+	histoReport="$(echo "$histoReport" | grep -Piv ' #000000 ')"
+fi
+
+stitchesTotal="$(echo "$histoReport" | perl -p -e 's/^ +//g;' -e 's/:.+$//g;' | sum)"
+
+inputDim="$(identify -format '%wx%h' "$optFile")"
+inputWidth="$( echo "$inputDim" | cut -d 'x' -f 1)"
+inputHeight="$(echo "$inputDim" | cut -d 'x' -f 2)"
+
+inchesWidth="$( echo "scale=2; $inputWidth / $optAida" | bc -l)"
+inchesHeight="$(echo "scale=2; $inputHeight / $optAida" | bc -l)"
+
+if [[ "$inchesWidth" == *"."* ]]
+then
+	inchesWidth="$(echo "$inchesWidth" | perl -p -e 's/0+$//g;' -e 's/\.$//g;')"
+fi
+
+if [[ "$inchesHeight" == *"."* ]]
+then
+	inchesHeight="$(echo "$inchesHeight" | perl -p -e 's/0+$//g;' -e 's/\.$//g;')"
+fi
+
+stitchesDim="${inputWidth} x ${inputHeight}"
+inchesDim="${inchesWidth}\" x ${inchesHeight}\""
+
+echo "stitch a: $stitchesDim"
+echo "inches:   $inchesDim"
+
+# prepend standard lines
+# in reverse order
+# optTextLines=("here's a test line" "${optTextLines[@]}")
+optTextLines=("inches: $inchesDim (with $optAida ct Aida)" "${optTextLines[@]}")
+optTextLines=("stitch area: $stitchesDim" "${optTextLines[@]}")
+optTextLines=("stitches : $(printf "%'d" "$stitchesTotal")" "${optTextLines[@]}")
+
+textLineArgs=()
+for line in "${optTextLines[@]}"
+do
+	textLineArgs+=( '(' -background transparent -pointsize "$labelFontPoints" -fill black label:"$line" ')' )
+done
+
+qrArgs=()
+if [[ -n "$optQrUrl" ]]
+then
+	# generate a tiny one-to-one qr code
+	echo "$optQrUrl" | qrencode --size 1 --margin 1 --output "$qrTempPath"
+	qrSize="$(echo "$labelFontPoints * ${#optTextLines[@]} * 1.3333" | bc -l | perl -pe 's/\.\d+$//g')"
+	qrArgs+=('(' "$qrTempPath" -interpolate integer -filter point -resize "${qrSize}x${qrSize}<" ')')
+fi
+
+# match the logic of the imagemagick geometry ">" operator
+if [[ "$inputWidth" -le "$inputHeight" ]]
+then
+	smallestInputDim="$inputWidth"
+else
+	smallestInputDim="$inputHeight"
+fi
+
+outRatio="$(echo "scale=2; $minOutputDim / $smallestInputDim" | bc -l | perl -pe 's/\.0+$//g')"
+
+# increase the target min dim to find a round ratio
+if [[ "$outRatio" == *.* ]]
+then
+	# round up the ratio if it isn't a whole number
+	outRatio="$(echo "scale=0; ($outRatio + 0.999999)/1" | bc -l)"
+	minOutputDim="$(echo "scale=2; $outRatio * $smallestInputDim" | bc -l)"
+fi
+
+targetWidth="$(echo "$outRatio * $inputWidth" | bc -l)"
+targetHeight="$(echo "$outRatio * $inputHeight" | bc -l)"
+
+gridLineArgs=()
+bigGridLineArgs=()
+
+# TODO make these two x / y line blocks into one function
+
+i=1
+iX="$outRatio"
+
+# xBigGridLineAdj=$(( (inputWidth % bigGridLinesEvery) / 2))
+
+# bugged
+mod=$((inputWidth % bigGridLinesEvery))
+halfMod="$(echo "scale=4; $mod / 2" | bc -l)"
+xBigGridLineAdj="$(echo "scale=0; ($halfMod + 0.5) / 1" | bc)"
+
+while [[ "$iX" -lt "$targetWidth" ]]
+do
+	if (( ( i - xBigGridLineAdj ) % bigGridLinesEvery == 0 ))
+	then
+		isBigLine=1
+	else
+		isBigLine=0
+	fi
+
+	localLineArgs=( -draw "line $iX,0 $iX,$targetHeight" )
+
+	if [[ "$isBigLine" == 1 ]]
+	then
+		bigGridLineArgs+=("${localLineArgs[@]}")
+	else
+		gridLineArgs+=("${localLineArgs[@]}")
+	fi
+
+	i=$((i+1))
+	iX=$((iX+outRatio))
+done
+
+i=1
+iY="$outRatio"
+
+# yBigGridLineAdj=$(( (inputHeight % bigGridLinesEvery) / 2))
+
+# bugged
+mod=$((inputHeight % bigGridLinesEvery))
+halfMod="$(echo "scale=4; $mod / 2" | bc -l)"
+yBigGridLineAdj="$(echo "scale=0; ($halfMod + 0.5) / 1" | bc)"
+
+while [[ "$iY" -lt "$targetHeight" ]]
+do
+	if (( ( i - yBigGridLineAdj ) % bigGridLinesEvery == 0 ))
+	then
+		isBigLine=1
+	else
+		isBigLine=0
+	fi
+
+	localLineArgs=( -draw "line 0,$iY $targetWidth,$iY" )
+
+	if [[ "$isBigLine" == 1 ]]
+	then
+		bigGridLineArgs+=("${localLineArgs[@]}")
+	else
+		gridLineArgs+=("${localLineArgs[@]}")
+	fi
+
+	i=$((i+1))
+	iY=$((iY+outRatio))
+done
+
+if [[ "$optVerbose" == 1 ]]
+then
+	echo "outRatio: $outRatio"
+	echo "minOutputDim: $minOutputDim"
+	echo "targetWidth: $targetWidth"
+	echo "targetHeight: $targetHeight"
+	echo "xBigGridLineAdj: $xBigGridLineAdj"
+	echo "yBigGridLineAdj: $yBigGridLineAdj"
+	echo "gridLineArgs: ${gridLineArgs[*]}"
+	echo "bigGridLineArgs: ${bigGridLineArgs[*]}"
+fi
+
+
+"$magick" \
+	"$optFile" -interpolate integer -filter point -resize "${minOutputDim}x${minOutputDim}^<" \
+	-stroke "$normalGridLineColor" -strokewidth "$normalGridLineWidth" \
+	"${gridLineArgs[@]}" \
+	-stroke "$bigGridLineColor" -strokewidth "$bigGridLineWidth" \
+	"${bigGridLineArgs[@]}" \
+	-flatten +repage \
+	-bordercolor "$normalGridLineColor" -border "$normalGridLineWidth" \
+	"${textLineArgs[@]}" \
+	-append +repage \
+	"${qrArgs[@]}" \
+	-gravity southeast -composite \
+	-background white -alpha remove -bordercolor white -border 20 "$outPath"
+

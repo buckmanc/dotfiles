@@ -7,14 +7,11 @@ set -e
 repoPath="$TEMP/death_generator"
 tempDir="$TEMP/deathstitch_generator"
 textTempPath="$tempDir/text.png"
-qrTempPath="$tempDir/qr.png"
 tempOutPath="$tempDir/output.png"
 repoUrl="https://github.com/foone/SierraDeathGenerator"
 borderDir="$(dirname "$0")/deathstitch_borders"
-
-labelFontPoints=60
-labelFontLines=5 # needs to be manually updated if changed
-qrSize="$(echo "$labelFontPoints * $labelFontLines * 1.3333" | bc -l | perl -pe 's/\.\d+$//g')"
+patternGenPath="$HOME/bin/pixel-to-xstitch"
+lastRunPath="$tempDir/last-run.log"
 
 optGame=""
 optSubFont=""
@@ -23,8 +20,11 @@ optOutPath=""
 optSize=""
 optVerbose=0
 optBorder=""
-optQrUrl='https://github.com/buckmanc/dotfiles/blob/main/bin/deathstitch-generator'
 optImagePath=""
+optAida=14
+optNextIsAida=0
+optQrUrl='https://github.com/buckmanc/dotfiles/blob/main/bin/deathstitch-generator'
+optNextIsQrUrl=0
 
 for arg in "$@"
 do
@@ -61,6 +61,10 @@ do
 	then
 		optImagePath="$arg"
 		optNextIsImagePath=0
+	elif [[ "$optNextIsAida" == 1 ]]
+	then
+		optAida="$arg"
+		optNextIsAida=0
 	elif [[ "$arg" == "-v" || "$arg" == "--verbose" ]]
 	then
 		optVerbose=1
@@ -85,6 +89,9 @@ do
 	elif [[ "$arg" == "--image" ]]
 	then
 		optNextIsImagePath=1
+	elif [[ "$arg" == "--aida" ]]
+	then
+		optNextIsAida=1
 	elif [[ "$arg" =~ [0-9]+[xX][0-9]+ ]]
 	then
 		optSize="$arg"
@@ -152,14 +159,30 @@ then
 	exit 1
 fi
 
+if [[ -f "$lastRunPath" ]]
+then
+	lastRunStamp="$(date --reference "$lastRunPath" '+%s')"
+else
+	lastRunStamp=0
+fi
+
 if [[ -d "$repoPath/.git" ]]
 then
-	# TODO smooth out probs
-	git -C "$repoPath" pull > /dev/null
+	# only pull once in a while
+	# else github gets mad
+	if [[ "$lastRunStamp" -lt "$(date --date "24 hours ago" '+%s')" ]]
+	then
+		# TODO smooth out probs
+		git -C "$repoPath" pull > /dev/null
+	fi
 else
 	git clone "$repoUrl" "$repoPath"
 	echo
 fi
+
+
+mkdir -p "$tempDir"
+touch "$lastRunPath"
 
 outDir="$(dirname "$optOutPath")"
 outFullFileName="$(basename "$optOutPath")"
@@ -171,13 +194,9 @@ then
 	optOutPath="$outDir/${outFileName}.$outExt"
 fi
 
-outPatternFullFileName="${outFileName}_pattern.${outExt}"
-outPatternPath="$outDir/$outPatternFullFileName"
-
 echo "file:     ${outFileName%.**}"
 
 mkdir -p "$outDir"
-mkdir -p "$tempDir"
 
 # only game dirs with a json config file
 # they *can* have multiple config files, but only one game does
@@ -284,6 +303,12 @@ then
 	magickTextArgs+=("\( $optImagePath -background transparent -gravity south -splice 0x5 \)")
 	optImageWidth="$(identify -format '%w' "$optImagePath")"
 fi
+
+# TODO
+# calc an auto space var
+# starts at 1, bigger with bigger fonts
+# use for select games for line spacing and word spacing
+
 
 # colorize the text as best as we can
 magickLineColorArgs=()
@@ -495,43 +520,16 @@ fi
 
 cp "$tempOutPath" "$optOutPath"
 
-
-inchesWidth="$(echo "scale=2; $outputWidth / 14" | bc -l)"
-inchesHeight="$(echo "scale=2; $outputHeight / 14" | bc -l)"
-
-if [[ "$inchesWidth" == *"."* ]]
+# TODO call pattern gen script here
+if [[ -x "$patternGenPath" ]]
 then
-	inchesWidth="$(echo "$inchesWidth" | perl -p -e 's/0+$//g;' -e 's/\.$//g;')"
+	verboseArg=()
+	if [[ "$optVerbose" == 1 ]]
+	then
+		verboseArg=(--verbose)
+	fi
+	"$patternGenPath" --aida "$optAida" --qr-url "$optQrUrl" "$optOutPath" "font: $gameTitle" "font sourced from death generator" "pattern made with deathstitch generator" "${verboseArg[@]}"
 fi
-
-if [[ "$inchesHeight" == *"."* ]]
-then
-	inchesHeight="$(echo "$inchesHeight" | perl -p -e 's/0+$//g;' -e 's/\.$//g;')"
-fi
-
-stitchesDim="${outputWidth} x ${outputHeight}"
-inchesDim="${inchesWidth}\" x ${inchesHeight}\""
-
-echo "stitches: $stitchesDim"
-echo "inches:   $inchesDim"
-
-# generate a tiny one-to-one qr code
-echo "$optQrUrl" | qrencode --size 1 --margin 1 --output "$qrTempPath"
-
-# TODO extract all of this to a separate script that can be run on manually created/altered pixel images to turn them into cross stitch patterns
-# TODO add grid lines with thicker lines every x
-# TODO build line args, then you can count the array elements update the line count arg for the qr code size calculation
-"$magick" \
-	"$tempOutPath" -interpolate integer -filter point -resize "1500x1500^<" \
-	\( -background transparent -pointsize "$labelFontPoints" -fill black label:"stitches: $outputDim" \) \
-	\( -background transparent -pointsize "$labelFontPoints" -fill black label:"inches: $inchesWidth\" x $inchesHeight\" (with 14 ct Aida)" \) \
-	\( -background transparent -pointsize "$labelFontPoints" -fill black label:"font: $gameTitle" \) \
-	\( -background transparent -pointsize "$labelFontPoints" -fill black label:"font sourced from death generator" \) \
-	\( -background transparent -pointsize "$labelFontPoints" -fill black label:"pattern made with deathstitch generator" \) \
-	-append +repage \
-	\( "$qrTempPath" -interpolate integer -filter point -resize "${qrSize}x${qrSize}<" \) \
-	-gravity southeast -composite \
-	-background white -alpha remove -bordercolor white -border 20 "$outPatternPath"
 
 echo "done!"
 echo
