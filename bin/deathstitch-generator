@@ -25,6 +25,8 @@ optAida=14
 optNextIsAida=0
 optQrUrl='https://github.com/buckmanc/dotfiles/blob/main/bin/deathstitch-generator'
 optNextIsQrUrl=0
+optBleed=3
+optNextIsBleed=0
 
 for arg in "$@"
 do
@@ -65,6 +67,10 @@ do
 	then
 		optAida="$arg"
 		optNextIsAida=0
+	elif [[ "$optNextIsBleed" == 1 ]]
+	then
+		optBleed="$arg"
+		optNextIsBleed=0
 	elif [[ "$arg" == "-v" || "$arg" == "--verbose" ]]
 	then
 		optVerbose=1
@@ -92,6 +98,9 @@ do
 	elif [[ "$arg" == "--aida" ]]
 	then
 		optNextIsAida=1
+	elif [[ "$arg" == "--bleed" ]]
+	then
+		optNextIsBleed=1
 	elif [[ "$arg" =~ [0-9]+[xX][0-9]+ ]]
 	then
 		optSize="$arg"
@@ -475,9 +484,9 @@ else
 	cp "$textTempPath" "$tempOutPath"
 fi
 
-	outputDim="$(identify -format '%wx%h' "$tempOutPath")"
-	outputWidth="$( echo "$outputDim" | cut -d 'x' -f 1)"
-	outputHeight="$(echo "$outputDim" | cut -d 'x' -f 2)"
+outputDim="$(identify -format '%wx%h' "$tempOutPath")"
+outputWidth="$( echo "$outputDim" | cut -d 'x' -f 1)"
+outputHeight="$(echo "$outputDim" | cut -d 'x' -f 2)"
 
 # you can provide the top left corner as a border
 # this is then flip/flopped to all corners and edge pixels are stretched between the corners
@@ -515,6 +524,7 @@ then
 		\( "$fillerTopPath" -flip		\) -gravity south		-composite \
 		\( "$fillerSidePath"			\) -gravity west		-composite \
 		\( "$fillerSidePath" -flop		\) -gravity east		-composite \
+		-bordercolor none -border "$optBleed" \
 		"$tempOutPath"
 fi
 

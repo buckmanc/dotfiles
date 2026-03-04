@@ -9,9 +9,9 @@ minOutputDim=1500
 
 # grid line settings
 bigGridLinesEvery=10
-normalGridLineWidth=1
+normalGridLineWidth=2
 normalGridLineColor="#909090"
-bigGridLineWidth=3
+bigGridLineWidth=4
 # bigGridLineColor="#202020"
 bigGridLineColor="$normalGridLineColor"
 
@@ -117,6 +117,7 @@ stitchesDim="${inputWidth} x ${inputHeight}"
 inchesDim="${inchesWidth}\" x ${inchesHeight}\""
 
 echo "stitch a: $stitchesDim"
+echo "aida:     $optAida"
 echo "inches:   $inchesDim"
 
 # prepend standard lines
@@ -251,7 +252,9 @@ fi
 	-stroke "$bigGridLineColor" -strokewidth "$bigGridLineWidth" \
 	"${bigGridLineArgs[@]}" \
 	-flatten +repage \
+	-stroke none -strokewidth 0 \
 	-bordercolor "$normalGridLineColor" -border "$normalGridLineWidth" \
+	-flatten +repage \
 	"${textLineArgs[@]}" \
 	-append +repage \
 	"${qrArgs[@]}" \
