@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+
+# TODO
+# add --new
+# add --merge, to automate merging from different platforms
+
+set -e
+
+configPath="$HOME/.config/quoter.json"
+defaultConfigJson='[{"path":"to do.md","name":"todo","appendToTop":true},{"name":"meeting notes"},{"path":"misc.txt","name":"notes"},{}]'
+getStoragePath="$HOME/bin/get-storage-dir"
+
+if [[ ! -f "$configPath" ]]
+then
+	echo "$defaultConfigJson" | jq . > "$configPath"
+fi
+
+optName="${1}"
+optTextToAdd="${2}"
+
+rawJson="$(cat "$configPath")"
+allNames="$(echo "$rawJson" | jq -rc ".[] | select(.name != null) | .name")"
+configJson="$(echo "$rawJson" | jq -rc ".[] | select(.name != null) | select(.name | match(\"^$optName\"))")"
+
+if [[ -z "$configJson" ]]
+then
+	matchCount=0
+else
+	matchCount="$(echo "$configJson" | wc -l)"
+fi
+
+if [[ -z "$optName" ]]
+then
+	echo "options:"
+	echo "$allNames"
+	exit 1
+elif [[ "$matchCount" -eq 0 ]]
+then
+	echo "no matches found for $optName"
+	echo
+	echo "options:"
+	echo "$allNames"
+	exit 1
+	# TODO would you like to add one?
+elif [[ "$matchCount" -gt 1 ]]
+then
+	echo "too many matches found:"
+	echo "$configJson" | jq -r '.name'
+	exit 1
+fi
+
+cfgPath="$(echo "$configJson" | jq -r '.path')"
+cfgName="$(echo "$configJson" | jq -r '.name')"
+cfgAppendToTop="$(echo "$configJson" | jq -r '.appendToTop')"
+
+if [[ -z "$cfgPath" ]]
+then
+	cfgPath="$cfgName"
+fi
+
+if [[ ! "$cfgPath" =~ ^[/\\] ]]
+then
+	if [[ -x "$getStoragePath" ]]
+	then
+		rootPath="$("$getStoragePath")"
+	else
+		rootPath="$HOME"
+	fi
+
+	if [[ -d "$rootPath/Dropbox" ]]
+	then
+		rootPath+="/Dropbox"
+	fi
+
+	rootPath+="/Notes"
+	cfgPath="$rootPath/$cfgPath"
+
+fi
+
+if [[ -d "$cfgPath" ]]
+then
+	cfgPath+="/$cfgName"
+fi
+
+fileNameFull="$(basename "$cfgPath")"
+ext="${fileNameFull#*.}"
+dirName="$(dirname "$cfgPath")"
+
+mkdir -p "$dirName"
+
+if [[ -z "$ext" ]]
+then
+	ext="txt"
+	cfgPath+=".$ext"
+	fileNameFull+=".$ext"
+fi
+
+if [[ -z "${optTextToAdd}" ]]
+then
+	vimArgs=()
+	if [[ "$cfgAppendToTop" != "true" ]]
+	then
+		vimArgs+=(-c :$)
+	fi
+
+	vim "$cfgPath" "${vimArgs[@]}"
+	clear # clear screen for privacy
+else
+	if [[ "$cfgAppendToTop" != "true" ]]
+	then
+		echo "$optTextToAdd" >> "$cfgPath"
+	else
+		tempPath="$TEMP/quoter"
+		echo "$optTextToAdd" | cat - "$cfgPath" > "$tempPath"
+		mv "$tempPath" "$cfgPath"
+	fi
+	echo "quoted $cfgName"
+fi

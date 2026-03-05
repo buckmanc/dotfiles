@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+optAll=0
+for arg in "$@"
+do
+	if [[ "$arg" == "--all" ]]
+	then
+		optAll=1
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
+
+defaultDirs=("$HOME/storage/external-1" "$HOME/storage/shared" "/media/content" "/d/" "$HOME/My Documents" "$HOME")
+
+for dir in "${defaultDirs[@]}"
+do
+	if [[ -d "$dir" ]]
+	then
+		echo "$dir"
+
+		if [[ "$optAll" == 0 ]]
+		then
+			exit
+		fi
+	fi
+done

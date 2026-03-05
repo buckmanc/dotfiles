@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# if the hostname is useless, use the ostype instead
+if [[ "$HOSTNAME" == "localhost" ]]
+then
+	# shorten android name
+	if [[ "$OSTYPE" == "linux-android" ]]
+	then
+		hostyHost="android"
+
+		# add the user number as a substitute for a useful hostname
+		userNum="$(echo "$USER" | grep -iPo '(?<=^u0_a).+')"
+
+		# TODO allow for using a device alias instead
+		if [[ -n "$userNum" ]]
+		then
+			hostyHost="$hostyHost $userNum"
+		fi
+	else
+		hostyHost="$OSTYPE"
+	fi
+else
+	hostyHost="$HOSTNAME"
+fi
+
+echo "$hostyHost"
