@@ -15,8 +15,32 @@ then
 	echo "$defaultConfigJson" | jq . > "$configPath"
 fi
 
-optName="${1}"
-optTextToAdd="${2}"
+optVerbose=0
+
+for arg in "$@"
+do
+	if [[ "$arg" == "--verbose" ]]
+	then
+		optVerbose=1
+	elif [[ "$arg" == "--new" || "$arg" == "--merge" ]]
+	then
+		echo "not yet supported"
+		exit 1
+	elif [[ "$arg" == -* ]]
+	then
+		echo "I have no idea what $arg means"
+		exit 1
+	elif [[ -z "$optName" ]]
+	then
+		optName="$arg"
+	elif [[ -z "$optTextToAdd" ]]
+	then
+		optTextToAdd="$arg"
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
 
 rawJson="$(cat "$configPath")"
 allNames="$(echo "$rawJson" | jq -rc ".[] | select(.name != null) | .name")"
@@ -49,9 +73,9 @@ then
 	exit 1
 fi
 
-cfgPath="$(echo "$configJson" | jq -r '.path')"
-cfgName="$(echo "$configJson" | jq -r '.name')"
-cfgAppendToTop="$(echo "$configJson" | jq -r '.appendToTop')"
+cfgPath="$(echo "$configJson" | jq -r '.path // ""')"
+cfgName="$(echo "$configJson" | jq -r '.name // ""')"
+cfgAppendToTop="$(echo "$configJson" | jq -r '.appendToTop // false')"
 
 if [[ -z "$cfgPath" ]]
 then
@@ -83,7 +107,12 @@ then
 fi
 
 fileNameFull="$(basename "$cfgPath")"
-ext="${fileNameFull#*.}"
+if [[ "$fileNameFull" == *.* ]]
+then
+	ext="${fileNameFull#*.}"
+else
+	ext=''
+fi
 dirName="$(dirname "$cfgPath")"
 
 mkdir -p "$dirName"
@@ -93,6 +122,14 @@ then
 	ext="txt"
 	cfgPath+=".$ext"
 	fileNameFull+=".$ext"
+fi
+
+if [[ "$optVerbose" == 1 ]]
+then
+	echo "cfgName: $cfgName"
+	echo "cfgPath: $cfgPath"
+	echo "ext: $ext"
+	echo "dirName: $dirName"
 fi
 
 if [[ -z "${optTextToAdd}" ]]
