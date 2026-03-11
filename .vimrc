@@ -253,6 +253,7 @@ if filereadable(expand("~/.vim/plug.vim"))
 	" Plug 'sbdchd/vim-shebang'	" :ShebangInsert
 	Plug 'buckmanc/vim-shebang', { 'branch': 'blank_line_dev' }
 	Plug 'glensc/vim-syntax-lighttpd'
+	Plug 'isobit/vim-caddyfile'
 
 	call plug#end()
 

@@ -3,6 +3,7 @@
 # TODO
 # add --new
 # add --merge, to automate merging from different platforms
+# add a "clear screen" option in the config so it only has to be cleared when desired
 
 set -e
 
@@ -143,7 +144,7 @@ then
 	vim "$cfgPath" "${vimArgs[@]}"
 	clear # clear screen for privacy
 else
-	if [[ "$cfgAppendToTop" != "true" ]]
+	if [[ "$cfgAppendToTop" != "true" || ! -f "$cfgPath" ]]
 	then
 		echo "$optTextToAdd" >> "$cfgPath"
 	else

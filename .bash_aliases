@@ -5,7 +5,6 @@
 alias unmount=umount
 alias xtree='tree -fi | grep -i --color'
 alias xgrep='grep -i --color'
-alias xhistory='history | cut -c 8- | grep -ivE  "^x?hist(ory | )" | grep -i --color'
 alias xhist='xhistory'
 alias xschellcheck='xshellcheck'
 alias gut='git'
@@ -25,7 +24,7 @@ alias vin='echo "praise the Ascendant Warrior" ; vim'
 alias :q="echo \"this isn't vim, "'$("$HOME/bin/message-error-name")'"\""
 alias :wq=":q"
 alias :w=":q"
-alias :x=":q"
+# alias :x=":q"
 alias x=":q"
 alias ZZ=":q"
 alias dc="cd"
@@ -466,36 +465,6 @@ gowebgo(){
 	sudo python -m http.server -d "${dir}" "${port}"
 }
 
-quoter_update(){
-	# store file paths, names in a dictionary format
-	# try a json file, parse with jq
-	# 'quoter todo "bake us a cake"' appends to the file
-	# 'quoter todo' opens the file
-
-	fileSearch="${1}"
-	textToAdd="${2}"
-
-	if [[ -z "${fileSearch}" ]]
-	then
-		blarp=blorp
-		# list optional names
-	fi
-
-	# find file path
-	# something like '^${fileSearch.*'
-	# warn an exit if more than one matching path found
-
-	if [[ -z "${textToAdd}" ]]
-	then
-		blarp=blorp
-		# vim file
-	else
-		blarp=blorp
-		# append to file
-	fi
-}
-
-
 dotnewt(){
 
 	if [[ $# -eq 0 ]]
@@ -525,5 +494,62 @@ dotnewt(){
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		git commit -m "Initial commit based on $1 dotnet template"
+	fi
+}
+
+# must be a function
+# so it can access the in-memory session history
+xhistory(){
+	tailLines=''
+	grepPattern=''
+
+	for arg in "$@"
+	do
+		if [[ "$arg" =~ ^[0-9]+$ ]]
+		then
+			tailLines="$arg"
+		elif [[ -z "$grepPattern" ]]
+		then
+			grepPattern="$arg"
+		else
+			echo "I have no idea what $arg means"
+			exit 1
+		fi
+	done
+
+	# echo "grepPattern: $grepPattern"
+	# echo "tailLines: $tailLines"
+
+	output="$(history | cut -c 8- | grep -Piv  "^x?hist(ory)?( |$)")"
+
+	if [[ -n "$grepPattern" ]]
+	then
+		output="$(echo "$output" | grep -i --color "$grepPattern")"
+	fi
+
+	if [[ -n "$tailLines" ]]
+	then
+		output="$(echo "$output" | tail -n "$tailLines")"
+	fi
+
+	echo "$output"
+}
+
+# must be a function so it can see the screen pid from inside
+# this exists to give a context-specific extra function to a termux shortcut
+# so the shortcut can both exit vim and exit an active screen, but *not* exit a session like ctrl+a, d does
+:x(){
+
+	currentPid="$(ps -o ppid -p $$ --no-headers)"
+	screenMatch="$(screen -ls | grep -F "$currentPid" | grep -i 'attached')"
+
+	# echo "currentPid: $currentPid"
+	# echo "screenMatch: $screenMatch"
+
+	if [[ -n "$screenMatch" ]]
+	then
+		screen -d "$currentPid"
+	else
+		echo "not in a screen or in a vim"
 	fi
 }

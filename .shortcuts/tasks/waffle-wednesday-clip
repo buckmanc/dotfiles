@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -129,5 +129,9 @@ rclone copyto "$compressedVidPath" "$rcloneDestDir/$destFileNameFull"
 # notificationAction="\"'$HOME/bin_termux/termux-mms-send' '$number' 'waffle wednesday clip uploaded' '$snapPath'\" > .logs/mms.log 2>&1"
 notificationAction="'$HOME/bin_termux/termux-mms-send' '$number' 'waffle wednesday clip uploaded' '$snapPath' > .logs/mms.log 2>&1"
 
-termux-media-scan "$vidDir"
+if type termux-media-scan > /dev/null 2>&1
+then
+	termux-media-scan "$vidDir"
+fi
+
 "$notify" 'waffle wednesday' 'vid uploaded' "$snapPath" --action "$notificationAction"
