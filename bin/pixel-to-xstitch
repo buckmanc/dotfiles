@@ -82,6 +82,8 @@ fileNameFull="$(basename "$optFile")"
 fileName="${fileNameFull%.*}"
 outFullFileName="${fileName}_pattern.png"
 outPath="$dir/$outFullFileName"
+# not sure what else to call this
+csvPath="$dir/stitch_suggestions.csv"
 
 histoReport="$(magick "$optFile" -format '%c' histogram:info:)"
 
@@ -100,18 +102,23 @@ inputDim="$(identify -format '%wx%h' "$optFile")"
 inputWidth="$( echo "$inputDim" | cut -d 'x' -f 1)"
 inputHeight="$(echo "$inputDim" | cut -d 'x' -f 2)"
 
-inchesWidth="$( echo "scale=2; $inputWidth / $optAida" | bc -l)"
-inchesHeight="$(echo "scale=2; $inputHeight / $optAida" | bc -l)"
+decimalTrim(){
+	arg="$(cat)"
+	if [[ "$arg" == *"."* ]]
+	then
+		echo "$arg" | perl -p -e 's/0+$//g;' -e 's/\.$//g;'
+	else
+		echo "$arg"
+	fi
+}
 
-if [[ "$inchesWidth" == *"."* ]]
-then
-	inchesWidth="$(echo "$inchesWidth" | perl -p -e 's/0+$//g;' -e 's/\.$//g;')"
-fi
+integerCeiling(){
+	arg="$(cat)"
+	perl -w -e 'use POSIX; print ceil($ARGV[0])' "$arg"
+}
 
-if [[ "$inchesHeight" == *"."* ]]
-then
-	inchesHeight="$(echo "$inchesHeight" | perl -p -e 's/0+$//g;' -e 's/\.$//g;')"
-fi
+inchesWidth="$( echo "scale=2; $inputWidth / $optAida" | bc -l | decimalTrim)"
+inchesHeight="$(echo "scale=2; $inputHeight / $optAida" | bc -l | decimalTrim)"
 
 stitchesDim="${inputWidth} x ${inputHeight}"
 inchesDim="${inchesWidth}\" x ${inchesHeight}\""
@@ -261,3 +268,55 @@ fi
 	-gravity southeast -composite \
 	-background white -alpha remove -bordercolor white -border 20 "$outPath"
 
+aidaOptions=("14" "16" "18")
+frameSizes=("4x5" "4x6" "5x5" "5x7" "7x7" "8x8" "8x10" "8.5x11" "8x12" "11x14" "12x12" "16x20" "18x24")
+
+# add rotated versions of all frame sizes
+for size in "${frameSizes[@]}"
+do
+	frameSizes+=("$(echo "$size" | perl -pe 's/(\d+)x(\d+)/$2x$1/g')")
+done
+
+# echo "${frameSizes[*]}" > "$TEMP/frametest.log"
+
+
+# TODO write a function to give the dif between two 0x0 format areas
+# Don't do that, just calculate locally because you'll need the separate variables
+
+csvText="File,Stitches,Aida,Inches,New Aida,Frame Size,Inch Diff,Inch Diff Dim,New Stitches"
+for frameSize in "${frameSizes[@]}"
+do
+	for aidaOption in "${aidaOptions[@]}"
+	do
+		frameWidth="${frameSize%%x*}"
+		frameHeight="${frameSize##*x}"
+
+		# if [[ "$optVerbose" == 1 ]]
+		# then
+		# 	echo "frameSize: $frameSize"
+		# 	echo "frameWidth: $frameWidth"
+		# 	echo "frameHeight: $frameHeight"
+		# fi
+
+		newStitchWidth="$(echo "scale=2; $frameWidth * $aidaOption" | bc -l | integerCeiling)"
+		newStitchHeight="$(echo "scale=2; $frameHeight * $aidaOption" | bc -l | integerCeiling)"
+
+		stitchWidthDiff="$(echo "scale=2;$newStitchWidth - $inputWidth" | bc -l | decimalTrim)"
+		stitchHeightDiff="$(echo "scale=2;$newStitchHeight - $inputHeight" | bc -l | decimalTrim)"
+		stitchDiff="$(echo "$stitchWidthDiff + $stitchHeightDiff" | bc -l)"
+		stitchDiffDim="${stitchWidthDiff}x${stitchHeightDiff}"
+
+		csvText+=$'\n'"$fileName,${inputWidth}x${inputHeight},$optAida,${inchesWidth}x${inchesHeight},$aidaOption,$frameSize,$stitchDiff,$stitchDiffDim,${newStitchWidth}x${newStitchHeight}"
+	done
+done
+
+# if the CSV file already exists
+# remove lines matching this file
+# and write only lines after the header
+if [[ -f "$csvPath" ]]
+then
+	cat "$csvPath" | grep -Piv "^$fileName," | sponge "$csvPath"
+	echo "$csvText" | tail -n +2 >> "$csvPath"
+else
+	echo "$csvText" > "$csvPath"
+fi
