@@ -51,5 +51,10 @@ fi
 simpleText="$optTitle: $optContent"
 
 echo "$simpleText"
-termux-notification --title "$optTitle" --content "$optContent" --image-path "$optImagePath" "${passThruArgs[@]}"
-termux-toast "$simpleText"
+
+# a quick check just in case
+if type termux-notification > /dev/null 2>&1
+then
+	termux-notification --title "$optTitle" --content "$optContent" --image-path "$optImagePath" "${passThruArgs[@]}"
+	termux-toast "$simpleText"
+fi
