@@ -99,7 +99,7 @@ if has("eval")
 	let spellPaths = ''
 	" glob isn't working with full paths under termux
 	" for d in glob(expand('~/.vim/spell') . '/*.add', 1, 1)
-	for d in split(system('find "$HOME/.vim/spell" -type f -iname "*.add"'), '\n')
+	for d in split(system('find "$HOME/.vim/spell" -type f -iname "*.add" | sort'), '\n')
 		if (filereadable(d))
 
 			" compile the file if needed
