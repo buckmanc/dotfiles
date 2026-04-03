@@ -223,6 +223,7 @@
 	doofus	en-US
 	DQ	en-US
 	dropbox	en-US
+	dryables	en-US
 	duddy	en-US
 	dudette	en-US
 	Duggar	en-US
@@ -315,6 +316,7 @@
 	headspace	en-US
 	healings	en-US
 	hearted	en-US
+	hellscape	en-US
 	hexmas	en-US
 	HIPAA	en-US
 	hissy	en-US
@@ -402,10 +404,12 @@
 	LGBTQ	en-US
 	lifesign	en-US
 	lifesigns	en-US
+	loc	en-US
 	lofi	en-US
 	Logitech	en-US
 	Longaberger	en-US
 	lort	en-US
+	loth	en-US
 	lovey-dovey	en-US
 	LUCA	en-US
 	lumen	en-US
@@ -539,6 +543,7 @@
 	plushie	en-US
 	podge	en-US
 	pokemon	en-US
+	Pokopia	en-US
 	polearm	en-US
 	polos	en-US
 	poofy	en-US
@@ -757,6 +762,7 @@
 	vids	en-US
 	villanized	en-US
 	Vischer	en-US
+	voluntold	en-US
 	voxel	en-US
 	Vredefort	en-US
 	Wachovia	en-US
@@ -1137,6 +1143,7 @@
 	Yumi	en-US
 	Zenithar	en-US
 	Zenithar's	en-US
+	Zora	en-US
 	Atari	en-US
 	Dreamcast	en-US
 	Famicom	en-US
@@ -1495,6 +1502,7 @@
 	Blackhawk	en-US
 	Blankman	en-US
 	Bluejays	en-US
+	Boystown	en-US
 	Capehart	en-US
 	Cascio's	en-US
 	Cass	en-US
@@ -2605,6 +2613,7 @@
 	Johto	en-US
 	Kalos	en-US
 	Kanto	en-US
+	Orre	en-US
 	Paldea	en-US
 	Sinnoh	en-US
 	Unova	en-US
@@ -2717,7 +2726,9 @@
 	href	en-US
 	ImageMagick	en-US
 	intellisense	en-US
+	interweb	en-US
 	interwebs	en-US
+	IoT	en-US
 	IPv4	en-US
 	IPv6	en-US
 	iterable	en-US

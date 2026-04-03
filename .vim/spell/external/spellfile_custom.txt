@@ -222,6 +222,7 @@ donut
 doofus
 DQ
 dropbox
+dryables
 duddy
 dudette
 Duggar
@@ -314,6 +315,7 @@ headachey
 headspace
 healings
 hearted
+hellscape
 hexmas
 HIPAA
 hissy
@@ -401,10 +403,12 @@ Levenger
 LGBTQ
 lifesign
 lifesigns
+loc
 lofi
 Logitech
 Longaberger
 lort
+loth
 lovey-dovey
 LUCA
 lumen
@@ -538,6 +542,7 @@ pls
 plushie
 podge
 pokemon
+Pokopia
 polearm
 polos
 poofy
@@ -756,6 +761,7 @@ vibing
 vids
 villanized
 Vischer
+voluntold
 voxel
 Vredefort
 Wachovia
@@ -1136,6 +1142,7 @@ Ysmir's
 Yumi
 Zenithar
 Zenithar's
+Zora
 Atari
 Dreamcast
 Famicom
@@ -1494,6 +1501,7 @@ Berkshire
 Blackhawk
 Blankman
 Bluejays
+Boystown
 Capehart
 Cascio's
 Cass
@@ -2604,6 +2612,7 @@ Hoenn
 Johto
 Kalos
 Kanto
+Orre
 Paldea
 Sinnoh
 Unova
@@ -2716,7 +2725,9 @@ Hotmail
 href
 ImageMagick
 intellisense
+interweb
 interwebs
+IoT
 IPv4
 IPv6
 iterable
