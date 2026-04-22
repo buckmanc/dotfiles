@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+name="$(echo "$1" | perl -pe 's/ /_/g')"
+
 # use this function as a toggle
 if [[ "$(termux-microphone-record -i | jq -r .isRecording)" == "true" ]]
 then
@@ -9,6 +11,7 @@ fi
 
 destDir="$HOME/storage/dcim/Camera"
 timeStamp="$(date '+%Y%m%d_%H%M%S')"
-outPath="$destDir/${timeStamp}_xmic.mp3"
+outPath="$destDir/${timeStamp}_xmic_${name}.mp3"
+outpath="$(echo "$outpath" | perl -pe 's/_\.mp3$/.mp3/g')"
 
 termux-microphone-record -f "$outPath" -l 0 -e aac -c 1

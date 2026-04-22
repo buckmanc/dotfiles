@@ -155,10 +155,10 @@ do
 		elif [[ "$packageName" == "youtube" ]] && [[ "${content,,}" == 'for you:'* ]]
 		then
 			continue
-		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" =~ (see\ where\ your\ package\ is|^out\ for\ delivery|^new from) || "${content,,}" =~ (^today\ only:|based\ on\ items) ]]
+		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" =~ (see\ where\ your\ package\ is|^out\ for\ delivery|^new from|^a deal inspired) || "${content,,}" =~ (^today\ only:|based\ on\ items) ]]
 		then
 			continue
-		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" =~ (^get this|deals) && "${content,,}" =~ (shop|save) ]]
+		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" =~ (^get this|deals|%\ off) && "${content,,}" =~ (shop|save|prices\ drop|these\ deals) ]]
 		then
 			continue
 		elif [[ "$packageName" == "googleplay" ]] && [[ "${content,,}" == *'successfully installed'* ]]
@@ -179,7 +179,7 @@ do
 		elif [[ "${packageName,,}" == "fdroid" ]] && [[ "${title,,}" =~ ^(updating repositories) || "${content,,}" =~ ^(downloading update for) ]]
 		then
 			continue
-		elif [[ "$packageName" == "messenger" && "${content,,}" =~ ^sent\ a\ message:\ .*minutes\ ago.$ ]]
+		elif [[ "$packageName" == "messenger" && "${content,,}" =~ ^(sent\ a\ message:\ .*minutes\ ago.|reminder:.* sent you .* new messages\.)$ ]]
 		then
 			continue
 		elif [[ "${content,,}" == *"a new login was detected"* ]]
@@ -245,7 +245,7 @@ done < <( echo "$jsonList" )
 
 output="$(echo "$output" | perl -0777pe 's/(^[\s-]+|[\s-]+$)//g')"
 
-screenHeight=$(($(tput lines)-3))
+screenHeight=$(($(tput lines)-4))
 outputHeight="$(echo "$output" | wc -l)"
 
 # echo "screenHeight: $screenHeight"

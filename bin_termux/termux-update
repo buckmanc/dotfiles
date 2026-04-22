@@ -4,3 +4,7 @@
 pkg upgrade
 apt autoremove
 pkg clean
+
+"$HOME/bin/vimplugupdate"
+"$HOME/bin/starship-update"
+"$HOME/bin/yt-dlp-update"

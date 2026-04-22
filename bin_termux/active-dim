@@ -6,7 +6,8 @@ lastPluggedIn=0
 dimToggle="$HOME/bin_termux/dim-toggle"
 
 getPluggedIn(){
-	batStat="$(termux-battery-status | jq -r .plugged)"
+	json="$1"
+	batStat="$(echo "$json" | jq -r .plugged)"
 	if [[ "${batStat,,}" == *"unplugged"* ]]
 	then
 		echo 0
@@ -14,18 +15,27 @@ getPluggedIn(){
 		echo 1
 	fi
 }
+getBatPerc(){
+	json="$1"
+	echo "$json" | jq -r .percentage
+}
 
 while true
 do
 	lastPluggedIn="$pluggedIn"
 
-	pluggedIn="$(getPluggedIn)"
+	# pull the json once
+	json="$(termux-battery-status)"
+	pluggedIn="$(getPluggedIn "$json")"
+	batPerc="$(getBatPerc "$json")"
 
 	if [[ "$pluggedIn" != "$lastPluggedIn" ]]
 	then
 		echo -n "$(date +'%R') "
+		echo -n "${batPerc}% "
 		if [[ "$pluggedIn" == 0 ]]
 		then
+			echo "$json" > "$HOME/.logs/active-dim-battery.json"
 			"$dimToggle" auto
 		else
 			"$dimToggle" default
@@ -36,6 +46,14 @@ do
 	# 1) we knew if a bluetooth device was connected or
 	# 2) we knew the name of connected bluetooth devices
 	
-	sleep 1m
+	if [[ "$batPerc" -ge 98 ]]
+	then
+		sleep 10s
+	elif [[ "$batPerc" -le 30 ]]
+	then
+		sleep 2m
+	else
+		sleep 1m
+	fi
 done
 
