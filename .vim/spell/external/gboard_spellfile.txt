@@ -237,6 +237,7 @@
 	Ea-nāṣir	en-US
 	earlyish	en-US
 	easter	en-US
+	ebon	en-US
 	ectoplasmic	en-US
 	el	en-US
 	eldritch	en-US
@@ -853,7 +854,6 @@
 	Adolin's	en-US
 	Adonalsium	en-US
 	Aetherius	en-US
-	aiji	en-US
 	Akatosh	en-US
 	Akatosh's	en-US
 	Albus	en-US
@@ -1060,7 +1060,6 @@
 	ODST	en-US
 	Olimar's	en-US
 	Paddington	en-US
-	paidhi	en-US
 	Parangosky	en-US
 	Perelandra	en-US
 	perpendicularity	en-US
@@ -1124,7 +1123,6 @@
 	Sunreach	en-US
 	Szeth	en-US
 	Szeth's	en-US
-	Tabini	en-US
 	Taldain	en-US
 	Talos	en-US
 	Talos's	en-US
@@ -1168,8 +1166,44 @@
 	Zenithar	en-US
 	Zenithar's	en-US
 	Zora	en-US
+	aiji	en-US
+	aishidi’tat	en-US
+	Atageini	en-US
+	ateva	en-US
+	atevi	en-US
+	Baiji	en-US
+	Banichi	en-US
 	Bren	en-US
 	Bren's	en-US
+	Bujavid	en-US
+	Caiti	en-US
+	Cajeiri	en-US
+	Damiri	en-US
+	Damiri's	en-US
+	Edi	en-US
+	Gan	en-US
+	Geigi	en-US
+	Ilisidi	en-US
+	Ilisidi's	en-US
+	Jago	en-US
+	Kadagidi	en-US
+	kyo	en-US
+	Kyoh	en-US
+	Machigi	en-US
+	Malguri	en-US
+	Marid	en-US
+	Mospheira	en-US
+	Murini	en-US
+	nadi	en-US
+	Najida	en-US
+	paidhi	en-US
+	Prakuyo	en-US
+	Ragi	en-US
+	Shejidan	en-US
+	Tabini	en-US
+	Taiben	en-US
+	Taibeni	en-US
+	Tatiseigi	en-US
 	Atari	en-US
 	Dreamcast	en-US
 	Famicom	en-US
