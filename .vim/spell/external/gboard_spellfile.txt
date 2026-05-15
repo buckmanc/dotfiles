@@ -83,6 +83,7 @@
 	Blippi	en-US
 	BLM	en-US
 	blotchiness	en-US
+	blouson	en-US
 	bluetooth	en-US
 	Bo	en-US
 	boff	en-US
@@ -155,6 +156,7 @@
 	Conoco	en-US
 	Contra	en-US
 	convo	en-US
+	convos	en-US
 	cooldown	en-US
 	cosleep	en-US
 	cosleeping	en-US
@@ -176,6 +178,7 @@
 	cubby	en-US
 	cuirass	en-US
 	Culver's	en-US
+	curriculums	en-US
 	Dafoe's	en-US
 	Darkspace	en-US
 	DBA	en-US
@@ -251,6 +254,7 @@
 	Faires	en-US
 	fakeout	en-US
 	fam	en-US
+	fanfic	en-US
 	fangled	en-US
 	Fauci	en-US
 	faux	en-US
@@ -290,6 +294,7 @@
 	Godfrey	en-US
 	gonna	en-US
 	Goodreads	en-US
+	gothic	en-US
 	gotta	en-US
 	grammaflage	en-US
 	grandboss	en-US
@@ -316,6 +321,7 @@
 	headspace	en-US
 	healings	en-US
 	hearted	en-US
+	hella	en-US
 	hellscape	en-US
 	hexmas	en-US
 	HIPAA	en-US
@@ -349,6 +355,7 @@
 	Iglesias	en-US
 	IGN	en-US
 	IGN's	en-US
+	IHOP	en-US
 	IM's	en-US
 	IMing	en-US
 	immunocompromised	en-US
@@ -356,11 +363,14 @@
 	inerrancy	en-US
 	ing	en-US
 	ingrate	en-US
+	intentioned	en-US
 	interoception	en-US
 	intersex	en-US
 	IOUs	en-US
 	ish	en-US
 	isos	en-US
+	ITT	en-US
+	ITT's	en-US
 	Ittibitz	en-US
 	ivermectin	en-US
 	Jackbox	en-US
@@ -376,14 +386,17 @@
 	joven	en-US
 	joycon	en-US
 	joycons	en-US
+	judgy	en-US
 	Jumanji	en-US
 	Juneteenth	en-US
 	junky	en-US
 	kaiju	en-US
 	Kat	en-US
 	keister	en-US
+	Kennedys	en-US
 	keychain	en-US
 	Khaw	en-US
+	kickstarted	en-US
 	kinda	en-US
 	Kolin	en-US
 	Konami	en-US
@@ -397,6 +410,8 @@
 	Lactaid	en-US
 	lambrequin	en-US
 	Larkwood's	en-US
+	lavalier	en-US
+	Layton	en-US
 	Legos	en-US
 	Lenscrafters	en-US
 	LeVar	en-US
@@ -504,6 +519,7 @@
 	Orobourous	en-US
 	Orson	en-US
 	OST	en-US
+	osteoporotic	en-US
 	other's	en-US
 	othered	en-US
 	ouija	en-US
@@ -525,6 +541,7 @@
 	pathing	en-US
 	Pattinson	en-US
 	Pazuzu	en-US
+	pendulumed	en-US
 	peridot	en-US
 	personhood	en-US
 	philtrum	en-US
@@ -533,6 +550,7 @@
 	pickpocketed	en-US
 	pincher	en-US
 	pinky	en-US
+	pissy	en-US
 	PJ	en-US
 	PJs	en-US
 	Plandemic	en-US
@@ -580,6 +598,7 @@
 	rando	en-US
 	randos	en-US
 	rangoon	en-US
+	rapcore	en-US
 	realtor	en-US
 	reconvince	en-US
 	recraft	en-US
@@ -701,6 +720,7 @@
 	that'll	en-US
 	theatre	en-US
 	themself	en-US
+	theoreticals	en-US
 	Thinsulate	en-US
 	thorts	en-US
 	throwies	en-US
@@ -754,12 +774,14 @@
 	unvaxxed	en-US
 	Urfaust	en-US
 	UTI	en-US
+	uwu	en-US
 	vampiric	en-US
 	vax	en-US
 	vaxxed	en-US
 	VGM	en-US
 	vibing	en-US
 	vids	en-US
+	villainized	en-US
 	villanized	en-US
 	Vischer	en-US
 	voluntold	en-US
@@ -870,8 +892,6 @@
 	BotW	en-US
 	BotW's	en-US
 	Braize	en-US
-	Bren	en-US
-	Bren's	en-US
 	Brudder	en-US
 	Canticle	en-US
 	Cardassia	en-US
@@ -908,6 +928,7 @@
 	Elhokar	en-US
 	Elric	en-US
 	Encanto	en-US
+	Ender's	en-US
 	Eowyn	en-US
 	Eragon	en-US
 	Eshonai	en-US
@@ -916,6 +937,7 @@
 	Evergaol	en-US
 	Evergaols	en-US
 	Evershore	en-US
+	Fayrah	en-US
 	Feyrune	en-US
 	FFXIV	en-US
 	flayers	en-US
@@ -930,6 +952,7 @@
 	GameChops	en-US
 	gancho	en-US
 	Ganon	en-US
+	Gaston	en-US
 	Ghibli	en-US
 	Godrick	en-US
 	Gollum	en-US
@@ -1046,6 +1069,7 @@
 	Phallanx	en-US
 	phasers	en-US
 	Phasmophobia	en-US
+	Picard's	en-US
 	Pikmin	en-US
 	pogo	en-US
 	PoGo	en-US
@@ -1144,10 +1168,12 @@
 	Zenithar	en-US
 	Zenithar's	en-US
 	Zora	en-US
+	Bren	en-US
+	Bren's	en-US
 	Atari	en-US
 	Dreamcast	en-US
 	Famicom	en-US
-	Gamecube	en-US
+	GameCube	en-US
 	GBA	en-US
 	GCN	en-US
 	NES	en-US
@@ -2742,6 +2768,7 @@
 	keycaps	en-US
 	localhost	en-US
 	M2	en-US
+	MacBook	en-US
 	macropad	en-US
 	macropads	en-US
 	mailhost	en-US

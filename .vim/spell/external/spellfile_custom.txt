@@ -82,6 +82,7 @@ blegh
 Blippi
 BLM
 blotchiness
+blouson
 bluetooth
 Bo
 boff
@@ -154,6 +155,7 @@ Columbkille's
 Conoco
 Contra
 convo
+convos
 cooldown
 cosleep
 cosleeping
@@ -175,6 +177,7 @@ cubbies
 cubby
 cuirass
 Culver's
+curriculums
 Dafoe's
 Darkspace
 DBA
@@ -250,6 +253,7 @@ Faire
 Faires
 fakeout
 fam
+fanfic
 fangled
 Fauci
 faux
@@ -289,6 +293,7 @@ gobless
 Godfrey
 gonna
 Goodreads
+gothic
 gotta
 grammaflage
 grandboss
@@ -315,6 +320,7 @@ headachey
 headspace
 healings
 hearted
+hella
 hellscape
 hexmas
 HIPAA
@@ -348,6 +354,7 @@ IEnumerable
 Iglesias
 IGN
 IGN's
+IHOP
 IM's
 IMing
 immunocompromised
@@ -355,11 +362,14 @@ incel
 inerrancy
 ing
 ingrate
+intentioned
 interoception
 intersex
 IOUs
 ish
 isos
+ITT
+ITT's
 Ittibitz
 ivermectin
 Jackbox
@@ -375,14 +385,17 @@ journalling
 joven
 joycon
 joycons
+judgy
 Jumanji
 Juneteenth
 junky
 kaiju
 Kat
 keister
+Kennedys
 keychain
 Khaw
+kickstarted
 kinda
 Kolin
 Konami
@@ -396,6 +409,8 @@ LaBeouf
 Lactaid
 lambrequin
 Larkwood's
+lavalier
+Layton
 Legos
 Lenscrafters
 LeVar
@@ -503,6 +518,7 @@ oogle
 Orobourous
 Orson
 OST
+osteoporotic
 other's
 othered
 ouija
@@ -524,6 +540,7 @@ parter
 pathing
 Pattinson
 Pazuzu
+pendulumed
 peridot
 personhood
 philtrum
@@ -532,6 +549,7 @@ pickleball
 pickpocketed
 pincher
 pinky
+pissy
 PJ
 PJs
 Plandemic
@@ -579,6 +597,7 @@ ramped
 rando
 randos
 rangoon
+rapcore
 realtor
 reconvince
 recraft
@@ -700,6 +719,7 @@ that
 that'll
 theatre
 themself
+theoreticals
 Thinsulate
 thorts
 throwies
@@ -753,12 +773,14 @@ unvaccinated
 unvaxxed
 Urfaust
 UTI
+uwu
 vampiric
 vax
 vaxxed
 VGM
 vibing
 vids
+villainized
 villanized
 Vischer
 voluntold
@@ -869,8 +891,6 @@ Borat
 BotW
 BotW's
 Braize
-Bren
-Bren's
 Brudder
 Canticle
 Cardassia
@@ -907,6 +927,7 @@ Elden
 Elhokar
 Elric
 Encanto
+Ender's
 Eowyn
 Eragon
 Eshonai
@@ -915,6 +936,7 @@ Eternals
 Evergaol
 Evergaols
 Evershore
+Fayrah
 Feyrune
 FFXIV
 flayers
@@ -929,6 +951,7 @@ Fullmetal
 GameChops
 gancho
 Ganon
+Gaston
 Ghibli
 Godrick
 Gollum
@@ -1045,6 +1068,7 @@ Peryite's
 Phallanx
 phasers
 Phasmophobia
+Picard's
 Pikmin
 pogo
 PoGo
@@ -1143,10 +1167,12 @@ Yumi
 Zenithar
 Zenithar's
 Zora
+Bren
+Bren's
 Atari
 Dreamcast
 Famicom
-Gamecube
+GameCube
 GBA
 GCN
 NES
@@ -2741,6 +2767,7 @@ keycap
 keycaps
 localhost
 M2
+MacBook
 macropad
 macropads
 mailhost
