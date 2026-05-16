@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+cols="$(tput cols)"
+bufferWidth=3
+if [[ "$cols" -gt 100 ]]
+then
+	nameWidth=20
+elif [[ "$cols" -lt 80 ]]
+then
+	nameWidth=2
+else
+	nameWidth=10
+fi
+dateWidth=20
+messageWidth=$((cols - nameWidth - dateWidth - bufferWidth))
+
+# TODO add pretty log support here too?
+
+# one line log
+git log --abbrev-commit --date-order --format=format:"%C(bold green)%ad%C(reset) %C(white)%<(${messageWidth},trunc)%s%C(reset) %C(dim white)- %<(${nameWidth})%aN%C(reset)%C(auto)%+d%C(reset)" "$@"
