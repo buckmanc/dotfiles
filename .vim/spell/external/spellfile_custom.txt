@@ -380,6 +380,7 @@ Jase
 JD
 Jemisin's
 jiggler
+Johnsons
 journaling
 journalled
 journalling
@@ -440,11 +441,13 @@ Malwart
 mana
 Mangelsen's
 Mardi Gras
+Maruchan
 marvelling
 Mastercuts
 matryoshka
 mayhaps
 McGoey
+McNuggets
 me's
 mech
 meds
@@ -506,6 +509,7 @@ NPC
 numbingly
 nunchuck
 obby
+obbys
 Odwalla
 offput
 ok
@@ -620,6 +624,7 @@ rizzed
 rizzler
 rng
 RNG
+Roblox
 robo
 Rogan
 rolf
@@ -770,6 +775,7 @@ unrepaired
 unshielded
 Unsplash
 unstyled
+untranscribed
 unvaccinated
 unvaxxed
 Urfaust
@@ -778,6 +784,7 @@ uwu
 vampiric
 vax
 vaxxed
+velcro
 VGM
 vibing
 vids
@@ -820,6 +827,7 @@ x6
 x7
 x8
 x9
+Xanga
 xfer
 xfered
 xferring
@@ -849,6 +857,7 @@ Zenni
 zonked
 zonking
 Zootopia
+Jubiliee
 Adolin
 Adolin's
 Adonalsium
@@ -1182,6 +1191,7 @@ Damiri's
 Edi
 Gan
 Geigi
+Geigi's
 Ilisidi
 Ilisidi's
 Jago

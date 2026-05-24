@@ -381,6 +381,7 @@
 	JD	en-US
 	Jemisin's	en-US
 	jiggler	en-US
+	Johnsons	en-US
 	journaling	en-US
 	journalled	en-US
 	journalling	en-US
@@ -441,11 +442,13 @@
 	mana	en-US
 	Mangelsen's	en-US
 	Mardi Gras	en-US
+	Maruchan	en-US
 	marvelling	en-US
 	Mastercuts	en-US
 	matryoshka	en-US
 	mayhaps	en-US
 	McGoey	en-US
+	McNuggets	en-US
 	me's	en-US
 	mech	en-US
 	meds	en-US
@@ -507,6 +510,7 @@
 	numbingly	en-US
 	nunchuck	en-US
 	obby	en-US
+	obbys	en-US
 	Odwalla	en-US
 	offput	en-US
 	ok	en-US
@@ -621,6 +625,7 @@
 	rizzler	en-US
 	rng	en-US
 	RNG	en-US
+	Roblox	en-US
 	robo	en-US
 	Rogan	en-US
 	rolf	en-US
@@ -771,6 +776,7 @@
 	unshielded	en-US
 	Unsplash	en-US
 	unstyled	en-US
+	untranscribed	en-US
 	unvaccinated	en-US
 	unvaxxed	en-US
 	Urfaust	en-US
@@ -779,6 +785,7 @@
 	vampiric	en-US
 	vax	en-US
 	vaxxed	en-US
+	velcro	en-US
 	VGM	en-US
 	vibing	en-US
 	vids	en-US
@@ -821,6 +828,7 @@
 	x7	en-US
 	x8	en-US
 	x9	en-US
+	Xanga	en-US
 	xfer	en-US
 	xfered	en-US
 	xferring	en-US
@@ -850,6 +858,7 @@
 	zonked	en-US
 	zonking	en-US
 	Zootopia	en-US
+	Jubiliee	en-US
 	Adolin	en-US
 	Adolin's	en-US
 	Adonalsium	en-US
@@ -1183,6 +1192,7 @@
 	Edi	en-US
 	Gan	en-US
 	Geigi	en-US
+	Geigi's	en-US
 	Ilisidi	en-US
 	Ilisidi's	en-US
 	Jago	en-US
