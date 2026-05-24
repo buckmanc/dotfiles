@@ -4,7 +4,12 @@ sudo apt install -y cowsay cron curl dos2unix dotnet-sdk-6.0 exa ffmpeg figlet f
 
 # programs for gui machines
 # apt install vlc streamlink
-pip install yt-dlp yq
+
+# pip install yt-dlp yq
+pip install yq
+"$HOME/bin/yt-dlp-update"
+"$HOME/bin/starship-update"
+
 
 ~/bin/vimplugupdate
 

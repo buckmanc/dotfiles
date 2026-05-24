@@ -234,7 +234,6 @@ if filereadable(expand("~/.vim/plug.vim"))
 
 	Plug 'tpope/vim-sensible'	" tpope's sensible defaults
 	Plug 'tpope/vim-sleuth'		" hueristic file options
-	" Plug 'tpope/vim-speeddating'	" mods ctrl+x and ctrl+a to work with dates
 	Plug 'tpope/vim-eunuch'		" simple file operations, namely :Delete and :SudoWrite and :Mkdir
 	Plug 'tomtom/tcomment_vim'	" gcc/gc to comment
 	Plug 'vim-airline/vim-airline'	" fancy status line
@@ -249,11 +248,12 @@ if filereadable(expand("~/.vim/plug.vim"))
 	Plug 'jlcrochet/vim-razor'	" razor syntax
 	Plug 'datamadsen/vim-compiler-plugin-for-dotnet'
 	Plug 'tpope/vim-dispatch'	" async :Make
-	Plug 'mhinz/vim-startify'	" startup screen
 	" Plug 'sbdchd/vim-shebang'	" :ShebangInsert
 	Plug 'buckmanc/vim-shebang', { 'branch': 'blank_line_dev' }
 	Plug 'glensc/vim-syntax-lighttpd'
 	Plug 'isobit/vim-caddyfile'
+	" TODO limit ale scope to certain categories somehow
+	" Plug 'dense-analysis/ale'
 
 	call plug#end()
 
@@ -337,6 +337,26 @@ if filereadable(expand("~/.vim/plug.vim"))
 				\ 'sh': '#!/usr/bin/env bash',
 				\ 'termux': '#!/data/data/com.termux/files/usr/bin/bash'
 				\ }
+	" let g:ale_linters = {
+	"     \ 'markdown': ['harper'],
+	"     \ 'text': ['harper'],
+	"     \}
+	" let g:ale_markdown_harper_config = {
+	" \   'harper-ls': {
+	" \       'diagnosticSeverity': 'warning',
+	" \       'dialect': 'American',
+	" \       'linters': {
+	" \           'SpellCheck': v:false,
+	" \           'SentenceCapitalization': v:true,
+	" \           'RepeatedWords': v:true,
+	" \           'LongSentences': v:true,
+	" \           'AnA': v:true,
+	" \           'Spaces': v:true,
+	" \           'SpelledNumbers': v:false,
+	" \           'WrongQuotes': v:false,
+	" \       },
+	" \   },
+	" \}
 endif " vim-plug exists
 
 " default position restoration from /etc/vim/vimrc

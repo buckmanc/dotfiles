@@ -274,7 +274,11 @@ frameSizes=("4x5" "4x6" "5x5" "5x7" "7x7" "8x8" "8x10" "8.5x11" "8x12" "11x14" "
 # add rotated versions of all frame sizes
 for size in "${frameSizes[@]}"
 do
-	frameSizes+=("$(echo "$size" | perl -pe 's/(\d+)x(\d+)/$2x$1/g')")
+	flipSize="$(echo "$size" | perl -pe 's/(\d+)x(\d+)/$2x$1/g')"
+	if [[ "$flipSize" != "$size" ]]
+	then
+		frameSizes+=("$flipSize")
+	fi
 done
 
 # echo "${frameSizes[*]}" > "$TEMP/frametest.log"
@@ -283,7 +287,7 @@ done
 # TODO write a function to give the dif between two 0x0 format areas
 # Don't do that, just calculate locally because you'll need the separate variables
 
-csvText="File,Stitches,Aida,Inches,New Aida,Frame Size,Inch Diff,Inch Diff Dim,New Stitches"
+csvText="File,Stitches,Aida,Inches,New Aida,Frame Size,Stitch Diff,Stitch Diff Dim,New Stitches"
 for frameSize in "${frameSizes[@]}"
 do
 	for aidaOption in "${aidaOptions[@]}"
@@ -303,12 +307,22 @@ do
 
 		stitchWidthDiff="$(echo "scale=2;$newStitchWidth - $inputWidth" | bc -l | decimalTrim)"
 		stitchHeightDiff="$(echo "scale=2;$newStitchHeight - $inputHeight" | bc -l | decimalTrim)"
-		stitchDiff="$(echo "$stitchWidthDiff + $stitchHeightDiff" | bc -l)"
+
+		absStitchWidthDiff="$(echo "$stitchWidthDiff" | perl -pe 's/^\-//g')"
+		absStitchHeightDiff="$(echo "$stitchHeightDiff" | perl -pe 's/^\-//g')"
+
+		stitchDiff="$(echo "$absStitchWidthDiff + $absStitchHeightDiff" | bc -l)"
 		stitchDiffDim="${stitchWidthDiff}x${stitchHeightDiff}"
 
 		csvText+=$'\n'"$fileName,${inputWidth}x${inputHeight},$optAida,${inchesWidth}x${inchesHeight},$aidaOption,$frameSize,$stitchDiff,$stitchDiffDim,${newStitchWidth}x${newStitchHeight}"
 	done
 done
+
+# sort by diff column if possible
+if type csvsort > /dev/null 2>&1
+then
+	csvText="$(echo "$csvText" 2>&1 | csvsort -c 'Stitch Diff')"
+fi
 
 # if the CSV file already exists
 # remove lines matching this file

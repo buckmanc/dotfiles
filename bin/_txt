@@ -1,32 +1,23 @@
 #!/usr/bin/env bash
 
-numberPath="$1"
+number="$1"
 text="$2"
-
-dir="$(dirname "$numberPath")"
 
 if [[ -z "$text" ]]
 then
 	echo "no message provided"
 	exit 1
-elif [[ ! -d "$dir" ]]
+elif [[ -z "$number" ]]
 then
-	mkdir "$dir"
-fi
-if [[ ! -f "$numberPath" ]]
-then
-	touch "$numberPath"
+	echo "no message provided"
+	exit 1
 fi
 
-number="$(cat "$numberPath")"
-justnumber="$(echo "$number" | grep -Po '^[^@]+')"
+justNumber="$(echo "$number" | grep -Po '^[^@]+')"
 
-if [[ -z "$number" ]]
+if (type termux-sms-send >/dev/null 2>&1)
 then
-	echo "no number found in $numberPath"
-elif (type termux-sms-send >/dev/null 2>&1)
-then
-	termux-sms-send -n "$justnumber" "$text"
+	termux-sms-send -n "$justNumber" "$text"
 elif (type mutt >/dev/null 2>&1)
 then
 	echo "$text" | mutt "$number"

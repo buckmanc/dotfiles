@@ -2,6 +2,17 @@
 
 set -e
 
+if type magick > /dev/null 2>&1
+then
+	ident="magick identify"
+elif type identify > /dev/null 2>&1
+then
+	ident="identify"
+else
+	echo "imagemagick not installed"
+	exit 1
+fi
+
 for arg in "$@"
 do
 	mimeType="$(file --mime-type "$arg" | cut -f2 -d: | sed 's/^ *//g')"
@@ -18,7 +29,7 @@ do
 		output+="${fileName}§$(echo "$json" | jq -r '"\(.streams[0].width)x\(.streams[0].height)§\(.format.duration)"')"$'\n'
 	elif echo "$mimeType" | grep -Piq '(image|pdf)'
 	then
-		output+="$(identify -format '%f§%wx%h' "$arg")"$'\n'
+		output+="$($ident -format '%f§%wx%h' "$arg")"$'\n'
 	else
 		fileSize="$(stat -c %s "$arg")"
 		output+="${fileName}§${fileSize}§${mimeType}"$'\n'

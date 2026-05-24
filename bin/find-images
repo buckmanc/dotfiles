@@ -23,5 +23,5 @@ fi
 
 # it's infinitely faster to just check the file extension instead of the mimetype
 find "$dirPath" "$@" -xtype f \
-  -regextype posix-extended -iregex '.+\.(jpe?g|png|pdf|mpo|bmp|psp|psd|docx?|pptx?|xcf|tiff?|ico)$' \
+  -regextype posix-extended -iregex '.+\.(jpe?g|png|pdf|mpo|bmp|psp|psd|docx?|pptx?|xcf|tiff?|ico|gif)$' \
   | sort -t'/' -k1,1 -k2,2 -k3,3 -k4,4 -k5,5 -k6,6 -k7,7

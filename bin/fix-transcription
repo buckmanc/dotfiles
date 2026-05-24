@@ -77,38 +77,40 @@ do
 	fileStringNew="$(echo "$fileStringOld" | tr -d '\r')"
 
 	# if the file contains the words "new line", erase existing new lines and opt for explicity ones only
-	if echo "$fileStringOld" | grep -Piq "\b[Nn]ew line\b"
+	if echo "$fileStringOld" | grep -Piq "\b[Nn]ew [Ll]ine\b"
 	then
 		expressions+=("s/ *\n */ /g")
 	fi
 
-	expressions+=("s/\b[Nn]ew line\b[,\.]? */\n\n/g")
+	expressions+=("s/\b[Nn]ew [Ll]ine\b[,\.]? */\n\n/g")
 
 	addEnclosureExpressions '\(' '\)' '[Pp]arenthes[ei]s'
 	addEnclosureExpressions '\[' '\]' '[Bb]rackets?'
 	addEnclosureExpressions '\{' '\}' '([Cc]urly )?[Bb]races?'
 	addEnclosureExpressions '\*' '\*' '[Aa]sterisks?'
-	addEnclosureExpressions '"'  '"'  '[Qq]uotes?(ation mark)?'
+	addEnclosureExpressions '"'  '"'  '[Qq]uotes?(ation [Mm]ark)?'
 
 	addPuncExpression ';' '[Ss]emi\-?[Cc]olon'
 	addPuncExpression ':' '[Cc]olon'
 	addPuncExpression ',' '[Cc]omma'
 	addPuncExpression '.' '[Pp]eriod'
-	addPuncExpression '!' '[Ee]xclamation point'
-	addPuncExpression '?' '[Qq]uestion mark'
+	addPuncExpression '!' '[Ee]xclamation [Pp]oint'
+	addPuncExpression '?' '[Qq]uestion [Mm]ark'
 	addPuncExpression ' -' '[Dd]ash'
+	addPuncExpression '#' '[Hh]ashtag'
 
-	expressions+=('s/ slash / \/ /g')
+	expressions+=('s/ [Ss]lash / \/ /g')
 
 	expressions+=('s/([,\.] )?dot dot dot dot/..../g')
 	expressions+=('s/([,\.] )?dot dot dot/.../g')
 
-	expressions+=('s/ [Ss]miley face[\.,]/ :) /g')
-	expressions+=('s/ [Ss]ad face[\.,]/ :( /g')
-	expressions+=('s/ [Ww]orried face[\.,]/ <:( /g')
-	expressions+=('s/ [Aa]ngry face[\.,]/ >:( /g')
+	expressions+=('s/ [Ss]miley [Ff]ace[\.,]/ :) /g')
+	expressions+=('s/ [Ss]ad [Ff]ace[\.,]/ :( /g')
+	expressions+=('s/ [Ww]orried [Ff]ace[\.,]/ <:( /g')
+	expressions+=('s/ [Aa]ngry [Ff]ace[\.,]/ >:( /g')
 
 	expressions+=('s/[,\.]? ?[Aa]mpersand[,\.]? ?/ & /g')
+	expressions+=('s/[,\.]? ?[Aa]nd [Pp]er [Ss]and[,\.]? ?/ & /g')
 	expressions+=('s/^ +//g')
 	expressions+=('s/ +$//g')
 	expressions+=('s/(?<=[\(\[\{]) //g')
@@ -116,10 +118,11 @@ do
 	expressions+=('s/ (?=\.$)//g')
 	expressions+=('s/ (?=\. )//g')
 	expressions+=('s/ (?=[\)\]\}])//g')
+	expressions+=('s/(?=<#)[ ,\.]+(?=#)//g')
 
 	# standardize them dates into yyyy-mm-dd Monday/holiday format
 	# as markdown headers
-	expressions+=('s/^(\d{4})[,\. ]+(January|February|March|April|May|June|July|August|September|October|November|December|\d{1,2})[,\. ]+(\d{1,2})(st|nd|rd|th)?[,\. ]{0,2}((?:\s?[^ \.,]+){1,3})[,\.]?/# $1-$2-$3 $5/g')
+	expressions+=('s/^(\d{4})[,\. ]+(January|February|March|April|May|June|July|August|September|October|November|December|\d{1,2})[,\. ]+(\d{1,2})(st|nd|rd|th)?[,\. ]{0,2}((?:\s?[^ \.,]+){1,3})[,\.]?/## $1-$2-$3 $5/g')
 	expressions+=('s/(?<=\d\-)January(?=\-\d)/01/g')
 	expressions+=('s/(?<=\d\-)February(?=\-\d)/02/g')
 	expressions+=('s/(?<=\d\-)March(?=\-\d)/03/g')
@@ -133,7 +136,9 @@ do
 	expressions+=('s/(?<=\d\-)November(?=\-\d)/11/g')
 	expressions+=('s/(?<=\d\-)December(?=\-\d)/12/g')
 
-	expressions+=('s/\n*[Ss]ection separator[,\.]\n*/\n\n---\n\n/g')
+	expressions+=('s/\n*([Ss]ection [Ss]eparator|[Hh]orizontal ([Ll]ine|[Rr]ule))[,\.]\n*/\n\n---\n\n/g')
+
+	expressions+=('s/et ?cetera\.?/etc./g')
 
 	# allow for custom expressions outside the repo
 	if [[ -f "$localFixPath" ]]

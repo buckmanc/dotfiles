@@ -4,10 +4,16 @@ set -e
 
 # TODO support more than one destination
 cameraDir="$HOME/storage/dcim/Camera"
+backupCameraDir="/media/content/Documents/Backup Pictures"
 numberPath="$HOME/.config/txt/waffle_number.txt"
 numberPathTest="$HOME/.config/txt/waffle_test_number.txt"
 rcloneDestDir="gdrive:Waffle Wednesday"
 optTest=0
+
+if [[ ! -d "$cameraDir" && -d "$backupCameraDir" ]]
+then
+	cameraDir="$backupCameraDir"
+fi
 
 notify="$HOME/bin_termux/termux-notify"
 
@@ -127,11 +133,13 @@ rclone copyto "$compressedVidPath" "$rcloneDestDir/$destFileNameFull"
 
 # notificationAction="\"bash -c '$HOME/bin_termux/termux-mms-send' '$number' 'waffle wednesday clip uploaded' '$snapPath'\" > .logs/mms.log 2>&1"
 # notificationAction="\"'$HOME/bin_termux/termux-mms-send' '$number' 'waffle wednesday clip uploaded' '$snapPath'\" > .logs/mms.log 2>&1"
-notificationAction="'$HOME/bin_termux/termux-mms-send' '$number' 'waffle wednesday clip uploaded' '$snapPath' > .logs/mms.log 2>&1"
+# notificationAction="'$HOME/bin_termux/termux-mms-send' '$number' 'waffle wednesday clip uploaded' '$snapPath' > .logs/mms.log 2>&1"
+
+"$HOME/bin/_txt" "$number" "waffle wednesday clip upload!"
 
 if type termux-media-scan > /dev/null 2>&1
 then
 	termux-media-scan "$vidDir"
 fi
 
-"$notify" 'waffle wednesday' 'vid uploaded' "$snapPath" --action "$notificationAction"
+"$notify" 'waffle wednesday' 'vid uploaded' "$snapPath" # --action "$notificationAction"

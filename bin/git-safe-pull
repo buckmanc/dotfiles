@@ -83,6 +83,12 @@ do
 	elif [[ "${pullOutput,,}" == *"shallow roots"* ]]
 	then
 		userOutput="shallow"
+	elif [[ "${pullOutput,,}" == *"dubious ownership"* ]]
+	then
+		userOutput="dubious ownership"
+	elif [[ "${pullOutput,,}" == *"no such ref was fetched"* ]]
+	then
+		userOutput="no commits?"
 	else
 		echo "$pullOutput" > "$HOME/.logs/git-safe-pull_error_output.log"
 		userOutput="unknown error"

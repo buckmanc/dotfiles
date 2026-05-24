@@ -124,6 +124,8 @@ Initializing...
 Don't panic
 # mistborn / halo
 Survive
+# david whitsett / ivan blair
+Never pet a burning dog.
 # meanin/loading_messages.js
 # https://gist.github.com/meain/6440b706a97d2dd71574769517e7ed32
 Reticulating splines...

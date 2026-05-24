@@ -2,17 +2,26 @@
 
 outPath=""
 optNextIsOutPath=0
+optWidth=1000
+optNextIsWidth=0
 
 for arg in "$@"
 do
 	if [[ "$arg" =~ (\-o|\-\-output) ]]
 	then
 		optNextIsOutPath=1
+	elif [[ "$arg" == "-w" || "$arg" == "--width" ]]
+	then
+		optNextIsWidth=1
 	elif [[ "$optNextIsOutPath" == 1 ]]
 	then
 		outPath="$arg"
 		optNextIsOutPath=0
+	elif [[ "$optNextIsWidth" == 1 ]]
+	then
+		optWidth="$arg"
+		optNextIsWidth=0
 	fi
 done
 
-qrencode --margin=1 --size=1 "$@" && convert "$outPath" -interpolate integer -filter point -resize "1000x1000^<" "$outPath"
+qrencode --margin=1 --size=1 "$@" && magick "$outPath" -interpolate integer -filter point -resize "${optWidth}x${optWidth}^<" "$outPath"

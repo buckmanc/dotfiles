@@ -50,6 +50,7 @@
 	singleKey = true
 [push]
 	autoSetupRemote = true
+	default = current
 [gc]
 	auto = 256
 [init]

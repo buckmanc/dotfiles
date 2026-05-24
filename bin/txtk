@@ -2,4 +2,4 @@
 
 path="$HOME/.local/share/txt/k_number_email"
 
-"$HOME/bin/_txt" "$path" "$1"
+"$HOME/bin/_txt" "$(cat "$path")" "$1"
