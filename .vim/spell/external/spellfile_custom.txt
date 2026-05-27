@@ -233,6 +233,7 @@ Duplo
 Duplos
 durian
 dystopia
+e.e. cummings
 Ea-nāṣir
 earlyish
 easter
@@ -857,7 +858,6 @@ Zenni
 zonked
 zonking
 Zootopia
-Jubiliee
 Adolin
 Adolin's
 Adonalsium
@@ -1588,6 +1588,7 @@ Eppley
 Farnam
 Florence
 Fontenelle
+Gaeta's
 Gallup
 Gamer
 Gamer's
@@ -1595,6 +1596,8 @@ Gavilon
 Gretna
 Halleck
 Hathaway
+Heafey Heafey Hoffmann Dworak
+Heafey Hoffmann Dworak Cutler
 Hillcrest
 Inacom
 infoUSA

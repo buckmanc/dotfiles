@@ -234,6 +234,7 @@
 	Duplos	en-US
 	durian	en-US
 	dystopia	en-US
+	e.e. cummings	en-US
 	Ea-nāṣir	en-US
 	earlyish	en-US
 	easter	en-US
@@ -858,7 +859,6 @@
 	zonked	en-US
 	zonking	en-US
 	Zootopia	en-US
-	Jubiliee	en-US
 	Adolin	en-US
 	Adolin's	en-US
 	Adonalsium	en-US
@@ -1589,6 +1589,7 @@
 	Farnam	en-US
 	Florence	en-US
 	Fontenelle	en-US
+	Gaeta's	en-US
 	Gallup	en-US
 	Gamer	en-US
 	Gamer's	en-US
@@ -1596,6 +1597,8 @@
 	Gretna	en-US
 	Halleck	en-US
 	Hathaway	en-US
+	Heafey Heafey Hoffmann Dworak	en-US
+	Heafey Hoffmann Dworak Cutler	en-US
 	Hillcrest	en-US
 	Inacom	en-US
 	infoUSA	en-US
