@@ -101,8 +101,9 @@ do
 
 	expressions+=('s/ [Ss]lash / \/ /g')
 
-	expressions+=('s/([,\.] )?dot dot dot dot/..../g')
-	expressions+=('s/([,\.] )?dot dot dot/.../g')
+	# expressions+=('s/([,\.] )?dot dot dot dot/..../g')
+	# expressions+=('s/([,\.] )?dot dot dot/.../g')
+	expressions+=('s/([,\.] )?([Dd]ot[,\.]? ?){3,6}/.../g')
 
 	expressions+=('s/ [Ss]miley [Ff]ace[\.,]/ :) /g')
 	expressions+=('s/ [Ss]ad [Ff]ace[\.,]/ :( /g')
@@ -136,9 +137,16 @@ do
 	expressions+=('s/(?<=\d\-)November(?=\-\d)/11/g')
 	expressions+=('s/(?<=\d\-)December(?=\-\d)/12/g')
 
+	# fix single-digit days in date strings
+	expressions+=('s/(?<=(?:20|19)\d\d\-\d\d\-)\d/b/0$1/g')
+
 	expressions+=('s/\n*([Ss]ection [Ss]eparator|[Hh]orizontal ([Ll]ine|[Rr]ule))[,\.]\n*/\n\n---\n\n/g')
 
 	expressions+=('s/et ?cetera\.?/etc./g')
+	# fix sub headers
+	expressions+=('s/# (?=#)/#/g')
+	# capitalize markdown headers
+	expressions+=('s/(\w+)/\u\L$1/g if /^#/;')
 
 	# allow for custom expressions outside the repo
 	if [[ -f "$localFixPath" ]]
