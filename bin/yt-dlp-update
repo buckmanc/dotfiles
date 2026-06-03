@@ -6,6 +6,33 @@ then
 	exit 1
 fi
 
+optUnrecent=0
+
+for arg in "$@"
+do
+	if [[ "$arg" == "--unrecent" ]]
+	then
+		optUnrecent=1
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
+
+logDir="$HOME/.logs"
+logPath="$logDir/yt-dlp-update"
+
+if [[ "$optUnrecent" == 1 ]]
+then
+	logDate="$(date --reference "$logPath" '+%s' 2> /dev/null)"
+
+	# if told to, only update if not updated in the last day
+	if [[ -n "$logDate" && "$logDate" -gt "$(date -d "1 day ago" '+%s')" ]]
+	then
+		exit 0
+	fi
+fi
+
 if ( type yt-dlp > /dev/null 2>&1 )
 then
 	which yt-dlp
@@ -14,3 +41,6 @@ else
 	curl --create-dirs -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp
 	chmod a+rx ~/.local/bin/yt-dlp
 fi
+
+mkdir -p "$logDir"
+touch "$logPath"

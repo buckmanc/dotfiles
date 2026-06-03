@@ -2,7 +2,7 @@
 
 optMore=0
 optAll=0
-optSortByLatest=1
+optSortByLatest=
 optIgnoreDate=0
 optName=""
 optNextIsName=0
@@ -65,7 +65,7 @@ do
 	elif [[ "$arg" == "-h" || "$arg" == "--help" ]]
 	then
 		helpDeets="
-		download and play a playlist of recent tracks from $optName
+		download and play a playlist of recent tracks from youtube
 
 		   --more	download more than the default (will be slower)
 		   --all	download all tracks (could be MUCH slower)
@@ -88,11 +88,6 @@ do
 	fi
 done
 
-if [[ -z "$optName" ]]
-then
-	optName="unknown"
-fi
-
 if [[ "${#urls[@]}" -eq 0 ]]
 then
 	echo "provide at least one url"
@@ -102,17 +97,21 @@ fi
 if ( ! type yt-dlp > /dev/null 2>&1 )
 then
 	echo "yt-dlp not installed, opening URL instead"
-	"$HOME/bin/open" "${urls[@]}"
+	"$HOME/bin/open" "${urls[0]}"
 	exit 0
 fi
 
-if [[ "$OSTYPE" = "linux-android" ]]
+# tweak default
+if [[ -z "$optSortByLatest" ]]
 then
-	# android apps need these files to be in a public, non . directory
-	cacheDir="$(realpath "$HOME/storage/shared/Music/play-$optName/")"
-else
-	cacheDir="$HOME/.cache/play-$optName"
+	if [[ "$optIgnoreDate" == 1 ]]
+	then
+		optSortByLatest=0
+	else
+		optSortByLatest=1
+	fi
 fi
+
 
 maxFilesToDownload=10
 maxFilesToKeep=20
@@ -136,6 +135,8 @@ outputPrefix=""
 if [[ "$optIgnoreDate" == "0" ]]
 then
 	outputFormat="%(upload_date)s_"
+else
+	outputFormat="%(playlist_index|0)03d_"
 fi
 
 outputFormat="${outputFormat}%(title)s"
@@ -146,7 +147,6 @@ outputFormat="${outputFormat}%(title)s"
 # 	outputPrefix="chapter:"
 # fi
 
-playlistPath="$cacheDir/$optName.m3u"
 ytDlpUpdatePath="$HOME/bin/yt-dlp-update"
 
 regexArg=()
@@ -168,22 +168,6 @@ then
 	# cookieArg=(--cookies-from-browser firefox)
 fi
 
-# cleanup specific meta data here
-metadataArgs=()
-if [[ "${urls[*],,}" == *dungeonsyntharchives* ]]
-then
-	metadataArgs=(--parse-metadata '%(playlist_channel)s:%(meta_album)s' --parse-metadata 'title:(?P<meta_artist>.+) \- (?P<meta_title>.+) \((?P<meta_date>\d+)\)')
-elif [[ "${optName,,}" == *keygen-castlevania* ]]
-then
-	# metadataArgs=(--parse-metadata '%(playlist_channel)s:%(meta_artist)s' --parse-metadata '%(playlist_title)s:%(meta_album)s' --replace-in-metadata 'title' ' \|.+$' '' --replace-in-metadata 'title' '^\d+ ' '')
-	metadataArgs=(--parse-metadata '%(playlist_channel)s:%(meta_artist)s' --parse-metadata '%(playlist_title)s:%(meta_album)s' --replace-in-metadata 'title' ' \|.+$' '' --parse-metadata 'title:^(?P<meta_track>\d+) (?P<meta_title>[^\|]+)')
-# elif [[ "$optSplitChapters" == 1 ]]
-# then
-# 	metadataArgs=(--parse-metadata 'section_title:%(meta_title)s' --parse-metadata 'title:%(meta_album)s' --parse-metadata 'section_number:%(meta_track)s')
-else
-	metadataArgs=(--parse-metadata 'YouTube:%(meta_album)s')
-fi
-
 # splitChaptersArg=()
 # if [[ "$optSplitChapters" == 1 ]]
 # then
@@ -196,7 +180,7 @@ then
 	nonVerboseArgs=(--print "$outputFormat" --no-warnings)
 else
 	echo "urls: ${urls[*]}"
-	echo "metadataArgs: ${metadataArgs[@]}"
+	echo "metadataArgs: ${metadataArgs[*]}"
 	echo "nonVerboseArgs: ${nonVerboseArgs[*]}"
 	echo "regexArg: ${regexArg[*]}"
 	echo "cookieArg: ${cookieArg[*]}"
@@ -205,8 +189,6 @@ else
 fi
 
 
-mkdir -p "$cacheDir"
-
 if [[ "$OSTYPE" = "linux-android" ]] && ! "$HOME/bin_termux/termux-on-wifi"
 then
 	echo "skipping download on mobile data"
@@ -214,7 +196,56 @@ else
 	# five seconds for an update is faster than wondering why we're getting a 403 yet again
 	if [[ -x "$ytDlpUpdatePath" ]]
 	then
-		"$ytDlpUpdatePath"
+		"$ytDlpUpdatePath" --unrecent
+	fi
+
+	# fallback name from playlist name / video name
+	if [[ -z "$optName" ]]
+	then
+		# using the filename trick to get filename safe output
+		optName="$(yt-dlp -t sleep --remote-components ejs:github --print filename --output '%(playlist_title,title)s' --skip-download --flat-playlist --playlist-items 1 --restrict-filenames "${cookieArg[@]}" -- "${urls[0]}" | head -n 1)"
+	fi
+
+	# fallback fallback name
+	if [[ -z "$optName" ]]
+	then
+		optName="unknown"
+	fi
+
+	if [[ "$OSTYPE" = "linux-android" ]]
+	then
+		# android apps need these files to be in a public, non . directory
+		cacheDir="$(realpath "$HOME/storage/shared/Music/play-${optName,,}/")"
+	else
+		cacheDir="$HOME/.cache/play-${optName,,}"
+	fi
+
+	mkdir -p "$cacheDir"
+
+	playlistPath="$cacheDir/${optName,,}.m3u"
+
+	# cleanup specific meta data here
+	metadataArgs=()
+	if [[ "${urls[*],,}" == *dungeonsyntharchives* ]]
+	then
+		metadataArgs=(--parse-metadata '%(channel)s:%(meta_album)s' --parse-metadata 'title:(?P<meta_artist>.+) \- (?P<meta_title>.+) \((?P<meta_date>\d+)\)')
+	elif [[ "${optName,,}" =~ (keygen\-castlevania|ode\-to\-castlevania|vampire\-survivors) ]]
+	then
+		metadataArgs=(--parse-metadata '%(channel)s:%(meta_artist)s' --parse-metadata '%(playlist_title)s:%(meta_album)s' --replace-in-metadata 'title' ' \|.+$' '' --replace-in-metadata 'title' 'Vampire Survivors( Original)? Soundtrack' '' --replace-in-metadata 'title' '( *\- *$|^ *\- *)' ''  --parse-metadata 'title:^(?P<meta_track>\d+) (?P<meta_title>[^\|]+)')
+	# elif [[ "$optSplitChapters" == 1 ]]
+	# then
+	# 	metadataArgs=(--parse-metadata 'section_title:%(meta_title)s' --parse-metadata 'title:%(meta_album)s' --parse-metadata 'section_number:%(meta_track)s')
+	else
+		if ( type perl > /dev/null 2>&1 )
+		then
+			reggyName="$(echo "$optName" | perl -pe 's/_/\[ \-_:\.\]/g')"
+		else
+			reggyName="$optName"
+		fi
+
+		# simple album/artist names
+		# trim off the album/playlist name from the beginning or end of the track name
+		metadataArgs=(--parse-metadata '%(channel)s:%(meta_artist)s' --parse-metadata '%(playlist_title,webpage_url_domain)s:%(meta_album)s' --replace-in-metadata 'title' "^(\d+_)?${reggyName}[ \-_:]+" "" --replace-in-metadata 'title' "[ \-_:]+${reggyName}$" "" --replace-in-metadata 'title' '([ \-]{1,3}[\[\(]?(complete|COMPLETE|Complete|Audio Only \|No AI)[\)\]]?)+$' '' --parse-metadata 'title:%(meta_title)s')
 	fi
 
 	# download the x most recent videos
