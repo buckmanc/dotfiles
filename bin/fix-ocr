@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+# TODO the purpose here is too isolated and it's all duplicate code
+# figure out where this should belong or trash it if unneeded
+# or abstract the base to process lists of expressions
+
+set -e
+
+for filePath in "$@"
+do
+	if [[ -z "$filePath" ]]
+	then
+		continue
+	elif [[ ! -f "$filePath" ]]
+	then
+		echo "file does not exist: $filePath"
+		continue
+	fi
+
+	fileNameFull="$(basename "$filePath")"
+	fileName="${fileNameFull%.*}"
+	ext="${fileNameFull##*.}"
+	fileDir="$(dirname "$filePath")"
+	outPath="$fileDir/${fileName}_fixed.txt"
+
+	echo -n "$fileName "
+
+	if [[ "${ext,,}" != "txt" ]]
+	then
+		echo "not a text file"
+		continue
+	fi
+
+	fileStringOld="$(cat "$filePath")"
+
+	fileStringNew="$(echo "$fileStringOld" | tr -d '\r' | perl -0777p -e 's/\n{3,}/\n\n/g;' -e 's//\n/g;' -e 's/(?<!\n)\n(?!\n)/ /g;')"
+
+	# no clue what these are
+	# expressions+=("s///g")
+	# page numbers
+	expressions+=("s/^\d$//g")
+	expressions+=("s/^\d[a-zA-Z]$//g")
+	expressions+=("s/^[a-zA-Z]\d$//g")
+	# burn single line breaks
+	# expressions+=("s/(?<!\n)\n(?!\n)/ /g")
+	# turn 3+ line breaks into 2
+	# expressions+=("s/\n{3,}/\n\n/g")
+	# stupid quotes
+	# expressions+=('s/[“”]/"/g')
+	expressions+=('s/“/"/g')
+	expressions+=('s/”/"/g')
+	expressions+=("s/’/'/g")
+
+	expressions+=('s/^([Cc]hapter)/## $1/g')
+
+	# common scan problems
+	expressions+=('s/\b[Tl]([tf])\b/I$1/g')
+	expressions+=('s/¢"/?"/g')
+	expressions+=('s/[|\|]/I/g')
+	
+	for expression in "${expressions[@]}"
+	do
+		# echo "$expression"
+		fileStringNew="$(echo "$fileStringNew" | perl -pe "$expression" | perl -0777 -pe 's/\n{3,}/\n\n/g')"
+	done
+
+	# zero out expressions at the end
+	# we *could* assemble these outside of the for loop, but we may have more file-specific variations we want in the future
+	expressions=()
+
+	if [[ "$fileStringOld" != "$fileStringNew" ]]
+	then
+		echo "$fileStringNew" > "$outPath"
+		echo "done"
+	else
+		echo "no changes"
+	fi
+	
+done
