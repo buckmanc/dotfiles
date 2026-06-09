@@ -376,6 +376,7 @@
 	Ittibitz	en-US
 	ivermectin	en-US
 	Jackbox	en-US
+	jammies	en-US
 	jank	en-US
 	Janzen's	en-US
 	Jase	en-US
@@ -419,6 +420,7 @@
 	Lenscrafters	en-US
 	LeVar	en-US
 	Levenger	en-US
+	Lexan	en-US
 	LGBTQ	en-US
 	lifesign	en-US
 	lifesigns	en-US
@@ -1112,6 +1114,7 @@
 	shinies	en-US
 	shovelry	en-US
 	Silmarillion	en-US
+	Sith	en-US
 	Skooma	en-US
 	Skyrim	en-US
 	SotN	en-US
@@ -1187,6 +1190,7 @@
 	Bujavid	en-US
 	Caiti	en-US
 	Cajeiri	en-US
+	Cajeiri's	en-US
 	Damiri	en-US
 	Damiri's	en-US
 	Edi	en-US
@@ -1200,10 +1204,12 @@
 	kyo	en-US
 	Kyoh	en-US
 	Machigi	en-US
+	Machigi's	en-US
 	Malguri	en-US
 	Marid	en-US
 	Mospheira	en-US
 	Murini	en-US
+	Murini's	en-US
 	nadi	en-US
 	Najida	en-US
 	paidhi	en-US
@@ -2715,6 +2721,7 @@
 	Meribah	en-US
 	Missionettes	en-US
 	NIV	en-US
+	NKJV	en-US
 	Pileser	en-US
 	Seir	en-US
 	shevarim	en-US
@@ -2722,6 +2729,7 @@
 	shofars	en-US
 	Sisera	en-US
 	Tiglath	en-US
+	Wenceslaus	en-US
 	Zerubbabel	en-US
 	abuela	en-US
 	abuelita	en-US
