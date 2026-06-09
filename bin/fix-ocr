@@ -25,9 +25,9 @@ do
 
 	echo -n "$fileName "
 
-	if [[ "${ext,,}" != "txt" ]]
+	if [[ ! "${ext,,}" =~ (txt|md) ]]
 	then
-		echo "not a text file"
+		echo "not a text file: $ext"
 		continue
 	fi
 

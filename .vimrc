@@ -254,6 +254,7 @@ if filereadable(expand("~/.vim/plug.vim"))
 	Plug 'isobit/vim-caddyfile'
 	" TODO limit ale scope to certain categories somehow
 	" Plug 'dense-analysis/ale'
+	Plug 'christoomey/vim-titlecase' " gzz to title case current line, or gz and a motion
 
 	call plug#end()
 

@@ -25,6 +25,13 @@ else
 	exit 1
 fi
 
+if [[ "$OSTYPE" == 'msys' ]] && ( type start >/dev/null 2>&1 )
+then
+	urlOpeny='start ""'
+else
+	urlOpeny="$openy"
+fi
+
 if ( type vlc >/dev/null 2>&1)
 then
 	mediaOpeny=vlc
@@ -139,7 +146,7 @@ do
 				echo "opening regular url"
 			fi
 
-			($openy "$url")
+			($urlOpeny "$url")
 		fi
 
 		log+=("$url")

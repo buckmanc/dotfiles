@@ -24,7 +24,7 @@ alias vin='echo "praise the Ascendant Warrior" ; vim'
 alias :q="echo \"this isn't vim, "'$("$HOME/bin/message-error-name")'"\""
 alias :wq=":q"
 alias :w=":q"
-# alias :x=":q"
+alias :x=":q"
 alias x=":q"
 alias ZZ=":q"
 alias dc="cd"
@@ -535,21 +535,22 @@ xhistory(){
 	echo "$output"
 }
 
-# must be a function so it can see the screen pid from inside
-# this exists to give a context-specific extra function to a termux shortcut
-# so the shortcut can both exit vim and exit an active screen, but *not* exit a session like ctrl+a, d does
-:x(){
-
-	currentPid="$(ps -o ppid -p $$ --no-headers)"
-	screenMatch="$(screen -ls | grep -F "$currentPid" | grep -i 'attached')"
-
-	# echo "currentPid: $currentPid"
-	# echo "screenMatch: $screenMatch"
-
-	if [[ -n "$screenMatch" ]]
-	then
-		screen -d "$currentPid"
-	else
-		echo "not in a screen or in a vim"
-	fi
-}
+# this never worked fully
+# # must be a function so it can see the screen pid from inside
+# # this exists to give a context-specific extra function to a termux shortcut
+# # so the shortcut can both exit vim and exit an active screen, but *not* exit a session like ctrl+a, d does
+# :x(){
+#
+# 	currentPid="$(ps -o ppid -p $$ --no-headers)"
+# 	screenMatch="$(screen -ls | grep -F "$currentPid" | grep -i 'attached')"
+#
+# 	# echo "currentPid: $currentPid"
+# 	# echo "screenMatch: $screenMatch"
+#
+# 	if [[ -n "$screenMatch" ]]
+# 	then
+# 		screen -d "$currentPid"
+# 	else
+# 		echo "not in a screen or in a vim"
+# 	fi
+# }

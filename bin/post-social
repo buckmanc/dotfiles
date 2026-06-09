@@ -1,0 +1,263 @@
+#!/usr/bin/env bash
+# post-social — post to Mastodon, Bluesky, and Threads
+#
+# Usage:
+#   post-social "message"                    post to all configured platforms
+#   post-social --mastodon --bluesky "msg"   post to specific platforms
+#   post-social --setup                      create/update credentials
+#   post-social --help
+
+set -euo pipefail
+
+# ── Config ────────────────────────────────────────────────────────────────────
+
+CREDS="${POST_SOCIAL_CREDS:-$HOME/.config/post-social.json}"
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+die()     { echo "error: $*" >&2; exit 1; }
+info()    { echo "  ✓ $*"; }
+fail()    { echo "  ✗ $*" >&2; }
+require() { command -v "$1" &>/dev/null || die "'$1' is required but not installed"; }
+
+jq_get()  { jq -r "$1 // empty" "$CREDS" 2>/dev/null; }
+
+jq_set() {
+    local path="$1" value="$2" tmp
+    tmp=$(mktemp)
+    if [[ -f "$CREDS" ]]; then
+        jq --arg v "$value" "$path = \$v" "$CREDS" > "$tmp"
+    else
+        jq -n --arg v "$value" "$path = \$v" > "$tmp"
+    fi
+    mv "$tmp" "$CREDS"
+    chmod 600 "$CREDS"
+}
+
+# ── Platform posting ──────────────────────────────────────────────────────────
+
+post_mastodon() {
+    local text="$1" instance token response
+    instance=$(jq_get '.mastodon.instance')
+    token=$(jq_get '.mastodon.access_token')
+    [[ -z "$instance" || -z "$token" ]] && { fail "Mastodon: missing credentials"; return 1; }
+
+    response=$(curl -sf -X POST "https://${instance}/api/v1/statuses" \
+        -H "Authorization: Bearer ${token}" \
+        -H "Content-Type: application/json" \
+        -d "$(jq -n --arg t "$text" '{"status":$t}')")
+
+    jq -e '.id' <<< "$response" &>/dev/null \
+        && info "Mastodon: posted ($(jq -r '.url' <<< "$response"))" \
+        || { fail "Mastodon: $(jq -r '.error // "unknown error"' <<< "$response")"; return 1; }
+}
+
+post_bluesky() {
+    local text="$1" handle password pds auth did jwt response
+    handle=$(jq_get '.bluesky.handle')
+    password=$(jq_get '.bluesky.app_password')
+    pds=$(jq_get '.bluesky.pds')
+    [[ -z "$pds" ]] && pds="https://bsky.social"
+    [[ -z "$handle" || -z "$password" ]] && { fail "Bluesky: missing credentials"; return 1; }
+
+    auth=$(curl -sf -X POST "${pds}/xrpc/com.atproto.server.createSession" \
+        -H "Content-Type: application/json" \
+        -d "$(jq -n --arg h "$handle" --arg p "$password" '{"identifier":$h,"password":$p}')")
+
+    did=$(jq -r '.did // empty' <<< "$auth")
+    jwt=$(jq -r '.accessJwt // empty' <<< "$auth")
+    [[ -z "$did" ]] && { fail "Bluesky: auth failed — check handle/app_password"; return 1; }
+
+    response=$(curl -sf -X POST "${pds}/xrpc/com.atproto.repo.createRecord" \
+        -H "Authorization: Bearer ${jwt}" \
+        -H "Content-Type: application/json" \
+        -d "$(jq -n \
+            --arg did "$did" \
+            --arg text "$text" \
+            --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            '{"repo":$did,"collection":"app.bsky.feed.post","record":{"text":$text,"createdAt":$ts}}')")
+
+    jq -e '.uri' <<< "$response" &>/dev/null \
+        && info "Bluesky: posted ($(jq -r '.uri' <<< "$response"))" \
+        || { fail "Bluesky: $(jq -r '.message // "unknown error"' <<< "$response")"; return 1; }
+}
+
+post_threads() {
+    local text="$1" user_id token container_id response
+    user_id=$(jq_get '.threads.user_id')
+    token=$(jq_get '.threads.access_token')
+    [[ -z "$user_id" || -z "$token" ]] && { fail "Threads: missing credentials"; return 1; }
+
+    response=$(curl -sf -X POST \
+        "https://graph.threads.net/v1.0/${user_id}/threads" \
+        -H "Content-Type: application/json" \
+        -d "$(jq -n --arg text "$text" --arg token "$token" \
+            '{"media_type":"TEXT","text":$text,"access_token":$token}')")
+
+    container_id=$(jq -r '.id // empty' <<< "$response")
+    [[ -z "$container_id" ]] \
+        && { fail "Threads: container error — $(jq -r '.error.message // "unknown error"' <<< "$response")"; return 1; }
+
+    response=$(curl -sf -X POST \
+        "https://graph.threads.net/v1.0/${user_id}/threads_publish" \
+        -H "Content-Type: application/json" \
+        -d "$(jq -n --arg id "$container_id" --arg token "$token" \
+            '{"creation_id":$id,"access_token":$token}')")
+
+    jq -e '.id' <<< "$response" &>/dev/null \
+        && info "Threads: posted (id: $(jq -r '.id' <<< "$response"))" \
+        || { fail "Threads: $(jq -r '.error.message // "unknown error"' <<< "$response")"; return 1; }
+}
+
+# ── Setup ─────────────────────────────────────────────────────────────────────
+
+prompt() {
+    local label="$1" default="$2" value
+    if [[ -n "$default" ]]; then
+        read -rp "  ${label} [${default}]: " value
+        echo "${value:-$default}"
+    else
+        read -rp "  ${label}: " value
+        echo "$value"
+    fi
+}
+
+prompt_secret() {
+    local label="$1" existing="${2:-}" value
+    if [[ -n "$existing" ]]; then
+        read -rsp "  ${label} [keep existing]: " value
+    else
+        read -rsp "  ${label}: " value
+    fi
+    echo >&2
+    echo "$value"
+}
+
+do_setup() {
+    echo
+    echo "=== post-social setup ==="
+    echo "Config: $CREDS"
+    echo "Press Enter to keep existing values shown in [brackets]."
+    echo
+
+    # ── Mastodon ──
+    echo "── Mastodon ──"
+    local m_instance m_token
+    m_instance=$(prompt "Instance (e.g. mastodon.social)" "$(jq_get '.mastodon.instance')")
+    m_token=$(prompt_secret "Access token (Settings → Development → New Application)" "$(jq_get '.mastodon.access_token')")
+    [[ -n "$m_instance" ]] && jq_set '.mastodon.instance'     "$m_instance"
+    [[ -n "$m_token"    ]] && jq_set '.mastodon.access_token' "$m_token"
+    echo
+
+    # ── Bluesky ──
+    echo "── Bluesky ──"
+    local b_handle b_password b_pds
+    b_handle=$(prompt   "Handle (e.g. you.bsky.social)"   "$(jq_get '.bluesky.handle')")
+    b_password=$(prompt_secret "App password (Settings → Privacy & Security → App Passwords)" "$(jq_get '.bluesky.app_password')")
+    b_pds=$(prompt      "PDS URL" "$(jq_get '.bluesky.pds // "https://bsky.social"')")
+    [[ -n "$b_handle"   ]] && jq_set '.bluesky.handle'       "$b_handle"
+    [[ -n "$b_password" ]] && jq_set '.bluesky.app_password' "$b_password"
+    [[ -n "$b_pds"      ]] && jq_set '.bluesky.pds'          "$b_pds"
+    echo
+
+    # ── Threads ──
+    echo "── Threads ──"
+    echo "  Generate a long-lived token at:"
+    echo "  developers.facebook.com → Your App → Threads → Token Generator"
+    echo
+    local t_token t_user_id
+    t_token=$(prompt_secret "Long-lived access token" "$(jq_get '.threads.access_token')")
+    if [[ -n "$t_token" ]]; then
+        echo "  Looking up user ID from token..."
+        local me_response
+        me_response=$(curl -sf \
+            "https://graph.threads.net/v1.0/me?fields=id,username&access_token=${t_token}" \
+            2>/dev/null || echo "{}")
+        t_user_id=$(jq -r '.id // empty' <<< "$me_response")
+        local t_username
+        t_username=$(jq -r '.username // empty' <<< "$me_response")
+        if [[ -n "$t_user_id" ]]; then
+            info "Verified — @${t_username} (id: ${t_user_id})"
+        else
+            echo "  Could not look up user ID automatically."
+            t_user_id=$(prompt "Numeric user ID" "$(jq_get '.threads.user_id')")
+        fi
+        jq_set '.threads.access_token' "$t_token"
+        jq_set '.threads.user_id'      "$t_user_id"
+    fi
+    echo
+
+    info "Setup complete. Test with: post-social \"Hello, world!\""
+}
+
+# ── Usage ─────────────────────────────────────────────────────────────────────
+
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") [--mastodon] [--bluesky] [--threads] "message"
+       $(basename "$0") --setup
+
+Options:
+  --mastodon         Post to Mastodon
+  --bluesky          Post to Bluesky
+  --threads          Post to Threads
+  (no platform flag) Post to all configured platforms
+
+  --setup            Interactive credential setup
+
+Environment:
+  POST_SOCIAL_CREDS  Override config path (default: ~/.config/post-social.json)
+EOF
+    exit 0
+}
+
+# ── Main ──────────────────────────────────────────────────────────────────────
+
+require curl
+require jq
+
+[[ $# -eq 0 ]] && usage
+
+case "$1" in
+    --setup)  do_setup; exit 0 ;;
+    --help|-h) usage ;;
+esac
+
+platforms=()
+text=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --mastodon) platforms+=(mastodon) ;;
+        --bluesky)  platforms+=(bluesky)  ;;
+        --threads)  platforms+=(threads)  ;;
+        --help|-h)  usage ;;
+        -*)         die "unknown flag: $1" ;;
+        *)          [[ -n "$text" ]] && die "too many arguments"; text="$1" ;;
+    esac
+    shift
+done
+
+[[ -z "$text" ]]  && die "no message provided"
+[[ -f "$CREDS" ]] || die "no config found — run: $(basename "$0") --setup"
+
+if [[ ${#platforms[@]} -eq 0 ]]; then
+    [[ -n "$(jq_get '.mastodon.access_token')" ]] && platforms+=(mastodon)
+    [[ -n "$(jq_get '.bluesky.app_password')"  ]] && platforms+=(bluesky)
+    [[ -n "$(jq_get '.threads.access_token')"  ]] && platforms+=(threads)
+fi
+
+[[ ${#platforms[@]} -eq 0 ]] && die "no platforms configured — run: $(basename "$0") --setup"
+
+echo "Posting to: ${platforms[*]}"
+errors=0
+
+for platform in "${platforms[@]}"; do
+    case "$platform" in
+        mastodon) post_mastodon "$text" || ((errors++)) ;;
+        bluesky)  post_bluesky  "$text" || ((errors++)) ;;
+        threads)  post_threads  "$text" || ((errors++)) ;;
+    esac
+done
+
+[[ $errors -gt 0 ]] && exit 1 || exit 0
