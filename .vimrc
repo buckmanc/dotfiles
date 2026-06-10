@@ -93,6 +93,10 @@ hi! link ErrorMsg Error
 set spellcapcheck=	" turn off capitalization check. too bad this doesn't exist for SpellLocal
 set spellsuggest+=10	" limit spell suggest for small screens
 
+" use tab to accept auto completions instead of ctrl+y
+" matches visual studio
+inoremap <expr> <Tab> pumvisible() ? "\<C-y>" : "\<Tab>"
+
 " not for vim.tiny
 if has("eval")
 	" iterate over custom spellfiles
