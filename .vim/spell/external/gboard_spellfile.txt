@@ -279,6 +279,7 @@
 	fuddy	en-US
 	Fukushima	en-US
 	fundie	en-US
+	Futhark	en-US
 	gabber	en-US
 	GAM	en-US
 	gameplay	en-US
@@ -685,6 +686,7 @@
 	skirling	en-US
 	skyping	en-US
 	sleevies	en-US
+	slinked	en-US
 	Slurpees	en-US
 	smithing	en-US
 	sms	en-US
@@ -867,6 +869,7 @@
 	Aetherius	en-US
 	Akatosh	en-US
 	Akatosh's	en-US
+	Al Bhed	en-US
 	Albus	en-US
 	Allant	en-US
 	Aloysius	en-US
@@ -883,6 +886,7 @@
 	Armello	en-US
 	Ashyn	en-US
 	Atevi	en-US
+	Aurebesh	en-US
 	Azura	en-US
 	Azura's	en-US
 	Bat'leth	en-US
@@ -914,12 +918,15 @@
 	Chakotay	en-US
 	Cherryh	en-US
 	Cherryh's	en-US
+	Chozo	en-US
 	Clavicus	en-US
 	Clavicus's	en-US
 	coppermind	en-US
+	Coruscanti	en-US
 	Cosmere	en-US
 	cosmere	en-US
 	Cytoverse	en-US
+	Daedric	en-US
 	Dalinar	en-US
 	Dalinar's	en-US
 	Davar	en-US
@@ -931,6 +938,7 @@
 	draugr	en-US
 	Drominad	en-US
 	DS9	en-US
+	Dwemer	en-US
 	Ecclesia	en-US
 	Edgedancer	en-US
 	Eggman	en-US
@@ -940,6 +948,7 @@
 	Elric	en-US
 	Encanto	en-US
 	Ender's	en-US
+	Eorzean	en-US
 	Eowyn	en-US
 	Eragon	en-US
 	Eshonai	en-US
@@ -948,6 +957,7 @@
 	Evergaol	en-US
 	Evergaols	en-US
 	Evershore	en-US
+	Falmer	en-US
 	Fayrah	en-US
 	Feyrune	en-US
 	FFXIV	en-US
@@ -964,7 +974,9 @@
 	gancho	en-US
 	Ganon	en-US
 	Gaston	en-US
+	Gerudo	en-US
 	Ghibli	en-US
+	Goa'uld	en-US
 	Godrick	en-US
 	Gollum	en-US
 	Gondolin	en-US
@@ -984,6 +996,7 @@
 	Homelander	en-US
 	Hylia	en-US
 	Hylia's	en-US
+	Hylian	en-US
 	Hyrule	en-US
 	Héra	en-US
 	Húrin	en-US
@@ -1011,12 +1024,14 @@
 	Kholin	en-US
 	Komashi	en-US
 	Koopa	en-US
+	Koppaite	en-US
 	Korok	en-US
 	Koroks	en-US
 	Kynareth	en-US
 	Kynareth's	en-US
 	l4d2	en-US
 	L4D2	en-US
+	Lantean	en-US
 	Lemmy	en-US
 	Li'l	en-US
 	Lopen	en-US
@@ -1031,6 +1046,7 @@
 	Malacath	en-US
 	Malacath's	en-US
 	man'chi	en-US
+	Mandalorian	en-US
 	Maneater	en-US
 	Maquis	en-US
 	Matlock	en-US
@@ -1058,6 +1074,7 @@
 	Mystara	en-US
 	Mythos	en-US
 	Nabbit	en-US
+	Naboo	en-US
 	Nalthis	en-US
 	Namira	en-US
 	Namira's	en-US
@@ -1102,6 +1119,7 @@
 	Sanderson	en-US
 	Sanderson's	en-US
 	Sando	en-US
+	Sanghelli	en-US
 	Sanguine's	en-US
 	Scadrial	en-US
 	Sel	en-US
@@ -1109,6 +1127,7 @@
 	Shallan	en-US
 	Shallan's	en-US
 	Shazam	en-US
+	Sheikah	en-US
 	Sheogorath	en-US
 	Sheogorath's	en-US
 	shinies	en-US
@@ -1161,6 +1180,7 @@
 	Vallano	en-US
 	Vax	en-US
 	Venli	en-US
+	Vorlon	en-US
 	Wakanda	en-US
 	Wario	en-US
 	Witcher	en-US
@@ -1175,6 +1195,7 @@
 	Yoshi's	en-US
 	Ysmir's	en-US
 	Yumi	en-US
+	Zebes	en-US
 	Zenithar	en-US
 	Zenithar's	en-US
 	Zora	en-US
