@@ -13,6 +13,9 @@ runifexists(){
 	fi
 }
 
-runifexists "ascii-image-converter --color" "$@" || runifexists "magick identify" "$@" || runifexists "identify" "$@"
+# ascii image display is sick but not that useful in practice
+# runifexists "ascii-image-converter --color" "$@" || runifexists "magick identify" "$@" || runifexists "identify" "$@"
+# runifexists "xident" "$@" || runifexists "magick identify" "$@" || runifexists "identify" "$@"
+runifexists "magick identify" "$@" || runifexists "identify" "$@"
 
 

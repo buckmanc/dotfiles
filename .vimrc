@@ -26,9 +26,7 @@ set linebreak		" do not visually break lines in the middle of words
 set autoindent		" copy indenting from current line
 set smartindent 	" smart indenting for coding
 set autoread		" reloads file only if unmodified in vim
-set novisualbell	" stop yelling at me
-set noerrorbells	" i'm serious
-set belloff=all         " no really
+set belloff=all         " stop yelling at me
 set wildmenu		" command line tab completion
 set wildignorecase	" ignore case when tab completing paths
 set whichwrap+=<,>,h,l	" allow moving to next line from the ends
@@ -37,6 +35,8 @@ set mouse=		" disable mouse/touch controls
 set clipboard=		" unjoin from system clipboard on windows for consistent cross-platform behaviour
 set viminfo+=!		" make sure it can save viminfo
 set viminfo-=<50	" unlimited saved register size
+set updatetime=1000	" swap / CursorHold more often
+set confirm		" ask to save changes
 
 " not for vim.tiny
 if has("eval")
@@ -102,13 +102,19 @@ if has("eval")
 	" iterate over custom spellfiles
 	let spellPaths = ''
 	" glob isn't working with full paths under termux
-	" for d in glob(expand('~/.vim/spell') . '/*.add', 1, 1)
-	for d in split(system('find "$HOME/.vim/spell" -type f -iname "*.add" | sort'), '\n')
+	" keeping as a fallback
+	if executable('find')
+		let spellFileList = split(system('find "$HOME/.vim/spell" -type f -iname "*.add" | sort'), '\n')
+	else
+		let spellFileList = sort(glob(expand('~/.vim/spell') . '/*.add', 1, 1))
+	endif
+
+	for d in spellFileList
 		if (filereadable(d))
 
 			" compile the file if needed
 			if (!filereadable(d . '.spl') || getftime(d) > getftime(d . '.spl'))
-				echo 'compiling spell file updates: ' . d
+				echo 'updated spell file: ' . fnamemodify(d, ':t:r')
 				silent exec 'mkspell! ' . fnameescape(d)
 			endif
 
@@ -128,10 +134,12 @@ if has("eval")
 			" echo d
 			" echo spellPaths
 		endif
-
-		" update the spell file setting
-		exec 'set spellfile=' . spellPaths
 	endfor
+
+	" update the spell file setting
+	if len(spellPaths)
+		exec 'set spellfile=' . spellPaths
+	endif
 
 	" custom date insert command
 	" accepts an integer date offset
@@ -188,6 +196,7 @@ endif
 
 if has('autocmd')
 augroup FileTypeSpecificAutocommands
+	au!
 
 	" autocommand filetypes
 	" makes sure these filetypes have appropriate syntax highlighting and comment chars
@@ -224,6 +233,8 @@ augroup myvimrc
 	au!
 	" using silent here as the update called in GitAddMeFunc causes this to throw an error
 	au BufWritePost .vimrc silent! source $MYVIMRC
+augroup END
+
 endif " has('autocmd')
 
 " github.com/junegunn/vim-plug
