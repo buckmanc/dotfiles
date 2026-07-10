@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ "$OSTYPE" == "linux-android" ]]
+then
+	if type termux-wifi-connectioninfo > /dev/null 2>&1
+	then
+		termux-wifi-connectioninfo | jq '.bssid // ""'
+	else
+		echo 'termux-wifi-connectioninfo not installed'
+		exit 1
+	fi
+elif [[ "$OSTYPE" == "linux-gnu" ]]
+then
+	if type iwgetid > /dev/null 2>&1
+	then
+		iwgetid -r
+	else
+		# *probably* means we're not connected, right?
+		echo ""
+	fi
+elif [[ "$OSTYPE" == "msys" ]]
+then
+	# needs tweaking
+	netsh wlan show interfaces | grep -i "ssid"
+else
+	echo "$OSTYPE not supported"
+fi

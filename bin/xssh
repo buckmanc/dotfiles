@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -e
+
+homeNetworkName=''
+homeNetworkNamePath="$HOME/.cache/homenetworkname"
+
+# only intervene if one nor no args is provided
+if [[ "$#" -lt 2 ]]
+then
+
+	hostNames="$(grep -iPo '(?<=^host ).+$' "$HOME/.ssh/config")"
+
+	# default to the first hostname if none are provided
+	if [[ "$#" -eq 0 ]]
+	then
+		hostName="$(echo "$hostNames" | head -n1)"
+	else
+		hostName="$1"
+	fi
+
+	localNetworkName="${hostName}_local"
+
+	# if a local version of this host exists...
+	if echo "$hostNames" | grep -Piq "$localNetworkName"
+	then
+		# and we know what the home network is...
+		if [[ -f "$homeNetworkNamePath" ]]
+		then
+			homeNetworkName="$(cat "$homeNetworkNamePath")"
+
+			# and we're home...
+			if [[ "$("$HOME/bin/wifi-ssid")" == "$homeNetworkName" ]]
+			then
+				# ...use the local version instead
+				hostName="$localNetworkName"
+			fi
+		fi
+	fi
+
+	ssh "$hostName"
+else
+	ssh "$@"
+fi
+
+# # cleaner exits from failure
+# # hides error messages tho :(
+# reset
+# clear

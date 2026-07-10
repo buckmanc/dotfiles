@@ -189,7 +189,7 @@ else
 fi
 
 
-if [[ "$OSTYPE" = "linux-android" ]] && ! "$HOME/bin_termux/termux-on-wifi"
+if [[ "$OSTYPE" = "linux-android" ]] && [[ -z "$("$HOME/bin/wifi-ssid")" ]]
 then
 	echo "skipping download on mobile data"
 else
