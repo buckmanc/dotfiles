@@ -28,9 +28,10 @@ then
 		if [[ -f "$homeNetworkNamePath" ]]
 		then
 			homeNetworkName="$(cat "$homeNetworkNamePath")"
+			wifiSsid="$("$HOME/bin/wifi-ssid")"
 
 			# and we're home...
-			if [[ "$("$HOME/bin/wifi-ssid")" == "$homeNetworkName" ]]
+			if [[ "$wifiSsid" == "$homeNetworkName" ]]
 			then
 				# ...use the local version instead
 				hostName="$localNetworkName"

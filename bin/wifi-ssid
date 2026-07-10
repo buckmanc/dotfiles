@@ -6,7 +6,7 @@ if [[ "$OSTYPE" == "linux-android" ]]
 then
 	if type termux-wifi-connectioninfo > /dev/null 2>&1
 	then
-		termux-wifi-connectioninfo | jq '.bssid // ""'
+		termux-wifi-connectioninfo | jq -r '.ssid // ""'
 	else
 		echo 'termux-wifi-connectioninfo not installed'
 		exit 1

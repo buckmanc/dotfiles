@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+termux-change-repo
+
 pkg upgrade
-pkg install -y jq python openssh ncurses-utils vim git cronie 7zip cowsay ruby termux-api screen imagemagick termux-am
+pkg install -y jq python openssh ncurses-utils vim git cronie 7zip p7zip cowsay ruby termux-api screen imagemagick termux-am perl tree starship android-tools shellcheck bc rsync ffmpeg
 # package require for pyphash
 pkg install -y python-scipy
 pkg autoclean
@@ -14,6 +16,7 @@ export LDFLAGS="-landroid-spawn -lm -lpython3.11"
 # python-scipy installs that as a dependency, but it isn't sufficient to get pyphash running
 pip install git+https://github.com/numpy/numpy
 pip install git+https://github.com/TotallyNotChase/glitch-this
+pip install gallery-dl yq
 
 termux-setup-storage
 

@@ -9,7 +9,7 @@ then
 	exit
 fi
 
-destDir="$HOME/storage/dcim/Camera"
+destDir="$HOME/storage/shared/xmic"
 timeStamp="$(date '+%Y%m%d_%H%M%S')"
 outPath="$destDir/${timeStamp}_xmic_${name}.mp3"
 outpath="$(echo "$outpath" | perl -pe 's/_\.mp3$/.mp3/g')"

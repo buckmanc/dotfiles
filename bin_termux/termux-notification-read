@@ -73,7 +73,7 @@ do
 
 	packageName="$(echo "$json" | jq -r '.packageName')"
 	packageName="$(echo "$packageName" | perl -p \
-		-e 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec|cliffweitzman|jrtstudio|lockdown|scee|kids|ballistiq|providers)\.)+//g;' \
+		-e 's/^((org|com|android|samsung|google|apps|schabi|app|mobi|de|danoeh|app|sec|cliffweitzman|jrtstudio|lockdown|scee|kids|ballistiq|providers|valvesoftware|events|io)\.)+//g;' \
 		-e 's/^(facebook.orca)$/messenger/g;' \
 		-e 's/^(oceanwing.care.cam)$/eufy baby/g;' \
 		-e 's/^(zhiliaoapp.musically)$/tiktok/g;' \
@@ -83,7 +83,8 @@ do
 		-e 's/^(tycho)$/googlefi/g;' \
 		-e 's/^(vending)$/googleplay/g;' \
 		-e 's/^(fdroid.fdroid)$/fdroid/g;' \
-		-e 's/(\.(orca|android|frontpage|application|app|mShop|shopping|katana|music))+$//g;' \
+		-e 's/^(irobot.home)$/irobot/g;' \
+		-e 's/(\.(orca|android|frontpage|application|app|mShop|shopping|katana|music|community|task|companion))+$//g;' \
 		| cat)"
 	packageName="${packageName,,}"
 
@@ -99,7 +100,7 @@ do
 	# echo "content: $content"
 
 	# skip these no matter what
-	if [[ "$packageName" =~ ^(spotify|aimp.player|newpipe|smartcapture|antennapod|systemui|samsungapps|speechify2?|anothermusicplayer|ipsgeofence)$ ]]
+	if [[ "$packageName" =~ ^(spotify|aimp.player|newpipe|smartcapture|antennapod|systemui|samsungapps|speechify2?|anothermusicplayer|ipsgeofence|incallui|ticktick|storyservice)$ ]]
 	then
 		continue
 	# skip bupkiss
@@ -109,17 +110,20 @@ do
 	elif [[ "$packageName" == "termux" && "$content" =~ ^[0-9]+\ sessions? ]]
 	then
 		continue
+	elif [[ "$packageName" == "googlefi" && "$content" == *"on this call" ]]
+	then
+		continue
 	# skip these unless passed --all
 	# things you might want to check once
 	elif [[ "$optAll" == 0 ]]
 	then
-		if [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok|weather|truebill|walmart|jimmyjohns|psxandroid|youtube|vvm|scloud|downloads)$ ]]
+		if [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok|weather|breezyweather|truebill|walmart|jimmyjohns|psxandroid|youtube|vvm|scloud|downloads)$ ]]
 		then
 			continue
-		elif [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* ]] && [[ "${content,,}" =~ \.(jpe?g|png|mp4)$ || "${content,,}" =~ ^http.+(youtu\.?be|tiktok) || "${content,,}" =~ ^reacted.+to\ your ]]
+		elif [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* ]] && [[ "${content,,}" =~ \.(jpe?g|png|mp4)$ || "${content,,}" =~ ^http.+(youtu\.?be|tiktok) || "${content,,}" =~ ^reacted.+to\ your || "${content,,}" == "sent an image"* ]]
 		then
 			continue
-		elif [[ "$packageName" == "snapchat" ]] && [[ "${content,,}" == *'added a video to spotlight!' || "${content,,}" == *"is on snapchat!" || "${content,,}" == *"added to their story"* || "${content,,}" == "updating messages"* || "${content,,}" == *"new friend suggestion"* ]]
+		elif [[ "$packageName" == "snapchat" ]] && [[ "${content,,}" == *'added a video to spotlight!' || "${content,,}" == *"is on snapchat!" || "${content,,}" == *"added to their story"* || "${content,,}" == *"updating messages"* || "${content,,}" == *"new friend suggestion"* ]]
 		then
 			continue
 		elif [[ "$packageName" == "photos" ]] && [[ "${title,,}" == 'we made a collage'* ]]
@@ -139,9 +143,12 @@ do
 			elif [[ "${content,,}" =~ visit\ http ]]
 			then
 				continue
-			elif [[ "${content,,}" =~ (department|group|unit|desk) ]]
+			elif [[ "${content,,}" =~ (debt\ consolidation\ loan|pre\-?approved|for\ up\ to\ \$) ]]
 			then
-				if echo "$content" | grep -qiP 'this( message)? is ?[^\.]* from the [^\.]+ (department|group|unit|desk)'
+				continue
+			elif [[ "${content,,}" =~ (department|group|unit|desk|branch|center) ]]
+			then
+				if echo "$content" | grep -qiP '(this is|this message is|contacting|thank you|back around|my name is|in touch with you) ?[^\.]* from the [^\.]+ (department|group|unit|desk|branch|center)'
 				then
 					continue
 				fi
@@ -159,6 +166,9 @@ do
 		then
 			continue
 		elif [[ "$packageName" == "amazon" ]] && [[ "${title,,}" =~ (^get this|deals|%\ off) && "${content,,}" =~ (shop|save|prices\ drop|these\ deals) ]]
+		then
+			continue
+		elif [[ "$packageName" == "steam" ]] && [[ "${title,,}" =~ (on\ sale) ]]
 		then
 			continue
 		elif [[ "$packageName" == "googleplay" ]] && [[ "${content,,}" == *'successfully installed'* ]]
@@ -179,7 +189,22 @@ do
 		elif [[ "${packageName,,}" == "fdroid" ]] && [[ "${title,,}" =~ ^(updating repositories) || "${content,,}" =~ ^(downloading update for) ]]
 		then
 			continue
+		elif [[ "$packageName" == "messenger" && "${title,,}" =~ ^(your\ photo\ was\ sent)$ ]]
+		then
+			continue
 		elif [[ "$packageName" == "messenger" && "${content,,}" =~ ^(sent\ a\ message:\ .*minutes\ ago.|reminder:.* sent you .* new messages\.)$ ]]
+		then
+			continue
+		elif [[ "$packageName" == "familylink" && "${title,,}" == *"installed a new app"* ]]
+		then
+			continue
+		elif [[ "$packageName" == "settings" && "${content,,}" == "free up some space" ]]
+		then
+			continue
+		elif [[ "$packageName" == "settings" && "${title,,}" == "free up some space" ]]
+		then
+			continue
+		elif [[ "$packageName" == "irobot" && "${content,,}" == *"ended the job stuck"* ]]
 		then
 			continue
 		elif [[ "${content,,}" == *"a new login was detected"* ]]

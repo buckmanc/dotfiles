@@ -21,10 +21,12 @@ then
 	divider+=$'\n'
 fi
 
+clear
+
 while true
 do
 	sleep 10s
-	output="$("$mainPath" --new --speak --quiet | cat)"
+	output="$("$mainPath" --new --quiet "$@" | cat)"
 	if [[ -n "$output" ]]
 	then
 		echo "$output"

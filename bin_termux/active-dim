@@ -33,9 +33,12 @@ do
 	then
 		echo -n "$(date +'%R') "
 		echo -n "${batPerc}% "
-		if [[ "$pluggedIn" == 0 ]]
+
+		# only brighted if unplugged and < 100%
+		# if it gets to 100% it reports as unplugged even if it isn't
+		if [[ "$pluggedIn" == 0 && "$batPerc" -lt 100 ]]
 		then
-			echo "$json" > "$HOME/.logs/active-dim-battery.json"
+			# echo "$json" > "$HOME/.logs/active-dim-battery.json"
 			"$dimToggle" auto
 		else
 			"$dimToggle" default
