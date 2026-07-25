@@ -57,7 +57,7 @@ trap "cursorVisible ; exit 130" SIGINT
 
 tput civis
 
-echo "sleeping til $(date --date=@"$targetEpochSec" --rfc-3339=second | cut -c -19)"
+echo "sleeping til $(date --date=@"$targetEpochSec" '+%F %T' | cut -c -19 | sed "s/^$(date '+%F') //g")"
 
 # could optionally use a "--quiet" arg to select this method
 # just waiting the full time with no countdown

@@ -10,11 +10,12 @@ if [[ "$#" -lt 2 ]]
 then
 
 	hostNames="$(grep -iPo '(?<=^host ).+$' "$HOME/.ssh/config")"
+	firstHostName="$(echo "$hostNames" | head -n1)"
 
 	# default to the first hostname if none are provided
 	if [[ "$#" -eq 0 ]]
 	then
-		hostName="$(echo "$hostNames" | head -n1)"
+		hostName="$firstHostName"
 	else
 		hostName="$1"
 	fi
@@ -22,7 +23,7 @@ then
 	localNetworkName="${hostName}_local"
 
 	# if a local version of this host exists...
-	if echo "$hostNames" | grep -Piq "$localNetworkName"
+	if echo "$hostNames" | grep -iq "$localNetworkName"
 	then
 		# and we know what the home network is...
 		if [[ -f "$homeNetworkNamePath" ]]
@@ -37,9 +38,26 @@ then
 				hostName="$localNetworkName"
 			fi
 		fi
+	# otherwise if the provided hostName is *not* in the list of hostnames...
+	elif ! echo "$hostNames" | grep -iq "$hostName"
+	then
+		remoteHostNames="$(ssh "$firstHostName" 'grep -iPo "(?<=^host ).+$" "$HOME/.ssh/config"')"
+		remoteHostNameMatch="$(echo "$remoteHostNames" | grep -i "$hostName" | head -n1)"
+
+		if [[ -z "$remoteHostNameMatch" ]]
+		then
+			echo "cannot find $hostName"
+			exit 1
+		fi
 	fi
 
-	ssh "$hostName"
+	if [[ -n "$remoteHostNameMatch" ]]
+	then
+		echo "relaying through ${firstHostName}..."
+		ssh "$firstHostName" -t "ssh $remoteHostNameMatch"
+	else
+		ssh "$hostName"
+	fi
 else
 	ssh "$@"
 fi
