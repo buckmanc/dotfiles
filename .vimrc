@@ -40,12 +40,21 @@ set confirm		" ask to save changes
 
 " not for vim.tiny
 if has("eval")
-	" problematic behaviour
+
+	" keep these files out of a OneDrive folder
+	" for performance
+	let s:vimDataDir = expand("~/.vim/")
+	if s:vimDataDir =~? 'OneDrive' && !empty($LOCALAPPDATA)
+		let s:vimDataDir = substitute($LOCALAPPDATA, '\\', '/', 'g') . '/vim/'
+	endif
+
+	let &viminfo .= ',n' . s:vimDataDir . '/viminfo'
+
 	" these setting vars are comma delineated
 	" which means any paths assigned to them need to have the commas escaped
 	" you're right, commas should *never* be in your home dir
 	" but some things cannot be controlled
-	let vimDirCommaless=escape(expand("~/.vim/"), ',')
+	let vimDirCommaless=escape(s:vimDataDir, ',')
 	let &undodir=vimDirCommaless . 'undodir'	" where to save undo history
 	set undofile			" enable persistent undo
 	let &backupdir=vimDirCommaless . 'backupdir'  " backups
@@ -103,7 +112,7 @@ if has("eval")
 	let spellPaths = ''
 	" glob isn't working with full paths under termux
 	" keeping as a fallback
-	if executable('find')
+	if expand('~') =~? 'termux' && executable('find')
 		let spellFileList = split(system('find "$HOME/.vim/spell" -type f -iname "*.add" | sort'), '\n')
 	else
 		let spellFileList = sort(glob(expand('~/.vim/spell') . '/*.add', 1, 1))
@@ -249,24 +258,23 @@ if filereadable(expand("~/.vim/plug.vim"))
 
 	Plug 'tpope/vim-sensible'	" tpope's sensible defaults
 	Plug 'tpope/vim-sleuth'		" hueristic file options
-	Plug 'tpope/vim-eunuch'		" simple file operations, namely :Delete and :SudoWrite and :Mkdir
+	Plug 'tpope/vim-eunuch',	{ 'on': ['Delete', 'Mkdir', 'SudoWrite']}
 	Plug 'tomtom/tcomment_vim'	" gcc/gc to comment
 	Plug 'vim-airline/vim-airline'	" fancy status line
 	Plug 'vim-airline/vim-airline-themes'
 	" Plug 'airblade/vim-gitgutter'	" git in the gutter, freezing on excessively large repos
 	Plug 'mhinz/vim-signify'	" git in the gutter
-	Plug 'tpope/vim-fugitive'		" git commands, namely :Git add
-	Plug 'preservim/vim-markdown'	" improved markdown syntax
-	Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }	" intellisense
+	Plug 'tpope/vim-fugitive'	" git commands, namely :Git add
+	Plug 'preservim/vim-markdown',	{ 'for': 'markdown' }
+	Plug 'ycm-core/YouCompleteMe',	{ 'do': './install.py' }	" intellisense
 	" Plug 'sirver/ultisnips'
-	Plug 'editorconfig/editorconfig-vim'
-	Plug 'jlcrochet/vim-razor'	" razor syntax
-	Plug 'datamadsen/vim-compiler-plugin-for-dotnet'
-	Plug 'tpope/vim-dispatch'	" async :Make
+	Plug 'jlcrochet/vim-razor',	{ 'for': 'razor' }
+	Plug 'datamadsen/vim-compiler-plugin-for-dotnet', { 'for': ['cs', 'razor']}
+	Plug 'tpope/vim-dispatch',	{ 'on': ['Make', 'Dispatch']} " async :Make
 	" Plug 'sbdchd/vim-shebang'	" :ShebangInsert
-	Plug 'buckmanc/vim-shebang', { 'branch': 'blank_line_dev' }
-	Plug 'glensc/vim-syntax-lighttpd'
-	Plug 'isobit/vim-caddyfile'
+	Plug 'buckmanc/vim-shebang',	{ 'branch': 'blank_line_dev', 'on': 'ShebangInsert' }
+	Plug 'glensc/vim-syntax-lighttpd', { 'for': 'lighttpd' }
+	Plug 'isobit/vim-caddyfile', { 'for': 'caddyfile' }
 	" TODO limit ale scope to certain categories somehow
 	" Plug 'dense-analysis/ale'
 	Plug 'christoomey/vim-titlecase' " gzz to title case current line, or gz and a motion

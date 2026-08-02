@@ -79,20 +79,30 @@ if ! shopt -oq posix; then
 fi
 
 addtopath(){
-	newPath="$1"
-	newPath="$(echo "$newPath" | sed 's|^C:\\|/c/|g')"
+	local newPath="$1"
+
+	# using no external commands to limit subprocess creation
+	if [[ "$newPath" == C:\\* ]]
+	then
+		newPath="/c/${newPath:3}"
+	fi
+
 	if [[ -d "$newPath" ]]
 	then
-
 		export PATH="$PATH:$newPath"
 	fi
 }
 addtopathstart(){
-	newPath="$1"
-	newPath="$(echo "$newPath" | sed 's|^C:\\|/c/|g')"
+	local newPath="$1"
+
+	# using no external commands to limit subprocess creation
+	if [[ "$newPath" == C:\\* ]]
+	then
+		newPath="/c/${newPath:3}"
+	fi
+
 	if [[ -d "$newPath" ]]
 	then
-
 		export PATH="$newPath:$PATH"
 	fi
 }
@@ -166,7 +176,9 @@ function set_win_title(){
 	then
 		text="$customHomeChar"
 	else
-		text=$(basename "$PWD")
+		# using this method instead of basename
+		# to avoid subprocess spawn
+		text="${PWD##*/}"
 	fi
 
 	# neat idea for pulling directly from starship to support substitutions
@@ -219,22 +231,6 @@ function set_win_title(){
 	echo -ne "\033]0;${text}\007"
 }
 
-function custom_pwd_ps1(){
-
-	echo -n "${PWD/#$HOME/$customHomeChar}"
-}
-function custom_git_ps1(){
-
-	customGitStat="$(__git_ps1)"
-
-	if [[ -n "$customGitStat" ]]
-	then
-		customGitStat=" ( $(echo "$customGitStat" | sed 's/[\(\) ]//g'))"
-	fi
-
-	echo -n "$customGitStat"
-}
-
 starship_precmd_user_func="set_win_title"
 # suppress warnings
 export STARSHIP_LOG=error
@@ -247,10 +243,23 @@ else
 	# doesn't work unless you're using \w in PS1
 	# PROMPT_DIRTRIM=2
 
-	PROMPT_COMMAND="set_win_title"
-	# not that the backticks here are not doing command subtitution as normal; the string is not double quoted
-	# bash does its own command substitution with them
-	PS1='\n\[\033[32m\]`custom_pwd_ps1`\[\033[36m\]`custom_git_ps1`\[\033[0m\]\n★ ❯ '
+	__prompt(){
+		set_win_title
+		local pwdSeg="${PWD/#$HOME/$customHomeChar}"
+		local gitSeg="" d="$PWD" branch
+		while [[ -n "$d" ]]
+		do
+			[[ -e "$d/.git" ]] && break
+			d="${d%/*}"
+		done
+		if [[ -n "$d" ]]
+		then
+			branch="$(git branch --show-current 2>/dev/null)"
+			[[ -n "$branch" ]] && gitSeg=" ($branch)"
+		fi
+		PS1="\n\[\033[32m\]${pwdSeg}\[\033[36m\]${gitSeg}\[\033[0m\]\n★ ❯ "
+	}
+	PROMPT_COMMAND="__prompt"
 fi
 
 if [[ -d /home/linuxbrew ]]
@@ -276,9 +285,11 @@ then
 	complete -f -F _dotnet_bash_complete dotnet
 fi
 
-if type pandoc >/dev/null 2>&1; then
-	eval "$(pandoc --bash-completion)"
-fi
+# expensive on certain platforms
+# if needed cache it instead
+# if type pandoc >/dev/null 2>&1; then
+# 	eval "$(pandoc --bash-completion)"
+# fi
 
 
 if [[ -f /usr/share/bash-completion/completions/screen ]]
@@ -294,9 +305,11 @@ fi
 
 # https://superuser.com/a/947240
 function _complete_xscreen() {
-	local does_screen_exist=$(type -t _screen_sessions)
+	local does_screen_exist
+	does_screen_exist=$(type -t _screen_sessions)
+
 	local cur=$2 # Needed by _screen_sessions
-	if [[ "function" = "${does_screen_exist}" ]]; then
+	if [[ "function" == "${does_screen_exist}" ]]; then
 		# _screen_sessions "Detached"
 		_screen_sessions
 	fi
