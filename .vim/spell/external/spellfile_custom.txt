@@ -54,6 +54,7 @@ axe's
 B2B
 Baahubali
 backronym
+Balatro
 bam
 bandana
 bariatric
@@ -238,6 +239,7 @@ Ea-nāṣir
 earlyish
 easter
 ebon
+Ecobee
 ectoplasmic
 el
 eldritch
@@ -489,6 +491,7 @@ moolahs
 moreso
 Morgana
 Morgana's
+mosquitos
 mothership
 moustache
 mowhawk
@@ -607,6 +610,7 @@ rando
 randos
 rangoon
 rapcore
+Rayman
 realtor
 reconvince
 recraft
@@ -1200,6 +1204,8 @@ Zenithar's
 Zora
 aiji
 aishidi’tat
+Ajuri
+Algini
 Atageini
 ateva
 atevi
@@ -1227,6 +1233,7 @@ Machigi
 Machigi's
 Malguri
 Marid
+Maudit
 Mospheira
 Murini
 Murini's
@@ -1237,6 +1244,7 @@ Prakuyo
 Ragi
 Shejidan
 Tabini
+Tabini's
 Taiben
 Taibeni
 Tatiseigi
@@ -2757,6 +2765,7 @@ estufa
 estufar
 mañana
 8BitDo
+adb
 api
 ascii
 async
@@ -2841,12 +2850,14 @@ jpg
 json
 keycap
 keycaps
+LineageOS
 localhost
 M2
 MacBook
 macropad
 macropads
 mailhost
+MindTheGapps
 mssql
 MSSQL
 multiline
@@ -2883,6 +2894,7 @@ repointing
 scripter
 serialize
 SHA
+sideload
 sproc
 sprocs
 sqlbulkcopy
@@ -2923,6 +2935,7 @@ Wayback
 WebEx
 WebExs
 whitespace
+xda
 Xiaomi
 Xiaomi Redmi
 xls

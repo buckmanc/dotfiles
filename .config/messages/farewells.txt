@@ -412,7 +412,7 @@ Farewell, and good luck go with thee!
 And so farewell, and fair be all thy hopes, And prosperous be thy life in peace and war!
 farewell, and be proud of thy victory.
 Fairies and gods Prosper it with thee!
- Your own good thoughts excuse me, and farewell.
+Your own good thoughts excuse me, and farewell.
 As much good stay with thee as go with me!
 Farewell. What will ensue hereof there’s none can tell
 Bid me farewell.
@@ -478,6 +478,8 @@ All I got right now is this box of one dozen starving, crazed weasels
 The world is our burrito
 # horizon zero dawn
 May the great Sun lend you the strength of midday
+# Horizon forbidden west
+May the wind carry you
 # animal crossing
 You're worth your weight in fish.
 # mario odyssey
@@ -489,3 +491,6 @@ are you diverted?
 I am exceedingly diverted!
 # roblox
 It's rude to double jump in someone else's home
+# goat simulator
+...Is that a goat?
+I thought it was free-to-play!

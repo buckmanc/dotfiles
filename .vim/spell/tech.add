@@ -1,4 +1,5 @@
 8BitDo
+adb
 api
 ascii
 async
@@ -83,12 +84,14 @@ jpg
 json
 keycap
 keycaps
+LineageOS
 localhost
 M2
 MacBook
 macropad
 macropads
 mailhost
+MindTheGapps
 mssql
 MSSQL
 multiline
@@ -125,6 +128,7 @@ repointing
 scripter
 serialize
 SHA
+sideload
 sproc
 sprocs
 sqlbulkcopy
@@ -165,6 +169,7 @@ Wayback
 WebEx
 WebExs
 whitespace
+xda
 Xiaomi
 Xiaomi Redmi
 xls

@@ -55,6 +55,7 @@
 	B2B	en-US
 	Baahubali	en-US
 	backronym	en-US
+	Balatro	en-US
 	bam	en-US
 	bandana	en-US
 	bariatric	en-US
@@ -239,6 +240,7 @@
 	earlyish	en-US
 	easter	en-US
 	ebon	en-US
+	Ecobee	en-US
 	ectoplasmic	en-US
 	el	en-US
 	eldritch	en-US
@@ -490,6 +492,7 @@
 	moreso	en-US
 	Morgana	en-US
 	Morgana's	en-US
+	mosquitos	en-US
 	mothership	en-US
 	moustache	en-US
 	mowhawk	en-US
@@ -608,6 +611,7 @@
 	randos	en-US
 	rangoon	en-US
 	rapcore	en-US
+	Rayman	en-US
 	realtor	en-US
 	reconvince	en-US
 	recraft	en-US
@@ -1201,6 +1205,8 @@
 	Zora	en-US
 	aiji	en-US
 	aishidi’tat	en-US
+	Ajuri	en-US
+	Algini	en-US
 	Atageini	en-US
 	ateva	en-US
 	atevi	en-US
@@ -1228,6 +1234,7 @@
 	Machigi's	en-US
 	Malguri	en-US
 	Marid	en-US
+	Maudit	en-US
 	Mospheira	en-US
 	Murini	en-US
 	Murini's	en-US
@@ -1238,6 +1245,7 @@
 	Ragi	en-US
 	Shejidan	en-US
 	Tabini	en-US
+	Tabini's	en-US
 	Taiben	en-US
 	Taibeni	en-US
 	Tatiseigi	en-US
@@ -2758,6 +2766,7 @@
 	estufar	en-US
 	mañana	en-US
 	8BitDo	en-US
+	adb	en-US
 	api	en-US
 	ascii	en-US
 	async	en-US
@@ -2842,12 +2851,14 @@
 	json	en-US
 	keycap	en-US
 	keycaps	en-US
+	LineageOS	en-US
 	localhost	en-US
 	M2	en-US
 	MacBook	en-US
 	macropad	en-US
 	macropads	en-US
 	mailhost	en-US
+	MindTheGapps	en-US
 	mssql	en-US
 	MSSQL	en-US
 	multiline	en-US
@@ -2884,6 +2895,7 @@
 	scripter	en-US
 	serialize	en-US
 	SHA	en-US
+	sideload	en-US
 	sproc	en-US
 	sprocs	en-US
 	sqlbulkcopy	en-US
@@ -2924,6 +2936,7 @@
 	WebEx	en-US
 	WebExs	en-US
 	whitespace	en-US
+	xda	en-US
 	Xiaomi	en-US
 	Xiaomi Redmi	en-US
 	xls	en-US
