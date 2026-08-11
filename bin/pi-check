@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -e
+
+optNotify=0
+url='https://rpilocator.com?cat=PIZERO2@instock=yes'
+
+for arg in "$@"
+do
+	if [[ "$arg" =~ ^\-\-(text|notify)$ ]]
+	then
+		optNotify=1
+	fi
+done
+
+jsonMatches="$(curl -s "https://rpilocator.com/feed/" | xq -c '.rss.channel.item[] | select(.title | test( "zero\\s?w\\s?2"; "i"))')"
+
+if [[ -z "$jsonMatches" ]]
+then
+	echo "nopers"
+	exit 0
+fi
+
+while read -r match
+do
+	title="$(echo "$match" | jq '.title')"
+	echo "$title"
+	echo "$url"
+
+	if [[ "$optNotify" == 1 ]]
+	then
+		"$HOME/bin/txtme" "$title"$'\n'"$url"
+	fi
+
+done < <(echo "$jsonMatches")
