@@ -266,7 +266,7 @@ get_tokens(){
 	if [[ "${typey,,}" == "--initial" ]]
 	then
 		permString="$(echo "$perms" | perl -pe 's/ /%20/g')"
-		url="https://accounts.spotify.com/authorize?client_id=$client_id&response_type=code&redirect_uri=http%3A%2F%2Flocalhost&scope=$permString"
+		url="https://accounts.spotify.com/authorize?client_id=$client_id&response_type=code&redirect_uri=https%3A%2F%2Fexample.com&scope=$permString"
 		echo "please authenticate at the below url and paste the response access code or broken page url here"
 		echo "$url"
 
@@ -280,7 +280,7 @@ get_tokens(){
 			exit 1
 		fi
 
-		json="$(curl -s -X POST "https://accounts.spotify.com/api/token" --data-urlencode "grant_type=authorization_code" --data-urlencode "code=$access_code" --data-urlencode "redirect_uri=http://localhost" --header "Authorization: Basic $authString" --header "Content-Type: application/x-www-form-urlencoded")"
+		json="$(curl -s -X POST "https://accounts.spotify.com/api/token" --data-urlencode "grant_type=authorization_code" --data-urlencode "code=$access_code" --data-urlencode "redirect_uri=https://example.com" --header "Authorization: Basic $authString" --header "Content-Type: application/x-www-form-urlencoded")"
 
 	elif [[ "${typey,,}" == "--refresh" ]]
 	then
