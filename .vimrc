@@ -218,6 +218,7 @@ augroup FileTypeSpecificAutocommands
 	autocmd BufNewFile,BufRead *.bqsql set filetype=sql
 	autocmd BufNewFile,BufRead *.hlsl set filetype=c
 	autocmd BufNewFile,BufRead *.MD set filetype=markdown " uppercase markdown is still markdown
+	autocmd StdinReadPost * set nomodified
 
 	" autocommand actions
 	autocmd FileType cs setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
