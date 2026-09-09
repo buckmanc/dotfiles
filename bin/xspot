@@ -69,7 +69,10 @@ get_current(){
 	# echo "trackLiked: $trackLiked"
 
 	# return depending on what was asked for
-	if [[ "${typey,,}" == "name" ]]
+	if [[ "$typey" == "json" ]]
+	then
+		echo "$json" | jq -c --arg prettyString "$trackName" '{track: .item.name, artist: [.item.artists[].name] | join(", "), album: .item.album.name, prettyString: $prettyString}'
+	elif [[ "${typey,,}" == "name" ]]
 	then
 		echo "$trackName"
 	elif [[ "${typey,,}" == "id" ]]
@@ -313,7 +316,7 @@ get_tokens(){
 	# merge the json data that we care about storing so that...
 	# ...the refresh token from the initial auth isn't overwritten by refreshing (which does not provide a new refresh token)
 	# ...the timestamp is stored so we know when to refresh again
-	echo "$tokenJson $json $timestampJson" | jq -s '.[0] * .[1] * .[2]' > "$tokenPath"
+	echo "$tokenJson $json $timestampJson" | jq -s 'map(. // {}) | .[0] * .[1] * .[2]' > "$tokenPath"
 }
 
 readTokens(){
@@ -327,7 +330,7 @@ readTokens(){
 		configJson="{}"
 	fi
 
-	if [[ -f "$tokenPath" ]]
+	if [[ -s "$tokenPath" ]]
 	then
 		tokenJson="$(cat "$tokenPath")"
 		access_token="$(echo "$tokenJson"	| jq -r ".access_token")"
@@ -355,6 +358,7 @@ optDeviceToggle=0
 optGetCurrent=0
 optGetCurrentId=0
 optGetCurrentUrl=0
+optJson=0
 optShare=0
 optNextMightBeLikeTrack=0
 optNextMightBeDeviceNames=0
@@ -386,6 +390,9 @@ do
 		# even though we're not using it anymore
 		optLike=1
 		optNextMightBeLikeTrack=1
+	elif [[ "$arg" == "--json" ]]
+	then
+		optJson=1
 	elif [[ "$arg" == "--what" ]]
 	then
 		optGetCurrent=1
@@ -493,7 +500,12 @@ then
 	fi
 elif [[ "$optGetCurrent" == 1 || $# -eq 0 ]]
 then
-	get_current "name"
+	if [[ "$optJson" == 1 ]]
+	then
+		get_current "json"
+	else
+		get_current "name"
+	fi
 fi
 
 if [[ "$optSkipNext" == 1 ]]

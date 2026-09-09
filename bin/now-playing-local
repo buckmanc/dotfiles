@@ -1,0 +1,178 @@
+#!/usr/bin/env bash
+
+# a simple local media status wrapper
+# uses online scripts to check for more details
+
+set -e
+
+optNoOnline=0
+optJson=0
+
+for arg in "$@"
+do
+	if [[ "$arg" =~ ^\-\-no\-(online|streaming)$ ]]
+	then
+		optNoOnline=1
+	elif [[ "$arg" == "--json" ]]
+	then
+		optJson=1
+	fi
+done
+
+if type playerctl > /dev/null 2>&1
+then
+	# have to manually pick the player that's playing
+	players="$(playerctl --list-all 2>&1)"
+
+	# back out for borko
+	if [[ "${players,,}" == "no players found" ]]
+	then
+		echo
+		exit
+	fi
+
+	# find the first playing player
+	while read -r thisPlayer
+	do
+		if [[ "$optNoOnline" == 1 && "${thisPlayer,,}" =~ ^(spotify|sendspin)$ ]]
+		then
+			continue
+		elif [[ -z "$thisPlayer" ]]
+		then
+			continue
+		fi
+
+		status="$(playerctl --player "$thisPlayer" status)"
+
+		if [[ "${status,,}" == "playing" ]]
+		then
+			player="$thisPlayer"
+			break
+		fi
+
+	done < <(echo "$players")
+
+	# return nopers for nopers
+	if [[ -z "$player" ]]
+	then
+		echo '||'
+		exit
+	fi
+
+	format="{{artist}}§{{title}}§{{album}}§{{vlc:nowplaying}}§{{xesam:url}}"
+
+	# get the status string
+	playerCtlDeets="$(playerctl --player "$player" metadata --format "$format")"
+	IFS="§" read -r trackName artistName albumName vlcNowPlaying trackUrl <<< "$playerCtlDeets"
+	# what the hell is in the vlc field anyway?
+
+	prettyString="$(echo "$vlcNowPlaying - $artistName - $trackName" | perl -p -e 's/( \- |[Ss]tream [Nn]ame)+$//g;' -e 's/^( \- )+//g;' -e 's/( \- ){2,}/ - /g;')"
+
+	# need that speaker icon, but wminfo doesn't provide it
+	# if [[ "${player,,}" == "firefox"* && "$nowPlaying" == *"is playing media" ]] && type wmctrl > /dev/null 2>&1
+	# then
+	# 	windowTitle="$(wmctrl -l | grep -i "firefox" | head -n1)"
+	# 	nowPlaying="$windowTitle"
+	# fi
+
+	# backup format is a beautified url
+	if [[ -z "$prettyString" ]]
+	then
+		if [[ -n "$trackUrl" && -x "$HOME/bin/urldecode" ]]
+		then
+			trackUrl="$(echo "$trackUrl" | "$HOME/bin/urldecode")"
+		fi
+
+		if [[ "$trackUrl" == "http"* ]]
+		then
+			prettyString="$(echo "$trackUrl" | perl -p -e 's=(^https?://|\.[^/\.]+?$|/hls)==g;' -e 's|^([^/]+)/(.+$)|$1 - $2|g;' -e 's/(_|%20)/ /g;' -e 's|/| / |g;')"
+		else
+			prettyString="$(echo "$trackUrl" | perl -p -e 's|^.+/([^/]+)$|$1|g;' -e 's/\.[^\.]+$//g')"
+		fi
+	fi
+
+	# if the nowPlaying string is still empty, back out
+	if [[ -z "$prettyString" ]]
+	then
+		echo '?'
+		exit
+	fi
+elif type termux-notification-list > /dev/null 2>&1
+then
+	# shit that's not playing still shows up, so it's not gonna be 100% accurate
+	# might wanna default to cloud providers just for the reliability of "actually playing"
+	playingJson="$(termux-notification-list | jq -c '.[] | select(.packageName | test("spotify|musicassistant|aimp|audioplayer"))' | head -n1)"
+
+
+	packageName="$(echo "$playingJson" | jq -r '.packageName' | perl -pe 's/^(com)\.//g;' -e 's/\.(music|player|application)$//g;' -e 's/sendspindroid/sendspin/g;')"
+	title="$(echo "$playingJson" | jq -r '.title')"
+	content="$(echo "$playingJson" | jq -r '.content')"
+
+	if [[ "${packageName,,}" =~ (aimp|audioplayer) ]]
+	then
+		trackName="$title"
+		albumName="$(echo "$content" | grep -iPo '(?<= \- ).+$')"
+		artistName="$(echo "$content" | grep -iPo '^.+(?= \- )')"
+	# elif [[ "${packageName,,}" == *spotify* ]]
+	else
+		trackName="$title"
+		artistName="$content"
+	fi
+
+	prettyString="$trackName - $artistName"
+else
+	echo "no known local player status app"
+	exit 1
+fi
+
+# check the spotify api for more details...
+if [[ "$optJson" == 0 && "${player,,}" =~ ^(spotify|sendspin)$ ]]
+then
+
+	lastPlayingPath="$TEMP/lastplaying"
+	lastOnlinePlayingPath="$TEMP/lastOnlineplaying"
+
+	# get cached vars
+	lastPlaying="$(cat "$lastPlayingPath" 2>/dev/null || true)"
+	onlineNowPlaying="$(cat "$lastOnlinePlayingPath" 2>/dev/null || true)"
+
+	# ...but only if it's a different track then last time
+	if [[ "$prettyString" != "$lastPlaying" || -z "$onlineNowPlaying" ]]
+	then
+		if [[ "${player,,}" == "spotify" ]]
+		then
+			statusPath="$HOME/bin/xspot"
+		elif [[ "${player,,}" == "sendspin" ]]
+		then
+			statusPath="$HOME/bin/xma"
+		else
+			echo "no status script for $player"
+			exit 1
+		fi
+
+		onlineNowPlaying="$("$statusPath" --what)"
+		lastPlaying="$prettyString"
+
+		export onlineNowPlaying
+		export lastPlaying
+		echo "$onlineNowPlaying" > "$lastOnlinePlayingPath"
+		echo "$lastPlaying" > "$lastPlayingPath"
+	fi
+fi
+
+if [[ "$optJson" == 0 ]]
+then
+	if [[ -n "$onlineNowPlaying" ]]
+	then
+		echo "$onlineNowPlaying"
+	else
+		echo "$prettyString"
+	fi
+else
+	jq -c -n \
+		--arg track "$trackName" \
+		--arg artist "$artistName" \
+		--arg album "$albumName" \
+		--arg prettyString "$prettyString" \
+		'{track: $track, artist: $artist, album: $album, prettyString: $prettyString}'
+fi

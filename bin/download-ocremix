@@ -1,0 +1,270 @@
+#!/usr/bin/env bash
+
+set -e
+
+optLimit=10
+optNextIsLimit=0
+optSkipDwelling=0
+optAlbumInstead=0
+optOverwrite=0
+taggerPath="$HOME/bin/xtag"
+audioRegex='.*\.(mp3|aac|aax|flac|ogg|opus|wav|m4a|m4b|wma)$'
+
+for arg in "$@"
+do
+	if [[ "$arg" =~ ^\-\-?a(ll)?$ ]]
+	then
+		optLimit=9999
+	elif [[ "$arg" =~ ^\-\-?l(imit)? ]]
+	then
+		optNextIsLimit=1
+	elif [[ "$optNextIsLimit" == 1 ]]
+	then
+		optLimit="$arg"
+		optNextIsLimit=0
+	elif [[ "$arg" =~ ^\-\-skip\-dwelling(\-of\-duels)?$ ]]
+	then
+		optSkipDwelling=1
+	elif [[ "$arg" =~ ^\-\-(download\-)?albums?\-instead$ ]]
+	then
+		optAlbumInstead=1
+	elif [[ "$arg" =~ ^\-\-overwrite$ ]]
+	then
+		optOverwrite=1
+	elif [[ -d "$arg" ]]
+	then
+		optOutputDir="$arg"
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
+
+if [[ -z "$optOutputDir" ]]
+then
+	echo 'yo, need output dir'
+	exit 1
+elif [[ ! -d "$optOutputDir" ]]
+then
+	echo "output dir doesn't exist"
+	exit 1
+fi
+
+rootUrl="https://ocremix.org"
+baseUrl="$rootUrl/remixes/?sort=datedesc&offset="
+pageSize=30
+pageI="-1"
+songI=0
+
+singlesDir="$optOutputDir/Singles"
+albumsDir="$optOutputDir/Albums"
+competitionsDir="$optOutputDir/Competitions"
+
+mkdir -p "$singlesDir"
+mkdir -p "$albumsDir"
+mkdir -p "$competitionsDir"
+
+sleepachu(){
+	# be kind to the servers
+	sleep "$(shuf -i 5-60 -n 1)"
+}
+
+while true
+do
+	pageI=$((pageI+1))
+	echo "page $((pageI +1))"
+
+	pageBody="$(curl -s "$baseUrl$((pageI * pageSize))")"
+
+	songUrls="$(echo "$pageBody" | grep -iPo '(?<=href=")/remix/[^"]+' | sort -ur)"
+
+	while read -r songUrl
+	do
+
+		if [[ -z "$songUrl" ]]
+		then
+			continue
+		fi
+	
+		songI=$((songI+1))
+		if [[ "$songI" -gt "$optLimit" ]]
+		then
+			break
+		fi
+
+		songCode="$(echo "$songUrl" | grep -iPo 'OCR\d+')"
+		echo -n "$songCode"
+
+		fullSongUrl="$rootUrl$songUrl"
+		songPageBody="$(curl -s "$fullSongUrl")"
+
+		# should be 3 direct mp3 links per page found, one per mirror
+		# pick one randomly
+		mp3Url="$(echo "$songPageBody" | grep -iPo 'http[^"]+\.mp3' | shuf | head -n1)"
+		# the track name, pulled by whatever is in quotes in the html title
+		simpleTrackName="$(echo "$songPageBody" | grep -ziPo '(?<=<title>)[^<]+' | tr -d '\0' | grep -iPo '(?<=")[^"]+(?=")')"
+
+		# pull out custom tags and dwelling-ness
+		tagsString="$(echo "$songPageBody" | grep -iP '^<(dt|dd)' | perl -pe 's/<[^.]+?>//g' | perl -pe 's/(?<=:)[\r\n]+//g')"
+		declare -A tagKvps=()
+		mapfile -d $'\n' -t pairs <<< "$tagsString"
+		for pair in "${pairs[@]}"
+		do
+			if [[ -z "$pair" ]]
+			then
+				continue
+			fi
+			pair="${pair%$'\n'}"
+			tagName="${pair%%:*}"
+			tagValue="${pair#*:}"
+			tagName="${tagName,,}"
+			tagValue="${tagValue,,}"
+
+			# echo "tagName: $tagName, tagValue $tagValue"
+			tagKvps["$tagName"]="${tagValue}"
+		done
+
+		# fallback genre, like "piano"
+		if [[ -z "${tagKvps[genre]}" ]]
+		then
+			tagKvps[genre]="${tagKvps[instrumentation]}"
+		fi
+
+
+		# echo "${tagKvps[@]}"
+
+		mp3FileNameFull="$(basename "$mp3Url")"
+		mp3FileName="${mp3FileNameFull%.*}"
+		songName="$(echo "$mp3FileName" | perl -pe 's/[ _]OC[ _]ReMix$//g')"
+
+		finalSongPath="$singlesDir/$mp3FileNameFull"
+		tempSongPath="$TEMP/$mp3FileNameFull"
+		skipSongPath="$singlesDir/$mp3FileName.skipped"
+
+		echo -n " ${songName:0:20}..."
+
+		albumSiteLink="$(echo "$songPageBody" | grep -iPo 'href="http[^"]+"[^>]*>[^<]*album[^<]*download[^<]*http' | grep -iPo 'http[^"]+' || true)"
+
+		if [[ "$optAlbumInstead" == 1 ]]
+		then
+			if [[ -n "$albumSiteLink" ]]
+			then
+				echo -n " album"
+				
+				# try a download page if the main site doesn't have a zip link
+				# we *could* try to parse the download page link from the main page, but this is more light weight
+				albumSiteUrls=("$albumSiteLink" "$albumSiteLink/download.html")
+				for albumSiteUrl in "${albumSiteUrls[@]}"
+				do
+					albumSiteBody="$(curl -s "$albumSiteUrl")"
+					zipLinks="$(echo "$albumSiteBody" | grep -iPo 'http[^"]+\.zip' || true)"
+
+					if [[ -n "$zipLinks" ]]
+					then
+						break
+					fi
+				done
+
+				if echo "$zipLinks" | grep -iq 'flac'
+				then
+					zipLinks="$(echo "$zipLinks" | grep -i 'flac')"
+				fi
+
+				if [[ -z "$zipLinks" ]]
+				then
+					echo 'could not find album zip link'
+					exit 1
+				fi
+
+				zipLink="$(echo "$zipLinks" | head -n1)"
+
+				albumName="$(echo "$zipLink" | grep -iPo '[^/]+$' | perl -pe 's/(\(.+?\)|\.zip|_)+$//g')"
+				zipFilename="$(basename "$zipLink")"
+
+				zipDest="$TEMP/$zipFilename"
+				albumDestDir="$albumsDir/$albumName"
+
+				if [[ "$optOverwrite" == 0 && -d "$albumDestDir" ]]
+				then
+					echo -n " skip existing"
+				else
+					sleepachu
+					# download and unzip
+					curl -s "$zipLink" -o "$zipDest"
+					unzip -qo "$zipDest" -d "$albumDestDir" && rm "$zipDest"
+					# fix some stupid permission issues
+					chmod -R 755 "$albumDestDir"
+
+					musicFiles="$(find "$albumDestDir" -type f -regextype posix-extended -iregex "$audioRegex")"
+
+					while read -r file
+					do
+						if [[ -z "$file" ]]
+						then
+							continue
+						fi
+
+						"$taggerPath" "$file" "AlbumArtist" "OC Remix" --no-overwrite
+					done < <(echo "$musicFiles")
+				fi
+
+				pathToSongInAlbum="$(find "$albumDestDir" -type f -iname "*${simpleTrackName}*" -regextype posix-extended -iregex "$audioRegex")"
+
+				if [[ -n "$pathToSongInAlbum" && "$(echo "$pathToSongInAlbum" | wc -l)" -eq 1 ]]
+				then
+					# if we could find exactly one song in this album matching the single, then ferry the tags over
+					# WARNING: duplicate code
+					# WARNING: xtag only handles mp3s at present, but some albums contain flacs
+					echo -n ' tag'
+					"$taggerPath" "$pathToSongInAlbum" "genre" "${tagKvps[genre]}"
+					"$taggerPath" "$pathToSongInAlbum" "mood" "${tagKvps[mood]}" --ignore-blank
+				fi
+
+				echo " done"
+				echo "album instead" > "$skipSongPath"
+				continue
+
+			elif [[ "$songPageBody" == *'>Featured on album...'* ]]
+			then
+				echo "it's an album but link couldn't be found"
+				exit 1
+			fi
+		fi
+		
+		if [[ "$optSkipDwelling" == 1 ]] && echo "${tagKvps[additional]}" | grep -iq 'dwelling of duels'
+		then
+			echo " skip dwelling" | tee "$skipSongPath"
+			continue
+		fi
+
+		if [[ "$optOverwrite" == 0 && -f "$finalSongPath" ]]
+		then
+			echo " skip existing"
+			continue
+		fi
+
+		sleepachu
+		curl -s "$mp3Url" -o "$tempSongPath"
+
+		# tag it!
+		# don't overwrite mood, but *do* overwrite genre
+		# because "game" isn't a genre
+		echo -n ' tag'
+		"$taggerPath" "$tempSongPath" "genre" "${tagKvps[genre]}"
+		"$taggerPath" "$tempSongPath" "mood" "${tagKvps[mood]}" --ignore-blank
+		"$taggerPath" "$tempSongPath" "AlbumArtist" "OC Remix" --no-overwrite
+
+		# remove the skippy log if it's there from a previous run
+		rm -f "$skipSongPath"
+		# move song to final dest
+		mv "$tempSongPath" "$finalSongPath"
+
+		echo " done"
+
+	done < <(echo "$songUrls")
+
+	if [[ "$songI" -gt "$optLimit" ]]
+	then
+		break
+	fi
+done

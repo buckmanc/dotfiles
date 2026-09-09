@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+
+set -e
+
+optPath=""
+optTagName=""
+optTagValue=""
+optIgnoreBlankValue=0
+optNoOverwrites=0
+badTagRegex='(\-rw\-rw\-|audio/mpeg|Joint Stereo|LAME3\.|image/jpeg|\(Binary data \d+ bytes)'
+
+for arg in "$@"
+do
+	if [[ "$arg" =~ ^\-\-ignore\-blank(\-values?)?$ ]]
+	then
+		optIgnoreBlankValue=1
+	elif [[ "$arg" =~ ^\-\-no-overwrites?$ ]]
+	then
+		optNoOverwrites=1
+	elif [[ -z "$optPath" && -f "$arg" ]]
+	then
+		optPath="$arg"
+	elif [[ -z "$optTagName" ]]
+	then
+		optTagName="$arg"
+	elif [[ -z "$optTagValue" ]]
+	then
+		optTagValue="$arg"
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
+
+if [[ -z "$optPath" || -z "$optTagName" ]]
+then
+	echo "need path, tag name"
+	echo "optPath: $optPath"
+	echo "optTagName: $optTagName"
+	echo "optTagValue: $optTagValue"
+	exit 1
+fi
+
+# for automated situations where the tag may be missing but you don't intend to wipe it
+if [[ "$optIgnoreBlankValue" == 1 && -z "$optTagValue" ]]
+then
+	exit 0
+fi
+
+existingValue="$(exiftool -T -"$optTagName" "$optPath")"
+
+if [[ "$optNoOverwrites" == 0 && -n "$existingValue" ]]
+then
+	exit
+fi
+
+# if a tag isn't natively supported by exiftool it spits out all values, thus ensuring it'll *never* match
+# fallback to manually pulling out the value we want
+if echo "$existingValue" | grep -Piq "$badTagRegex"
+then
+	echo "using exiftool fallback method"
+	existingValue="$(exiftool "$optPath" | grep -iPo "^${optTagName}+?: \\K.+$")"
+fi
+
+# if [[ -n "$existingValue" ]]
+# then
+# 	echo "existing $optTagName: $existingValue"
+# fi
+
+if [[ "$existingValue" == "$optTagValue" ]]
+then
+	exit 0
+fi
+
+fileNameFull="$(basename "$optPath")"
+fileExt="${fileNameFull##*.}"
+
+# ffmpeg destroys tags, do not use
+
+if [[ "${fileExt,,}" == "mp3" ]]
+then
+	# map some tags from descriptions to id3 frames
+	# only supported for id3 v2.7
+	if [[ "${optTagName,,}" == "mood" ]]
+	then
+		optTagName=TMOO
+	elif [[ "${optTagName,,}" == "grouping" ]]
+	then
+		optTagName=TIT1
+	elif [[ "${optTagName,,}" == "albumartist" ]]
+	then
+		optTagName=TPE2
+	elif [[ "${optTagName,,}" == "genre" ]]
+	then
+		optTagName=TCON
+	fi
+
+	# dedicated mp3 tool
+	if [[ -z "$optTagValue" ]]
+	then
+		# --delete-frames needs the actual id3 frame name, not the friendly one
+		# so anything needed will have to be manually mapped
+		output="$(mid3v2 --quiet --delete-frames="$optTagName" "$optPath" 2>&1)"
+	else
+		output="$(mid3v2 --quiet --"$optTagName"="$optTagValue" "$optPath" 2>&1)"
+	fi
+
+	# painfully ignore warnings
+	output="$(echo "$output" | grep -Piv '^warning')"
+	if [[ -z "$output" ]]
+	then
+		echo "$output"
+	fi
+else
+	# multipurpose tool
+	exiftool -"$optTagName"="$optTagValue" "$optPath"
+fi

@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+set -e
+
+optDump=0
+optKeep=0
+optLike=0
+optLove=0
+
+
+for arg in "$@"
+do
+	if [[ "${arg,,}" == "--like" ]]
+	then
+		optLike=1
+	else
+		echo "I have no idea what $arg" means
+	fi
+done
+
+if [[ "$optLike" == 1 ]]
+then
+	likeArg=(--like)
+else
+	likeArg=(--what)
+fi
+
+logPath="$HOME/.logs/music-ratings"
+
+runAndVal(){
+	local command="$1"
+	shift
+	output="$($command "$@" || true)"
+
+	# what command was sent and what output returned
+	# echo "$command $*: $output" >&2
+
+	if [[ "$output" == '{'*'}' ]]
+	then
+		echo "$output"
+	else
+		return 1
+	fi
+}
+
+trackJson="$(runAndVal "$HOME/bin/now-playing-local" --no-online --json \
+	|| runAndVal "$HOME/bin/xspot" "${likeArg[@]}" --json \
+	|| runAndVal "$HOME/bin/xma" "${likeArg[@]}" --json \
+	|| true)"
+
+if [[ -z "$trackJson" ]]
+then
+	exit
+fi
+
+# log here
+
+echo "$trackJson" | jq -r '.prettyString'
+

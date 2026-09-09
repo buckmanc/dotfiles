@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+
+set -e
+
+optLimit=2
+optNextIsLimit=0
+optOverwrite=0
+# optOutputDir="/media/library/music/Free/Video Games/Dwelling of Duels"
+optOutputDir="./test-dls"
+taggerPath="$HOME/bin/xtag"
+
+urlDecode(){
+	# local s="${1//+/ }"
+	printf '%b' "${1//%\\x}"
+}
+
+for arg in "$@"
+do
+	if [[ "$arg" =~ ^\-\-?a(ll)?$ ]]
+	then
+		optLimit=9999
+	elif [[ "$arg" =~ ^\-\-?l(imit)?$ ]]
+	then
+		optNextIsLimit=1
+	elif [[ "$optNextIsLimit" == 1 ]]
+	then
+		optLimit="$arg"
+		optNextIsLimit=0
+	elif [[ "$arg" =~ ^\-\-overwrite$ ]]
+	then
+		optOverwrite=1
+	elif [[ -d "$arg" ]]
+	then
+		optOutputDir="$arg"
+	else
+		echo "I have no idea what $arg means"
+		exit 1
+	fi
+done
+
+sleepachu(){
+	# be kind to the servers
+	sleep "$(shuf -i 5-60 -n 1)"
+}
+
+baseUrl="https://www.dwellingofduels.net/duels/"
+
+baseBody="$(curl -s "$baseUrl")"
+
+duelUrls="$(echo "$baseBody" | grep -iPo '(?<=href=")/duels/[^"]+' | sort -ur)"
+
+duelCount="$(echo "$duelUrls" | wc -l)"
+
+echo "$duelCount duels"
+
+duelUrls="$(echo "$duelUrls" | head -n "$optLimit")"
+
+while read -r duelUrl
+do
+
+	if [[ -z "$duelUrl" ]]
+	then
+		continue
+	fi
+
+	fullPageUrl="https://dwellingofduels.net$duelUrl"
+	pageBody="$(curl -s "$fullPageUrl")"
+
+	zipUrl="$(echo "$pageBody" | grep -iPo '(?<=href=")[^"]+\.zip')"
+	# echo "$zipUrl"
+
+	if [[ -z "$zipUrl" ]]
+	then
+		zipUrlCount=0
+	else
+		zipUrlCount="$(echo "$zipUrl" | wc -l)"
+	fi
+
+	if [[ "$zipUrlCount" -ne 1 ]]
+	then
+		echo "yo there were $zipUrlCount zip urls"
+	fi
+
+	zipFileName="$(basename "$zipUrl")"
+	duelName="${zipFileName%.*}"
+
+	echo -n "$duelName"
+
+	finalDuelDir="$optOutputDir/$duelName"
+
+	if [[ "$optOverwrite" == 0 && -d "$finalDuelDir" ]]
+	then
+		echo " skipachu"
+		continue
+	fi
+
+	zipDest="$TEMP/$zipFileName"
+	sleepachu
+	curl -s "$zipUrl" -o "$zipDest"
+	unzip -qo "$zipDest" -d "$finalDuelDir" && rm "$zipDest"
+	chmod -R 755 "$finalDuelDir"
+
+	mp3Files="$(find "$finalDuelDir" -type f -iname '*.mp3' | sort)"
+
+	echo " done"
+
+	while read -r mp3File
+	do
+		fileGenre="$(exiftool -T -genre "$mp3File")"
+		if [[ -n "$fileGenre" ]]
+		then
+			mp3FileNameFull="$(basename "$mp3File")"
+			# dod stores the game title in the genre tag
+			# move it to the grouping tag, like ocremix
+			echo " tag ${mp3FileNameFull:0:20}..."
+			"$taggerPath" "$mp3File" "grouping" "$fileGenre"
+			"$taggerPath" "$mp3File" "genre" ""
+			"$taggerPath" "$mp3File" "AlbumArtist" "Dwelling of Duels" --no-overwrite
+		fi
+
+	done < <(echo "$mp3Files")
+
+done < <(echo "$duelUrls")

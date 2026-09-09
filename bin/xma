@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+
+set -e
+
+# TODO ignore always playing players
+# maybe in the config?
+
+configPath="$HOME/.config/xma.json"
+
+if [[ ! -f "$configPath" ]]
+then
+	echo "need config file at $configPath"
+	echo "need key and server address"
+	exit 1
+fi
+
+configJson="$(cat "$configPath")"
+maKey="$(echo "$configJson" | jq -r .key)"
+maServer="$(echo "$configJson" | jq -r .server)"
+excludePlayers="$(echo "$configJson" | jq -c ".exclude_players // []")"
+curlArgs=(-X POST "${maServer}/api" --silent --max-time 10 --header "Content-Type: application/json" --header "Authorization: Bearer $maKey")
+
+optLike=0
+optAdd=0
+optAddName=""
+optUrls=()
+optNextMightBeAddName=0
+optWhat=""
+optJson=0
+
+for arg in "$@"
+do
+	if [[ "${arg,,}" == "--add" ]]
+	then
+		optAdd=1
+		optNextMightBeAddName=1
+	elif [[ "${arg,,}" == "--like" ]]
+	then
+		optLike=1
+	elif [[ "${arg,,}" =~ ^\-\-(what|now\-playing)$ ]]
+	then
+		optWhat=1
+	elif [[ "${arg,,}" == '--json' ]]
+	then
+		optJson=1
+	elif [[ "$arg" =~ ^https?: ]]
+	then
+		optUrls+=("$arg")
+	elif [[ "$optNextMightBeAddName" == 1 ]]
+	then
+		optAddName="$arg"
+		optNextMightBeAddName=0
+	else
+		echo "I have no idea what $arg" means
+	fi
+	
+done
+
+urlsCount="${#optUrls[@]}"
+echo "${optUrls[@]}"
+
+if [[ "$optAdd" == 1 ]]
+then
+	if [[ "$urlsCount" -eq 0 || "$urlsCount" -gt 2  ]]
+	then
+		echo "wrong number of urls"
+		exit 1
+	elif [[ -z "$optAddName" ]]
+	then
+		echo "need track name"
+		exit 1
+	fi
+
+	addTrackUrl=''
+	addImageUrl=''
+
+	if [[ "$urlsCount" -eq 1 ]]
+	then
+		addTrackUrl="${optUrls[0]}"
+	else
+		for url in "${optUrls[@]}"
+		do
+			if [[ -z "$addTrackUrl" && "${url}" =~ \.(mp3)$ ]]
+			then
+				addTrackUrl="$url"
+			elif [[ -z "$addImageUrl" && "${url,,}" =~ \.(png|jpe?g)$ ]]
+			then
+				addImageUrl="$url"
+			else
+				echo "is this one a track or image:"
+				echo "$url"
+				exit 1
+			fi
+		done
+	fi
+	
+	if [[ -z "$addTrackUrl" ]]
+	then
+		echo "couldn't figure out the track url"
+		exit 1
+	fi
+
+	payload="{\"command\": \"builtin/add_track\", \"args\": { \"url\": \"$addTrackUrl\", \"image_url\": \"$addImageUrl\", \"name\": \"$optAddName\"}}"
+	echo "payload: $(echo "$payload" | jq .)"
+
+	curl "${curlArgs[@]}" -d "$payload"
+elif [[ "$optWhat" == 1 || "$optLike" == 1 ]]
+then
+	payload='{"command": "players/all", "args": {"return_unavailable": false, "return_disabled": false}}'
+	players="$(curl "${curlArgs[@]}" -d "$payload" | \
+	  jq --argjson exclude "$excludePlayers" \
+		'[.[] | select(.playback_state == "playing" and ((.name | IN($exclude[])) | not))]')"
+
+	currentMedia="$(echo "$players" | jq '.[0].current_media')"
+	if [[ "$currentMedia" != "null" ]]
+	then
+		prettyString="$(echo "$currentMedia" | jq -r '.title + " - " + (.artist // .album_artist)')"
+
+		if [[ "$optJson" == 0 ]]
+		then
+			echo "$prettyString"
+		else
+			echo "$currentMedia" | jq -c --arg prettyString "$prettyString" '{track: .title, artist: (.artist // .album_artist), album: .album, prettyString: $prettyString}'
+		fi
+	
+		if [[ "$optLike" == 1 ]]
+		then
+			itemId="$(echo "$currentMedia" | jq -r '.uri')"
+			# echo "itemId: $itemId"
+			payload="{\"command\": \"music/favorites/add_item\", \"args\": { \"item\": \"$itemId\"}}"
+			output="$(curl "${curlArgs[@]}" -d "$payload")"
+
+			if [[ -n "$output" && "$output" != "null" ]]
+			then
+				echo "$output"
+			fi
+		fi
+
+
+	fi
+fi
