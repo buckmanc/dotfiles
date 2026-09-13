@@ -8,6 +8,7 @@ optSkipDwelling=0
 optAlbumInstead=0
 optOverwrite=0
 taggerPath="$HOME/bin/xtag"
+htmlDecodePath="$HOME/bin/htmldecode"
 audioRegex='.*\.(mp3|aac|aax|flac|ogg|opus|wav|m4a|m4b|wma)$'
 
 for arg in "$@"
@@ -100,7 +101,7 @@ do
 
 		# should be 3 direct mp3 links per page found, one per mirror
 		# pick one randomly
-		mp3Url="$(echo "$songPageBody" | grep -iPo 'http[^"]+\.mp3' | shuf | head -n1)"
+		mp3Url="$(echo "$songPageBody" | grep -iPo 'http[^"]+\.mp3' | shuf | head -n1 | "$htmlDecodePath")"
 		# the track name, pulled by whatever is in quotes in the html title
 		simpleTrackName="$(echo "$songPageBody" | grep -ziPo '(?<=<title>)[^<]+' | tr -d '\0' | grep -iPo '(?<=")[^"]+(?=")')"
 

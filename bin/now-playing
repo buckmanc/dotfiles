@@ -2,30 +2,44 @@
 
 set -e
 
-optDump=0
-optKeep=0
-optLike=0
-optLove=0
+optRating=''
 
+# TODO add a way to queue tag updates
 
 for arg in "$@"
 do
-	if [[ "${arg,,}" == "--like" ]]
+	# super short version
+	if [[ "${arg,,}" =~ ^\-?[dkl]$ ]]
 	then
-		optLike=1
+		case "${arg,,}" in
+			d)
+				arg='dump'
+				;;
+			k)
+				arg='keep'
+				;;
+			l)
+				arg='like'
+				;;
+			esac
+	fi
+
+	if [[ "${arg,,}" =~ ^\-?\-?(dump|keep|like|love)$ ]]
+	then
+		optRating="${arg,,}"
 	else
 		echo "I have no idea what $arg" means
 	fi
 done
 
-if [[ "$optLike" == 1 ]]
+if [[ "${optRating,,}" =~ ^(like|love)$ ]]
 then
 	likeArg=(--like)
 else
 	likeArg=(--what)
 fi
 
-logPath="$HOME/.logs/music-ratings"
+logPath="$HOME/.logs/music-ratings.json"
 
 runAndVal(){
 	local command="$1"
@@ -54,6 +68,11 @@ then
 fi
 
 # log here
+if [[ -n "$rating" ]]
+then
+	trackJson="$(echo "$trackJson" | jq -c --arg rating "$optRating" '. + {rating: $rating}')"
+	echo "$trackJson" >> "$logPath"
+fi
 
 echo "$trackJson" | jq -r '.prettyString'
 
