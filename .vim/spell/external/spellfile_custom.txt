@@ -361,6 +361,7 @@ IGN
 IGN's
 IHOP
 IM's
+IMAX
 IMing
 immunocompromised
 incel
@@ -497,6 +498,7 @@ moustache
 mowhawk
 must've
 nanite
+nastygram
 nd
 necklet
 negatable
@@ -680,6 +682,7 @@ shifter
 shitshow
 Shoney's
 shoppy
+shoutouts
 si
 Silksong
 sippy
@@ -816,6 +819,7 @@ weaponized
 WebMD
 Webtoon
 webtoons
+weirded
 wfh
 what'd
 whatevs
@@ -2870,6 +2874,8 @@ performant
 phreak
 phreaker
 phreaking
+PicoReplayer
+PiCorePlayer
 png
 PowerShell
 powershell
@@ -2881,6 +2887,7 @@ raspi2
 raspi3
 raspi4
 raspi5
+Raspotify
 rasterize
 readme
 rebase
@@ -2892,6 +2899,7 @@ repoint
 repointed
 repointing
 scripter
+Sendspin
 serialize
 SHA
 sideload
@@ -2943,6 +2951,7 @@ xlsm
 xlsx
 Xubuntu
 yaml
+Zigbee
 Baladia
 Baladian
 Berglund

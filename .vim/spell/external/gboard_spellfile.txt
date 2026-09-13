@@ -362,6 +362,7 @@
 	IGN's	en-US
 	IHOP	en-US
 	IM's	en-US
+	IMAX	en-US
 	IMing	en-US
 	immunocompromised	en-US
 	incel	en-US
@@ -498,6 +499,7 @@
 	mowhawk	en-US
 	must've	en-US
 	nanite	en-US
+	nastygram	en-US
 	nd	en-US
 	necklet	en-US
 	negatable	en-US
@@ -681,6 +683,7 @@
 	shitshow	en-US
 	Shoney's	en-US
 	shoppy	en-US
+	shoutouts	en-US
 	si	en-US
 	Silksong	en-US
 	sippy	en-US
@@ -817,6 +820,7 @@
 	WebMD	en-US
 	Webtoon	en-US
 	webtoons	en-US
+	weirded	en-US
 	wfh	en-US
 	what'd	en-US
 	whatevs	en-US
@@ -2871,6 +2875,8 @@
 	phreak	en-US
 	phreaker	en-US
 	phreaking	en-US
+	PicoReplayer	en-US
+	PiCorePlayer	en-US
 	png	en-US
 	PowerShell	en-US
 	powershell	en-US
@@ -2882,6 +2888,7 @@
 	raspi3	en-US
 	raspi4	en-US
 	raspi5	en-US
+	Raspotify	en-US
 	rasterize	en-US
 	readme	en-US
 	rebase	en-US
@@ -2893,6 +2900,7 @@
 	repointed	en-US
 	repointing	en-US
 	scripter	en-US
+	Sendspin	en-US
 	serialize	en-US
 	SHA	en-US
 	sideload	en-US
@@ -2944,6 +2952,7 @@
 	xlsx	en-US
 	Xubuntu	en-US
 	yaml	en-US
+	Zigbee	en-US
 	Baladia	en-US
 	Baladian	en-US
 	Berglund	en-US
