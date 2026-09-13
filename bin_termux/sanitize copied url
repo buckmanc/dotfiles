@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# TODO also use regex to pull a url out of a larger string
+# like those "check out this item i found on etsy" type share messages
+
 stringy="$(termux-clipboard-get)"
 sanStringy="$(echo "$stringy" | perl -pe 's/(ref=|\?).*$//g')" 
 

@@ -23,7 +23,7 @@ then
 	brightArg="$defaultBrightness"
 fi
 
-toggleFile="$TMPDIR/dim-toggle-file"
+toggleFile="$TEMP/dim-toggle-file"
 
 if [[ ( -f "$toggleFile" && "$brightArgProvided" == 0 ) || "$brightArg" == "auto" ]]
 then

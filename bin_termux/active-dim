@@ -2,6 +2,7 @@
 
 pluggedIn=0
 lastPluggedIn=0
+lastAdjusted=0
 
 dimToggle="$HOME/bin_termux/dim-toggle"
 
@@ -22,41 +23,53 @@ getBatPerc(){
 
 while true
 do
-	lastPluggedIn="$pluggedIn"
 
 	# pull the json once
 	json="$(termux-battery-status)"
 	pluggedIn="$(getPluggedIn "$json")"
 	batPerc="$(getBatPerc "$json")"
 
-	if [[ "$pluggedIn" != "$lastPluggedIn" ]]
+	# ignore at 100%
+	# if it gets to 100% it reports as unplugged even if it isn't
+	# so this way the logic is ignored at 100% and then applied when it drops again
+	if [[ "$pluggedIn" != "$lastPluggedIn" && "$batPerc" -lt 100 ]]
 	then
 		echo -n "$(date +'%R') "
 		echo -n "${batPerc}% "
 
-		# only brighted if unplugged and < 100%
-		# if it gets to 100% it reports as unplugged even if it isn't
-		if [[ "$pluggedIn" == 0 && "$batPerc" -lt 100 ]]
+		if [[ "$pluggedIn" == 0 ]]
 		then
 			# echo "$json" > "$HOME/.logs/active-dim-battery.json"
 			"$dimToggle" auto
 		else
 			"$dimToggle" default
 		fi
+
+		# log here to allow for skipping at 100%
+		lastPluggedIn="$pluggedIn"
+		lastAdjusted="$(date +%s)"
 	fi
 
 	# could do much more if
 	# 1) we knew if a bluetooth device was connected or
 	# 2) we knew the name of connected bluetooth devices
+
 	
-	if [[ "$batPerc" -ge 98 ]]
+	# check more often when full
+	if [[ "$batPerc" -ge 99 ]]
 	then
 		sleep 10s
+	# if left on overnight, unplugged, and not changed, wait a long time to check
+	elif [[ "$pluggedIn" == 0 && "$(date +%H%M)" -lt 800 && "$(($(date +%s) - lastAdjusted))" -ge 3600 ]]
+	then
+		sleep 1h
+	# wait longer when the battery is low
 	elif [[ "$batPerc" -le 30 ]]
 	then
-		sleep 2m
+		sleep 4m
+	# default wait time
 	else
-		sleep 1m
+		sleep 2m
 	fi
 done
 
