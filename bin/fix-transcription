@@ -47,8 +47,15 @@ do
 
 	fileNameFull="$(basename "$filePath")"
 	fileName="${fileNameFull%.*}"
+	fileExt="${fileNameFull##*.}"
 	fileDir="$(dirname "$filePath")"
 	outPath="$fileDir/${fileName}_fixed.txt"
+
+	if [[ "${fileExt,,}" != "txt" ]]
+	then
+		echo "not a text file: $fileNameFull"
+		exit 1
+	fi
 
 	echo -n "$fileName "
 
@@ -138,7 +145,7 @@ do
 	expressions+=('s/(?<=\d\-)December(?=\-\d)/12/g')
 
 	# fix single-digit days in date strings
-	expressions+=('s/(?<=(?:20|19)\d\d\-\d\d\-)\d/b/0$1/g')
+	# expressions+=('s/(?<=(?:20|19)\d\d\-\d\d\-)\d/b/0$1/g')
 
 	expressions+=('s/\n*([Ss]ection [Ss]eparator|[Hh]orizontal ([Ll]ine|[Rr]ule))[,\.]\n*/\n\n---\n\n/g')
 

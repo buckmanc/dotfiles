@@ -137,6 +137,9 @@ addtopath "/c/Program Files (x86)/MakeMKV"
 addtopath "$PROGRAMFILES/AutoHotkey/"
 addtopath "$PROGRAMFILES/VideoLAN/VLC/"
 addtopath "/c/Program Files (x86)/Google/Cloud SDK/google-cloud-sdk/bin"
+addtopath "${LOCALAPPDATA}/Google/Cloud SDK/google-cloud-sdk/bin"
+addtopath "/c/Program Files/SqlCmd"
+addtopath "${LOCALAPPDATA}/Programs/Exiftool"
 
 if [[ -d "${ANDROID_HOME}" ]]
 then

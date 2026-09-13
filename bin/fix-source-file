@@ -2,7 +2,6 @@
 
 # TODO
 # test
-# accept files list or dirs
 # wrap with git-fix-source-file
 
 # this script uses perl instead of sed because
@@ -61,7 +60,8 @@ do
 	elif [[ -d "$arg" ]]
 	then
 		# add files in the dir to our list of files
-		readarray -d '' files < <(find "$arg" -type f -print0 -not -ipath '*/.git/*')
+		# exclude common known non-text files for performance boost
+		readarray -d '' files < <(find "$arg" -type f -not -ipath '*/.git/*' -regextype posix-extended -not -iregex '.*\.(dll|exe|xls\w?|jpe?g|png|gif|bmp|wav|mp3|mp4|m4a|ogg)' -print0)
 	else
 		echo 'invalid path'
 		exit 1
@@ -89,6 +89,9 @@ do
 		continue
 	fi
 
+	# big performance hit here
+	# drastic, probably worth leaving out
+	# skips json files?
 	fileType="$(file --brief --mime-type "$file" | cut -d '/' -f1)"
 
 	# skip non text files
@@ -97,18 +100,29 @@ do
 		continue
 	fi
 
-	if [[ "$optTw" == 1 ]] && grep -Piq '[ \t]+$' "$file"
+	# report the current file; very useful for long runs
+	basename "$file"
+
+	if [[ "$optTw" == 1 ]]
 	then
-		perl -i -pe 's/[ \t]+$//g' "$file"
-	elif [[ "$optCarriageReturn" == 1 ]] && grep -q --binary $'\r' "$file"
+		# gotta allow for that accursed carriage return
+		# in case we're only doing --tw and not --cr
+		perl -i -pe 's/[ \t]+(\r?)$/$1/g' "$file"
+	fi
+
+	if [[ "$optCarriageReturn" == 1 ]]
 	then
 		perl -i -pe 's/\r//g' "$file"
-	elif [[ "$optTab" == 1 ]] && grep -Piq '^\W*?\t+?\W*?\w' "$file"
+	fi
+
+	if [[ "$optTab" == 1 ]]
 	then
 		# tempPath="$(mktemp)"
 		# expand -i -t 4 "$file" > "$tempPath" && mv "$tempPath" "$file"
 		:
-	elif [[ "$optCommentSpacing" == 1 ]]
+	fi
+
+	if [[ "$optCommentSpacing" == 1 ]]
 	then
 		fileExt="${file##*.,,}"
 		if [[ "$fileExt" == "cs" ]]

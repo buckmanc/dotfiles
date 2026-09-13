@@ -26,6 +26,7 @@ crf=18
 preset=slower
 
 # ffmpeg -hide_banner -f concat -safe 0 -i "$fileLog" -c copy "$dir/merged.$ext"
-ffmpeg -hide_banner -f concat -safe 0 -i "$fileLog" -vcodec libx264 -crf "$crf" -vf yadif=1 -c:a aac -preset "$preset" "$dir/merged.mp4"
+# ffmpeg -hide_banner -f concat -safe 0 -i "$fileLog" -vcodec libx264 -crf "$crf" -vf yadif=1 -c:a aac -preset "$preset" "$dir/merged.mp4"
+ffmpeg -hide_banner -f concat -safe 0 -i "$fileLog" -c copy "$dir/merged.mp4"
 
 rm -f "$fileLog"

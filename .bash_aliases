@@ -13,6 +13,7 @@ alias it='git'
 alias tgi='git'
 alias tgit='git'
 alias ttgi='git'
+alias gti='git'
 alias sgit='git'
 alias lgit='git'
 alias mgit='git'
@@ -30,6 +31,7 @@ alias ZZ=":q"
 alias dc="cd"
 # long exa
 alias lexa='exa --long --no-permissions --no-user --icons --time-style long-iso'
+alias fuck="echo 'fr'"
 
 # aliases for bin stuff
 alias xleep='xsleep'
@@ -37,6 +39,7 @@ alias bookenberg='gutenbook'
 alias screeny='xscreen'
 alias xscr='xscreen'
 alias xscrn='xscreen'
+alias np='now-playing'
 
 if [[ -d ~/.jpsxdec ]]
 then
