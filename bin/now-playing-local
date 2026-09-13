@@ -31,26 +31,42 @@ then
 		exit
 	fi
 
-	# find the first playing player
-	while read -r thisPlayer
+	# sort players that don't report what they're playing last
+	unpreferredPlayers="(firefox\..+|sendspin)"
+
+	playerGroups=("$(echo "$players" | grep -Piv "$unpreferredPlayers")" "$(echo "$players" | grep -Pi "$unpreferredPlayers")")
+
+	for playerGroup in "${playerGroups[@]}"
 	do
-		if [[ "$optNoOnline" == 1 && "${thisPlayer,,}" =~ ^(spotify|sendspin)$ ]]
-		then
-			continue
-		elif [[ -z "$thisPlayer" ]]
-		then
-			continue
-		fi
 
-		status="$(playerctl --player "$thisPlayer" status)"
+		# find the first playing player
+		while read -r thisPlayer
+		do
+			if [[ "$optNoOnline" == 1 && "${thisPlayer,,}" =~ ^(spotify|sendspin)$ ]]
+			then
+				continue
+			elif [[ -z "$thisPlayer" ]]
+			then
+				continue
+			fi
 
-		if [[ "${status,,}" == "playing" ]]
-		then
-			player="$thisPlayer"
-			break
-		fi
+			status="$(playerctl --player "$thisPlayer" status)"
 
-	done < <(echo "$players")
+			# stop looping if we found one
+			if [[ "${status,,}" == "playing" ]]
+			then
+				player="$thisPlayer"
+				break
+			fi
+
+		# stop looping if we found one
+        done < <(echo "$playerGroup")
+
+        if [[ -n "$player" ]]
+        then
+                break
+        fi
+	done
 
 	# return nopers for nopers
 	if [[ -z "$player" ]]
@@ -62,7 +78,7 @@ then
 	format="{{artist}}§{{title}}§{{album}}§{{vlc:nowplaying}}§{{xesam:url}}"
 
 	# get the status string
-	playerCtlDeets="$(playerctl --player "$player" metadata --format "$format")"
+	playerCtlDeets="$(playerctl --player "$player" metadata --format "$format" 2>&1)"
 	IFS="§" read -r trackName artistName albumName vlcNowPlaying trackUrl <<< "$playerCtlDeets"
 	# what the hell is in the vlc field anyway?
 
@@ -89,6 +105,12 @@ then
 		else
 			prettyString="$(echo "$trackUrl" | perl -p -e 's|^.+/([^/]+)$|$1|g;' -e 's/\.[^\.]+$//g')"
 		fi
+	fi
+
+	if [[ "${prettyString,,}" == "no player could handle"* ]]
+	then
+		echo "${player%.*}"
+		exit
 	fi
 
 	# if the nowPlaying string is still empty, back out
