@@ -8,7 +8,7 @@ then
 	exit 1
 fi
 
-if [[ "$OSTYPE" = "msys" ]]
+if [[ "$OSTYPE" = "cygwin" ]]
 then
 	pwshCommand="(new-object -comobject Shell.Application).Namespace(0).ParseName(\"$(cygpath -w "$linkPath")\").InvokeVerb(\"taskbarunpin\")"
 	pwshOutput="$(pwsh -noprofile -command "$pwshCommand" | tail -n 1)"

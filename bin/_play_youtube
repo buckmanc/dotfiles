@@ -314,7 +314,7 @@ else
 fi
 
 # convert to windows paths as necessary
-if type cygpath > /dev/null 2>&1 && [[ "$OSTYPE" = "msys" ]]
+if type cygpath > /dev/null 2>&1 && [[ "$OSTYPE" = "cygwin" ]]
 then
 	files="$(echo "$files" | xargs --delimiter $'\n' cygpath --windows)"
 	# playlistPath="$(echo "$playlistPath" | xargs --delimiter $'\n' cygpath --windows)"

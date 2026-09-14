@@ -35,7 +35,7 @@ then
 	fi
 fi
 
-if [ "$OSTYPE" == 'msys' ] && [[ "$optRestart" == 1 ]]
+if [ "$OSTYPE" == 'cygwin' ] && [[ "$optRestart" == 1 ]]
 then
 	clear
 	"$farewell"
@@ -43,7 +43,7 @@ then
 
 	"$(which shutdown)" -r -f -t 0
 
-elif [ "$OSTYPE" == 'msys' ]
+elif [ "$OSTYPE" == 'cygwin' ]
 then
 	clear
 	"$farewell"

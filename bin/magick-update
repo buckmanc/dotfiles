@@ -4,7 +4,7 @@ set -e
 
 imeiDir="$TEMP/imei"
 
-if [[ "$OSTYPE" == "msys" ]]
+if [[ "$OSTYPE" == "cygwin" ]]
 then
 	winget install imagemagick.imagemagick
 elif [[ "$OSTYPE" == "linux-android" ]]

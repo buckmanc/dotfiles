@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ "$OSTYPE" = "msys" ]]
+if [[ "$OSTYPE" = "cygwin" ]]
 then
 	pwshCommand="& \"$(realpath "$HOME/bin/_FocusAllWindows.ps1")"
 	pwsh -noprofile -command "$pwshCommand" | tail -n 1

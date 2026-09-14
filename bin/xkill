@@ -22,7 +22,7 @@ then
 	# jorbs="$(jobs -ps)"
 	
 	# ps has different formats and stopped jobs have different states on different OSs
-	if [[ "$OSTYPE" == "msys" ]]
+	if [[ "$OSTYPE" == "cygwin" ]]
 	then
 		jorbs="$(ps | grep -P '^S')"
 	else
@@ -47,7 +47,7 @@ fi
 
 for progName in "${progNames[@]}"
 do
-	if [[ "$OSTYPE" == "msys" ]]
+	if [[ "$OSTYPE" == "cygwin" ]]
 	then
 		# if the name given does *not* end in .exe
 		# try appending .exe *first*

@@ -25,7 +25,7 @@ else
 	exit 1
 fi
 
-if [[ "$OSTYPE" == 'msys' ]] && ( type start >/dev/null 2>&1 )
+if [[ "$OSTYPE" == 'cygwin' ]] && ( type start >/dev/null 2>&1 )
 then
 	urlOpeny='start ""'
 else

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ "$OSTYPE" == "msys" ]]
+if [[ "$OSTYPE" == "cygwin" ]]
 then
 	wmic process get description
 else

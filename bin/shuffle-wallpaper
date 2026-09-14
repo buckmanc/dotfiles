@@ -285,7 +285,7 @@ fi
 finalFilesCount="$(echo "$files" | wc -l)"
 echo "total files to pick from: ${finalFilesCount}/${baseFilesCount}"
 
-if [[ "$OSTYPE" == "msys" && -z "$optOutPath" ]] && [[ "$optLockScreen" == "1" || "$optDefaultTarget" == "1" ]]
+if [[ "$OSTYPE" == "cygwin" && -z "$optOutPath" ]] && [[ "$optLockScreen" == "1" || "$optDefaultTarget" == "1" ]]
 then
 	if [[ "$optDefaultTarget" == "1" ]]
 	then
@@ -418,7 +418,7 @@ fi
 if [[ -n "$optOutPath" ]]
 then
 	cp "$paperPath" "$optOutPath"
-elif [[ "$OSTYPE" == "msys" && "$optTerminal" == 1 ]]
+elif [[ "$OSTYPE" == "cygwin" && "$optTerminal" == 1 ]]
 then
 	wtDir="$(find "${LOCALAPPDATA}/Packages/" -maxdepth 2 -wholename "*WindowsTerminal*" -name LocalState -print -quit)"
 	settingsPath="${wtDir}/settings.json"

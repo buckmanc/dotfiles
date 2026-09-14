@@ -20,7 +20,7 @@ then
 		# *probably* means we're not connected, right?
 		echo ""
 	fi
-elif [[ "$OSTYPE" == "msys" ]]
+elif [[ "$OSTYPE" == "cygwin" ]]
 then
 	# needs tweaking
 	netsh wlan show interfaces | grep -i "ssid"

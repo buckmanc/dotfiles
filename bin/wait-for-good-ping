@@ -22,7 +22,7 @@ then
 	url="$("$HOME/bin/_get-test-ip")"
 fi
 
-if [[ "$OSTYPE" = "msys" ]]
+if [[ "$OSTYPE" = "cygwin" ]]
 then
 	pingy="ping -n 1 -w $timeoutMs"
 else

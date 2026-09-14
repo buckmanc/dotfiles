@@ -5,7 +5,7 @@ logDir="$(dirname "$logPath")"
 
 mkdir -p "$logDir"
 
-if [[ "$OSTYPE" = "msys" ]]
+if [[ "$OSTYPE" = "cygwin" ]]
 then
 	pingy="ping -n 5"
 else

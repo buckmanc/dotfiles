@@ -10,7 +10,7 @@ getCameraIDs(){
 	then
 		# take the largest camera of each orientation
 		termux-camera-info | jq 'group_by(.facing) | map(sort_by(.physical_size) | .[-1])' | jq -r '.[].id'
-	elif [[ "$OSTYPE" == "msys" ]]
+	elif [[ "$OSTYPE" == "cygwin" ]]
 	then
 		ffmpeg -list_devices true -f dshow -i dummy 2>&1 | grep -i '(video)' | grep -iPo '(?<=")[^"]+(?=")'
 	else
@@ -38,7 +38,7 @@ snapPhoto(){
 	then
 		# fswebcam spews garbage and doesn't throw errors for errors
 		fswebcam --resolution 1920x1080 --no-banner --device "$cameraID" --quiet "$destPath" > /dev/null 2>&1
-	elif [[ "$OSTYPE" == "msys" ]] && (type ffmpeg > /dev/null 2>&1)
+	elif [[ "$OSTYPE" == "cygwin" ]] && (type ffmpeg > /dev/null 2>&1)
 	then
 		ffmpeg -f dshow -i "video=$cameraID" -vframes 1 -update true "$destPath" -loglevel quiet
 	else

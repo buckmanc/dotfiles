@@ -321,7 +321,7 @@ export -f _complete_xscreen
 complete -F _complete_xscreen -o default xscreen
 complete -F _complete_xscreen -o default xscrn
 
-if [[ "$OSTYPE" == "msys" ]]
+if [[ "$OSTYPE" == "cygwin" ]]
 then
 	# bug fix for grep on Windows
 	export LC_ALL="en_US.UTF-8"
