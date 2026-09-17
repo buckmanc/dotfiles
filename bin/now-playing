@@ -11,6 +11,7 @@ do
 	# super short version
 	if [[ "${arg,,}" =~ ^\-?[dkl]$ ]]
 	then
+		arg="${arg: -1}"
 		case "${arg,,}" in
 			d)
 				arg='dump'

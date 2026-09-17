@@ -100,7 +100,7 @@ do
 	# echo "content: $content"
 
 	# skip these no matter what
-	if [[ "$packageName" =~ ^(spotify|aimp.player|newpipe|smartcapture|antennapod|systemui|samsungapps|speechify2?|anothermusicplayer|ipsgeofence|incallui|ticktick|storyservice|sendspindroid|maxmpz\.audioplayer)$ ]]
+	if [[ "$packageName" =~ ^(spotify|aimp.player|newpipe|smartcapture|antennapod|systemui|samsungapps|speechify2?|anothermusicplayer|ipsgeofence|incallui|ticktick|storyservice|sendspindroid|maxmpz\.audioplayer|gonemad|gonemad\.gmmp)$ ]]
 	then
 		continue
 	# skip bupkiss
@@ -143,7 +143,7 @@ do
 			elif [[ "${content,,}" =~ visit\ http ]]
 			then
 				continue
-			elif [[ "${content,,}" =~ (debt\ consolidation\ loan|pre\-?approved|for\ up\ to\ \$|anchor\ lending|l[ea]nding department) ]]
+			elif [[ "${content,,}" =~ (debt\ consolidation\ loan|personal loan|pre\-?approved|for\ up\ to\ \$|anchor\ lending|l[ea]nding department) ]]
 			then
 				continue
 			elif [[ "${content,,}" =~ (department|group|unit|desk|branch|center) ]]
@@ -291,7 +291,7 @@ then
 
 	if (type lolcat > /dev/null 2>&1)
 	then
-		output="$(echo "$output" | lolcat)"
+		output="$(echo "$output" | lolcat -f)"
 	fi
 
 	if [[ "$optQuiet" == 0 ]]

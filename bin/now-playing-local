@@ -122,8 +122,9 @@ then
 elif type termux-notification-list > /dev/null 2>&1
 then
 	# shit that's not playing still shows up, so it's not gonna be 100% accurate
-	# might wanna default to cloud providers just for the reliability of "actually playing"
-	playingJson="$(termux-notification-list | jq -c '.[] | select(.packageName | test("spotify|musicassistant|aimp|audioplayer"))' | head -n1)"
+	# might wanna use cloud provider apis instead of checking locally with this script just for the reliability of "actually playing"
+	# sorting spotify to the bottom of the list as it tends to stay open and report tracks when it isn't playing
+	playingJson="$(termux-notification-list | jq -c 'sort_by(.packageName | test("spotify")) | .[] | select(.packageName | test("spotify|musicassistant|aimp|audioplayer|gonemad")) ' | head -n1)"
 
 
 	packageName="$(echo "$playingJson" | jq -r '.packageName' | perl -pe 's/^(com)\.//g;' -e 's/\.(music|player|application)$//g;' -e 's/sendspindroid/sendspin/g;')"
@@ -135,7 +136,7 @@ then
 		trackName="$title"
 		albumName="$(echo "$content" | grep -iPo '(?<= \- ).+$')"
 		artistName="$(echo "$content" | grep -iPo '^.+(?= \- )')"
-	# elif [[ "${packageName,,}" == *spotify* ]]
+	# elif [[ "${packageName,,}" =~ (gonemad|spotify) ]]
 	else
 		trackName="$title"
 		artistName="$content"
@@ -181,6 +182,9 @@ then
 		echo "$lastPlaying" > "$lastPlayingPath"
 	fi
 fi
+
+# trim off them file extensions if they show up
+prettyString="$(echo "$prettyString" | perl -pe 's/\.(mp3|m4a|mp4|mkv)(?=($| \- ))//g;')"
 
 if [[ "$optJson" == 0 ]]
 then
