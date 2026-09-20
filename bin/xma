@@ -57,7 +57,7 @@ do
 done
 
 urlsCount="${#optUrls[@]}"
-echo "${optUrls[@]}"
+# echo "${optUrls[@]}"
 
 if [[ "$optAdd" == 1 ]]
 then

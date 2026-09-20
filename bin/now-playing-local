@@ -27,7 +27,7 @@ then
 	# back out for borko
 	if [[ "${players,,}" == "no players found" ]]
 	then
-		echo
+		echo 'no players'
 		exit
 	fi
 
@@ -56,16 +56,24 @@ then
 			if [[ "${status,,}" == "playing" ]]
 			then
 				player="$thisPlayer"
+
+				# remove the instance ID from the sendspin player name
+				if [[ "${player,,}" == "sendspin."* ]]
+				then
+					player="${player%%.*}"
+					player="${player,,}"
+				fi
+
 				break
 			fi
 
-		# stop looping if we found one
-        done < <(echo "$playerGroup")
+			# stop looping if we found one
+		done < <(echo "$playerGroup")
 
-        if [[ -n "$player" ]]
-        then
-                break
-        fi
+		if [[ -n "$player" ]]
+		then
+			break
+		fi
 	done
 
 	# return nopers for nopers
@@ -78,7 +86,7 @@ then
 	format="{{artist}}§{{title}}§{{album}}§{{vlc:nowplaying}}§{{xesam:url}}"
 
 	# get the status string
-	playerCtlDeets="$(playerctl --player "$player" metadata --format "$format" 2>&1)"
+	playerCtlDeets="$(playerctl --player "$player" metadata --format "$format" 2>&1 || true)"
 	IFS="§" read -r trackName artistName albumName vlcNowPlaying trackUrl <<< "$playerCtlDeets"
 	# what the hell is in the vlc field anyway?
 
@@ -107,8 +115,11 @@ then
 		fi
 	fi
 
-	if [[ "${prettyString,,}" == "no player could handle"* ]]
+	# just report the player name if it can't give status
+	# ...unless it's sendspin, then try the api below for more deets
+	if [[ "${prettyString,,}" == "no player could handle"* && "$player" != "sendspin" ]]
 	then
+		# echo -n 'test: '
 		echo "${player%.*}"
 		exit
 	fi
@@ -152,15 +163,17 @@ fi
 if [[ "$optJson" == 0 && "${player,,}" =~ ^(spotify|sendspin)$ ]]
 then
 
-	lastPlayingPath="$TEMP/lastplaying"
-	lastOnlinePlayingPath="$TEMP/lastOnlineplaying"
+	tempDir="${TEMP:-/tmp}"
+	lastPlayingPath="$tempDir/lastplaying"
+	lastOnlinePlayingPath="$tempDir/lastOnlineplaying"
 
 	# get cached vars
 	lastPlaying="$(cat "$lastPlayingPath" 2>/dev/null || true)"
 	onlineNowPlaying="$(cat "$lastOnlinePlayingPath" 2>/dev/null || true)"
 
 	# ...but only if it's a different track then last time
-	if [[ "$prettyString" != "$lastPlaying" || -z "$onlineNowPlaying" ]]
+	# ...and not for sendspin coz it doesn't report any track at all, so we have to check every time
+	if [[ "$prettyString" != "$lastPlaying" || -z "$onlineNowPlaying" || "$player" == "sendspin" ]]
 	then
 		if [[ "${player,,}" == "spotify" ]]
 		then
