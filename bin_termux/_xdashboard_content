@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+bat="$("$HOME/bin_termux/xbat")"
+np="$("$HOME/bin/now-playing-local")"
+# echo "${bat} ${np}" | "$HOME/bin/nowrap"
+echo -n "$bat"
+npLen=$(($(tput cols) - ${#bat}))
+printf "%*.*s" "$npLen" "$npLen" "$np"
+echo && echo
+
+"$HOME/bin_termux/termux-notification-read" --short | head -n "$((LINES-2))"

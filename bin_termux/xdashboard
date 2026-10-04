@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+watch --no-title --color -n 10 "$HOME/bin_termux/_xdashboard_content"

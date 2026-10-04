@@ -78,6 +78,15 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# download if missing or to update
+# curl -OJ 'https://raw.githubusercontent.com/git/git/refs/heads/master/contrib/completion/git-completion.bash'
+if [[ -f ~/.git-completion.bash ]]
+then
+	. ~/.git-completion.bash
+fi
+
+
+
 addtopath(){
 	local newPath="$1"
 

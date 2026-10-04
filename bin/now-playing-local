@@ -135,7 +135,7 @@ then
 	# shit that's not playing still shows up, so it's not gonna be 100% accurate
 	# might wanna use cloud provider apis instead of checking locally with this script just for the reliability of "actually playing"
 	# sorting spotify to the bottom of the list as it tends to stay open and report tracks when it isn't playing
-	playingJson="$(termux-notification-list | jq -c 'sort_by(.packageName | test("spotify")) | .[] | select(.packageName | test("spotify|musicassistant|aimp|audioplayer|gonemad")) ' | head -n1)"
+	playingJson="$(termux-notification-list | jq -c 'sort_by(.packageName | test("spotify")) | .[] | select((.packageName | test("spotify|musicassistant|aimp|audioplayer|gonemad")) and (.title | test("Spotify is trying to play") | not)) ' | head -n1)"
 
 
 	packageName="$(echo "$playingJson" | jq -r '.packageName' | perl -pe 's/^(com)\.//g;' -e 's/\.(music|player|application)$//g;' -e 's/sendspindroid/sendspin/g;')"
@@ -162,7 +162,6 @@ fi
 # check the spotify api for more details...
 if [[ "$optJson" == 0 && "${player,,}" =~ ^(spotify|sendspin)$ ]]
 then
-
 	tempDir="${TEMP:-/tmp}"
 	lastPlayingPath="$tempDir/lastplaying"
 	lastOnlinePlayingPath="$tempDir/lastOnlineplaying"

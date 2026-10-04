@@ -9,6 +9,8 @@ optShort=0
 optNew=0
 optSpeak=0
 optQuiet=0
+optUnsubscribe=0
+
 reverseJqArg=" | reverse"
 # ltr mark, pop directional formatting, ltr embedding
 dumpCharRegex='(\xE2\x80\x8E|\xE2\x80\xAC|\xE2\x80\xAA)'
@@ -45,6 +47,9 @@ do
 	elif [[ "$arg" == "--quiet" ]]
 	then
 		optQuiet=1
+	elif [[ "$arg" =~ ^\-\-unsub(scribe)?$ ]]
+	then
+		optUnsubscribe=1
 	else
 		echo "I have no idea what $arg means"
 		exit 1
@@ -117,7 +122,7 @@ do
 	# things you might want to check once
 	elif [[ "$optAll" == 0 ]]
 	then
-		if [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok|weather|breezyweather|truebill|walmart|jimmyjohns|psxandroid|youtube|vvm|scloud|downloads)$ ]]
+		if [[ "$packageName" =~ ^(termux.api|reddit|patreon|facebook|lool|tiktok|weather|breezyweather|truebill|walmart|jimmyjohns|psxandroid|youtube|vvm|scloud|downloads|chess\.gambit)$ ]]
 		then
 			continue
 		elif [[ "$packageName" == "discord" ]] && [[ "$title" == *#memes* ]] && [[ "${content,,}" =~ \.(jpe?g|png|mp4)$ || "${content,,}" =~ ^http.+(youtu\.?be|tiktok) || "${content,,}" =~ ^reacted.+to\ your || "${content,,}" == "sent an image"* ]]
@@ -152,6 +157,9 @@ do
 				then
 					continue
 				fi
+			elif [[ "${content,,}" =~ (sensitive notification content hidden) ]]
+			then
+				continue
 			fi
 		elif [[ "$packageName" == "instagram" ]] && [[ "${content,,}" == *'who you might know, is on instagram'* || "${content,,}" == *"reposted"* || "${content,,}" == *"see what"*"person sent you"* ]]
 		then
@@ -316,5 +324,18 @@ then
 	# 	echo -n "$output"
 	else
 		echo "$output"
+	fi
+fi
+
+if [[ "$optUnsubscribe" != 0 ]]
+then
+	phoneNumber="$(echo "$output" | grep -iPo '\(?\d{3}\)?[\s\.\-]?\d{3}[\s\.\-]?\d{4}' | perl -pe 's/\D//g' | head -n1)"
+
+	if [[ -z "$phoneNumber" ]]
+	then
+		echo "no phone number found"
+	else
+		termux-sms-send -n "$phoneNumber" 'unsubscribe'
+		echo 'unsubscribed'
 	fi
 fi
