@@ -38,6 +38,7 @@ Temba, at rest
 Set phasers to stun
 Welcome aboard
 May this be the first of many visits.
+Let's go!
 #stargate, the steps of atlantis
 a heartfilled welcome to those of other worlds visiting our world for the first time
 welcome again to those returning
@@ -77,6 +78,8 @@ hey, you've got weasels on your face
 Do you wanna join the Columbia Record Club?
 # fvrfvr
 Hail, traveler, come rest awhile.
+# Mario 64
+Here we go!
 # mario odyssey
 Initiating passive-aggressive commentary
 I'd show you around but, uh... things are kinda on fire right now.
@@ -511,3 +514,5 @@ Star Citizen took all my money!
 It's not a big truck, it's a series of tubes!
 # Bucky O'Hare
 Let's croak us some toads!
+# Darkwing Duck
+Let's get dangerous
