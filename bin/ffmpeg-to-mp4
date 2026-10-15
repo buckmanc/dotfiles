@@ -111,7 +111,7 @@ quoteRe() {
 	sed -e 's/[^^]/[&]/g; s/\^/\\^/g; $!a\'$'\n''\\n' <<<"$1" | tr -d '\n'
 }
 
-resizeArgs=()
+resizeString=''
 if [[ -n "$optResize" ]]
 then
 	# swap normal resolution notation for ffmpeg format
@@ -122,7 +122,7 @@ then
 		optResize="${optResize}:-2"
 	fi
 
-	resizeArgs=(-vf scale="$optResize")
+	resizeString=",scale=$optResize"
 fi
 
 makeTestImage(){
@@ -245,7 +245,7 @@ do
 	then
 		if [[ "$optDryRun" == 0 ]]
 		then
-			$progress ffmpeg -hide_banner -i "$src" "${resizeArgs[@]}" -vcodec libx264 -crf "$optCrf" -vf yadif=1 -c:a aac -preset "$optSpeedPreset" "$destPath" || true
+			$progress ffmpeg -hide_banner -i "$src" -vcodec libx264 -crf "$optCrf" -vf "yadif=1$resizeString" -c:a aac -preset "$optSpeedPreset" "$destPath" || true
 
 			rm -rf "$testPathDest"
 		else
@@ -257,7 +257,7 @@ do
 	then
 		if [[ "$optDryRun" == 0 ]]
 		then
-			$progress ffmpeg -hide_banner -i "$src" "${resizeArgs[@]}" -vcodec libx265 -crf "$optCrf"-tag:v hvc1 -vf yadif=1 -c:a aac -preset "$optSpeedPreset" "$destPath" || true
+			$progress ffmpeg -hide_banner -i "$src" -vcodec libx265 -crf "$optCrf"-tag:v hvc1 -vf "yadif=1$resizeString" -c:a aac -preset "$optSpeedPreset" "$destPath" || true
 
 			rm -rf "$testPathDest"
 		else

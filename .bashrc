@@ -149,6 +149,7 @@ addtopath "/c/Program Files (x86)/Google/Cloud SDK/google-cloud-sdk/bin"
 addtopath "${LOCALAPPDATA}/Google/Cloud SDK/google-cloud-sdk/bin"
 addtopath "/c/Program Files/SqlCmd"
 addtopath "${LOCALAPPDATA}/Programs/Exiftool"
+addtopath "/c/Program Files/GitHub CLI"
 
 if [[ -d "${ANDROID_HOME}" ]]
 then

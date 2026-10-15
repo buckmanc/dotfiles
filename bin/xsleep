@@ -53,7 +53,9 @@ cursorVisible() {
 # restore cursor on interrupt
 # exit with error code for interrupt
 # that way you can cancel a task like 'xsleep 1h && txtme "do stuff"'
-trap "cursorVisible ; exit 130" SIGINT
+trap "cursorVisible ; exit 130" INT
+trap "cursorVisible" EXIT
+# tried trapping TSTP as well but it just freezes instead
 
 tput civis
 
@@ -94,6 +96,7 @@ do
 	secRemaining="$((targetEpochSec-$(date +"%s")))"
 done
 
+echo -ne "\r\033[2Kgo"
 cursorVisible
 
 echo
