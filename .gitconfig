@@ -1,10 +1,7 @@
 [user]
 	# These values are set in ~/.gitconfig_local
 [alias]
-	# # word diff
-	# wdiff
-	# # letter diff
-	# ldiff
+	wdiff = diff --color-words --ignore-space-change
 	dbdiff=wdiff --ignore-matching-lines='^USE \\[\\w+\\]$'
 	# short stat
 	# stat
@@ -82,6 +79,9 @@
 	autocorrect = 50
 [diff]
 	wsErrorHighlight = all
+	colorMoved = blocks
+	colorMovedWS = allow-indentation-change
+	wordRegex = [[:alnum:]_]+|[^[:space:][:alnum:]_]+
 [diff "image"]
 	textconv = ~/bin/git-image-diff
 [diff "music"]
@@ -89,6 +89,8 @@
 [color "diff"]
 	meta = blue
 	frag = dim blue
+	oldMoved = red dim
+	newMoved = green dim
 [log]
 	date = format-local:%Y-%m-%d %H:%M:%S
 
