@@ -17,7 +17,7 @@
 	undo-commit=reset HEAD~
 	list-alias=!git config -l | grep alias | cut -c 7-
 	# word diff log
-	wlog=log --patch --color-words='\\w+|.'
+	wlog=log --patch --color-words
 	xgrep=!git --no-pager grep -in -I
 	xtree=!git ls-files | grep -i --color
 	# pretty log
@@ -43,13 +43,28 @@
 	pager = tr -d '\\r' | less -REX # visually strip CR's
 	attributesfile = ~/.gitattributes # todo: fix the slowdown this causes in some environments
 	excludesfile = ~/.gitignore_global
+	fsmonitor = true
+	untrackedCache = true
+	longPaths = true # darn you windows
+[tag]
+	sort = version:refname
+[merge]
+	conflictStyle = zdiff3
+	autostash = true
+[rerere]
+	enabled = true
+[rebase]
+	autostash = true
+	autosquash = true
+	updateRefs = true
+	missingCommitsCheck = error
 [interactive]
 	singleKey = true
 [push]
 	autoSetupRemote = true
 	default = current
 [gc]
-	auto = 256
+	auto = 1000
 [init]
 	defaultBranch = main
 [status]
@@ -76,7 +91,7 @@
 [filter "terminal_config"]
 	clean = "~/.config/gitconfig_scripts/terminal_config_clean_filter.sh"
 [help]
-	autocorrect = 50
+	autocorrect = prompt
 [diff]
 	wsErrorHighlight = all
 	colorMoved = blocks

@@ -124,7 +124,8 @@ do
 
 	if [[ "$optCommentSpacing" == 1 ]]
 	then
-		fileExt="${file##*.,,}"
+		fileExt="${file##*.}"
+		fileExt="${file,,}"
 		if [[ "$fileExt" == "cs" ]]
 		then
 			commentChar="\\\\"
