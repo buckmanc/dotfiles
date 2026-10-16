@@ -1,4 +1,5 @@
 # Gboard Dictionary version:1
+	3061	en-US
 	3D	en-US
 	achey	en-US
 	adamantine	en-US
@@ -448,6 +449,7 @@
 	Malwart	en-US
 	mana	en-US
 	Mangelsen's	en-US
+	Manitou	en-US
 	Mardi Gras	en-US
 	Maruchan	en-US
 	marvelling	en-US

@@ -38,7 +38,9 @@ fi
 "${spellDir}"/sort.sh
 
 # mash all vim spell files into one text file for outside use
-ls "${spellDir}"/*.add | grep -iv private | xargs cat | grep -Piv '/!$' | sed '/^[ \t]*$/d' | uniq > "${customPath}" 
+find "$spellDir" -maxdepth 1 -type f -iname '*.add' | sort | grep -iv private | xargs cat | grep -Piv '/!$' | sed '/^[ \t]*$/d' | uniq > "${customPath}"
+
+wc -l < "$customPath" | cat - "$customPath" | sponge "$customPath"
 
 # write gboard file from spellfile_custom
 newGboardText="# Gboard Dictionary version:1
