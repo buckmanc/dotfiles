@@ -1,5 +1,5 @@
 # Gboard Dictionary version:1
-	3061	en-US
+	2921	en-US
 	3D	en-US
 	achey	en-US
 	adamantine	en-US
@@ -873,6 +873,7 @@
 	zonked	en-US
 	zonking	en-US
 	Zootopia	en-US
+	3061	en-US
 	Adolin	en-US
 	Adolin's	en-US
 	Adonalsium	en-US
@@ -2731,41 +2732,6 @@
 	Paldea	en-US
 	Sinnoh	en-US
 	Unova	en-US
-	Abimelech	en-US
-	Amalek	en-US
-	Barak	en-US
-	Barnea	en-US
-	Bartimaeus	en-US
-	Bethel	en-US
-	Christianese	en-US
-	Creflo	en-US
-	Edom	en-US
-	Edomites	en-US
-	Gilgal	en-US
-	Heber	en-US
-	Hebron	en-US
-	Jabez	en-US
-	Jael	en-US
-	Jael's	en-US
-	Jah	en-US
-	Kadesh	en-US
-	KJV	en-US
-	Levite	en-US
-	Levites	en-US
-	lovingkindness	en-US
-	Meribah	en-US
-	Missionettes	en-US
-	NIV	en-US
-	NKJV	en-US
-	Pileser	en-US
-	Seir	en-US
-	shevarim	en-US
-	shofar	en-US
-	shofars	en-US
-	Sisera	en-US
-	Tiglath	en-US
-	Wenceslaus	en-US
-	Zerubbabel	en-US
 	abuela	en-US
 	abuelita	en-US
 	estufa	en-US
@@ -2955,109 +2921,3 @@
 	Xubuntu	en-US
 	yaml	en-US
 	Zigbee	en-US
-	Baladia	en-US
-	Baladian	en-US
-	Berglund	en-US
-	Bev	en-US
-	birdfeeder	en-US
-	bowtie	en-US
-	bowties	en-US
-	BPQ	en-US
-	BPQ's	en-US
-	Bravadas	en-US
-	BVOV	en-US
-	candlenewsletter@qWest.com	en-US
-	candlenewsletter@qwest.net	en-US
-	candlenewsletter@uswest.net	en-US
-	carseat	en-US
-	carseats	en-US
-	Chas	en-US
-	cliché	en-US
-	Crissie	en-US
-	Crissy	en-US
-	Delahanty	en-US
-	diningroom	en-US
-	Dunston	en-US
-	durn	en-US
-	durned	en-US
-	dustmopped	en-US
-	Elsbernd	en-US
-	enquire	en-US
-	fibromyalgic	en-US
-	fleecie	en-US
-	fleecies	en-US
-	fleecy	en-US
-	flyer	en-US
-	flyers	en-US
-	Gaspard	en-US
-	gauché	en-US
-	glucosamine	en-US
-	gooney	en-US
-	Hallo'een	en-US
-	Hallowe'en	en-US
-	Homebuilders	en-US
-	I'd've	en-US
-	Indocin	en-US
-	Jerilyn	en-US
-	Jerilyn's	en-US
-	Jin	en-US
-	JMW	en-US
-	JMW's	en-US
-	JoAnne's	en-US
-	Joanne's	en-US
-	Judi	en-US
-	KCM	en-US
-	Kriskeys	en-US
-	Kutler	en-US
-	Lennertz	en-US
-	livingroom	en-US
-	Lockwood	en-US
-	Lundgren	en-US
-	M'Nal	en-US
-	M'Nal's	en-US
-	mallwalk	en-US
-	mallwalking	en-US
-	Marialy	en-US
-	Marialy's	en-US
-	Matisyahu	en-US
-	Meghann	en-US
-	Meghann's	en-US
-	Millroy	en-US
-	Mozner	en-US
-	N'Mal	en-US
-	N'Mal's	en-US
-	Nikumen	en-US
-	PartyLite	en-US
-	PMDD	en-US
-	PMDD'd	en-US
-	PraiseArt	en-US
-	QWest	en-US
-	Rabon	en-US
-	Rabon's	en-US
-	Randa	en-US
-	RenFair	en-US
-	Rhineheart	en-US
-	Robarge	en-US
-	Robarges	en-US
-	Rootes	en-US
-	Sartéris	en-US
-	Shmele	en-US
-	Slobodnik	en-US
-	Stargell	en-US
-	Stargil	en-US
-	synthroid	en-US
-	Ta-Da	en-US
-	TabTeam	en-US
-	Tarkio	en-US
-	Timm	en-US
-	Tobycloth	en-US
-	VesRehab	en-US
-	Vinny	en-US
-	Vinny's	en-US
-	Volquartsen	en-US
-	Wal-Mart	en-US
-	Waterman's	en-US
-	whammo	en-US
-	whitework	en-US
-	Zaluda	en-US
-	Zaluda's	en-US

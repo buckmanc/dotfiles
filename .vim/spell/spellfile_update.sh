@@ -38,7 +38,8 @@ fi
 "${spellDir}"/sort.sh
 
 # mash all vim spell files into one text file for outside use
-find "$spellDir" -maxdepth 1 -type f -iname '*.add' | sort | grep -iv private | xargs cat | grep -Piv '/!$' | sed '/^[ \t]*$/d' | uniq > "${customPath}"
+# but only the spellfiles tracked by git, so private files are excluded
+git ls-files "$spellDir" | grep -iP '\.add$' | sort | xargs cat | grep -Piv '/!$' | sed '/^[ \t]*$/d' | uniq > "${customPath}"
 
 wc -l < "$customPath" | cat - "$customPath" | sponge "$customPath"
 
